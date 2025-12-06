@@ -1,0 +1,265 @@
+/* Mobile Tab Bar - Enhanced Styling
+ * Additional styles for customization and advanced features
+ * Include this file or use as reference for custom styling
+ */
+
+/* Base mobile tab bar styles */
+.mobile-tab-bar {
+  --tab-bar-height: 56px;
+  --tab-bar-icon-height: 64px;
+  --tab-item-padding: 8px 4px;
+  --tab-item-font-size: 0.6875rem;
+  --tab-item-border-width: 3px;
+  --tab-item-transition-duration: 0.2s;
+  --tab-item-transition-timing: ease;
+}
+
+/* Smooth scrolling for better UX */
+.mobile-tab-bar__item {
+  scroll-behavior: smooth;
+}
+
+/* Touch device specific styles */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-tab-bar__item {
+    /* Increase touch target size */
+    padding: 12px 8px;
+  }
+
+  .mobile-tab-bar__item:active {
+    background-color: rgba(var(--color-foreground-rgb), 0.1);
+    transform: scale(0.98);
+  }
+}
+
+/* High-contrast mode support */
+@media (prefers-contrast: more) {
+  .mobile-tab-bar {
+    border-top-width: 2px;
+  }
+
+  .mobile-tab-bar__item--active {
+    border-bottom-width: 4px;
+    font-weight: 600;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-tab-bar__item {
+    transition: none;
+  }
+
+  .mobile-tab-bar__item:active {
+    transform: none;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .mobile-tab-bar {
+    border-top-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-tab-bar__item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .mobile-tab-bar__item--active {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+}
+
+/* Light mode support */
+@media (prefers-color-scheme: light) {
+  .mobile-tab-bar {
+    border-top-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .mobile-tab-bar__item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  .mobile-tab-bar__item--active {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+}
+
+/* Orientation handling for tablets */
+@media screen and (max-width: 749px) and (orientation: landscape) {
+  .mobile-tab-bar__container {
+    min-height: 48px;
+  }
+
+  .mobile-tab-bar__item {
+    padding: 6px 4px;
+  }
+
+  .mobile-tab-bar__link-text {
+    font-size: 0.625rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media screen and (max-width: 374px) {
+  .mobile-tab-bar__item {
+    padding: 6px 2px;
+  }
+
+  .mobile-tab-bar__link-text {
+    font-size: 0.6rem;
+  }
+}
+
+/* Small mobile devices (320px - 374px) */
+@media screen and (max-width: 374px) and (min-width: 320px) {
+  .mobile-tab-bar__container {
+    min-height: 52px;
+  }
+}
+
+/* Standard mobile devices (375px and up) */
+@media screen and (min-width: 375px) and (max-width: 749px) {
+  .mobile-tab-bar__container {
+    min-height: 56px;
+  }
+}
+
+/* Variant: Solid background */
+.mobile-tab-bar--solid {
+  background-color: var(--color-background);
+  border-top: 1px solid rgba(var(--color-foreground-rgb), 0.1);
+}
+
+/* Variant: Translucent background with backdrop blur */
+.mobile-tab-bar--translucent {
+  background-color: rgba(var(--color-background-rgb), 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(var(--color-foreground-rgb), 0.1);
+}
+
+/* Variant: Minimal (no border, no shadow) */
+.mobile-tab-bar--minimal {
+  border-top: none;
+  box-shadow: none;
+}
+
+/* Variant: Elevated (stronger shadow) */
+.mobile-tab-bar--elevated {
+  box-shadow: 0 -4px 12px rgba(var(--color-foreground-rgb), 0.15);
+}
+
+/* Variant: Compact (smaller height) */
+.mobile-tab-bar--compact .mobile-tab-bar__container {
+  min-height: 48px;
+}
+
+.mobile-tab-bar--compact .mobile-tab-bar__item {
+  padding: 6px 3px;
+  font-size: 0.625rem;
+}
+
+/* Variant: Spacious (larger height) */
+.mobile-tab-bar--spacious .mobile-tab-bar__container {
+  min-height: 64px;
+}
+
+.mobile-tab-bar--spacious .mobile-tab-bar__item {
+  padding: 10px 6px;
+}
+
+/* Animation: Slide in from bottom */
+@keyframes slideInFromBottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.mobile-tab-bar--animate-in {
+  animation: slideInFromBottom 0.3s ease-out;
+}
+
+/* Animation: Fade in */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mobile-tab-bar--fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Tab item with badge support */
+.mobile-tab-bar__item--with-badge {
+  position: relative;
+}
+
+.mobile-tab-bar__badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: var(--color-error, #ff6b6b);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.625rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* Icon-only mode */
+.mobile-tab-bar__item--icon-only .mobile-tab-bar__link-text {
+  display: none;
+}
+
+.mobile-tab-bar__item--icon-only {
+  padding: 10px;
+}
+
+/* Text-only mode (no icons) */
+.mobile-tab-bar__item--text-only .mobile-tab-bar__icon {
+  display: none;
+}
+
+.mobile-tab-bar__item--text-only {
+  padding: 8px 4px;
+}
+
+/* Responsive font scaling */
+@media screen and (max-width: 374px) {
+  .mobile-tab-bar__item {
+    font-size: 0.6rem;
+  }
+}
+
+@media screen and (min-width: 375px) and (max-width: 749px) {
+  .mobile-tab-bar__item {
+    font-size: 0.6875rem;
+  }
+}
+
+/* Focus styles for keyboard navigation */
+.mobile-tab-bar__item:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-button));
+  outline-offset: -2px;
+}
+
+/* Print styles */
+@media print {
+  .mobile-tab-bar {
+    display: none !important;
+  }
+}

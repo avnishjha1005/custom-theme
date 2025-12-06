@@ -1,0 +1,155 @@
+{% liquid
+  # Mobile Tab Bar Navigation with Icons
+  # This is an enhanced version of mobile-tab-bar.liquid with icon support
+  # Displays navigation with optional icons at the top of each menu item
+  # Hidden on tablet and desktop screens
+  assign menu = 
+  assign show_icons = block.settings.show_icons | default: false
+%}
+
+<nav class="mobile-tab-bar mobile-tab-bar--icons" mobile-tab-bar>
+  <div class="mobile-tab-bar__container">
+    {% for link in menu.links %}
+      <a
+        href="{{ link.url }}"
+        class="mobile-tab-bar__item{% if link.active %} mobile-tab-bar__item--active{% endif %}"
+        title="{{ link.title }}"
+        aria-label="{{ link.title }}"
+        {% if link.active %}
+          aria-current="page"
+        {% endif %}
+      >
+        {% if show_icons %}
+          <span class="mobile-tab-bar__icon">
+            {% case link.title | downcase %}
+              {% when 'home' %}
+                {% render 'icon', name: 'home' %}
+              {% when 'shop' %}
+                {% render 'icon', name: 'shop' %}
+              {% when 'search' %}
+                {% render 'icon', name: 'search' %}
+              {% when 'account' %}
+                {% render 'icon', name: 'account' %}
+              {% when 'cart' %}
+                {% render 'icon', name: 'cart' %}
+              {% else %}
+                <span class="mobile-tab-bar__icon-placeholder">●</span>
+            {% endcase %}
+          </span>
+        {% endif %}
+        <span class="mobile-tab-bar__link-text">{{ link.title }}</span>
+      </a>
+    {% endfor %}
+  </div>
+</nav>
+
+{% stylesheet %}
+  .mobile-tab-bar--icons {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .mobile-tab-bar--icons {
+      display: block;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      border-top: 1px solid rgba(var(--color-foreground-rgb), 0.1);
+      background-color: var(--color-background);
+      box-shadow: 0 -2px 8px rgba(var(--color-foreground-rgb), 0.08);
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      min-height: 64px;
+      height: 100%;
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      padding: 6px 4px;
+      text-decoration: none;
+      color: var(--color-foreground);
+      font-size: 0.625rem;
+      font-weight: 500;
+      line-height: 1;
+      text-align: center;
+      transition: color 0.2s ease, background-color 0.2s ease, border-bottom-color 0.2s ease;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      position: relative;
+      -webkit-user-select: none;
+      user-select: none;
+      gap: 4px;
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__item:active {
+      background-color: rgba(var(--color-foreground-rgb), 0.05);
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__item:hover {
+      color: var(--color-foreground-accent);
+      background-color: rgba(var(--color-foreground-rgb), 0.02);
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__item--active {
+      color: var(--color-button);
+      border-bottom-color: var(--color-button);
+      background-color: rgba(var(--color-foreground-rgb), 0.02);
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      font-size: 1.25rem;
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__icon svg {
+      width: 24px;
+      height: 24px;
+      stroke-width: 1.5;
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__icon-placeholder {
+      font-size: 0.75rem;
+      opacity: 0.6;
+    }
+
+    .mobile-tab-bar--icons .mobile-tab-bar__link-text {
+      display: block;
+      word-break: break-word;
+      max-width: 100%;
+    }
+
+    body {
+      padding-bottom: 68px;
+    }
+  }
+
+  /* Tablet and Desktop - Tab Bar is hidden */
+  @media screen and (min-width: 750px) {
+    .mobile-tab-bar--icons {
+      display: none !important;
+    }
+
+    body {
+      padding-bottom: 0;
+    }
+  }
+{% endstylesheet %}

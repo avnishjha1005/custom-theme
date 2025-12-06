@@ -1,0 +1,301 @@
+{% comment %}
+  Mobile Tab Bar Navigation - Sticky bottom navigation for mobile
+  Uses Shopify menu object (section.settings.menu) and displays SVG icons per link.
+{% endcomment %}
+
+{% liquid
+  assign menu = section.settings.menu
+  assign tab_bar_variant = section.settings.mobile_tab_bar_variant
+  assign tab_bar_height = section.settings.mobile_tab_bar_height
+  assign show_on_tablet = section.settings.mobile_tab_bar_show_on_tablet
+
+  if tab_bar_variant == blank
+    assign tab_bar_variant = 'solid'
+  endif
+  if tab_bar_height == blank
+    assign tab_bar_height = 'standard'
+  endif
+  if show_on_tablet == blank
+    assign show_on_tablet = false
+  endif
+%}
+
+{% comment %}
+  Helper: returns an icon name for a given link.
+  Priority:
+    1) link.metafields.custom.icon (string)
+    2) match by title keywords
+    3) match by URL path keywords
+    4) default 'dot'
+{% endcomment %}
+{% liquid
+  # No custom Liquid functions, so we'll compute per-link inline in the loop.
+%}
+
+<nav class="mobile-tab-bar mobile-tab-bar--{{ tab_bar_variant }} mobile-tab-bar--{{ tab_bar_height }}{% if show_on_tablet %} mobile-tab-bar--show-on-tablet{% endif %}" data-mobile-tab-bar="true" role="navigation" aria-label="Mobile tab bar">
+  <div class="mobile-tab-bar__container">
+    {% if menu and menu.links.size > 0 %}
+      {% for link in menu.links %}
+        {% liquid
+          assign icon_name = ''
+          # Use metafield if present (namespace:key -> custom.icon). Adjust to your namespace/key.
+          if link.metafields.custom.icon != blank
+            assign icon_name = link.metafields.custom.icon | downcase
+          endif
+
+          # If no metafield, match common titles
+          if icon_name == ''
+            case link.title | downcase
+              when 'home'
+                assign icon_name = 'home'
+              when 'shop', 'store'
+                assign icon_name = 'shop'
+              when 'search', 'find'
+                assign icon_name = 'search'
+              when 'cart', 'bag'
+                assign icon_name = 'cart'
+              when 'account', 'profile', 'login'
+                assign icon_name = 'account'
+              else
+                assign icon_name = ''
+            endcase
+          endif
+
+          # If still empty, match URL keywords
+          if icon_name == ''
+            assign url_lower = link.url | downcase
+            if url_lower contains '/cart'
+              assign icon_name = 'cart'
+            elsif url_lower contains '/search'
+              assign icon_name = 'search'
+            elsif url_lower contains '/account'
+              assign icon_name = 'account'
+            elsif url_lower contains '/collections' or url_lower contains '/products'
+              assign icon_name = 'shop'
+            elsif url_lower == '/' or url_lower contains '/home'
+              assign icon_name = 'home'
+            endif
+          endif
+
+          # Final fallback
+          if icon_name == ''
+            assign icon_name = 'dot'
+          endif
+        %}
+
+        <a
+          href="{{ link.url }}"
+          class="mobile-tab-bar__item{% if link.active %} mobile-tab-bar__item--active{% endif %}"
+          title="{{ link.title }}"
+          aria-label="{{ link.title }}"
+          {% if link.active %}aria-current="page"{% endif %}
+        >
+          <span class="mobile-tab-bar__icon" aria-hidden="true">
+            {% case icon_name %}
+              {% when 'home' %}
+                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 10.5L12 3l9 7.5"></path>
+                  <path d="M5 10v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9"></path>
+                </svg>
+              {% when 'shop' %}
+                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 6h15l-1.5 9a2 2 0 0 1-2 1.7H8.7a2 2 0 0 1-2-1.7L5 4H2"></path>
+                  <circle cx="9" cy="20" r="1.8"></circle>
+                  <circle cx="18" cy="20" r="1.8"></circle>
+                </svg>
+              {% when 'search' %}
+                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="7"></circle>
+                  <path d="M20 20l-3.5-3.5"></path>
+                </svg>
+              {% when 'cart' %}
+                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 6h15l-1.5 9a2 2 0 0 1-2 1.7H8.7a2 2 0 0 1-2-1.7L5 4H2"></path>
+                  <circle cx="9" cy="20" r="1.8"></circle>
+                  <circle cx="18" cy="20" r="1.8"></circle>
+                </svg>
+              {% when 'account' %}
+                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="7" r="4"></circle>
+                  <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
+                </svg>
+              {% else %}
+                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4"></circle>
+                </svg>
+            {% endcase %}
+          </span>
+          <span class="mobile-tab-bar__link-text">{{ link.title }}</span>
+        </a>
+      {% endfor %}
+    {% endif %}
+  </div>
+</nav>
+
+{% stylesheet %}
+.mobile-tab-bar {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  border-top: 1px solid rgba(var(--color-foreground-rgb), 0.1);
+  background-color: var(--color-background);
+  box-shadow: 0 -2px 8px rgba(var(--color-foreground-rgb), 0.08);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+@media screen and (max-width: 749px) {
+  .mobile-tab-bar {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Height variants */
+  .mobile-tab-bar--compact .mobile-tab-bar__container { min-height: 48px; }
+  .mobile-tab-bar--standard .mobile-tab-bar__container { min-height: 56px; }
+  .mobile-tab-bar--spacious .mobile-tab-bar__container { min-height: 64px; }
+
+  /* Background style variants */
+  .mobile-tab-bar--solid {
+    background-color: var(--color-background);
+    box-shadow: 0 -2px 8px rgba(var(--color-foreground-rgb), 0.08);
+  }
+  .mobile-tab-bar--translucent {
+    background-color: rgba(var(--color-background-rgb), 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -2px 8px rgba(var(--color-foreground-rgb), 0.08);
+  }
+  .mobile-tab-bar--minimal {
+    background-color: var(--color-background);
+    border-top: none;
+    box-shadow: none;
+  }
+
+  .mobile-tab-bar__container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+  }
+
+  .mobile-tab-bar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 6px 4px;
+    text-decoration: none;
+    color: var(--color-foreground);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    transition: color 0.2s ease, background-color 0.2s ease, border-bottom-color 0.2s ease;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    position: relative;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .mobile-tab-bar__icon {
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+    color: currentColor;
+  }
+
+  .mobile-tab-bar__item:active { background-color: rgba(var(--color-foreground-rgb), 0.05); }
+  .mobile-tab-bar__item:hover { color: var(--color-foreground-accent); background-color: rgba(var(--color-foreground-rgb), 0.02); }
+  .mobile-tab-bar__item--active { color: var(--color-button); border-bottom-color: var(--color-button); background-color: rgba(var(--color-foreground-rgb), 0.02); }
+
+  .mobile-tab-bar__link-text { display: block; word-break: break-word; }
+
+  /* Ensure main content doesn't get hidden behind fixed tab bar */
+  body {
+    padding-bottom: 56px;
+  }
+  
+  .mobile-tab-bar--compact ~ main {
+    padding-bottom: 48px;
+  }
+  
+  .mobile-tab-bar--spacious ~ main {
+    padding-bottom: 64px;
+  }
+}
+
+/* Tablet visibility option */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .mobile-tab-bar--show-on-tablet { display: block; }
+}
+
+/* Tablet and Desktop - Tab Bar is hidden */
+@media screen and (min-width: 750px) {
+  .mobile-tab-bar:not(.mobile-tab-bar--show-on-tablet) { display: none !important; }
+}
+
+/* Keyboard focus styles for accessibility */
+.mobile-tab-bar__item:focus-visible {
+  outline: 2px solid var(--color-button);
+  outline-offset: -2px;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Mobile Tab Bar",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu"
+    },
+    {
+      "type": "select",
+      "id": "mobile_tab_bar_variant",
+      "label": "Background style",
+      "default": "solid",
+      "options": [
+        { "value": "solid", "label": "Solid" },
+        { "value": "translucent", "label": "Translucent" },
+        { "value": "minimal", "label": "Minimal" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "mobile_tab_bar_height",
+      "label": "Height",
+      "default": "standard",
+      "options": [
+        { "value": "compact", "label": "Compact" },
+        { "value": "standard", "label": "Standard" },
+        { "value": "spacious", "label": "Spacious" }
+      ]
+    },
+    {
+      "type": "checkbox",
+      "id": "mobile_tab_bar_show_on_tablet",
+      "label": "Show on tablet",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mobile Tab Bar",
+      "category": "Navigation"
+    }
+  ]
+}
+{% endschema %}

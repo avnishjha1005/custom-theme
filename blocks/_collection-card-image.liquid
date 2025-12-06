@@ -1,0 +1,216 @@
+
+
+{%- doc -%}
+  Display an image of a collection inside a collection card.
+  Intended for collection-card.liquid block.
+
+  @param {string} parent_block_id - The block.id of the collection-card block
+
+  @example
+  {% content_for 'block', type: '_collection-card-image', id: 'collection-card-image', parent_block_id: block.id %}
+{%- enddoc -%}
+
+{% comment %} Render a small slideshow for the collection card using the theme slideshow snippets. 
+  We'll include the collection image first (if present) then up to 3 product featured images as fallbacks.
+  This uses the existing slideshow, slideshow-slide and slideshow-controls snippets so arrows and dot indicators match theme styles.
+{% endcomment %}
+
+{%- liquid
+  assign collection = closest.collection
+  assign slides = ''
+  assign slide_count = 0
+-%}
+
+{% if collection != blank %}
+  {%- comment -%} gather images: collection image first {% endcomment %}
+
+  {%- if collection.image != blank -%}
+    {% capture slides %}
+      {{ slides }}
+      {% render 'slideshow-slide', index: slide_count, children: "{{ collection.image | image_url: width: 1600 | image_tag: class: 'image-block__image', loading: 'eager' }}", slide_id: 'collection-image-' | append: collection.id, media_fit: 'cover' %}
+    {% endcapture %}
+    {%- assign slide_count = slide_count | plus: 1 -%}
+  {%- endif -%}
+
+  {%- comment -%} then include up to 3 product featured images as additional slides {% endcomment %}
+
+  {%- assign max_product_images = 3 -%}
+  {%- for product in collection.products limit: max_product_images -%}
+    {%- if product.featured_image != blank -%}
+      {% capture slides %}
+        {{ slides }}
+        {% render 'slideshow-slide', index: slide_count, children: "{{ product.featured_image | image_url: width: 1600 | image_tag: class: 'image-block__image', loading: 'lazy', alt: product.title }}", slide_id: 'product-image-' | append: product.id, media_fit: 'cover' %}
+      {% endcapture %}
+      {%- assign slide_count = slide_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- comment -%} if no images were collected, fall back to the resource-image placeholder {% endcomment %}
+
+  {%- if slide_count == 0 -%}
+    {% render 'resource-image',
+      content_type: 'collections',
+      parent_block_id: parent_block_id,
+      block_settings: block.settings,
+      section_settings: section.settings,
+      block_attributes: block.shopify_attributes
+    %}
+  {%- else -%}
+    {%- capture slideshow_arrows -%}
+      {%- render 'slideshow-arrows', icon_style: 'chevron', icon_shape: 'circle' -%}
+    {%- endcapture -%}
+
+    {%- capture controls_markup -%}
+      {% render 'slideshow-controls', style: 'dots', item_count: slide_count, icon_style: 'chevron', shape: 'circle' %}
+    {%- endcapture -%}
+
+    {% render 'slideshow', slides: slides, slide_count: slide_count, show_arrows: true, slideshow_arrows: slideshow_arrows, controls: controls_markup %}
+  {%- endif -%}
+{% else %}
+  {%- comment -%} No collection object - use resource-image fallback (editor placeholder){% endcomment %}
+
+  {% render 'resource-image',
+    content_type: 'collections',
+    parent_block_id: parent_block_id,
+    block_settings: block.settings,
+    section_settings: section.settings,
+    block_attributes: block.shopify_attributes
+  %}
+{% endif %}
+
+{% schema %}
+{
+  "name": "t:names.collection_card_image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.resource_reference_collection_card_image"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "t:settings.aspect_ratio",
+      "info": "t:info.aspect_ratio_adjusted",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:options.auto"
+        },
+        {
+          "value": "portrait",
+          "label": "t:options.portrait"
+        },
+        {
+          "value": "square",
+          "label": "t:options.square"
+        },
+        {
+          "value": "landscape",
+          "label": "t:options.landscape"
+        }
+      ],
+      "default": "portrait"
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle_overlay",
+      "label": "t:settings.media_overlay"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "t:settings.overlay_color",
+      "alpha": true,
+      "default": "#00000026",
+      "visible_if": "{{ block.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "overlay_style",
+      "label": "t:settings.overlay_style",
+      "options": [
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        },
+        {
+          "value": "gradient",
+          "label": "t:options.gradient"
+        }
+      ],
+      "default": "solid",
+      "visible_if": "{{ block.settings.toggle_overlay }}"
+    },
+    {
+      "type": "select",
+      "id": "gradient_direction",
+      "label": "t:settings.gradient_direction",
+      "options": [
+        {
+          "value": "to top",
+          "label": "t:options.up"
+        },
+        {
+          "value": "to bottom",
+          "label": "t:options.down"
+        }
+      ],
+      "default": "to top",
+      "visible_if": "{{ block.settings.toggle_overlay and block.settings.overlay_style == 'gradient' }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.borders"
+    },
+    {
+      "type": "select",
+      "id": "border",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "solid",
+          "label": "t:options.solid"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:settings.thickness",
+      "default": 1,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "t:settings.opacity",
+      "default": 100,
+      "visible_if": "{{ block.settings.border != 'none' }}"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "t:settings.border_radius",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}
