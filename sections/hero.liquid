@@ -1,8 +1,4 @@
-
-
 {% liquid
-  assign media_count = 0
-  assign media_count_mobile = 0
   assign fallback_to_desktop = false
   assign media_1 = 'none'
   assign media_2 = 'none'
@@ -469,6 +465,50 @@
         {{ section.settings.bottom_left_text_2 }}
       </div>
     {%- endif -%}
+    {%- comment -%}
+      Metafield-driven bottom-left text (merchant selects a metafield in theme editor)
+      and per-slide Shop Now buttons. These use the same "hero__bottom-left-text" class
+      so they are synchronized with the carousel JS (visibility toggled per slide).
+    {%- endcomment -%}
+    {%- if section.settings.bottom_left_metafield_reference != blank -%}
+      {%- assign mf_parts = section.settings.bottom_left_metafield_reference | split: '.' -%}
+      {%- assign mf_ns = mf_parts[0] | default: '' -%}
+      {%- assign mf_key = mf_parts[1] | default: '' -%}
+      {%- if mf_ns != '' and mf_key != '' -%}
+        {%- assign mf = shop.metafields[mf_ns] | default: nil -%}
+        {%- if mf and mf[mf_key] != nil -%}
+          {%- assign mf_value = mf[mf_key].value | default: mf[mf_key] -%}
+          <div class="hero__bottom-left-text hero__bottom-left-text--metafield" style="--bottom-left-text-max-width: {{ section.settings.bottom_left_metafield_max_width | default: section.settings.bottom_left_text_max_width_1 }}px;">
+            {{ mf_value }}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} Shop Now button(s) per slide. They follow the same indexing as bottom-left text 1/2 and will be toggled by JS. {%- endcomment -%}
+    {%- if section.settings.link != blank -%}
+      {%- comment -%} Create one button per media slide so it syncs with the carousel. {%- endcomment -%}
+      {%- for i in (1..media_count) -%}
+        <a href="{{ section.settings.link }}" class="hero__bottom-left-text hero__shop-now hero__shop-now--{{ i }}" aria-label="Shop now">
+          Shop now
+        </a>
+      {%- endfor -%}
+    {%- else -%}
+      {%- for i in (1..media_count) -%}
+        <a href="{{ routes.all_products_collection_url }}" class="hero__bottom-left-text hero__shop-now hero__shop-now--{{ i }}" aria-label="Shop now">
+          Shop now
+        </a>
+      {%- endfor -%}
+    {%- endif -%}
+
+    {%- comment -%} Carousel indicators (dots) - generated server-side so markup exists for CSS/JS. {%- endcomment -%}
+    {% if media_count > 1 %}
+      <div class="hero__indicators" aria-hidden="false">
+        {% for i in (1..media_count) %}
+          <button class="hero__indicator{% if forloop.index0 == 0 %} indicator-active{% endif %}" data-index="{{ forloop.index0 }}" aria-label="Slide {{ forloop.index }}"></button>
+        {% endfor %}
+      </div>
+    {% endif %}
   </div>
 </div>
 
@@ -738,6 +778,51 @@
       }
     }
   }
+
+  /* Carousel indicators (dots) */
+  .hero__indicators {
+    position: absolute;
+    bottom: 20px;
+    left: 10%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: var(--layer-flat);
+    pointer-events: auto;
+  }
+
+  .hero__indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgb(156 163 175); /* gray-400 */
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .hero__indicator.indicator-active {
+    background: #ffffff;
+  }
+
+  /* Shop now button styling when shown at bottom-left */
+  .hero__shop-now {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    pointer-events: auto;
+  }
+
+  .hero__shop-now:hover {
+    background: rgba(0,0,0,0.75);
+  }
 {% endstylesheet %}
 
 {% javascript %}
@@ -748,10 +833,12 @@
     const container = carousel.querySelector('.hero__carousel-container');
     if (!container) return;
 
-    const items = container.querySelectorAll(':scope > :is(.hero__image, .hero__video, .hero__video-wrapper, svg)');
-    const textItems = carousel.parentElement.querySelectorAll('.hero__bottom-left-text');
-    
-    if (items.length <= 1 && textItems.length === 0) return;
+  const items = container.querySelectorAll(':scope > :is(.hero__image, .hero__video, .hero__video-wrapper, svg)');
+  const textItems = carousel.parentElement.querySelectorAll('.hero__bottom-left-text');
+  const indicators = carousel.parentElement.querySelectorAll('.hero__indicator');
+
+  // If there's nothing to rotate and no text/indicators, exit early
+  if (items.length <= 1 && textItems.length === 0 && indicators.length === 0) return;
 
     let currentIndex = 0;
 
@@ -764,6 +851,13 @@
       textItems.forEach((text, i) => {
         text.classList.toggle('carousel-active', i === index);
       });
+      
+      // Sync indicators
+      if (indicators && indicators.length) {
+        indicators.forEach((dot, i) => {
+          dot.classList.toggle('indicator-active', i === index);
+        });
+      }
     }
 
     function nextItem() {
@@ -774,8 +868,24 @@
     // Show the first item
     showItem(0);
 
-    // Rotate every 5 seconds
-    setInterval(nextItem, 5000);
+    // Rotate every 5 seconds — store timer so we can reset after manual navigation
+    let rotateTimer = setInterval(nextItem, 5000);
+
+    // Make indicators clickable to jump to a specific slide
+    if (indicators && indicators.length) {
+      indicators.forEach((btn) => {
+        btn.addEventListener('click', (event) => {
+          const idx = parseInt(btn.dataset.index, 10);
+          if (Number.isFinite(idx)) {
+            currentIndex = idx;
+            showItem(currentIndex);
+            // reset rotation timer
+            clearInterval(rotateTimer);
+            rotateTimer = setInterval(nextItem, 5000);
+          }
+        });
+      });
+    }
   });
 {% endjavascript %}
 
@@ -995,6 +1105,21 @@
       "type": "range",
       "id": "bottom_left_text_max_width_2",
       "label": "Text max width for media 2",
+      "min": 100,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "default": 300
+    },
+    {
+      "type": "richtext",
+      "id": "bottom_left_metafield",
+      "label": "Bottom-left metafield"
+    },
+    {
+      "type": "range",
+      "id": "bottom_left_metafield_max_width",
+      "label": "Bottom-left metafield max width",
       "min": 100,
       "max": 600,
       "step": 50,
