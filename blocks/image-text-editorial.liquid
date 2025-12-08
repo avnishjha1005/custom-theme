@@ -1,0 +1,510 @@
+{% style %}
+  .quote-section-{{ section.id }} {
+    display: flex;
+    width: 100%;
+    max-width: {{ section.settings.max_width }}px;
+    margin: {{ section.settings.section_margin_top }}px auto {{ section.settings.section_margin_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .quote-section-{{ section.id }} .image-container {
+    flex: 1;
+    min-height: 400px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .quote-section-{{ section.id }} .content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: {{ section.settings.content_padding_desktop }}px;
+    background-color: {{ section.settings.content_background_color }};
+  }
+
+  .quote-section-{{ section.id }} .quote-text {
+    font-family: {{ section.settings.quote_font }};
+    font-size: {{ section.settings.quote_font_size }}px;
+    line-height: {{ section.settings.quote_line_height }};
+    color: {{ section.settings.quote_color }};
+    text-align: center;
+    margin-bottom: {{ section.settings.quote_margin_bottom }}px;
+    max-width: {{ section.settings.quote_max_width }}px;
+  }
+
+  .quote-section-{{ section.id }} .attribution {
+    text-align: center;
+  }
+
+  .quote-section-{{ section.id }} .attribution-divider {
+    width: {{ section.settings.divider_width }}px;
+    height: 1px;
+    background-color: {{ section.settings.divider_color }};
+    margin: 0 auto {{ section.settings.divider_margin_bottom }}px;
+  }
+
+  .quote-section-{{ section.id }} .attribution-text {
+    font-family: {{ section.settings.attribution_font }};
+    font-size: {{ section.settings.attribution_font_size }}px;
+    letter-spacing: {{ section.settings.attribution_letter_spacing }}px;
+    color: {{ section.settings.attribution_color }};
+    text-transform: uppercase;
+  }
+
+  {% if section.settings.image_position == 'right' %}
+    .quote-section-{{ section.id }} {
+      flex-direction: row-reverse;
+    }
+  {% endif %}
+
+  @media screen and (max-width: 768px) {
+    .quote-section-{{ section.id }} {
+      flex-direction: column;
+      max-width: {{ section.settings.mobile_max_width }}px;
+      margin: {{ section.settings.section_margin_top_mobile }}px auto {{ section.settings.section_margin_bottom_mobile }}px;
+    }
+
+    .quote-section-{{ section.id }} .image-container {
+      display: none;
+    }
+
+    .quote-section-{{ section.id }} .content-container {
+      padding: {{ section.settings.content_padding_mobile }}px;
+    }
+
+    .quote-section-{{ section.id }} .quote-text {
+      font-size: {{ section.settings.quote_font_size_mobile }}px;
+      margin-bottom: {{ section.settings.quote_margin_bottom_mobile }}px;
+    }
+
+    .quote-section-{{ section.id }} .mobile-image {
+      width: {{ section.settings.mobile_image_width }}px;
+      height: auto;
+      margin-top: {{ section.settings.mobile_image_margin_top }}px;
+      margin-bottom: {{ section.settings.mobile_image_margin_bottom }}px;
+    }
+
+    .quote-section-{{ section.id }} .attribution-text {
+      font-size: {{ section.settings.attribution_font_size_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="quote-section-{{ section.id }}">
+  <div class="image-container" style="background-image: url('{{ section.settings.image | img_url: '1200x' }}');"></div>
+  
+  <div class="content-container">
+    <p class="quote-text">{{ section.settings.quote_text }}</p>
+    
+    {% if section.settings.show_mobile_image %}
+        <img
+          src="{{ block.settings.image | image_url: width: 2000 }}"
+          alt="{{ block.settings.image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.image.width }}"
+          height="{{ block.settings.image.height }}"
+          class="mobile-image"
+        >
+      {% comment %} <img src="{{ section.settings.image | image_url: width: 600 }}" alt="{{ section.settings.image.alt | escape }}" class="mobile-image"> {% endcomment %}
+    {% endif %}
+    
+    <div class="attribution">
+      {% if section.settings.show_divider %}
+        <div class="attribution-divider"></div>
+      {% endif %}
+      <p class="attribution-text">{{ section.settings.attribution_text }}</p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Quote with Image",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image Position (Desktop)",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Quote Content"
+    },
+    {
+      "type": "textarea",
+      "id": "quote_text",
+      "label": "Quote Text",
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
+    },
+    {
+      "type": "text",
+      "id": "attribution_text",
+      "label": "Attribution Text",
+      "default": "NOSTRUD EXERCITATION LABORIS"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1920,
+      "step": 20,
+      "unit": "px",
+      "label": "Max Width (Desktop)",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "mobile_max_width",
+      "min": 300,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Max Width (Mobile)",
+      "default": 600
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section Background Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "content_background_color",
+      "label": "Content Background Color",
+      "default": "#8B4546"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Section Margin Top (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Section Margin Bottom (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_top_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section Margin Top (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_margin_bottom_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Section Margin Bottom (Mobile)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "content_padding_desktop",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Content Padding (Desktop)",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "content_padding_mobile",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Content Padding (Mobile)",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Quote Typography"
+    },
+    {
+      "type": "select",
+      "id": "quote_font",
+      "label": "Quote Font",
+      "options": [
+        {
+          "value": "Georgia, serif",
+          "label": "Georgia (Serif)"
+        },
+        {
+          "value": "'Times New Roman', serif",
+          "label": "Times New Roman (Serif)"
+        },
+        {
+          "value": "'Playfair Display', serif",
+          "label": "Playfair Display (Serif)"
+        },
+        {
+          "value": "Arial, sans-serif",
+          "label": "Arial (Sans-serif)"
+        },
+        {
+          "value": "'Helvetica Neue', sans-serif",
+          "label": "Helvetica (Sans-serif)"
+        }
+      ],
+      "default": "Georgia, serif"
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size",
+      "min": 14,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "label": "Quote Font Size (Desktop)",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size_mobile",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "label": "Quote Font Size (Mobile)",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "quote_line_height",
+      "min": 1.0,
+      "max": 2.5,
+      "step": 0.1,
+      "label": "Quote Line Height",
+      "default": 1.6
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Quote Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "quote_max_width",
+      "min": 200,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "label": "Quote Max Width",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "quote_margin_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Quote Margin Bottom (Desktop)",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "quote_margin_bottom_mobile",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Quote Margin Bottom (Mobile)",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Attribution Typography"
+    },
+    {
+      "type": "select",
+      "id": "attribution_font",
+      "label": "Attribution Font",
+      "options": [
+        {
+          "value": "Arial, sans-serif",
+          "label": "Arial"
+        },
+        {
+          "value": "'Helvetica Neue', sans-serif",
+          "label": "Helvetica"
+        },
+        {
+          "value": "Verdana, sans-serif",
+          "label": "Verdana"
+        }
+      ],
+      "default": "Arial, sans-serif"
+    },
+    {
+      "type": "range",
+      "id": "attribution_font_size",
+      "min": 8,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Attribution Font Size (Desktop)",
+      "default": 11
+    },
+    {
+      "type": "range",
+      "id": "attribution_font_size_mobile",
+      "min": 8,
+      "max": 16,
+      "step": 1,
+      "unit": "px",
+      "label": "Attribution Font Size (Mobile)",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "attribution_letter_spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "label": "Attribution Letter Spacing",
+      "default": 2
+    },
+    {
+      "type": "color",
+      "id": "attribution_color",
+      "label": "Attribution Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show Divider",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "divider_width",
+      "min": 10,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Divider Width",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "divider_color",
+      "label": "Divider Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "divider_margin_bottom",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Divider Margin Bottom",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Mobile Image Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_mobile_image",
+      "label": "Show Image on Mobile",
+      "default": true,
+      "info": "Display a smaller version of the image inside the content area on mobile"
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_width",
+      "min": 100,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Mobile Image Width",
+      "default": 200
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_margin_top",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Image Margin Top",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_margin_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Mobile Image Margin Bottom",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quote with Image",
+      "category": "Text"
+    }
+  ]
+}
+{% endschema %}

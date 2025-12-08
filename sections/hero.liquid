@@ -1,3 +1,4 @@
+
 {% liquid
   assign slides = section.blocks | where: 'type', 'slide'
   assign media_count = slides.size
@@ -41,15 +42,15 @@
       {%- endif -%}
 
       {%- comment -%} MOBILE MEDIA {%- endcomment -%}
-      {%- if block.settings.image_mobile != blank -%}
+      {%- if block.settings.image != blank -%}
         {{
-          block.settings.image_mobile
+          block.settings.image
           | image_url: width: 1600
           | image_tag:
-            width: block.settings.image_mobile.width,
+            width: block.settings.image.width,
             widths: mobile_widths,
-            height: block.settings.image_mobile.height,
-            alt: block.settings.image_mobile.alt,
+            height: block.settings.image.height,
+            alt: block.settings.image.alt,
             class: 'hero__image hero__image--mobile',
             sizes: sizes_mobile,
             fetchpriority: fetch_priority,
@@ -136,6 +137,82 @@
       </div>
     </div>
     
+    {%- comment -%} 
+      LOGO CONTAINER - Outside content wrapper, positioned relative to hero__container
+    {%- endcomment -%}
+    {% for block in section.blocks %}
+      {% if block.type == 'logo' %}
+        {% liquid
+          assign block_settings = block.settings
+          assign image = settings.logo
+
+          if block_settings.inverse and settings.logo_inverse
+            assign image = settings.logo_inverse
+          endif
+        %}
+
+        {%- if image -%}
+          {% capture logo_image %}
+            {{-
+              image
+              | image_url: width: 3840
+              | image_tag:
+                width: image.width,
+                widths: '240, 352, 832, 1200, 1600, 1920, 2560, 3840',
+                height: image.height,
+                class: 'logo-block__image',
+                alt: shop.name,
+                sizes: '(min-width: 750px) calc(var(--logo-width)), 100vw'
+            -}}
+          {% endcapture %}
+        {%- endif -%}
+
+        <div
+          class="
+            hero__logo-container
+            logo-block--align-{{ block_settings.vertical_align | default: 'top' }}
+            logo-block--horizontal-{{ block_settings.horizontal_align | default: 'center' }}
+          "
+          style="
+            {% if block_settings.unit == 'percent' %}
+              --logo-width: {{ block_settings.percent_width }}%;
+            {% else %}
+              {% if image %}
+                --logo-width: {{ image.width | times: 1.00 | divided_by: image.height | times: block_settings.pixel_height }}px;
+              {% else %}
+                --logo-width: {{ shop.name.size }}ch;
+                --logo-height: {{ block_settings.pixel_height }}px;
+              {% endif %}
+            {% endif %}
+
+            {% if block_settings.custom_mobile_size %}
+              {% if block_settings.unit_mobile == 'percent' %}
+                --logo-width-mobile: {{ block_settings.percent_width_mobile }}%;
+                --logo-height-mobile: auto;
+              {% else %}
+                {% if image %}
+                  --logo-width-mobile: {{ image.width | times: 1.00 | divided_by: image.height | times: block_settings.pixel_height_mobile }}px;
+                  {% else %}
+                    --logo-width-mobile: {{ shop.name.size }}ch;
+                    --logo-height-mobile: {{ block_settings.pixel_height_mobile }}px;
+                {% endif %}
+              {% endif %}
+            {% endif %}
+            {% render 'spacing-style', settings: block_settings %}
+          "
+          {{ block.shopify_attributes }}
+        >
+          {% if logo_image %}
+            <div class="logo-block__image-wrapper">
+              {{ logo_image }}
+            </div>
+          {% else %}
+            {% render 'jumbo-text', text: shop.name, block_settings: block_settings %}
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+    
     <div
       class="
         hero__content-wrapper
@@ -148,13 +225,11 @@
       "
       style="{% render 'layout-panel-style', settings: section.settings %}"
     >
-      
       {%- comment -%} 
-        1. Render Static Blocks (Fixed)
-        If you have other blocks like 'text' or 'button' that should stay visible always.
+        1. Render Static Blocks (Non-logo blocks that stay visible)
       {%- endcomment -%}
       {% for block in section.blocks %}
-        {% if block.type != 'slide' %}
+        {% if block.type != 'slide' and block.type != 'logo' %}
           <div class="hero__static-block" {{ block.shopify_attributes }}>
             {% case block.type %}
               {% when 'text' %}
@@ -172,7 +247,6 @@
 
       {%- comment -%} 
         2. Bottom Left Content Container (Text, Button, Indicators)
-        All vertically aligned at bottom left
       {%- endcomment -%}
       <div class="hero__bottom-left-container">
         {%- for block in slides -%}
@@ -207,7 +281,6 @@
       </div>
     </div>
 
-    </div>
   </div>
 </div>
 
@@ -261,6 +334,83 @@
   .hero__media-wrapper :is(a, button, input, textarea, select), 
   .hero__content-wrapper :is(a, button, input, textarea, select) { pointer-events: auto; }
 
+  /* Dedicated Logo Container - Positioned relative to hero__container, NOT content wrapper */
+  .hero__logo-container {
+    position: absolute;
+    z-index: var(--layer-overlay, 10);
+    pointer-events: auto;
+    width: calc(var(--logo-width) + var(--padding-inline-start, 0px) + var(--padding-inline-end, 0px));
+    max-width: calc(100% - 40px);
+    max-height: calc(var(--logo-height, 100%) + var(--padding-block-start, 0px) + var(--padding-block-end, 0px));
+    font-size: var(--logo-height);
+    display: flex;
+    flex-direction: column;
+
+    @media screen and (max-width: 750px) {
+      max-height: calc(
+        var(--logo-height-mobile, var(--logo-height, 100%)) + var(--padding-block-start, 0px) + var(--padding-block-end, 0px)
+      );
+      font-size: var(--logo-height-mobile, var(--logo-height));
+      width: calc(
+        var(--logo-width-mobile, var(--logo-width)) + var(--padding-inline-start, 0px) + var(--padding-inline-end, 0px)
+      );
+      max-width: calc(100% - 32px);
+    }
+  }
+
+  /* Vertical alignment for logo */
+  .hero__logo-container.logo-block--align-top {
+    top: 20px;
+    align-items: flex-start;
+  }
+
+  .hero__logo-container.logo-block--align-center {
+    top: 50%;
+    transform: translateY(-50%);
+    align-items: center;
+  }
+
+  .hero__logo-container.logo-block--align-bottom {
+    bottom: 20px;
+    align-items: flex-end;
+  }
+
+  /* Horizontal alignment for logo */
+  .hero__logo-container.logo-block--horizontal-left {
+    left: 20px;
+  }
+
+  .hero__logo-container.logo-block--horizontal-center {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .hero__logo-container.logo-block--horizontal-center.logo-block--align-center {
+    transform: translate(-50%, -50%);
+  }
+
+  .hero__logo-container.logo-block--horizontal-right {
+    right: 20px;
+  }
+
+  @media screen and (max-width: 750px) {
+    .hero__logo-container.logo-block--align-top {
+      top: 16px;
+    }
+
+    .hero__logo-container.logo-block--align-bottom {
+      bottom: 16px;
+    }
+
+    .hero__logo-container.logo-block--horizontal-left {
+      left: 16px;
+    }
+
+    .hero__logo-container.logo-block--horizontal-right {
+      right: 16px;
+    }
+  }
+
   /* Bottom Left Container - Vertically aligned content */
   .hero__bottom-left-container {
     position: absolute;
@@ -272,7 +422,7 @@
     align-items: start;
   }
 
-  /* Individual slide content (text + button) - absolutely positioned to prevent layout shift */
+  /* Individual slide content (text + button) */
   .hero__bottom-left-content {
     position: absolute;
     top: 0;
@@ -292,7 +442,7 @@
   .hero__bottom-left-content.carousel-active {
     opacity: 1;
     pointer-events: auto;
-    cursor : pointer;
+    cursor: pointer;
     z-index: 9999;
   }
 
@@ -332,10 +482,10 @@
     pointer-events: none;
   }
 
-  /* Indicators - positioned with safe top margin to always be below content */
+  /* Indicators */
   .hero__indicators {
     position: absolute;
-    top: 120px; /* Position well below content area - adjust if content is taller */
+    top: 120px;
     left: 0;
     display: flex;
     gap: 8px;
@@ -379,11 +529,11 @@
 
     .hero__bottom-left-button {
       font-size: clamp(0.75rem, 2vw, 1rem);
-      cursor:pointer;
+      cursor: pointer;
     }
 
     .hero__indicators {
-      top: 100px; /* Adjusted for mobile */
+      top: 100px;
     }
   }
 
@@ -393,8 +543,20 @@
     border-radius: 6px; font-weight: 600; pointer-events: auto;
   }
   .hero__shop-now:hover { background: rgba(0,0,0,0.75); }
-{% endstylesheet %}
 
+  /* Logo block image wrapper and image */
+  .logo-block__image-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .logo-block__image {
+    object-fit: contain;
+    width: 100%;
+  }
+{% endstylesheet %}
 {% javascript %}
   document.addEventListener('DOMContentLoaded', function() {
     const carousel = document.querySelector('[data-carousel="true"]');
@@ -403,18 +565,28 @@
     const container = carousel.querySelector('.hero__carousel-container');
     if (!container) return;
 
-    const items = container.querySelectorAll(':scope > :is(.hero__image, .hero__video, .hero__video-wrapper, svg)');
     // Find content items within the section
     const sectionContainer = carousel.closest('.hero__container');
     const contentItems = sectionContainer.querySelectorAll('.hero__bottom-left-content');
     const indicators = sectionContainer.querySelectorAll('.hero__indicator');
 
-    if (items.length <= 1 && contentItems.length === 0 && indicators.length === 0) return;
+    // Count unique media blocks (desktop images only to avoid double-counting)
+    const desktopItems = container.querySelectorAll(':scope > .hero__image--desktop, :scope > .hero__video--desktop, :scope > .hero__video-wrapper--desktop, :scope > svg');
+    const itemCount = desktopItems.length;
+
+    if (itemCount <= 1 && contentItems.length === 0 && indicators.length === 0) return;
 
     let currentIndex = 0;
 
     function showItem(index) {
-      items.forEach((item, i) => {
+      // Show/hide desktop images
+      desktopItems.forEach((item, i) => {
+        item.classList.toggle('carousel-active', i === index);
+      });
+      
+      // Show/hide mobile images (same index)
+      const mobileItems = container.querySelectorAll(':scope > .hero__image--mobile, :scope > .hero__video--mobile, :scope > .hero__video-wrapper--mobile');
+      mobileItems.forEach((item, i) => {
         item.classList.toggle('carousel-active', i === index);
       });
       
@@ -430,7 +602,7 @@
     }
 
     function nextItem() {
-      currentIndex = (currentIndex + 1) % items.length;
+      currentIndex = (currentIndex + 1) % itemCount;
       showItem(currentIndex);
     }
 
@@ -529,7 +701,209 @@
       "settings": [
          { "type": "range", "id": "pixel_size", "min": 0, "max": 100, "step": 1, "label": "Height (px)", "default": 20 }
       ]
-    }
+    },
+    {
+      "type": "logo",
+      "name": "t:names.logo",
+      "settings": [
+        {
+          "type": "checkbox",
+          "label": "t:settings.use_inverse_logo",
+          "id": "inverse",
+          "default": false,
+          "visible_if": "{{ settings.logo_inverse }}"
+        },
+        {
+          "type": "select",
+          "id": "font",
+          "label": "t:settings.font",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:options.body"
+            },
+            {
+              "value": "subheading",
+              "label": "t:options.subheading"
+            },
+            {
+              "value": "heading",
+              "label": "t:options.heading"
+            },
+            {
+              "value": "accent",
+              "label": "t:options.accent"
+            }
+          ],
+          "default": "heading",
+          "visible_if": "{{ settings.logo == blank and settings.logo_inverse == blank or block.settings.inverse == false }}"
+        },
+        {
+          "type": "paragraph",
+          "content": "t:content.edit_logo_in_theme_settings"
+        },
+        {
+          "type": "header",
+          "content": "t:content.alignment"
+        },
+        {
+          "type": "select",
+          "id": "vertical_align",
+          "label": "t:settings.vertical_alignment",
+          "options": [
+            {
+              "value": "top",
+              "label": "t:options.top"
+            },
+            {
+              "value": "center",
+              "label": "t:options.center"
+            },
+            {
+              "value": "bottom",
+              "label": "t:options.bottom"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "header",
+          "content": "t:content.size"
+        },
+        {
+          "type": "select",
+          "id": "unit",
+          "label": "t:settings.unit",
+          "options": [
+            {
+              "value": "pixel",
+              "label": "t:options.pixel"
+            },
+            {
+              "value": "percent",
+              "label": "t:options.percent"
+            }
+          ],
+          "default": "percent"
+        },
+        {
+          "type": "range",
+          "id": "percent_width",
+          "label": "t:settings.width",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 100,
+          "visible_if": "{{ block.settings.unit == 'percent' }}"
+        },
+        {
+          "type": "range",
+          "id": "pixel_height",
+          "label": "t:settings.height",
+          "min": 16,
+          "max": 320,
+          "step": 8,
+          "unit": "px",
+          "default": 48,
+          "visible_if": "{{ block.settings.unit == 'pixel' }}"
+        },
+        {
+          "type": "checkbox",
+          "id": "custom_mobile_size",
+          "label": "t:settings.custom_mobile_size",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "t:content.mobile_size",
+          "visible_if": "{{ block.settings.custom_mobile_size == true }}"
+        },
+        {
+          "type": "select",
+          "id": "unit_mobile",
+          "label": "t:settings.unit",
+          "options": [
+            {
+              "value": "pixel",
+              "label": "t:options.pixel"
+            },
+            {
+              "value": "percent",
+              "label": "t:options.percent"
+            }
+          ],
+          "default": "percent",
+          "visible_if": "{{ block.settings.custom_mobile_size == true }}"
+        },
+        {
+          "type": "range",
+          "id": "percent_width_mobile",
+          "label": "t:settings.width",
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 100,
+          "visible_if": "{{ block.settings.unit_mobile == 'percent' and block.settings.custom_mobile_size == true}}"
+        },
+        {
+          "type": "range",
+          "id": "pixel_height_mobile",
+          "label": "t:settings.height",
+          "min": 16,
+          "max": 160,
+          "step": 8,
+          "unit": "px",
+          "default": 120,
+          "visible_if": "{{ block.settings.unit_mobile == 'pixel' and block.settings.custom_mobile_size == true}}"
+        },
+        {
+          "type": "header",
+          "content": "t:content.padding"
+        },
+        {
+          "type": "range",
+          "id": "padding-block-start",
+          "label": "t:settings.top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding-block-end",
+          "label": "t:settings.bottom",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding-inline-start",
+          "label": "t:settings.left",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "padding-inline-end",
+          "label": "t:settings.right",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "default": 0
+        }
+      ]
+    },
   ],
   "settings": [
     {
