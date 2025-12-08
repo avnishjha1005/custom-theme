@@ -1,0 +1,703 @@
+{% doc %}
+  @prompt
+    Create a section with text and one image, one desktop the image can be left or right aligned. On mobile we want the text to overlap the image and image be centered. The text has two parts, One quote a separator and a quote author. On mobile the image ends up centered, takes up half height. Make this as configurable and flexible as possible. 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-quote-section-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .ai-quote-section__container-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ block.settings.desktop_gap }}px;
+    align-items: {{ block.settings.desktop_vertical_alignment }};
+    padding: {{ block.settings.section_padding_top }}px {{ block.settings.section_padding_horizontal }}px {{ block.settings.section_padding_bottom }}px;
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+  }
+
+  .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    {% if block.settings.desktop_image_position == 'left' %}
+      order: 1;
+    {% else %}
+      order: 2;
+    {% endif %}
+  }
+
+  .ai-quote-section__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-quote-section__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    min-height: {{ block.settings.desktop_min_height }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: {{ block.settings.image_border_radius }}px;
+  }
+
+  .ai-quote-section__image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 400px;
+  }
+
+  .ai-quote-section__content-{{ ai_gen_id }} {
+    {% if block.settings.desktop_image_position == 'left' %}
+      order: 2;
+    {% else %}
+      order: 1;
+    {% endif %}
+    display: flex;
+    flex-direction: column;
+    gap: {{ block.settings.text_spacing }}px;
+    padding: {{ block.settings.desktop_text_padding }}px;
+    background-color: {{ block.settings.text_background_color }};
+    border-radius: {{ block.settings.text_border_radius }}px;
+  }
+
+  .ai-quote-section__quote-{{ ai_gen_id }} {
+    font-size: {{ block.settings.quote_font_size }}px;
+    line-height: {{ block.settings.quote_line_height }};
+    color: {{ block.settings.quote_color }};
+    font-style: {{ block.settings.quote_font_style }};
+    font-weight: {{ block.settings.quote_font_weight }};
+    margin: 0;
+  }
+
+  .ai-quote-section__separator-{{ ai_gen_id }} {
+    width: {{ block.settings.separator_width }}px;
+    height: {{ block.settings.separator_height }}px;
+    background-color: {{ block.settings.separator_color }};
+    border-radius: {{ block.settings.separator_border_radius }}px;
+    {% if block.settings.separator_alignment == 'left' %}
+      margin-left: 0;
+      margin-right: auto;
+    {% elsif block.settings.separator_alignment == 'center' %}
+      margin-left: auto;
+      margin-right: auto;
+    {% else %}
+      margin-left: auto;
+      margin-right: 0;
+    {% endif %}
+  }
+
+  .ai-quote-section__author-{{ ai_gen_id }} {
+    font-size: {{ block.settings.author_font_size }}px;
+    line-height: {{ block.settings.author_line_height }};
+    color: {{ block.settings.author_color }};
+    font-weight: {{ block.settings.author_font_weight }};
+    margin: 0;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-quote-section__container-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding: 0;
+    }
+
+    .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
+      order: 1;
+      height: {{ block.settings.mobile_image_height }}vh;
+      position: relative;
+    }
+
+    .ai-quote-section__image-{{ ai_gen_id }} {
+      border-radius: 0;
+      object-position: center;
+    }
+
+    .ai-quote-section__image-placeholder-{{ ai_gen_id }} {
+      min-height: {{ block.settings.mobile_image_height }}vh;
+      border-radius: 0;
+    }
+
+    .ai-quote-section__content-{{ ai_gen_id }} {
+      order: 2;
+      position: absolute;
+      bottom: {{ block.settings.mobile_text_bottom }}px;
+      left: {{ block.settings.mobile_text_left }}px;
+      right: {{ block.settings.mobile_text_right }}px;
+      padding: {{ block.settings.mobile_text_padding }}px;
+      z-index: 2;
+      background-color: {{ block.settings.mobile_text_background_color }};
+      border-radius: {{ block.settings.mobile_text_border_radius }}px;
+    }
+
+    .ai-quote-section__quote-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_quote_font_size }}px;
+      color: {{ block.settings.mobile_quote_color }};
+    }
+
+    .ai-quote-section__author-{{ ai_gen_id }} {
+      font-size: {{ block.settings.mobile_author_font_size }}px;
+      color: {{ block.settings.mobile_author_color }};
+    }
+
+    .ai-quote-section__separator-{{ ai_gen_id }} {
+      background-color: {{ block.settings.mobile_separator_color }};
+    }
+  }
+{% endstyle %}
+
+<div class="ai-quote-section-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-quote-section__container-{{ ai_gen_id }}">
+    <div class="ai-quote-section__image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.image %}
+        <img
+          src="{{ block.settings.image | image_url: width: 2000 }}"
+          alt="{{ block.settings.image.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.image.width }}"
+          height="{{ block.settings.image.height }}"
+          class="ai-quote-section__image-{{ ai_gen_id }}"
+        >
+      {% else %}
+        <div class="ai-quote-section__image-placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-quote-section__content-{{ ai_gen_id }}">
+      {% if block.settings.quote != blank %}
+        <blockquote class="ai-quote-section__quote-{{ ai_gen_id }}">
+          {{ block.settings.quote }}
+        </blockquote>
+      {% endif %}
+
+      {% if block.settings.show_separator %}
+        <div class="ai-quote-section__separator-{{ ai_gen_id }}"></div>
+      {% endif %}
+
+      {% if block.settings.author != blank %}
+        <p class="ai-quote-section__author-{{ ai_gen_id }}">
+          {{ block.settings.author }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Quote with image",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Quote content"
+    },
+    {
+      "type": "textarea",
+      "id": "quote",
+      "label": "Quote text",
+      "default": "The quality and craftsmanship exceeded all my expectations. Truly exceptional."
+    },
+    {
+      "type": "text",
+      "id": "author",
+      "label": "Author name",
+      "default": "Sarah Mitchell"
+    },
+    {
+      "type": "header",
+      "content": "Separator"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_separator",
+      "label": "Show separator",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "separator_width",
+      "min": 20,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Width",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "separator_height",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Height",
+      "default": 2
+    },
+    {
+      "type": "select",
+      "id": "separator_alignment",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "separator_border_radius",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Desktop layout"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_position",
+      "label": "Image position",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "desktop_vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "desktop_gap",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Gap between image and text",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "desktop_min_height",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Minimum height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 800,
+      "max": 1600,
+      "step": 100,
+      "unit": "px",
+      "label": "Maximum width",
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding bottom",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "section_padding_horizontal",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Padding horizontal",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Desktop text style"
+    },
+    {
+      "type": "range",
+      "id": "desktop_text_padding",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "label": "Text padding",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "text_spacing",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Spacing between elements",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "text_background_color",
+      "label": "Background color",
+      "default": "rgba(0,0,0,0)"
+    },
+    {
+      "type": "range",
+      "id": "text_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "quote_font_size",
+      "min": 16,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Quote font size",
+      "default": 32
+    },
+    {
+      "type": "select",
+      "id": "quote_line_height",
+      "label": "Quote line height",
+      "options": [
+        {
+          "value": "1.2",
+          "label": "Tight"
+        },
+        {
+          "value": "1.4",
+          "label": "Normal"
+        },
+        {
+          "value": "1.6",
+          "label": "Loose"
+        }
+      ],
+      "default": "1.4"
+    },
+    {
+      "type": "select",
+      "id": "quote_font_style",
+      "label": "Quote font style",
+      "options": [
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "italic",
+          "label": "Italic"
+        }
+      ],
+      "default": "italic"
+    },
+    {
+      "type": "select",
+      "id": "quote_font_weight",
+      "label": "Quote font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "quote_color",
+      "label": "Quote color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "author_font_size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Author font size",
+      "default": 16
+    },
+    {
+      "type": "select",
+      "id": "author_line_height",
+      "label": "Author line height",
+      "options": [
+        {
+          "value": "1.2",
+          "label": "Tight"
+        },
+        {
+          "value": "1.4",
+          "label": "Normal"
+        },
+        {
+          "value": "1.6",
+          "label": "Loose"
+        }
+      ],
+      "default": "1.4"
+    },
+    {
+      "type": "select",
+      "id": "author_font_weight",
+      "label": "Author font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semibold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "author_color",
+      "label": "Author color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "range",
+      "id": "mobile_image_height",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "label": "Image height",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_padding",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Text padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Text position from bottom",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_left",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Text position from left",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_right",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Text position from right",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "mobile_text_background_color",
+      "label": "Background color",
+      "default": "rgba(255,255,255,0.9)"
+    },
+    {
+      "type": "range",
+      "id": "mobile_text_border_radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "mobile_quote_font_size",
+      "min": 14,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Quote font size",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "mobile_quote_color",
+      "label": "Quote color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "mobile_author_font_size",
+      "min": 10,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "label": "Author font size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "mobile_author_color",
+      "label": "Author color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "mobile_separator_color",
+      "label": "Separator color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quote with image"
+    }
+  ]
+}
+{% endschema %}
