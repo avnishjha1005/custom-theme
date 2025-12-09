@@ -115,7 +115,7 @@
     },
     "email_signup": {
       "label": "Email",
-      "placeholder": "Email address",
+      "placeholder": "Email",
       "success": "Thanks for subscribing!"
     },
     "filter": "Filter",
