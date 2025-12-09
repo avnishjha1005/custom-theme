@@ -1,0 +1,288 @@
+{% schema %}
+{
+  "name": "Expert Collage",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Meet our experts for a bespoke look."
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Description",
+      "default": "<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem.</p>"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "BOOK AN APPOINTMENT"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1 (Top Left)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2 (Top Right)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3 (Bottom Left)"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image 4 (Bottom Right)"
+    },
+    {
+      "type": "header",
+      "content": "Layout Dimensions"
+    },
+    {
+      "type": "range",
+      "id": "desktop_height",
+      "min": 500,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Desktop Minimum Height",
+      "default": 700,
+      "info": "Controls the vertical space for the floating images."
+    },
+    {
+      "type": "range",
+      "id": "mobile_height",
+      "min": 400,
+      "max": 1200,
+      "step": 50,
+      "unit": "px",
+      "label": "Mobile Minimum Height",
+      "default": 600,
+      "info": "Ensures the section is at least this tall on mobile."
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F4F1EC"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#4A3B32"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Expert Collage",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="expert-collage-section" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
+  <div class="collage-container">
+    
+    <div class="collage-image-wrapper img-pos-1">
+      {% if section.settings.image_1 %}
+        <img src="{{ section.settings.image_1 | img_url: '600x' }}" alt="{{ section.settings.image_1.alt }}" loading="lazy" height="auto" width="auto">
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </div>
+
+    <div class="collage-image-wrapper img-pos-2">
+      {% if section.settings.image_2 %}
+        <img src="{{ section.settings.image_2 | img_url: '400x' }}" alt="{{ section.settings.image_2.alt }}" loading="lazy" height="auto" width="auto">>
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </div>
+
+    <div class="collage-content">
+      <h2 class="collage-heading">{{ section.settings.heading }}</h2>
+      <div class="collage-subheading">{{ section.settings.subheading }}</div>
+      {% if section.settings.link_text != blank %}
+        <a href="{{ section.settings.link_url }}" class="collage-link">{{ section.settings.link_text }}</a>
+      {% endif %}
+    </div>
+
+    <div class="collage-image-wrapper img-pos-3">
+      {% if section.settings.image_3 %}
+        <img src="{{ section.settings.image_3 | img_url: '400x' }}" alt="{{ section.settings.image_3.alt }}" loading="lazy" height="auto" width="auto">>
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </div>
+
+    <div class="collage-image-wrapper img-pos-4">
+      {% if section.settings.image_4 %}
+        <img src="{{ section.settings.image_4 | img_url: '600x' }}" alt="{{ section.settings.image_4.alt }}" loading="lazy" height="auto" width="auto">>
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<style>
+  /* Base Layout */
+  .expert-collage-section {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+  
+  .collage-container {
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .collage-content {
+    text-align: center;
+    max-width: 500px;
+    z-index: 2;
+    padding: 20px;
+  }
+
+  .collage-heading {
+    font-family: var(--font-heading-family, serif);
+    font-size: 42px;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    color: inherit;
+    font-weight: 400;
+  }
+
+  .collage-subheading {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    color: inherit;
+    opacity: 0.9;
+  }
+
+  .collage-link {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .collage-image-wrapper {
+    position: absolute;
+    z-index: 1;
+    transition: transform 0.3s ease;
+  }
+
+  .collage-image-wrapper img,
+  .collage-image-wrapper svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Desktop Positioning */
+  @media screen and (min-width: 769px) {
+    .expert-collage-section {
+      padding: 0; /* No padding on desktop */
+    }
+
+    .collage-container {
+      width: 100%; /* Full width to stick to edges */
+      max-width: 100%;
+      min-height: {{ section.settings.desktop_height }}px;
+    }
+
+    .img-pos-1 { top: 0px; left: 0; width: 28%; }
+    .img-pos-2 { top: 0; right: 15%; width: 16%; }
+    .img-pos-3 { bottom: -40px; left: 22%; width: 16%; }
+    .img-pos-4 { bottom: 20px; right: 0; width: 22%; }
+  }
+
+  /* Mobile Layout */
+  @media screen and (max-width: 768px) {
+    .expert-collage-section {
+      padding: 40px 15px; /* Keep padding for mobile readability */
+    }
+
+    .collage-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      min-height: {{ section.settings.mobile_height }}px;
+    }
+
+    .collage-image-wrapper {
+      position: relative;
+      width: 100%;
+      top: auto !important;
+      left: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+    }
+
+    /* Grid Positioning */
+    .img-pos-1 { grid-column: 1; grid-row: 1; align-self: center; }
+    
+    .img-pos-2 { 
+      grid-column: 2; 
+      grid-row: 1; 
+      align-self: flex-start; 
+      width: 80%; 
+      justify-self: end; 
+      margin-top: -20px; 
+    }
+
+    .collage-content {
+      grid-column: 1 / span 2;
+      grid-row: 2;
+      padding: 30px 0;
+    }
+
+    .collage-heading { font-size: 32px; }
+
+    .img-pos-3 { grid-column: 1; grid-row: 3; width: 90%; align-self: center; }
+    
+    .img-pos-4 { 
+      grid-column: 2; 
+      grid-row: 3; 
+      align-self: flex-end; 
+      margin-bottom: -20px; 
+    }
+  }
+</style>
