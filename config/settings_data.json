@@ -10,9 +10,9 @@
 {
   "current": {
     "logo": "shopify://shop_images/AR_Wordmark_SoftBeige.png",
-    "type_body_font": "red_hat_text_n4",
+    "type_body_font": "inter_n4",
     "type_subheading_font": "newsreader_n2",
-    "type_heading_font": "newsreader_n2",
+    "type_heading_font": "marcellus_n4",
     "type_accent_font": "red_hat_text_n4",
     "type_size_paragraph": "12",
     "type_line_height_paragraph": "body-loose",
@@ -321,8 +321,8 @@
           "secondary_button_hover_text": "#000000",
           "secondary_button_hover_border": "#dedede",
           "input_background": "#ffffff",
-          "input_text_color": "#000000",
-          "input_border_color": "#00000021",
+          "input_text_color": "#ffffff",
+          "input_border_color": "#ffffff",
           "input_hover_background": "#f5f5f5",
           "variant_background_color": "#ffffff",
           "variant_text_color": "#000000",
@@ -341,6 +341,45 @@
       "scheme-517372f4-0f2b-4a24-95f4-50ba226a0dd9": {
         "settings": {
           "background": "#f3eee6",
+          "foreground_heading": "#692c23",
+          "foreground": "#000000",
+          "primary": "#000000",
+          "primary_hover": "#000000",
+          "border": "#e6e6e6",
+          "shadow": "#000000",
+          "primary_button_background": "#000000",
+          "primary_button_text": "#ffffff",
+          "primary_button_border": "#000000",
+          "primary_button_hover_background": "#383838",
+          "primary_button_hover_text": "#ffffff",
+          "primary_button_hover_border": "#383838",
+          "secondary_button_background": "#efefef",
+          "secondary_button_text": "#000000",
+          "secondary_button_border": "#efefef",
+          "secondary_button_hover_background": "#dedede",
+          "secondary_button_hover_text": "#000000",
+          "secondary_button_hover_border": "#dedede",
+          "input_background": "#ffffff",
+          "input_text_color": "#000000",
+          "input_border_color": "#00000021",
+          "input_hover_background": "#f5f5f5",
+          "variant_background_color": "#ffffff",
+          "variant_text_color": "#000000",
+          "variant_border_color": "#e6e6e6",
+          "variant_hover_background_color": "#ffffff",
+          "variant_hover_text_color": "#000000",
+          "variant_hover_border_color": "#000000",
+          "selected_variant_background_color": "#000000",
+          "selected_variant_text_color": "#ffffff",
+          "selected_variant_border_color": "#000000",
+          "selected_variant_hover_background_color": "#1a1a1a",
+          "selected_variant_hover_text_color": "#ffffff",
+          "selected_variant_hover_border_color": "#1a1a1a"
+        }
+      },
+      "scheme-9279c1cb-9d8e-4383-af64-cd9f6d70d124": {
+        "settings": {
+          "background": "#ffffff",
           "foreground_heading": "#692c23",
           "foreground": "#000000",
           "primary": "#000000",
@@ -630,5 +669,8 @@
         }
       }
     }
+  },
+  "platform_customizations": {
+    "custom_css": []
   }
 }

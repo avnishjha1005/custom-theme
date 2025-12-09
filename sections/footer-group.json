@@ -11,6 +11,24 @@
   "type": "footer",
   "name": "Footer",
   "sections": {
+    "export_collage_AK4FpE": {
+      "type": "export-collage",
+      "name": "Expert Collage",
+      "settings": {
+        "heading": "Meet our experts for a bespoke look.",
+        "subheading": "<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem.</p>",
+        "link_text": "BOOK AN APPOINTMENT",
+        "link_url": "",
+        "image_1": "shopify://shop_images/woman-in-the-city_925x_553d36c5-f403-4b83-9ed5-cddfbfd484bf.jpg",
+        "image_2": "shopify://shop_images/city-woman-fashion_925x_2x_45bfa4f9-d853-44dd-ab17-a8684f3dcb12.jpg",
+        "image_3": "shopify://shop_images/smiling-woman-on-snowy-afternoon_925x_2df5a334-84fb-4721-8b39-91f3e69ab3a9.jpg",
+        "image_4": "shopify://shop_images/young-female-models-denim_925x_d7cee7f0-5257-4754-9ae7-f6213a0c6485.jpg",
+        "desktop_height": 360,
+        "mobile_height": 550,
+        "bg_color": "#f3eee6",
+        "text_color": "#692c23"
+      }
+    },
     "mobile_tab_bar_hUiGjD": {
       "type": "mobile-tab-bar",
       "name": "Mobile Tab Bar",
@@ -97,6 +115,7 @@
         "text_nQrkwi",
         "button_hGqJyj"
       ],
+      "disabled": true,
       "name": "t:names.rich_text_section",
       "settings": {
         "content_direction": "column",
@@ -466,13 +485,14 @@
         "section_width": "page-width",
         "gap": 24,
         "divider_thickness": 1,
-        "color_scheme": "",
+        "color_scheme": "scheme-bed0b474-fe0a-4965-8562-aa2adf1dc067",
         "padding-block-start": 12,
         "padding-block-end": 16
       }
     }
   },
   "order": [
+    "export_collage_AK4FpE",
     "mobile_tab_bar_hUiGjD",
     "section_VzhdMi",
     "footer",
