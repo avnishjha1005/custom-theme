@@ -587,134 +587,21 @@ export class Slideshow extends Component {
       return;
     }
 
-    event.preventDefault();
-    // Store initial position but don't start handling yet
-    const { axis } = this.#scroll;
-    const startPosition = event[axis];
-
-    const controller = new AbortController();
-    const { signal } = controller;
-    const startTime = performance.now();
-    let previous = startPosition;
-    let velocity = 0;
-    let moved = false;
-    let distanceTravelled = 0;
-
-    this.#dragging = true;
-
-    /**
-     * Handles the 'pointermove' event to update the scroll position.
-     * @param {PointerEvent} event - The pointermove event.
-     */
-    const onPointerMove = (event) => {
-      const current = event[axis];
-      const initialDelta = startPosition - current;
-
-      if (!initialDelta) return;
-
-      if (!moved) {
-        moved = true;
-        this.setPointerCapture(event.pointerId);
-
-        // Prevent clicks once the user starts dragging
-        document.addEventListener('click', preventDefault, { once: true, signal });
-
-        const movingRight = initialDelta < 0;
-        const movingLeft = initialDelta > 0;
-
-        // Check if the current slideshow should handle this drag
-        const closestSlideshow = this.parentElement?.closest('slideshow-component');
-        const isNested = closestSlideshow instanceof Slideshow && closestSlideshow !== this;
-        const cannotMoveInDirection = (movingRight && this.atStart) || (movingLeft && this.atEnd);
-
-        // Abort and let the parent slideshow handle the drag if we're moving in a direction where nested slideshow can't move
-        if (isNested && cannotMoveInDirection) {
-          controller.abort();
-          return;
-        }
-
-        this.pause();
-        this.setAttribute('dragging', '');
+    // NEW: Check if this slideshow is inside a card-gallery within a carousel
+    // If so, prevent the outer carousel from handling these drag events
+    const cardGallery = this.closest('.card-gallery');
+    if (cardGallery) {
+      const outerCarousel = cardGallery.closest('slideshow-component');
+      // Only proceed if this is a product slideshow inside a card gallery
+      // which is inside a carousel (the outer slideshow)
+      if (outerCarousel && outerCarousel !== this) {
+        // Mark that this event should not propagate to parent slideshow
+        event.stopImmediatePropagation();
       }
+    }
 
-      // Stop the event from bubbling up to parent slideshow components
-      event.stopImmediatePropagation();
-
-      const delta = previous - current;
-      const timeDelta = performance.now() - startTime;
-      velocity = Math.round((delta / timeDelta) * 1000);
-      previous = current;
-      distanceTravelled += Math.abs(delta);
-
-      this.#scroll.by(delta, { instant: true });
-    };
-
-    /**
-     * Handles the 'pointerup' event to stop dragging slides.
-     * @param {PointerEvent} event - The pointerup event.
-     */
-    const onPointerUp = async (event) => {
-      controller.abort();
-      const { current, slides } = this;
-      const { scroller } = this.refs;
-
-      this.#dragging = false;
-
-      if (!slides?.length || !scroller) return;
-
-      const direction = Math.sign(velocity);
-      const next = this.#sync();
-
-      const modifier = current !== next || Math.abs(velocity) < 10 || distanceTravelled < 10 ? 0 : direction;
-      const newIndex = clamp(next + modifier, 0, slides.length - 1);
-
-      const newSlide = slides[newIndex];
-      const currentIndex = this.current;
-
-      if (!newSlide) throw new Error(`Slide not found at index ${newIndex}`);
-
-      this.#scroll.to(newSlide);
-
-      this.removeAttribute('dragging');
-      this.releasePointerCapture(event.pointerId);
-
-      this.#centerSelectedThumbnail(newIndex);
-
-      this.dispatchEvent(
-        new SlideshowSelectEvent({
-          index: newIndex,
-          previousIndex: currentIndex,
-          userInitiated: true,
-          trigger: 'drag',
-          slide: newSlide,
-          id: newSlide.getAttribute('slide-id'),
-        })
-      );
-
-      this.current = newIndex;
-
-      await this.#scroll.finished;
-
-      // It's possible that the user started dragging again before the scroll finished
-      if (this.#dragging) return;
-
-      this.#scroll.snap = true;
-      this.resume();
-    };
-
-    this.#scroll.snap = false;
-
-    document.addEventListener('pointermove', onPointerMove, { signal });
-    document.addEventListener('pointerup', onPointerUp, { signal });
-    /**
-     * pointerDown calls onPointerUp to fix an issue where the first tap-and-drag
-     * on the zoom dialog is captured by the pointerMove/pointerUp listeners,
-     * sometimes causing the slideshow to change slides unexpectedly
-     */
-    document.addEventListener('pointerdown', onPointerUp, { signal });
-    document.addEventListener('pointercancel', onPointerUp, { signal });
-    document.addEventListener('pointercapturelost', onPointerUp, { signal });
-  };
+    event.preventDefault();
+  }
 
   #handlePointerEnter = () => {
     this.setAttribute('actioned', '');

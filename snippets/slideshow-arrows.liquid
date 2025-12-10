@@ -27,3 +27,12 @@
   {%- render 'slideshow-arrow', action: 'previous', icon_style: icon_style, icon_shape: icon_shape -%}
   {%- render 'slideshow-arrow', action: 'next', icon_style: icon_style, icon_shape: icon_shape -%}
 </slideshow-arrows>
+
+{%stylesheet%}
+  @media screen and (max-width: 749px) {
+    /* Hide arrow controls on mobile; swipe/drag remains enabled via slideshow */
+    slideshow-arrows {
+      display: none !important;
+    }
+  }
+{% endstylesheet %}

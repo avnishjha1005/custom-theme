@@ -258,6 +258,19 @@
 </div>
 
 {% stylesheet %}
+  /* NEW: Strict isolation for the inner slideshow */
+  .card-gallery slideshow-component {
+    /* Prevents the browser from chaining the scroll to the parent */
+    overscroll-behavior-x: contain;
+    /* Tells browser this element handles horizontal swipes, preventing parent interference */
+    touch-action: pan-y; 
+  }
+  
+  /* Ensure the scroller inside specifically respects this */
+  .card-gallery .slider-mobile-gutter,
+  .card-gallery .slideshow__scroller {
+    overscroll-behavior-x: contain;
+  }
   .card-gallery {
     overflow: hidden;
     container-type: inline-size; /* Make card-gallery a container */
@@ -506,9 +519,61 @@
     pointer-events: auto !important;
     color: #fff !important;
   }
+@media screen and (max-width: 749px) {
+  .card-gallery slideshow-component[disabled='true'] slideshow-arrows {
+    display: none !important;
+  }
+}
 
   /* Stronger rule to ensure the active dot is white in all contexts */
   .card-gallery .slideshow-controls__dots button[aria-selected='true']::after {
     background-color: rgba(255,255,255,1) !important;
   }
 {% endstylesheet %}
+{% javascript %}
+  (function() {
+    function initChildSlideshow(cardGallery) {
+      const innerSlideshow = cardGallery.querySelector('slideshow-component');
+      if (!innerSlideshow) return;
+
+      // Remove the disabled attribute to enable scrolling
+      innerSlideshow.removeAttribute('disabled');
+      
+      // Re-initialize the slideshow if it has an init method
+      if (typeof innerSlideshow.init === 'function') {
+        innerSlideshow.init();
+      }
+
+      // Stop all touch/pointer/mouse events from bubbling to prevent outer carousel from capturing them
+      const stopPropagation = (e) => e.stopPropagation();
+      
+      innerSlideshow.addEventListener('touchstart', stopPropagation, { passive: true, capture: true });
+      innerSlideshow.addEventListener('touchmove', stopPropagation, { passive: true, capture: true });
+      innerSlideshow.addEventListener('touchend', stopPropagation, { passive: true, capture: true });
+      innerSlideshow.addEventListener('pointerdown', stopPropagation, { capture: true });
+      innerSlideshow.addEventListener('pointermove', stopPropagation, { capture: true });
+      innerSlideshow.addEventListener('pointerup', stopPropagation, { capture: true });
+      innerSlideshow.addEventListener('mousedown', stopPropagation, { capture: true });
+      innerSlideshow.addEventListener('mousemove', stopPropagation, { capture: true });
+      innerSlideshow.addEventListener('mouseup', stopPropagation, { capture: true });
+    }
+
+    // Apply to all current card galleries
+    document.querySelectorAll('.card-gallery').forEach(initChildSlideshow);
+
+    // Watch for new ones (e.g., if you use infinite scroll or filters)
+    new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) {
+            if (node.classList.contains('card-gallery')) {
+              initChildSlideshow(node);
+            } else {
+              node.querySelectorAll('.card-gallery').forEach(initChildSlideshow);
+            }
+          }
+        });
+      });
+    }).observe(document.body, { childList: true, subtree: true });
+  })();
+{% endjavascript %}
