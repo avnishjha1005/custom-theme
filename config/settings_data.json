@@ -10,6 +10,7 @@
 {
   "current": {
     "logo": "shopify://shop_images/AR_Wordmark_SoftBeige.png",
+    "logo_symbol": "shopify://shop_images/AR_Symbol_Soft_Beige.png",
     "type_body_font": "inter_n4",
     "type_subheading_font": "newsreader_n2",
     "type_heading_font": "marcellus_n4",
@@ -36,6 +37,7 @@
     "type_letter_spacing_h6": "heading-normal",
     "type_case_h6": "uppercase",
     "page_width": "narrow",
+    "card_hover_effect": "none",
     "badge_corner_radius": 0,
     "badge_text_transform": "uppercase",
     "primary_button_border_width": 0,

@@ -33,7 +33,7 @@
       "type": "mobile-tab-bar",
       "name": "Mobile Tab Bar",
       "settings": {
-        "menu": "main-menu",
+        "menu": "mobile-bottom-menu",
         "mobile_tab_bar_variant": "solid",
         "mobile_tab_bar_height": "standard",
         "mobile_tab_bar_show_on_tablet": true
