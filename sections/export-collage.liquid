@@ -66,7 +66,7 @@
       "unit": "px",
       "label": "Desktop Minimum Height",
       "default": 700,
-      "info": "Controls the vertical space for the floating images."
+      "info": "Total height of the section on desktop."
     },
     {
       "type": "range",
@@ -77,7 +77,7 @@
       "unit": "px",
       "label": "Mobile Minimum Height",
       "default": 600,
-      "info": "Ensures the section is at least this tall on mobile."
+      "info": "Total height of the section on mobile."
     },
     {
       "type": "header",
@@ -105,12 +105,12 @@
 }
 {% endschema %}
 
-<div class="expert-collage-section" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }};">
-  <div class="collage-container">
+<div class="expert-collage-section" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; --desktop-min-height: {{ section.settings.desktop_height }}px; --mobile-min-height: {{ section.settings.mobile_height }}px;">
+  <div class="collage-container" style="background-color: {{ section.settings.bg_color }}; color: {{ section.settings.text_color }}; --desktop-min-height: {{ section.settings.desktop_height }}px; --mobile-min-height: {{ section.settings.mobile_height }}px;">
     
     <div class="collage-image-wrapper img-pos-1">
       {% if section.settings.image_1 %}
-        <img src="{{ section.settings.image_1 | img_url: '600x' }}" alt="{{ section.settings.image_1.alt }}" loading="lazy" height="auto" width="auto">
+        <img src="{{ section.settings.image_1 | img_url: '500x' }}" alt="{{ section.settings.image_1.alt }}" loading="lazy" width="auto" height="auto">
       {% else %}
         {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
       {% endif %}
@@ -118,7 +118,7 @@
 
     <div class="collage-image-wrapper img-pos-2">
       {% if section.settings.image_2 %}
-        <img src="{{ section.settings.image_2 | img_url: '400x' }}" alt="{{ section.settings.image_2.alt }}" loading="lazy" height="auto" width="auto">>
+        <img src="{{ section.settings.image_2 | img_url: '300x' }}" alt="{{ section.settings.image_2.alt }}" loading="lazy" width="auto" height="auto">
       {% else %}
         {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
       {% endif %}
@@ -134,7 +134,7 @@
 
     <div class="collage-image-wrapper img-pos-3">
       {% if section.settings.image_3 %}
-        <img src="{{ section.settings.image_3 | img_url: '400x' }}" alt="{{ section.settings.image_3.alt }}" loading="lazy" height="auto" width="auto">>
+        <img src="{{ section.settings.image_3 | img_url: '300x' }}" alt="{{ section.settings.image_3.alt }}" loading="lazy" width="auto" height="auto">
       {% else %}
         {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
       {% endif %}
@@ -142,7 +142,7 @@
 
     <div class="collage-image-wrapper img-pos-4">
       {% if section.settings.image_4 %}
-        <img src="{{ section.settings.image_4 | img_url: '600x' }}" alt="{{ section.settings.image_4.alt }}" loading="lazy" height="auto" width="auto">>
+        <img src="{{ section.settings.image_4 | img_url: '400x' }}" alt="{{ section.settings.image_4.alt }}" loading="lazy" width="auto" height="auto">
       {% else %}
         {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
       {% endif %}
@@ -157,6 +157,7 @@
     overflow: hidden;
     position: relative;
     width: 100%;
+    box-sizing: border-box;
   }
   
   .collage-container {
@@ -166,17 +167,21 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
+    height: 360px;
+    /* Container takes full height of the section constraints */
   }
 
   .collage-content {
     text-align: center;
     max-width: 500px;
-    z-index: 2;
+    /* Ensures text is above images */
     padding: 20px;
+    position: relative;
   }
 
   .collage-heading {
-    font-family: var(--font-heading-family, serif);
+    font-family: var(--font-heading-family, Marcellus);
     font-size: 42px;
     line-height: 1.2;
     margin-bottom: 20px;
@@ -202,87 +207,67 @@
     text-underline-offset: 4px;
   }
 
+  /* Universal Image Wrapper Styles */
   .collage-image-wrapper {
     position: absolute;
     z-index: 1;
-    transition: transform 0.3s ease;
+    overflow: hidden;
   }
 
   .collage-image-wrapper img,
   .collage-image-wrapper svg {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
-    object-fit: cover;
+    object-fit: cover; /* Ensures images fill the exact pixel dimensions without stretching */
   }
 
-  /* Desktop Positioning */
+  /* -------------------------
+     DESKTOP STYLES
+     ------------------------- */
   @media screen and (min-width: 769px) {
     .expert-collage-section {
-      padding: 0; /* No padding on desktop */
+      min-height: var(--desktop-min-height);
     }
 
-    .collage-container {
-      width: 100%; /* Full width to stick to edges */
-      max-width: 100%;
-      min-height: {{ section.settings.desktop_height }}px;
-    }
+    /* Desktop Positioning */
+    .img-pos-1 { top: 0; left: 50px; }
+    .img-pos-2 { top: 0; right: 25px; }
+    .img-pos-3 { bottom: 0; left: 150px; }
+    .img-pos-4 { bottom: 0; right: 165px; }
 
-    .img-pos-1 { top: 0px; left: 0; width: 28%; }
-    .img-pos-2 { top: 0; right: 15%; width: 16%; }
-    .img-pos-3 { bottom: -40px; left: 22%; width: 16%; }
-    .img-pos-4 { bottom: 20px; right: 0; width: 22%; }
+    /* Desktop Dimensions */
+    .img-pos-1 { width: 242px; height: 168px; }
+    .img-pos-2 { width: 140px; height: 140px; }
+    .img-pos-3 { width: 143px; height: 143px; }
+    .img-pos-4 { width: 159px; height: 160px; }
+
   }
 
-  /* Mobile Layout */
+  /* -------------------------
+     MOBILE STYLES
+     ------------------------- */
   @media screen and (max-width: 768px) {
     .expert-collage-section {
-      padding: 40px 15px; /* Keep padding for mobile readability */
+      padding: 0; 
+      height:520px;
     }
+        .collage-container{
+    height:520px;}
 
-    .collage-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      min-height: {{ section.settings.mobile_height }}px;
-    }
+    .collage-heading { font-size: 30px; font-family:"Marcellus"}
+    .collage-subheading {font-size:12px;}
 
-    .collage-image-wrapper {
-      position: relative;
-      width: 100%;
-      top: auto !important;
-      left: auto !important;
-      right: auto !important;
-      bottom: auto !important;
-    }
+    /* Mobile Positioning (Same logic as desktop: 1&2 Top, 3&4 Bottom) */
+    .img-pos-1 { top: 0; left: 10px; }
+    .img-pos-2 { top: 0; right: 33px; }
+    .img-pos-3 { bottom: 0; left: 25px }
+    .img-pos-4 { bottom: 0; right: 31px; }
 
-    /* Grid Positioning */
-    .img-pos-1 { grid-column: 1; grid-row: 1; align-self: center; }
-    
-    .img-pos-2 { 
-      grid-column: 2; 
-      grid-row: 1; 
-      align-self: flex-start; 
-      width: 80%; 
-      justify-self: end; 
-      margin-top: -20px; 
-    }
-
-    .collage-content {
-      grid-column: 1 / span 2;
-      grid-row: 2;
-      padding: 30px 0;
-    }
-
-    .collage-heading { font-size: 32px; }
-
-    .img-pos-3 { grid-column: 1; grid-row: 3; width: 90%; align-self: center; }
-    
-    .img-pos-4 { 
-      grid-column: 2; 
-      grid-row: 3; 
-      align-self: flex-end; 
-      margin-bottom: -20px; 
-    }
+    /* Mobile Specific Dimensions */
+    .img-pos-1 { width: 150px; height: 100px; }
+    .img-pos-2 { width: 121px; height: 121px; }
+    .img-pos-3 { width: 123px; height: 123px; }
+    .img-pos-4 { width: 138px; height: 150px; }
   }
 </style>

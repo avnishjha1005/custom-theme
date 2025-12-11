@@ -232,6 +232,7 @@
     "search_results_no_results": "No results found for \"{{ terms }}\". Try another search.",
     "search_results_no_results_check_spelling": "No results found for \"{{ terms }}\". Check the spelling or use a different word or phrase.",
     "search_results_resource_articles": "Blog posts",
+    "symbol_logo":"Symbol Logo",
     "search_results_resource_collections": "Collections",
     // Section heading for Shopify store pages in search results
     "search_results_resource_pages": "Pages",

@@ -26,6 +26,11 @@
         "info": "t:content.inverse_logo_info"
       },
       {
+        "type": "image_picker",
+        "id":"logo_symbol",
+        "label": "t:settings.default_logo"
+      },
+      {
         "type": "range",
         "id": "logo_height",
         "label": "t:settings.desktop_height",

@@ -5,6 +5,8 @@
   .ai-quote-section-{{ ai_gen_id }} {
     width: 100%;
     overflow: hidden;
+ background-color: {{ block.settings.text_background_color }};
+ width:100vw;
   }
 
   .ai-quote-section__container-{{ ai_gen_id }} {
@@ -12,7 +14,7 @@
     flex-wrap: wrap;
     width: 100%;
     margin: 0 auto;
-    background-color: {{ block.settings.text_background_color }};
+   
   }
 
   /* --- Image Logic --- */
@@ -48,7 +50,6 @@
   }
 
   .ai-quote-section__content-inner-{{ ai_gen_id }} {
-    max-width: {{ block.settings.content_max_width }}px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -90,12 +91,12 @@
     .ai-quote-section__container-{{ ai_gen_id }} {
       flex-direction: row;
       align-items: stretch;
-      min-height: {{ block.settings.desktop_min_height }}px;
+      width: full;
     }
 
     .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
-      width: 50%;
-      height: auto;
+      width: 40%;
+      height: 480px;
       {% if block.settings.desktop_image_position == 'right' %}
         order: 2;
       {% else %}
@@ -119,40 +120,43 @@
     .ai-quote-section__container-{{ ai_gen_id }} {
       flex-direction: column;
       min-height: auto;
-      position: relative;
+      position: relative; /* Anchor for the absolute image */
+      width: 100%; /* Ensure container is as wide as screen */
+      /* Add padding bottom to ensure content isn't hidden behind the absolute image if it sits on top, 
+         or just enough space for the design breathing room */
+      height: 500px;
     }
 
     .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
-      width: 100%;
-      order: 2;
-      /* Small centered image */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: {{ block.settings.text_background_color }};
-      position: relative;
-      z-index: 1;
-      margin-top: -60px;
+      position: absolute;
+      bottom: -150px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: auto; /* Let image define width or use mobile_image_width */
+      height: auto;
+       /* Sit on top of content if they overlap */
+      background: transparent;
+      margin: 0;
     }
 
     .ai-quote-section__image-{{ ai_gen_id }} {
       width: {{ block.settings.mobile_image_width }}px;
       height: auto;
-      max-width: 90%;
+      max-width: 90vw;
       object-fit: contain;
+      display: block;
     }
 
     .ai-quote-section__content-wrapper-{{ ai_gen_id }} {
       width: 100%;
-      order: 1;
-      background-color: {{ block.settings.text_background_color }};
-      padding: {{ block.settings.mobile_text_padding }}px;
+      padding: {{ block.settings.mobile_text_padding }}px 0; /* Remove side padding, handle via inner width */
       position: relative;
-      z-index: 2;
-      padding-bottom: calc({{ block.settings.mobile_text_padding }}px + 30px);
+      z-index: 1;
     }
 
     .ai-quote-section__content-inner-{{ ai_gen_id }} {
+      width: 85vw; /* Fixed width as requested */
+      margin: 0 auto; /* Center alignment */
       align-items: center;
       text-align: center;
     }
@@ -160,6 +164,7 @@
     .ai-quote-section__quote-{{ ai_gen_id }} {
       font-size: {{ block.settings.mobile_quote_font_size }}px;
       text-align: center;
+      max-width:300px;
     }
 
     .ai-quote-section__author-{{ ai_gen_id }} {
@@ -340,10 +345,10 @@
       "label": "Font Family",
       "options": [
         { "value": "inherit", "label": "Theme Default" },
-        { "value": "serif", "label": "Serif" },
+        { "value": "Marcellus", "label": "Serif" },
         { "value": "sans-serif", "label": "Sans Serif" }
       ],
-      "default": "serif"
+      "default": "Marcellus"
     },
     {
       "type": "select",
@@ -462,16 +467,6 @@
       "unit": "px",
       "label": "Mobile Image Width",
       "default": 180
-    },
-    {
-      "type": "range",
-      "id": "mobile_image_padding",
-      "min": 20,
-      "max": 80,
-      "step": 5,
-      "unit": "px",
-      "label": "Image Padding",
-      "default": 40
     },
     {
       "type": "range",

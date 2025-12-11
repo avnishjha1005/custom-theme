@@ -5,6 +5,11 @@
   if block_settings.inverse and settings.logo_inverse
     assign image = settings.logo_inverse
   endif
+
+  # New logic: Override with symbol logo if selected and available
+  if block_settings.logo_type == 'symbol'
+    assign image = settings.logo_symbol
+  endif
 %}
 
 {%- if image -%}
@@ -116,6 +121,22 @@
   "name": "t:names.logo",
   "tag": null,
   "settings": [
+    {
+      "type": "select",
+      "id": "logo_type",
+      "label": "Logo type",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "symbol",
+          "label": "Symbol"
+        }
+      ],
+      "default": "default"
+    },
     {
       "type": "checkbox",
       "label": "t:settings.use_inverse_logo",
