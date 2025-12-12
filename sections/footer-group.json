@@ -258,7 +258,7 @@
                   "type": "email-signup",
                   "name": "t:names.email_signup",
                   "settings": {
-                    "width": "fill",
+                    "width": "custom",
                     "custom_width": 100,
                     "inherit_color_scheme": true,
                     "color_scheme": "",
@@ -416,7 +416,7 @@
     "logo_RVGHD7": {
       "type": "logo",
       "custom_css": [
-        "@media screen and (min-width:768px){.logo-section {justify-content: flex-end; width:50%;}}"
+        "@media screen and (min-width: 768px) {.logo-section {justify-content: flex-end; width: 50%; }}"
       ],
       "name": "t:names.logo",
       "settings": {

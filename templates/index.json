@@ -598,7 +598,6 @@
             "author_text_transform": "uppercase",
             "author_color": "#ffffff",
             "mobile_image_width": 180,
-            "mobile_image_padding": 40,
             "mobile_quote_font_size": 22,
             "mobile_author_font_size": 14,
             "mobile_text_padding": 10
