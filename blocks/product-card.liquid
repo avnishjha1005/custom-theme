@@ -39,6 +39,9 @@
       "type": "product-title"
     },
     {
+    "type":"product-vendor"
+    },
+    {
       "type": "custom-liquid"
     },
     {
@@ -217,6 +220,30 @@
             "padding-inline-end": 0
           }
         },
+        "product_vendor": {
+          "type": "product-vendor",
+          "name": "Product Vendor",
+          "settings": {
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 4,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          }
+        },
         "price": {
           "type": "price",
           "name": "t:names.product_price",
@@ -240,7 +267,7 @@
           }
         }
       },
-      "block_order": ["product-card-gallery", "product_title", "price"]
+      "block_order": ["product-card-gallery","product_vendor", "product_title", "price"]
     }
   ]
 }
