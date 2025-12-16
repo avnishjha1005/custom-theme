@@ -119,10 +119,7 @@
             <span
               class="svg-wrapper add-to-cart-icon"
             >
-              {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
-            </span>
-            <span class="add-to-cart-text__content is-visually-hidden-mobile">
-              {{ add_to_cart_text }}
+              {{- 'icon-plus.svg' | inline_asset_content -}}
             </span>
           </span>
         </button>
@@ -133,6 +130,10 @@
 
 {% stylesheet %}
   /* Quick Add */
+  quick-add-component{
+    display:flex;
+    align-items:flex-end;
+  }
   .quick-add {
     --quick-add-offset: var(--padding-sm);
     --quick-add-top: calc(var(--quick-add-offset) + var(--padding-block-start));
@@ -176,7 +177,7 @@
     background-color: transparent;
     color: var(--color-foreground);
     border-color: transparent;
-    box-shadow: var(--shadow-popover);
+    
     pointer-events: all;
     position: relative;
     overflow: hidden;
