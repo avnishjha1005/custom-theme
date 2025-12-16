@@ -560,11 +560,23 @@
                   "block_order": [
                     "swatches_tGqDq9"
                   ]
+                },
+                "product_card_quick_add_pJeKKE": {
+                  "type": "_product-card-quick-add",
+                  "name": "t:names.quick_add",
+                  "settings": {
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
                 "group_KJDaTQ",
-                "group_cPyTRf"
+                "group_cPyTRf",
+                "product_card_quick_add_pJeKKE"
               ]
             }
           },
@@ -574,6 +586,9 @@
           ]
         }
       },
+      "custom_css": [
+        "quick-add-component{display:flex; align-items: flex-end;}"
+      ],
       "name": "Featured collection",
       "settings": {
         "collection": "all",
