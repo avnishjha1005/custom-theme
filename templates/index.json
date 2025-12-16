@@ -353,7 +353,7 @@
               "settings": {
                 "content_direction": "row",
                 "vertical_on_mobile": true,
-                "horizontal_alignment": "space-between",
+                "horizontal_alignment": "flex-start",
                 "vertical_alignment": "flex-start",
                 "align_baseline": false,
                 "horizontal_alignment_flex_direction_column": "flex-start",
@@ -587,7 +587,7 @@
         }
       },
       "custom_css": [
-        "quick-add-component{display:flex; align-items: flex-end;}"
+        "quick-add-component {display: flex; align-items: flex-end;}"
       ],
       "name": "Featured collection",
       "settings": {
