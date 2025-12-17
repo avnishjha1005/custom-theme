@@ -3339,9 +3339,11 @@ slideshow-slides[gutters*='end'] {
 
 slideshow-component[dragging] {
   --cursor: grabbing;
+  user-select: none;
 
   * {
     pointer-events: none;
+    user-select: none;
   }
 }
 

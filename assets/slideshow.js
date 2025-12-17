@@ -84,6 +84,10 @@ export class Slideshow extends Component {
       this.#scroll.destroy();
     }
 
+    // Clean up mouse drag event listeners
+    document.removeEventListener('mousemove', this.#handleMouseMove);
+    document.removeEventListener('mouseup', this.#handleMouseUp);
+
     const slideCount = this.slides?.length || 0;
     if (slideCount > 1) {
       this.removeEventListener('mouseenter', this.suspend);
@@ -569,6 +573,10 @@ export class Slideshow extends Component {
   };
 
   #dragging = false;
+  #mouseStartX = 0;
+  #mouseStartY = 0;
+  #scrollStartX = 0;
+  #scrollStartY = 0;
 
   /**
    * Handles the 'mousedown' event to start dragging slides.
@@ -597,11 +605,96 @@ export class Slideshow extends Component {
       if (outerCarousel && outerCarousel !== this) {
         // Mark that this event should not propagate to parent slideshow
         event.stopImmediatePropagation();
+        return;
       }
     }
 
+    // Only handle left mouse button
+    if (event.button !== 0) return;
+
+    // Don't start dragging if clicking on interactive elements
+    const target = event.target;
+    if (
+      target instanceof HTMLAnchorElement ||
+      target instanceof HTMLButtonElement ||
+      target instanceof HTMLInputElement ||
+      target.closest('a, button, input, [role="button"]')
+    ) {
+      return;
+    }
+
     event.preventDefault();
-  }
+    event.stopPropagation();
+
+    const { scroller } = this.refs;
+    if (!scroller) return;
+
+    // Start dragging
+    this.#dragging = true;
+    this.#mouseStartX = event.clientX;
+    this.#mouseStartY = event.clientY;
+    this.#scrollStartX = scroller.scrollLeft;
+    this.#scrollStartY = scroller.scrollTop;
+
+    this.setAttribute('dragging', '');
+    if (this.#scroll) {
+      this.#scroll.snap = false;
+    }
+
+    // Add event listeners for mouse move and up
+    document.addEventListener('mousemove', this.#handleMouseMove);
+    document.addEventListener('mouseup', this.#handleMouseUp);
+  };
+
+  /**
+   * Handles the 'mousemove' event while dragging.
+   * @param {MouseEvent} event - The mousemove event.
+   */
+  #handleMouseMove = (event) => {
+    if (!this.#dragging) return;
+
+    const { scroller } = this.refs;
+    if (!scroller) return;
+
+    const deltaX = this.#mouseStartX - event.clientX;
+    const deltaY = this.#mouseStartY - event.clientY;
+
+    // Determine scroll axis
+    const axis = this.#scroll?.axis || 'x';
+    const isHorizontal = axis === 'x';
+
+    // Calculate new scroll position
+    const newScrollX = this.#scrollStartX + deltaX;
+    const newScrollY = this.#scrollStartY + deltaY;
+
+    // Update scroll position
+    if (isHorizontal) {
+      scroller.scrollLeft = newScrollX;
+    } else {
+      scroller.scrollTop = newScrollY;
+    }
+
+    event.preventDefault();
+  };
+
+  /**
+   * Handles the 'mouseup' event to stop dragging.
+   * @param {MouseEvent} event - The mouseup event.
+   */
+  #handleMouseUp = (event) => {
+    if (!this.#dragging) return;
+
+    this.#dragging = false;
+    this.removeAttribute('dragging');
+    if (this.#scroll) {
+      this.#scroll.snap = true;
+    }
+
+    // Remove event listeners
+    document.removeEventListener('mousemove', this.#handleMouseMove);
+    document.removeEventListener('mouseup', this.#handleMouseUp);
+    document.removeEventListener('mouseleave', this.#handleMouseUp);
+  };
 
   #handlePointerEnter = () => {
     this.setAttribute('actioned', '');
