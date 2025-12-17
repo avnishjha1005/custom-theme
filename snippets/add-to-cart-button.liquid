@@ -10,7 +10,7 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign default_add_to_cart_text = 'actions.add_to_cart' | t
+  assign default_add_to_cart_text = "Add to cart"
   assign product_variant_media = product.selected_or_first_available_variant.featured_media.preview_image | image_url: width: 100
   if product.selected_or_first_available_variant.featured_media.preview_image == blank
     assign product_variant_media = product.featured_media.preview_image | image_url: width: 100
@@ -51,9 +51,6 @@
     >
       <span class="svg-wrapper add-to-cart-icon--added">
         {{- 'icon-checkmark.svg' | inline_asset_content -}}
-      </span>
-      <span class="{% if icon_only_on_mobile %}is-visually-hidden-mobile{% endif %}">
-        {{- 'actions.added' | t -}}
       </span>
     </span>
   </button>

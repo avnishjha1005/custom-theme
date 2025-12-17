@@ -8,7 +8,7 @@
 
 {% liquid
   assign product_form_id = 'QuickAdd-ProductForm-' | append: product.id | append: '-' | append: block.id
-  assign add_to_cart_text = 'actions.add' | t
+  assign add_to_cart_text = "Added"
 
   # Logic to determine which variant to use (matching swatch selection logic from product-card)
   assign variant_to_use = product.selected_or_first_available_variant
