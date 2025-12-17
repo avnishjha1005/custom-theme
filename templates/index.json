@@ -625,7 +625,7 @@
             "text_alignment": "center",
             "content_max_width": 500,
             "text_spacing": 20,
-            "desktop_text_padding": 40,
+            "desktop_text_padding": 35,
             "quote_font_size": 32,
             "quote_font_family": "Marcellus",
             "quote_font_style": "normal",
@@ -635,7 +635,7 @@
             "show_separator": true,
             "separator_width": 60,
             "separator_height": 2,
-            "separator_color": "#000000",
+            "separator_color": "#ffffff",
             "author_font_size": 16,
             "author_text_transform": "uppercase",
             "author_color": "#ffffff",
@@ -931,7 +931,7 @@
             "placement": "on_image",
             "horizontal_alignment": "flex-start",
             "vertical_alignment": "flex-end",
-            "collection_card_gap": 8,
+            "collection_card_gap": 12,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "border": "none",
@@ -995,7 +995,7 @@
               "type": "button",
               "name": "t:names.button",
               "settings": {
-                "label": "Shop now",
+                "label": "EXPLORE",
                 "link": "shopify://collections/all",
                 "open_in_new_tab": false,
                 "style_class": "link",
@@ -1034,6 +1034,9 @@
       "block_order": [
         "group_9fmY9n"
       ],
+      "custom_css": [
+        "a {font-weight: bold; text-decoration: underline;}"
+      ],
       "name": "t:names.collections_grid",
       "settings": {
         "collection_list": [
@@ -1047,14 +1050,14 @@
         "columns": 2,
         "mobile_columns": "1",
         "mobile_card_size": "60cqw",
-        "columns_gap": 8,
+        "columns_gap": 32,
         "bento_gap": 8,
-        "rows_gap": 8,
+        "rows_gap": 32,
         "max_collections": 4,
         "icons_style": "arrow",
         "icons_shape": "none",
         "section_width": "page-width",
-        "gap": 12,
+        "gap": 32,
         "color_scheme": "scheme-6",
         "padding-block-start": 48,
         "padding-block-end": 48
