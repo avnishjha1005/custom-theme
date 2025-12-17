@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "section": {
       "type": "section",
@@ -15,11 +16,11 @@
           "type": "text",
           "name": "Title",
           "settings": {
-            "text": "<p>{{ closest.collection.title }}</p>",
+            "text": "<p>Clothing</p>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "h2",
+            "type_preset": "h3",
             "font": "var(--font-primary--family)",
             "font_size": "",
             "line_height": "normal",
@@ -37,22 +38,36 @@
           },
           "blocks": {}
         },
-        "divider_agfR7J": {
-          "type": "_divider",
-          "name": "Divider",
+        "text_7cReRg": {
+          "type": "text",
+          "name": "t:names.text",
           "settings": {
-            "thickness": 1,
-            "corner_radius": "square",
-            "width_percent": 100,
+            "text": "<p>Lorem ipsum dolor sit amet</p>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
             "padding-block-start": 0,
-            "padding-block-end": 11
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
           },
           "blocks": {}
         }
       },
       "block_order": [
         "text_tqQTNE",
-        "divider_agfR7J"
+        "text_7cReRg"
       ],
       "name": "Collection heading",
       "settings": {
@@ -63,7 +78,7 @@
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
-        "gap": 84,
+        "gap": 16,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
@@ -95,9 +110,9 @@
             "filter_width": "centered",
             "text_label_case": "uppercase",
             "show_swatch_label": true,
-            "show_filter_label": false,
-            "enable_sorting": true,
-            "enable_grid_density": true,
+            "show_filter_label": true,
+            "enable_sorting": false,
+            "enable_grid_density": false,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "padding-block-start": 8,
@@ -144,7 +159,6 @@
             "group": {
               "type": "_product-card-group",
               "settings": {
-                "open_in_new_tab": false,
                 "content_direction": "row",
                 "vertical_on_mobile": true,
                 "horizontal_alignment": "space-between",
@@ -172,17 +186,29 @@
                 "overlay_color": "#00000026",
                 "overlay_style": "solid",
                 "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
                 "padding-block-start": 2,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
               "blocks": {
+                "product_card_quick_add_Vqh8Y3": {
+                  "type": "_product-card-quick-add",
+                  "name": "t:names.quick_add",
+                  "settings": {
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
                 "group_wwVYk6": {
                   "type": "_product-card-group",
                   "name": "t:names.group",
                   "settings": {
-                    "open_in_new_tab": false,
                     "content_direction": "column",
                     "vertical_on_mobile": true,
                     "horizontal_alignment": "flex-start",
@@ -210,12 +236,39 @@
                     "overlay_color": "#00000026",
                     "overlay_style": "solid",
                     "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
                   "blocks": {
+                    "product_vendor_Lww9Mj": {
+                      "type": "product-vendor",
+                      "name": "Product Vendor",
+                      "settings": {
+                        "width": "fit-content",
+                        "max_width": "normal",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
                     "product_title_GDE6KA": {
                       "type": "product-title",
                       "name": "t:names.product_title",
@@ -265,6 +318,7 @@
                     }
                   },
                   "block_order": [
+                    "product_vendor_Lww9Mj",
                     "product_title_GDE6KA",
                     "price_prVYBm"
                   ]
@@ -273,7 +327,6 @@
                   "type": "_product-card-group",
                   "name": "t:names.group",
                   "settings": {
-                    "open_in_new_tab": false,
                     "content_direction": "column",
                     "vertical_on_mobile": true,
                     "horizontal_alignment": "flex-start",
@@ -301,6 +354,8 @@
                     "overlay_color": "#00000026",
                     "overlay_style": "solid",
                     "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
@@ -327,6 +382,7 @@
                 }
               },
               "block_order": [
+                "product_card_quick_add_Vqh8Y3",
                 "group_wwVYk6",
                 "group_njW3rP"
               ]
@@ -338,10 +394,15 @@
           ]
         }
       },
+      "custom_css": [
+        "quick-add-component {display: flex; align-items: flex-end; align-self: flex-start;}"
+      ],
       "settings": {
         "layout_type": "grid",
         "product_card_size": "medium",
         "mobile_product_card_size": "small",
+        "enable_infinite_scroll": true,
+        "products_per_page": 24,
         "product_grid_width": "centered",
         "full_width_on_mobile": true,
         "columns_gap_horizontal": 16,
