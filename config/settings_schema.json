@@ -7,6 +7,51 @@
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://support.shopify.com/"
   },
+   {
+        "name":"Wishlist",
+        "settings":[
+         {
+            "type":"checkbox",
+            "id":"enable-wishlist",
+            "label": "Enable Wishlist",
+            "default": false
+          },
+          {
+            "type":"checkbox",
+            "id":"wishlist-floating-button-position",
+            "label": "Enable Floating Button",
+            "default": false
+          },
+           {
+          "type": "select",
+          "id": "floating_button-position",
+          "options": [
+            {
+              "value": "middle-left",
+              "label": "Middle Left"
+            },
+            {
+              "value": "middle-right",
+              "label": "Middle Right"
+            },
+            {
+              "value": "bottom-left",
+              "label": "Bottom Left"
+            },
+            {
+              "value": "bottom-center",
+              "label": "Bottom Center"
+            },
+            {
+              "value": "bottom-right",
+              "label": "Bottom Right"
+            }
+          ],
+          "default": "middle-right",
+          "label": "Floating Button Position"
+        }
+        ]
+      },
   {
     "name": "t:names.logo_and_favicon",
     "settings": [
