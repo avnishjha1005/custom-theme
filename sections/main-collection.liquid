@@ -51,48 +51,51 @@
 
     {% paginate collection.products by products_per_page %}
   {% capture children %}
-    {%- liquid
-      assign desktop_cols = section.settings.columns_desktop | default: 4
-      assign current_col_pos = 0
-    -%}
+  {%- liquid
     
-    {% for product in collection.products %}
-      {%- liquid
-        assign is_featured = product.metafields.custom.featured_products
+    assign desktop_cols = 4
+    assign hero_count = 3
+    assign current_col_pos = 1
+  -%}
+  
+  {% for product in collection.products %}
+    {% liquid
+    assign is_featured = product.metafields.custom.featured_products
+    assign remaining_space = desktop_cols | minus: current_col_pos
+    assign can_fit_hero = false
+
+    if is_featured and remaining_space >2
+      assign can_fit_hero = true
+      assign hero_count = hero_count | plus: 1
+    endif
+  %}
+
+    <li
+      id="{{ section.id }}-{{ product.id }}"
+      class="product-grid__item product-grid__item--{{ forloop.index0 }} {% if can_fit_hero %}product-grid__item--hero{% endif %}"
+      data-page="{{ paginate.current_page }}"
+      data-product-id="{{ product.id }}"
+      data-hero="{{ can_fit_hero }}"
+      ref="cards[]"
+    >
+      {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+    </li>
+
+    {%- liquid
       
-        assign can_fit_hero = false
-        assign remaining_space = desktop_cols | minus: current_col_pos
-        
-        if is_featured and remaining_space >= 2
-          assign can_fit_hero = true
-        endif
-      -%}
+      if can_fit_hero
+        assign current_col_pos = current_col_pos | plus: 2
+      else
+        assign current_col_pos = current_col_pos | plus: 1
+      endif
 
-      <li
-        id="{{ section.id }}-{{ product.id }}"
-        class="product-grid__item product-grid__item--{{ forloop.index0 }} {% if can_fit_hero %}product-grid__item--hero{% endif %}"
-        data-page="{{ paginate.current_page }}"
-        data-product-id="{{ product.id }}"
-        data-hero="{{ can_fit_hero }}"
-        ref="cards[]"
-      >
-        {% # theme-check-disable %}
-        {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-        {% # theme-check-enable %}
-      </li>
-
-      {%- liquid
-        if can_fit_hero
-          assign current_col_pos = current_col_pos | plus: 2
-        else
-          assign current_col_pos = current_col_pos | plus: 1
-        endif
-        if current_col_pos >= desktop_cols
-          assign current_col_pos = 0
-        endif
-      -%}
-    {% endfor %}
-  {% endcapture %}
+      
+      if current_col_pos > desktop_cols
+        assign current_col_pos = 0
+      endif
+    -%}
+  {% endfor %}
+{% endcapture %}
 
   {% render 'product-grid',
     section: section,
@@ -144,8 +147,8 @@
     @media screen and (min-width: 750px) {
       grid-template-columns:
         1fr repeat(
-          var(--centered-column-number),
-          minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / var(--centered-column-number)))
+          4,
+          minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / 4))
         )
         1fr;
     }
@@ -157,10 +160,10 @@
       grid-column: 1 / -1;
       grid-template-columns:
         minmax(var(--page-margin), 1fr) repeat(
-          var(--centered-column-number),
-          minmax(0, calc((var(--page-width) - var(--page-margin) * 2) / var(--centered-column-number)))
+          4,
+          minmax(0, calc((var(--page-width) - var(--page-margin) * 2) /4))
         )
-        minmax(var(--page-margin), 1fr);
+        minmax(var(--page-margin), 1fr) !important
     }
   }
 
@@ -249,15 +252,6 @@
       font-size: calc(var(--font-size-base) * 1.15);
     }
 
-    /* Optional: Add subtle visual emphasis */
-    .product-grid__item--hero .product-grid__card {
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-      transition: box-shadow 0.3s ease;
-    }
-
-    .product-grid__item--hero .product-grid__card:hover {
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    }
   }
 
   /* Tablet: Hero items span 2 columns, 1.5 rows */
