@@ -8,7 +8,8 @@
   src="{{ 'results-list.js' | asset_url }}"
   type="module"
   fetchpriority="low"
-></script>
+>
+</script>
 
 {% javascript %}
   const url = new URL(window.location.href);
@@ -25,7 +26,6 @@
     );
   }
 {% endjavascript %}
-
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <results-list
   class="section product-grid-container color-{{ section.settings.color_scheme }}"
@@ -50,55 +50,95 @@
     {% endif %}
 
     {% paginate collection.products by products_per_page %}
-      {% capture children %}
-        {% comment %} Count featured items to limit to max 2 per page {% endcomment %}
-        {% assign featured_count = 0 %}
-        {% assign max_featured = section.settings.max_featured_items | default: 2 %}
+  {% capture children %}
+    {%- liquid
+      assign desktop_cols = section.settings.columns_desktop | default: 4
+      assign current_col_pos = 0
+    -%}
+    
+    {% for product in collection.products %}
+      {%- liquid
+        assign is_featured = product.metafields.custom.featured_products
+      
+        assign can_fit_hero = false
+        assign remaining_space = desktop_cols | minus: current_col_pos
         
-        {% for product in collection.products %}
-          {% comment %} Check metafield and enforce max limit {% endcomment %}
-          {% assign wants_featured = product.metafields.custom.featured_grid_size %}
-          {% assign is_featured = false %}
-          
-          {% if wants_featured and featured_count < max_featured %}
-            {% assign is_featured = true %}
-            {% assign featured_count = featured_count | plus: 1 %}
-          {% endif %}
-          
-          <li
-            id="{{ section.id }}-{{ product.id }}"
-            class="product-grid__item product-grid__item--{{ forloop.index0 }} {% if is_featured %}product-grid__item--hero{% endif %}"
-            data-page="{{ paginate.current_page }}"
-            data-product-id="{{ product.id }}"
-            data-hero="{{ is_featured }}"
-            ref="cards[]"
-          >
-            {% # theme-check-disable %}
-            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-            {% # theme-check-enable %}
-          </li>
-        {% endfor %}
-      {% endcapture %}
+        if is_featured and remaining_space >= 2
+          assign can_fit_hero = true
+        endif
+      -%}
 
-      {% render 'product-grid',
-        section: section,
-        children: children,
-        products: collection.products,
-        paginate: paginate,
-        enable_infinite_scroll: section.settings.enable_infinite_scroll
-      %}
-    {% endpaginate %}
+      <li
+        id="{{ section.id }}-{{ product.id }}"
+        class="product-grid__item product-grid__item--{{ forloop.index0 }} {% if can_fit_hero %}product-grid__item--hero{% endif %}"
+        data-page="{{ paginate.current_page }}"
+        data-product-id="{{ product.id }}"
+        data-hero="{{ can_fit_hero }}"
+        ref="cards[]"
+      >
+        {% # theme-check-disable %}
+        {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+        {% # theme-check-enable %}
+      </li>
+
+      {%- liquid
+        if can_fit_hero
+          assign current_col_pos = current_col_pos | plus: 2
+        else
+          assign current_col_pos = current_col_pos | plus: 1
+        endif
+        if current_col_pos >= desktop_cols
+          assign current_col_pos = 0
+        endif
+      -%}
+    {% endfor %}
+  {% endcapture %}
+
+  {% render 'product-grid',
+    section: section,
+    children: children,
+    products: collection.products,
+    paginate: paginate,
+    enable_infinite_scroll: section.settings.enable_infinite_scroll
+  %}
+{% endpaginate %}
   </div>
 </results-list>
 
 {% stylesheet %}
+ /* ========================================
+     GRID CONTAINER: Intelligent Gap Filling
+     ======================================== */
   .main-collection-grid {
+    /* Preserve existing logic */
     grid-column: var(--grid-column--mobile);
-
+    
+    /* ADDED LOGIC: Enable intelligent dense packing */
+    display: grid;
+    grid-auto-flow: dense; 
+    grid-auto-rows: minmax(0, 1fr);
     @media screen and (min-width: 750px) {
       grid-column: var(--grid-column--desktop);
     }
   }
+
+  /* ========================================
+     HERO ITEMS: Base Logic
+     ======================================== */
+  @media (min-width: 990px) {
+  .product-grid__item--hero {
+    grid-column: 1 / span 2;
+  }
+}
+
+/* Tablet / 4-column danger zone */
+@media (min-width: 750px) and (max-width: 989px) {
+  .product-grid__item--hero {
+    grid-column: span 1;
+    grid-row: span 2;
+  }
+}
+
 
   .collection-wrapper {
     @media screen and (min-width: 750px) {
@@ -226,11 +266,17 @@
       grid-row: span 2;
     }
   }
+   .resource-list__item--featured {
+     grid-column: span 2;
+     grid-row: span 2;
+   }
 
   /* Mobile: Hero items full width and slightly taller */
   @media screen and (max-width: 749px) {
     .product-grid__item--hero {
       grid-column: 1 / -1;
+      /* ADDED LOGIC: Reset row span on single column mobile to prevent distortion */
+      grid-row: auto; 
     }
     
     .product-grid__item--hero .card__media {

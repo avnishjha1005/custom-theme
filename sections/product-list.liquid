@@ -1,5 +1,4 @@
 
-
 {% liquid
   assign max_items = section.settings.max_products
 %}
@@ -29,7 +28,7 @@
       {% paginate section.settings.collection.products by max_items %}
         {% for product in section.settings.collection.products limit: max_items %}
           <div
-            class="resource-list__item"
+            class="resource-list__item {% if is_featured %}resource-list__item--featured{% endif %}"
           >
             {% # theme-check-disable UniqueStaticBlockId %}
               {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: product %}
@@ -79,6 +78,22 @@
     {%- content_for 'blocks' -%}
   </div>
 </div>
+
+<style>
+  /* Featured product styling - spans 2 columns and 2 rows in grid layout */
+  .resource-list__item--featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  
+  /* Ensure featured items work on mobile too */
+  @media screen and (max-width: 749px) {
+    .resource-list__item--featured {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+</style>
 
 {% schema %}
 {
