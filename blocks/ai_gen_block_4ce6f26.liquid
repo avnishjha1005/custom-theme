@@ -5,18 +5,18 @@
   .ai-quote-section-{{ ai_gen_id }} {
     width: 100%;
     overflow: hidden;
- background-color: {{ block.settings.text_background_color }};
- width:100vw;
   }
 
   .ai-quote-section__container-{{ ai_gen_id }} {
     display: flex;
     flex-wrap: wrap;
-    width: 100%;
     margin: 0 auto;
-   
+    max-width: var(--page-width);
+    background: #692c23;
   }
-
+  #shopify-block-AcDNkZXlTVkFzZHVBT__ai_gen_block_4ce6f26_pz87jb{
+    width:100%;
+  }
   /* --- Image Logic --- */
   .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
     position: relative;
@@ -91,7 +91,9 @@
     .ai-quote-section__container-{{ ai_gen_id }} {
       flex-direction: row;
       align-items: stretch;
-      width: full;
+      justify-content:space-between;
+      background: {{block.settings.text_background_color}};
+      margin: 0 auto;
     }
 
     .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
@@ -118,6 +120,7 @@
   /* --- MOBILE SPECIFIC (Stacked Layout) --- */
   @media screen and (max-width: 749px) {
     .ai-quote-section__container-{{ ai_gen_id }} {
+      background_color:#692c23;
       flex-direction: column;
       min-height: auto;
       position: relative; /* Anchor for the absolute image */
@@ -170,6 +173,8 @@
     .ai-quote-section__author-{{ ai_gen_id }} {
       font-size: {{ block.settings.mobile_author_font_size }}px;
       text-align: center;
+      position:absolute;
+      bottom:-200px;
     }
 
     .ai-quote-section__separator-{{ ai_gen_id }} {

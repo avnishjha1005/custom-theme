@@ -202,13 +202,16 @@
         assign slideshow_attributes = slideshow_attributes | append: ' disabled="true"'
       endif
     %}
+   
+          {% if product.media.size > 1 %}
       {%- capture slideshow_arrows -%}
         {%- render 'slideshow-arrows', icon_style: 'chevron', icon_shape: 'circle' -%}
       {%- endcapture -%}
 
       {%- capture controls_markup -%}
-        {% render 'slideshow-controls', style: 'dots', item_count: all_media.size, icon_style: 'chevron', shape: 'circle' %}
+        {% render 'slideshow-controls', style: 'dots', item_count: product.media.size, icon_style: 'chevron', shape: 'circle' %}
       {%- endcapture -%}
+    {% endif %}
 
       <a
       class="contents"

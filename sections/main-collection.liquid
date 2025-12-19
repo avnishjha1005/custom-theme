@@ -134,7 +134,7 @@
   }
 }
 
-/* Tablet / 4-column danger zone */
+/* Tablet */
 @media (min-width: 750px) and (max-width: 989px) {
   .product-grid__item--hero {
     grid-column: span 1;
@@ -277,6 +277,19 @@
       min-height: 400px;
     }
   }
+  .product-grid__item--hero .card-gallery,
+.product-grid__item--hero slideshow-component,
+.product-grid__item--hero slideshow-container,
+.product-grid__item--hero slideshow-slides,
+.product-grid__item--hero slideshow-slide,
+.product-grid__item--hero .product-media {
+  height: 100%;
+}.product-grid__item--hero .product-media__image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
 {% endstylesheet %}
 
 {% schema %}
