@@ -615,7 +615,7 @@
         }
       },
       "custom_css": [
-        "quick-add-component {display: flex; align-items: flex-end; margin-right:0;}"
+        "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}"
       ],
       "name": "Featured collection",
       "settings": {
@@ -645,7 +645,7 @@
           "type": "ai_gen_block_4ce6f26",
           "settings": {
             "text_background_color": "#692c23",
-            "image": "shopify://shop_images/model-with-leather-jacket-over-shoulders.jpg",
+            "image": "shopify://shop_images/b99039773d558e7ede20c72d41d1ec53.jpg",
             "desktop_image_position": "left",
             "desktop_min_height": 500,
             "quote": "“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.”",
@@ -1068,9 +1068,9 @@
       "name": "t:names.collections_grid",
       "settings": {
         "collection_list": [
-          "frontpage",
           "mens-collection",
           "womens-collection",
+          "frontpage",
           "sales"
         ],
         "layout_type": "grid",
