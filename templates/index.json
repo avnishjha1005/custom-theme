@@ -615,7 +615,7 @@
         }
       },
       "custom_css": [
-        "quick-add-component {display: flex; align-items: flex-end;}"
+        "quick-add-component {display: flex; align-items: flex-end; margin-right:0;}"
       ],
       "name": "Featured collection",
       "settings": {

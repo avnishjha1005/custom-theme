@@ -423,7 +423,7 @@
         }
       },
       "custom_css": [
-        "quick-add-component {display: flex; align-items: flex-end; align-self: flex-start;}"
+        "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}"
       ],
       "settings": {
         "layout_type": "grid",
