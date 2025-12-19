@@ -457,6 +457,9 @@
   /* Button styling */
   .hero__bottom-left-button {
     display: inline-flex;
+    font-size:12px;
+    font-weight: 600px;
+    text-transform: uppercase;
     align-items: center;
     justify-content: center;
     background: transparent;
@@ -469,11 +472,12 @@
     max-width: 100%;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    &:hover {
+      color: white;
+      text-decoration-color: transparent;
+    }
   }
 
-  .hero__bottom-left-button:hover {
-    opacity: 0.8;
-  }
 
   .hero__bottom-left-button--disabled {
     opacity: 0.6;
