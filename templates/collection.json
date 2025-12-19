@@ -42,7 +42,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>Lorem ipsum dolor sit amet</p>",
+            "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aut odit aut fugit.</p>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
@@ -95,7 +95,7 @@
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "padding-block-start": 36,
-        "padding-block-end": 0
+        "padding-block-end": 16
       }
     },
     "main": {
@@ -115,7 +115,7 @@
             "enable_grid_density": false,
             "inherit_color_scheme": true,
             "color_scheme": "",
-            "padding-block-start": 8,
+            "padding-block-start": 16,
             "padding-block-end": 8,
             "padding-inline-start": 0,
             "padding-inline-end": 0,

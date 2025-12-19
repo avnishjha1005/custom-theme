@@ -116,7 +116,7 @@
             "vertical_align": "center",
             "unit": "pixel",
             "percent_width": 100,
-            "pixel_height": 32,
+            "pixel_height": 48,
             "custom_mobile_size": true,
             "unit_mobile": "pixel",
             "percent_width_mobile": 31,
@@ -184,7 +184,7 @@
           "type": "button",
           "name": "t:names.button",
           "settings": {
-            "label": "Shop now",
+            "label": "SHOP NOW",
             "link": "shopify://collections/all",
             "open_in_new_tab": false,
             "style_class": "link",
