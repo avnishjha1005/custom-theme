@@ -322,7 +322,7 @@
   }
 
   .hero__image--mobile { display: none; }
-  .hero__image--desktop { display: block; }
+  .hero__image--desktop { display: block; object-fit: cover; object-position: top;}
   @media screen and (max-width: 749px) {
     .hero__image--desktop { display: none; }
     .hero__image--mobile { display: block; }
@@ -477,7 +477,9 @@
       text-decoration-color: transparent;
     }
   }
-
+  img{
+    object-position: top;
+  }
 
   .hero__bottom-left-button--disabled {
     opacity: 0.6;
@@ -541,6 +543,7 @@
     }
     .logo-block__image-wrapper{
       display:flex;
+      object-position: top;
     }
   }
 
