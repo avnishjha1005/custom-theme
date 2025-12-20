@@ -451,8 +451,18 @@
     pointer-events: none;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-family: var(--font-h3--family);
     max-width: 100%;
   }
+
+  .hero { position: relative; min-height: calc(var(--hero-min-height) - var(--hero-height-offset)); }
+  .hero[data-shopify-visual-preview] { --hero-min-height: 600px; min-height: 600px; }
+  
+  @media screen and (max-width: 749px) {
+    .hero { min-height: 95svh; }
+  }
+
+  
 
   /* Button styling */
   .hero__bottom-left-button {
@@ -493,7 +503,7 @@
     top: 120px;
     left: 0;
     display: flex;
-    gap: 8px;
+    gap: 24px;
     pointer-events: auto;
   }
 
