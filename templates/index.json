@@ -80,7 +80,8 @@
       "custom_css": [
         "@media screen and (min-width: 768px) {.logo-block__image-wrapper {display: none; }}",
         ".header__column--right {stroke: white;}",
-        "h3 {max-width: 452px; font-size: 30px; font-weight: normal; letter-spacing: -0.02rem;}"
+        "h3 {max-width: 452px; font-size: 30px; font-weight: normal; letter-spacing: -0.02rem;}",
+        ".hero__content-wrapper {max-width: 1120px; margin: auto;}"
       ],
       "name": "t:names.hero_bottom_aligned",
       "settings": {
@@ -137,13 +138,13 @@
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "h3",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
-            "wrap": "pretty",
+            "wrap": "balance",
             "color": "var(--color-foreground-heading)",
             "background": false,
             "background_color": "#00000026",
@@ -161,7 +162,7 @@
           "settings": {
             "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
             "width": "fit-content",
-            "max_width": "normal",
+            "max_width": "none",
             "alignment": "left",
             "type_preset": "rte",
             "font": "var(--font-body--family)",
@@ -203,6 +204,9 @@
         "text_PDwKke",
         "button_aHmjT7"
       ],
+      "custom_css": [
+        ".spacing-style {max-width: 1120px; margin: auto;}"
+      ],
       "name": "t:names.rich_text_section",
       "settings": {
         "content_direction": "column",
@@ -212,9 +216,9 @@
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
-        "gap": 25,
+        "gap": 24,
         "section_width": "page-width",
-        "section_height": "small",
+        "section_height": "",
         "section_height_custom": 50,
         "color_scheme": "scheme-517372f4-0f2b-4a24-95f4-50ba226a0dd9",
         "background_media": "none",
@@ -679,7 +683,9 @@
       "block_order": [
         "ai_gen_block_4ce6f26_pz87jb"
       ],
-      "custom_css": [],
+      "custom_css": [
+        ".section--page-width {max-width: 1120px; margin: auto;}"
+      ],
       "name": "Image with Text",
       "settings": {
         "content_direction": "column",
@@ -1066,7 +1072,8 @@
       ],
       "custom_css": [
         "a {font-weight: bold; text-decoration: underline;}",
-        ".image-block__image {object-position: center center;}"
+        ".image-block__image {object-position: center center;}",
+        ".section--page-width{max-width: 1120px; margin: auto;}"
       ],
       "name": "t:names.collections_grid",
       "settings": {
