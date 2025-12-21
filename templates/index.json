@@ -37,8 +37,8 @@
           "settings": {
             "image": "{{ metaobjects.hero_image[\"limited-collection-the-party-edit\"].image.value }}",
             "image_mobile": "{{ metaobjects.hero_image[\"limited-collection-the-party-edit\"].image.value }}",
-            "heading": "<h4>{{ metaobjects.hero_image[\"limited-collection-the-party-edit\"].hero_text.value }}</h4>",
-            "text_max_width": 300,
+            "heading": "<h3>{{ metaobjects.hero_image[\"limited-collection-the-party-edit\"].hero_text.value }}</h3>",
+            "text_max_width": 400,
             "button_link": "",
             "button_label": "SHOP NOW",
             "open_in_new_tab": false
@@ -50,7 +50,7 @@
           "settings": {
             "image": "{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].image.value }}",
             "image_mobile": "{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].image.value }}",
-            "heading": "<h4>{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].hero_text.value }}</h4>",
+            "heading": "<h3>{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].hero_text.value }}</h3>",
             "text_max_width": 300,
             "button_link": "",
             "button_label": "SHOP NOW",
@@ -79,7 +79,8 @@
       ],
       "custom_css": [
         "@media screen and (min-width: 768px) {.logo-block__image-wrapper {display: none; }}",
-        ".header__column--right {stroke: white;}"
+        ".header__column--right {stroke: white;}",
+        "h3 {max-width:452px; font-size: 30px; font-weight: normal; letter-spacing: -0.02rem;}"
       ],
       "name": "t:names.hero_bottom_aligned",
       "settings": {
@@ -1063,7 +1064,8 @@
         "group_9fmY9n"
       ],
       "custom_css": [
-        "a {font-weight: bold; text-decoration: underline;}"
+        "a {font-weight: bold; text-decoration: underline;}",
+        ".image-block__image {object-position: center center;}"
       ],
       "name": "t:names.collections_grid",
       "settings": {

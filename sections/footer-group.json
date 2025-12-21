@@ -31,9 +31,10 @@
     },
     "mobile_tab_bar_hUiGjD": {
       "type": "mobile-tab-bar",
+      "custom_css": [],
       "name": "Mobile Tab Bar",
       "settings": {
-        "menu": "main-menu",
+        "menu": "mobile-bottom-menu",
         "mobile_tab_bar_variant": "solid",
         "mobile_tab_bar_height": "standard",
         "mobile_tab_bar_show_on_tablet": true
@@ -419,7 +420,7 @@
       ],
       "name": "t:names.logo",
       "settings": {
-        "inverse": false,
+        "inverse": true,
         "font": "heading",
         "unit": "percent",
         "pixel_height": 48,
