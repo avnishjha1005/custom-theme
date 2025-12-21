@@ -1,0 +1,192 @@
+
+{% liquid
+  assign enabled = section.settings.enabled
+  assign phone_raw = section.settings.phone | strip
+  assign preset_message = section.settings.message
+  assign offset_x = section.settings.offset_x
+  assign offset_y = section.settings.offset_y
+  assign button_style = section.settings.button_style
+  assign show_on_mobile = section.settings.show_on_mobile
+  assign z_index = section.settings.z_index | default: 9999
+
+  assign phone = phone_raw | replace: ' ', '' | replace: '+', '' | replace: '-', '' | replace: '(', '' | replace: ')', ''
+
+  assign encoded_message = preset_message | url_encode
+  assign chat_url = 'https://wa.me/' | append: phone | append: '?text=' | append: encoded_message
+
+  assign css_right = 'max(16px, env(safe-area-inset-right))'
+  assign css_left = 'auto'
+  assign css_bottom = 'max(16px, env(safe-area-inset-bottom))'
+  assign css_top = 'auto'
+%}
+
+{% if enabled and phone != '' %}
+  <a
+    href="{{ chat_url }}"
+    class="whatsapp-fab {% if button_style == 'pill' %}whatsapp-pill{% endif %}"
+    aria-label="Chat with us on WhatsApp"
+    rel="noopener"
+    target="_blank"
+  >
+    {{- 'icon-whatsapp.svg' | inline_asset_content -}}
+    {% if button_style == 'pill' %}
+      <span class="whatsapp-label">{{ section.settings.label_text | default: 'Chat on WhatsApp' }}</span>
+    {% endif %}
+  </a>
+
+  <style>
+    .whatsapp-fab {
+      position: fixed;
+      right: {{ css_right }};
+      left: {{ css_left }};
+      bottom: {{ css_bottom }};
+      top: {{ css_top }};
+      transform: translate({{ offset_x }}px, {{ offset_y }}px);
+      z-index: {{ z_index }};
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      background: black; /* WhatsApp green */
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.2),
+        0 2px 6px rgba(0, 0, 0, 0.12);
+      text-decoration: none;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+    }
+    .whatsapp-fab:hover {
+      transform: translate({{ offset_x }}px, {{ offset_y | plus: -1 }}px);
+      box-shadow:
+        0 10px 28px rgba(0, 0, 0, 0.25),
+        0 3px 8px rgba(0, 0, 0, 0.14);
+      background: #21bf5b;
+    }
+    .whatsapp-fab:active { transform: translate({{ offset_x }}px, {{ offset_y }}px); }
+    .whatsapp-fab:focus { outline: 3px solid rgba(37, 211, 102, 0.5); outline-offset: 2px; }
+
+    .whatsapp-icon { width: 28px; height: 28px; }
+
+    /* Pill variant */
+    .whatsapp-pill {
+      width: auto;
+      height: auto;
+      border-radius: 999px;
+      padding: 12px 16px;
+      gap: 10px;
+      font: 600 14px/1.1 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Inter", sans-serif;
+    }
+    .whatsapp-pill .whatsapp-icon { width: 22px; height: 22px; }
+    .whatsapp-label { white-space: nowrap; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .whatsapp-fab { transition: none; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .whatsapp-fab {
+        box-shadow:
+          0 8px 24px rgba(0, 0, 0, 0.6),
+          0 2px 6px rgba(0, 0, 0, 0.4);
+      }
+    }
+    @media (max-width: 480px) {
+      {% unless show_on_mobile %}
+        .whatsapp-fab { display: none !important; }
+      {% endunless %}
+      .whatsapp-fab:not(.whatsapp-pill) {
+        right: {{ css_right }};
+        bottom: {{ css_bottom }};
+        width: 52px;
+        height: 52px;
+      }
+      .whatsapp-icon { width: 26px; height: 26px; }
+    }
+  </style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "WhatsApp Fab",
+  "tag": "section",
+  "class": "section-whatsapp-fab",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable floating button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "WhatsApp Business number",
+      "info": "Digits only, no +, spaces, or dashes. Example: 919972320665",
+      "default": "919972320665"
+    },
+    {
+      "type": "text",
+      "id": "message",
+      "label": "Default message",
+      "default": "Hi there! I would like to chat."
+    },
+    {
+      "type": "range",
+      "id": "offset_x",
+      "label": "Horizontal offset (px)",
+      "min": -200,
+      "max": 200,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "offset_y",
+      "label": "Vertical offset (px)",
+      "min": -200,
+      "max": 200,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button style",
+      "default": "fab",
+      "options": [
+        { "value": "fab", "label": "Circular FAB" },
+        { "value": "pill", "label": "Label pill" }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "label_text",
+      "label": "Label text (pill style)",
+      "default": "Chat on WhatsApp"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on mobile (<=480px)",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "z_index",
+      "label": "Z-index",
+      "default": 9999
+    }
+  ],
+  "blocks": [],
+  "presets": [
+    {
+      "name": "WhatsApp Floating Button (Bottom Right)",
+      "category": "Contact"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}{% endstylesheet %}
+{% javascript %}{% endjavascript %}
