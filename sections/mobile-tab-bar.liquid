@@ -70,8 +70,8 @@
               assign icon_name = 'search'
             elsif url_lower contains '/account'
               assign icon_name = 'account'
-            elsif url_lower contains '/collections' or url_lower contains '/products'
-              assign icon_name = 'shop'
+              elsif url_lower contains '/collections' or url_lower contains '/products'
+                assign icon_name = 'shop'
             elsif url_lower == '/' or url_lower contains '/home'
               assign icon_name = 'home'
             endif
@@ -98,37 +98,17 @@
                 <path d="M5 10v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9"></path>
               </svg>
             {% elsif icon_lower contains 'shop' %}
-              <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 6h15l-1.5 9a2 2 0 0 1-2 1.7H8.7a2 2 0 0 1-2-1.7L5 4H2"></path>
-                <circle cx="9" cy="20" r="1.8"></circle>
-                <circle cx="18" cy="20" r="1.8"></circle>
-              </svg>
+              {{- 'icon-cart.svg' | inline_asset_content -}}
             {% elsif icon_lower contains 'search' or icon_lower contains 'find' %}
-              <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="11" cy="11" r="7"></circle>
-                <path d="M20 20l-3.5-3.5"></path>
-              </svg>
+              {{- 'icon-search.svg' | inline_asset_content -}}
             {% elsif icon_lower contains 'cart' or icon_lower contains 'bag' or icon_lower contains 'basket' %}
-              <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M6 6h15l-1.5 9a2 2 0 0 1-2 1.7H8.7a2 2 0 0 1-2-1.7L5 4H2"></path>
-                <circle cx="9" cy="20" r="1.8"></circle>
-                <circle cx="18" cy="20" r="1.8"></circle>
-              </svg>
+             {{- 'icon-cart.svg' | inline_asset_content -}}
             {% elsif icon_lower contains 'account' or icon_lower contains 'login' or icon_lower contains 'user' or icon_lower contains 'profile' or icon_lower contains 'sign' %}
-              <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="7" r="4"></circle>
-                <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
-              </svg>
+              {{- 'icon-account.svg' | inline_asset_content -}}
             {% elsif icon_lower contains 'menu' or icon_lower contains 'hamburger' or icon_lower contains 'nav' %}
-              <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-              </svg>
+             {{- 'icon-menu.svg' | inline_asset_content -}}
             {% else %}
-              <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
-                <circle cx="12" cy="12" r="4"></circle>
-              </svg>
+             {{- 'icon-menu.svg' | inline_asset_content -}}
             {% endif %}
           </span>
         </a>

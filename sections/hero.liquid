@@ -412,31 +412,32 @@
   }
 
   /* Bottom Left Container - Vertically aligned content */
-  .hero__bottom-left-container {
-    position: absolute;
-    bottom: 25%;
-    left: 30px;
-    z-index: var(--layer-flat);
-    pointer-events: none;
-    min-width: 80vw;
-    align-items: start;
-  }
+.hero__bottom-left-container {
+  position: absolute;
+  bottom: 48px; /* Changed from 100px to 48px */
+  left: 30px;
+  z-index: var(--layer-flat);
+  pointer-events: none;
+  min-width: 80vw;
+  align-items: start;
+}
+
 
   /* Individual slide content (text + button) */
   .hero__bottom-left-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    max-width: min(var(--bottom-left-text-max-width, 300px), calc(100% - 40px));
-    min-width: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    pointer-events: none;
-  }
+  position: absolute;
+  bottom: 58px; /* Changed from 40px to 58px (48px indicator spacing + 10px gap) */
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: min(var(--bottom-left-text-max-width, 500px), calc(100% - 40px));
+  min-width: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none;
+}
 
   .hero__bottom-left-content.carousel-active {
     opacity: 1;
@@ -459,7 +460,7 @@
   .hero[data-shopify-visual-preview] { --hero-min-height: 600px; min-height: 600px; }
   
   @media screen and (max-width: 749px) {
-    .hero { min-height: 95svh; }
+    .hero { min-height: calc(100svh - 56px); }
   }
 
   
@@ -498,14 +499,14 @@
   }
 
   /* Indicators */
-  .hero__indicators {
-    position: absolute;
-    top: 120px;
-    left: 0;
-    display: flex;
-    gap: 24px;
-    pointer-events: auto;
-  }
+.hero__indicators {
+  position: absolute;
+  bottom: 0; /* Stays at 0 relative to container (which is now 48px from edge) */
+  left: 0;
+  display: flex;
+  gap: 24px;
+  pointer-events: auto;
+}
 
   .hero__indicator {
     width: 10px;
@@ -528,29 +529,32 @@
 
   @media screen and (max-width: 749px) {
     .hero__bottom-left-container {
-      bottom: 25%;
-      left: 16px;
-      font-size: 16px;
-      max-width: 80vw;
-    }
+    bottom: 29px;
+    left: 16px;
+    font-size: 16px;
+    max-width: 80vw;
+  }
 
-    .hero__bottom-left-content {
-      max-width: 100%;
-    }
+  .hero__bottom-left-content {
+    max-width: 100%;
+    bottom: 58px; /* Maintain same 48px spacing on mobile */
+  }
 
-    .hero__bottom-left-text {
-      font-size: clamp(0.875rem, 2.5vw, 1.5rem);
-      line-height: 1.3;
-    }
+  .hero__bottom-left-text {
+    font-size: clamp(0.875rem, 2.5vw, 1.5rem);
+    line-height: 1.3;
+  }
 
-    .hero__bottom-left-button {
-      font-size: clamp(0.75rem, 2vw, 1rem);
-      cursor: pointer;
-    }
+  .hero__bottom-left-button {
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
 
-    .hero__indicators {
-      top: 80px;
-    }
+  .hero__indicators {
+    top: auto;  
+    bottom: 0;  
+  }
     .logo-block__image-wrapper{
       display:flex;
       object-position: top;

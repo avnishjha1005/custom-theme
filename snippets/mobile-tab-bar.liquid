@@ -57,7 +57,7 @@
               when 'account', 'profile', 'login'
                 assign icon_name = 'account'
               else
-                assign icon_name = ''
+                assign icon_name = 'menu'
             endcase
           endif
 
@@ -74,6 +74,8 @@
               assign icon_name = 'shop'
             elsif url_lower == '/' or url_lower contains '/home'
               assign icon_name = 'home'
+            else 
+              assign icon_name = 'menu'
             endif
           endif
 
@@ -104,25 +106,13 @@
                   <circle cx="18" cy="20" r="1.8"></circle>
                 </svg>
               {% when 'search' %}
-                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="11" cy="11" r="7"></circle>
-                  <path d="M20 20l-3.5-3.5"></path>
-                </svg>
+                {{- 'icon-search.svg' | inline_asset_content -}}
               {% when 'cart' %}
-                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 6h15l-1.5 9a2 2 0 0 1-2 1.7H8.7a2 2 0 0 1-2-1.7L5 4H2"></path>
-                  <circle cx="9" cy="20" r="1.8"></circle>
-                  <circle cx="18" cy="20" r="1.8"></circle>
-                </svg>
+                {{- 'icon-cart.svg' | inline_asset_content -}}
               {% when 'account' %}
-                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="7" r="4"></circle>
-                  <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"></path>
-                </svg>
+                {{- 'icon-account.svg' | inline_asset_content -}}
               {% else %}
-                <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4"></circle>
-                </svg>
+                {{- 'icon-menu.svg' | inline_asset_content -}}
             {% endcase %}
           </span>
         </a>
@@ -205,7 +195,7 @@
 
   .mobile-tab-bar__icon {
     display: inline-flex;
-    width: 24px;
+    width:  24px;
     height: 24px;
     margin-bottom: 4px;
     color: currentColor;
