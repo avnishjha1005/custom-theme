@@ -442,10 +442,26 @@
         "padding-block-start": 0,
         "padding-block-end": 66
       }
+    },
+    "whatsapp_fab_apNmVc": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button (Bottom Right)",
+      "settings": {
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi there! I would like to chat.",
+        "offset_x": 0,
+        "offset_y": -85,
+        "button_style": "fab",
+        "label_text": "Chat on WhatsApp",
+        "show_on_mobile": true,
+        "z_index": 9999
+      }
     }
   },
   "order": [
     "section",
-    "main"
+    "main",
+    "whatsapp_fab_apNmVc"
   ]
 }

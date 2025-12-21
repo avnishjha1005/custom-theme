@@ -93,6 +93,9 @@
           "blocks": {}
         }
       },
+      "custom_css": [
+        ".menu-list__link:hover {text-decoration: underline;}"
+      ],
       "settings": {
         "logo_position": "center",
         "menu_position": "left",

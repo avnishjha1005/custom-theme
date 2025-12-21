@@ -15,7 +15,7 @@
         "logo_RYPPnw": {
           "type": "logo",
           "settings": {
-            "inverse": false,
+            "inverse": true,
             "font": "heading",
             "vertical_align": "top",
             "unit": "percent",
@@ -80,7 +80,7 @@
       "custom_css": [
         "@media screen and (min-width: 768px) {.logo-block__image-wrapper {display: none; }}",
         ".header__column--right {stroke: white;}",
-        "h3 {max-width:452px; font-size: 30px; font-weight: normal; letter-spacing: -0.02rem;}"
+        "h3 {max-width: 452px; font-size: 30px; font-weight: normal; letter-spacing: -0.02rem;}"
       ],
       "name": "t:names.hero_bottom_aligned",
       "settings": {
@@ -320,7 +320,7 @@
           "name": "t:names.product_card",
           "static": true,
           "settings": {
-            "product_card_gap": 8,
+            "product_card_gap": 0,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "border": "none",
@@ -425,7 +425,7 @@
                     "align_baseline": false,
                     "horizontal_alignment_flex_direction_column": "flex-start",
                     "vertical_alignment_flex_direction_column": "flex-start",
-                    "gap": 0,
+                    "gap": 6,
                     "width": "fill",
                     "custom_width": 70,
                     "width_mobile": "fill",
@@ -447,7 +447,7 @@
                     "gradient_direction": "to top",
                     "link": "",
                     "open_in_new_tab": false,
-                    "padding-block-start": 0,
+                    "padding-block-start": 16,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
@@ -633,10 +633,10 @@
         "icons_shape": "circle",
         "section_width": "page-width",
         "horizontal_alignment": "flex-start",
-        "gap": 28,
+        "gap": 21,
         "color_scheme": "scheme-9279c1cb-9d8e-4383-af64-cd9f6d70d124",
-        "padding-block-start": 84,
-        "padding-block-end": 100
+        "padding-block-start": 36,
+        "padding-block-end": 51
       }
     },
     "1765185071796b9f09": {
@@ -650,7 +650,7 @@
             "desktop_image_position": "left",
             "desktop_min_height": 500,
             "quote": "“Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.”",
-            "author": "Sarah Mitchell",
+            "author": "Nostrud Exercitation Laboris",
             "text_alignment": "center",
             "content_max_width": 500,
             "text_spacing": 20,
@@ -669,9 +669,9 @@
             "author_text_transform": "uppercase",
             "author_color": "#ffffff",
             "mobile_image_width": 180,
-            "mobile_quote_font_size": 22,
-            "mobile_author_font_size": 14,
-            "mobile_text_padding": 10
+            "mobile_quote_font_size": 29,
+            "mobile_author_font_size": 12,
+            "mobile_text_padding": 0
           },
           "blocks": {}
         }
@@ -679,6 +679,7 @@
       "block_order": [
         "ai_gen_block_4ce6f26_pz87jb"
       ],
+      "custom_css": [],
       "name": "Image with Text",
       "settings": {
         "content_direction": "column",
@@ -1092,6 +1093,21 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "whatsapp_fab_QmNEQ4": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button (Bottom Right)",
+      "settings": {
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi there! I would like to chat.",
+        "offset_x": 0,
+        "offset_y": -90,
+        "button_style": "fab",
+        "label_text": "Chat on WhatsApp",
+        "show_on_mobile": true,
+        "z_index": 9999
+      }
     }
   },
   "order": [
@@ -1100,6 +1116,7 @@
     "product_list_UwRqN4",
     "1765185071796b9f09",
     "section_aDVtrc",
-    "collection_list_wWH4nF"
+    "collection_list_wWH4nF",
+    "whatsapp_fab_QmNEQ4"
   ]
 }
