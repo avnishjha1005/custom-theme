@@ -17,6 +17,17 @@
   #shopify-block-AcDNkZXlTVkFzZHVBT__ai_gen_block_4ce6f26_pz87jb{
     width:100%;
   }
+  @media screen and (max-width:749px){
+    #shopify-block-AcDNkZXlTVkFzZHVBT__ai_gen_block_4ce6f26_pz87jb{
+       width: 100vw;
+    }
+    blockquote{
+      width: 358px;
+    }
+    p{
+      bottom: -219px
+    }
+  }
   /* --- Image Logic --- */
   .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
     position: relative;
@@ -167,14 +178,15 @@
     .ai-quote-section__quote-{{ ai_gen_id }} {
       font-size: {{ block.settings.mobile_quote_font_size }}px;
       text-align: center;
-      max-width:300px;
+      max-width:358px;
+      letter-spacing: -0.02rem;
     }
 
     .ai-quote-section__author-{{ ai_gen_id }} {
       font-size: {{ block.settings.mobile_author_font_size }}px;
       text-align: center;
       position:absolute;
-      bottom:-200px;
+      bottom:-122px;
     }
 
     .ai-quote-section__separator-{{ ai_gen_id }} {
