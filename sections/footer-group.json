@@ -13,6 +13,9 @@
   "sections": {
     "export_collage_AK4FpE": {
       "type": "export-collage",
+      "custom_css": [
+        ".collage-container {max-width: 1120px; margin: auto;}"
+      ],
       "name": "Expert Collage",
       "settings": {
         "heading": "Meet our experts for a bespoke look.",
@@ -299,6 +302,9 @@
       "block_order": [
         "group_acXtYY"
       ],
+      "custom_css": [
+        ".section--page-width {max-width: 1120px; margin: auto;}"
+      ],
       "settings": {
         "section_width": "page-width",
         "gap": 0,
@@ -310,7 +316,8 @@
     "logo_RVGHD7": {
       "type": "logo",
       "custom_css": [
-        "@media screen and (min-width: 768px) {.logo-section {justify-content: flex-end; width: 50%; }}"
+        "@media screen and (min-width: 768px) {.logo-section {justify-content: flex-end; width: 50%; }}",
+        ".section--page-width {max-width: 1120px; margin: auto;}"
       ],
       "name": "t:names.logo",
       "settings": {
