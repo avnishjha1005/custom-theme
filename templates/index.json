@@ -671,7 +671,7 @@
             "mobile_image_width": 180,
             "mobile_quote_font_size": 29,
             "mobile_author_font_size": 12,
-            "mobile_text_padding": 0
+            "mobile_text_padding": 10
           },
           "blocks": {}
         }

@@ -69,6 +69,9 @@
         "text_tqQTNE",
         "text_7cReRg"
       ],
+      "custom_css": [
+        "@media screen and (max-width:768px) {p {text-align: center; }}"
+      ],
       "name": "Collection heading",
       "settings": {
         "content_direction": "column",

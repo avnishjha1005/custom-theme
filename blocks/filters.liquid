@@ -137,41 +137,37 @@
     "
     {{ block.shopify_attributes }}
   >
-    <div class="facets facets--horizontal facets-controls-wrapper spacing-style">
-  
+  <div class="facets-type-bar">
   {% if product_type_filter %}
-  <nav class="facets-product-type" aria-label="{{ product_type_filter.label }}">
-    <ul class="facets-product-type__list">
-
-      {%- comment -%}
-        View all – clears ALL filters
-      {%- endcomment -%}
-      <li class="{% if product_type_filter.active_values.size == 0 %}is-active{% endif %}">
-        <a href="{{ collection.url }}" style="padding-left:0;">
-          View all
-        </a>
-      </li>
-
-      {% for value in product_type_filter.values %}
-        <li class="{% if value.active %}is-active{% endif %}">
-          <a
-            href="{% if value.active %}
-                    {{ collection.url }}
-                  {% else %}
-                    {{ collection.url }}?filter.p.product_type={{ value.value | url_encode }}
-                  {% endif %}"
-            aria-current="{% if value.active %}true{% else %}false{% endif %}"
-          >
-            {{ value.label }}
-          </a>
+    <nav class="facets-product-type" aria-label="{{ product_type_filter.label }}">
+      <ul class="facets-product-type__list">
+        <li class="{% if product_type_filter.active_values.size == 0 %}is-active{% endif %}">
+          <a href="{{ collection.url }}">View all</a>
         </li>
-      {% endfor %}
 
-    </ul>
-  </nav>
-{% endif %}
+        {% for value in product_type_filter.values %}
+          <li class="{% if value.active %}is-active{% endif %}">
+            <a
+              href="{% if value.active %}
+                      {{ collection.url }}
+                    {% else %}
+                      {{ collection.url }}?filter.p.product_type={{ value.value | url_encode }}
+                    {% endif %}"
+              aria-current="{% if value.active %}true{% else %}false{% endif %}"
+            >
+              {{ value.label }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </nav>
+  {% endif %}
 
-  <div class="facets-horizontal-actions" style="display:block;">
+  <div class="facets-type-bar__meta">
+    <div class="products-count-wrapper">
+      {{ 'content.item_count' | t: count: products_count }}
+    </div>
+
     <button
       class="button facets-toggle__button button-unstyled button-unstyled--with-icon"
       on:click="#filters-drawer/showDialog"
@@ -183,7 +179,6 @@
       </span>
     </button>
   </div>
-
 </div>
   </div>
 
@@ -194,7 +189,7 @@
       {{ facets_margin_style }}
     "
   >
-    {% if block_settings.enable_filtering %}
+    {% comment %} {% if block_settings.enable_filtering %}
       <div class="facets-toggle__wrapper">
         <button
           class="button facets-toggle__button button-unstyled button-unstyled--with-icon"
@@ -226,7 +221,7 @@
           {% endif %}
         </button>
       </div>
-    {% endif %}
+    {% endif %} {% endcomment %}
 
     <div class="facets-mobile-wrapper facets-controls-wrapper">
       {% if block_settings.enable_filtering == false and block_settings.enable_sorting %}
@@ -1035,6 +1030,78 @@
       z-index: var(--facets-open-z-index);
     }
   }
+  /* PRODUCT TYPE FILTER BAR */
+.facets-type-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  width: 100%;
+}
+
+/* Horizontal scroll container */
+.facets-product-type {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.facets-product-type__list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--gap-sm);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Hide scrollbar */
+.facets-product-type__list::-webkit-scrollbar {
+  display: none;
+}
+.facets-product-type {
+  scrollbar-width: none;
+}
+
+.facets-product-type__list li {
+  flex: 0 0 auto;
+}
+
+/* Meta row (count left, icon right) */
+.facets-type-bar__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+/* Product count always visible */
+.products-count-wrapper {
+  display: block;
+  font-size: var(--font-paragraph--size);
+  color: var(--color-foreground);
+}
+
+/* Pills */
+.facets-product-type__list a {
+  display: inline-flex;
+  align-items: center;
+  height: var(--button-size-sm);
+  padding: 0 var(--padding-sm);
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-foreground);
+}
+
+.facets-product-type__list a:hover {
+  text-decoration: underline;
+}
+
+.facets-product-type__list .is-active a {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 {% endstylesheet %}
 
 {% schema %}
