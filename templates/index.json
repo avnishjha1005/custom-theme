@@ -83,7 +83,7 @@
         "h3 {max-width: 452px; font-size: 30px; font-weight: normal; letter-spacing: -0.02rem;}",
         ".hero__content-wrapper {max-width: 1120px; margin: auto;}",
         ".hero__media-wrapper {mix-blend-mode: overlay;}",
-        ".hero__container {background: linear-gradient(0deg, black, transparent);}"
+        ".hero__container {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}"
       ],
       "name": "t:names.hero_bottom_aligned",
       "settings": {
@@ -906,7 +906,7 @@
         "a {font-weight: bold; text-decoration: underline;}",
         ".image-block__image {object-position: center center;}",
         ".section--page-width {max-width: 1120px; margin: auto;}",
-        ".collection-card__content {background: linear-gradient(0deg, black, transparent);}"
+        ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70%);}"
       ],
       "name": "t:names.collections_grid",
       "settings": {
