@@ -40,7 +40,7 @@
         "menu": "mobile-bottom-menu",
         "mobile_tab_bar_variant": "solid",
         "mobile_tab_bar_height": "standard",
-        "mobile_tab_bar_show_on_tablet": true
+        "mobile_tab_bar_show_on_tablet": false
       }
     },
     "footer": {
@@ -316,7 +316,7 @@
     "logo_RVGHD7": {
       "type": "logo",
       "custom_css": [
-        "@media screen and (min-width: 768px) {.logo-section {justify-content: flex-end; width: 50%; }}",
+        "@media screen and (min-width: 768px) {.logo-section__content {display: flex; flex-direction: row-reverse; justify-content: space-between; } .logo-section__image-wrapper {width: 50%; } .logo-section__foter-info {display: flex; flex-direction: row; align-items: center; }}",
         ".section--page-width {max-width: 1120px; margin: auto;}"
       ],
       "name": "t:names.logo",
@@ -330,6 +330,12 @@
         "unit_mobile": "percent",
         "percent_width_mobile": 100,
         "pixel_height_mobile": 120,
+        "show_localization": true,
+        "show_country": true,
+        "show_language": true,
+        "country_selector_style": "dropdown",
+        "show_copyright": true,
+        "copyright_text": "© AltaRasa 2025. All rights reserved.",
         "section_width": "page-width",
         "alignment_horizontal": "flex-end",
         "color_scheme": "scheme-bed0b474-fe0a-4965-8562-aa2adf1dc067",
