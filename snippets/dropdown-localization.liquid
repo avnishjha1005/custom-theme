@@ -4,7 +4,7 @@
   @param {boolean} [show_country] - Whether to show the country selector.
   @param {boolean} [show_language] - Whether to show the language selector.
   @param {string} [country_style] - The style of the country selector.
-  @param {string} localization_position - { 'right' | 'left' } The position of the localization picker.
+  @param {string} localization_position - { 'right' | 'left' | 'top' } The position of the localization picker.
 {%- enddoc -%}
 
 {% liquid
@@ -19,6 +19,15 @@
   assign localization_font_size = '--menu-localization-font-size: [localization_font_size]; ' | replace: '[localization_font_size]', section.settings.localization_font_size
   assign color_shadow = '--color-shadow: rgb(var(--color-foreground-rgb) / var(--opacity-10-25));'
   assign form_style = localization_font | append: localization_font_size | append: color_shadow
+  
+  # Determine the CSS class for dropdown position
+  if localization_position == 'top'
+    assign position_class = 'top-bound'
+  elsif localization_position == 'left'
+    assign position_class = 'left-bound'
+  else
+    assign position_class = 'right-bound'
+  endif
 %}
 
 {% if show_language and show_country == false %}
@@ -84,7 +93,7 @@
     </button>
 
     <div
-      class="localization-wrapper {{ localization_position }}-bound color-{{ settings.popover_color_scheme }}"
+      class="localization-wrapper {{ position_class }} color-{{ settings.popover_color_scheme }}"
       hidden
       ref="panel"
     >
@@ -98,3 +107,16 @@
     </div>
   </dropdown-localization-component>
 {% endif %}
+
+{% stylesheet %}
+  .localization-wrapper.top-bound {
+  bottom: 100%;
+  top: auto;
+  margin-bottom: 0.5rem; /* spacing from button */
+}
+
+/* Optional: flip the caret icon when position is top */
+.dropdown-localization:has(.top-bound) .icon-caret {
+  transform: rotate(180deg);
+}
+{% endstylesheet %}

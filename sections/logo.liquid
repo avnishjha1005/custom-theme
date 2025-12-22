@@ -1,5 +1,3 @@
-
-
 {% liquid
   assign section_settings = section.settings
   assign image = settings.logo
@@ -64,13 +62,51 @@
     "
     {{ section.shopify_attributes }}
   >
-    {% if logo_image %}
-      <div class="logo-section__image-wrapper">
-        {{ logo_image }}
-      </div>
-    {% else %}
-      {% render 'jumbo-text', text: shop.name, block_settings: section.settings %}
-    {% endif %}
+    <div class="logo-section__content">
+      {% if logo_image %}
+        <div class="logo-section__image-wrapper">
+          {{ logo_image }}
+        </div>
+      {% else %}
+        {% render 'jumbo-text', text: shop.name, block_settings: section.settings %}
+      {% endif %}
+
+      {% comment %} Localization and Copyright Container {% endcomment %}
+      {% if section_settings.show_localization or section_settings.show_copyright %}
+        <div class="logo-section__footer-info">
+          {% comment %} Localization {% endcomment %}
+          {% if section_settings.show_localization %}
+            {% liquid
+              assign show_language = section.settings.show_language
+              if localization.available_languages.size <= 1
+                assign show_language = false
+              endif
+
+              assign show_country = section.settings.show_country
+              if localization.available_countries.size <= 1
+                assign show_country = false
+              endif
+            %}
+            {% if show_country or show_language %}
+              <div class="logo-section__localization">
+                {% render 'dropdown-localization',
+                  show_country: show_country,
+                  show_language: show_language,
+                  localization_position: 'top'
+                %}
+              </div>
+            {% endif %}
+          {% endif %}
+
+          {% comment %} Copyright Text {% endcomment %}
+          {% if section_settings.show_copyright and section_settings.copyright_text != blank %}
+            <div class="logo-section__copyright">
+              {{ section_settings.copyright_text }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
   </div>
 </div>
 
@@ -105,6 +141,14 @@
     margin-inline-end: auto;
   }
 
+  .logo-section__content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
   .logo-section__image-wrapper {
     display: flex;
     width: 100%;
@@ -115,6 +159,43 @@
   .logo-section__image {
     object-fit: contain;
     width: 100%;
+  }
+
+  .logo-section__footer-info {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    @media screen and (max-width: 750px) {
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+
+  .logo-section__localization {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .logo-section__copyright {
+    font-size: 0.875rem;
+    opacity: 0.8;
+    text-align: center;
+  }
+  .logo-section__localization :global(.localization-form__select),
+  .logo-section__localization :global(details[open]) summary + *,
+  .logo-section__localization :global(.disclosure__list-wrapper) {
+    bottom: 100%;
+    top: auto;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+  }
+
+  .logo-section__localization :global(details) {
+    position: relative;
   }
 {% endstylesheet %}
 
@@ -252,6 +333,64 @@
       "unit": "px",
       "default": 120,
       "visible_if": "{{ section.settings.unit_mobile == 'pixel' and section.settings.custom_mobile_size == true}}"
+    },
+    {
+      "type": "header",
+      "content": "Localization"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_localization",
+      "label": "Enable localization",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_country",
+      "label": "Show country selector",
+      "default": true,
+      "visible_if": "{{ section.settings.show_localization == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_language",
+      "label": "Show language selector",
+      "default": true,
+      "visible_if": "{{ section.settings.show_localization == true }}"
+    },
+    {
+      "type": "select",
+      "id": "country_selector_style",
+      "label": "Country selector style",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Dropdown"
+        },
+        {
+          "value": "modal",
+          "label": "Modal"
+        }
+      ],
+      "default": "dropdown",
+      "visible_if": "{{ section.settings.show_localization == true and section.settings.show_country == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Copyright"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_copyright",
+      "label": "Show copyright text",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "© AltaRasa 2025. All rights reserved.",
+      "visible_if": "{{ section.settings.show_copyright == true }}"
     },
     {
       "type": "header",
