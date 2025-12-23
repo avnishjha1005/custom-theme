@@ -15,63 +15,108 @@
 {% assign product_card_size = product_card_size | strip %}
 
 {% style %}
-  @media (min-width: 750px) {
-    {% case section.settings.layout_type %}
-      {% when 'grid' %}
-        .product-grid--{{ section.id }}:is(.product-grid--grid) {
-          --product-grid-columns-desktop: repeat(4, minmax({{ product_card_size }}, 1fr));
-        }
+ /* Responsive Product Grid for {{ section.id }} */
 
+/* 1. SHARED DESKTOP/TABLET BASE (Starts at 750px) */
+@media screen and (min-width: 750px) {
+  .product-grid--{{ section.id }} {
+    display: grid;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 
-      {% when 'organic' %}
-        {% assign large_span = 2 %}
-        {% assign row_cycle = 3 %}
-        {% assign product_cycle = row_cycle | times: 2 %}
-        {% assign right_large_start_col = 3 %}
-        .product-grid--{{ section.id }}:not([product-grid-view='zoom-out']):is(.product-grid--organic) .product-grid__item:nth-child({{ product_cycle }}n + 1) {
-          grid-column: 1 / span {{ large_span }};
-        }
+    /* Use clamp to keep gaps reasonable across devices */
+    column-gap: clamp(8px, {{ section.settings.columns_gap_horizontal }}px, 32px);
+    row-gap: clamp(8px, {{ section.settings.columns_gap_vertical }}px, 32px);
 
-        .product-grid--{{ section.id }}:not([product-grid-view='zoom-out']):is(.product-grid--organic) .product-grid__item:nth-child({{ product_cycle }}n + 2),
-        .product-grid--{{ section.id }}:not([product-grid-view='zoom-out']):is(.product-grid--organic) .product-grid__item:nth-child({{ product_cycle }}n + 5) {
-          align-self: end;
-        }
+    /* Help fill holes when items span columns (especially organic layout) */
+    grid-auto-flow: dense;
 
-        .product-grid--{{ section.id }}:not([product-grid-view='zoom-out']):is(.product-grid--organic) .product-grid__item:nth-child({{ product_cycle }}n + {{ product_cycle }}) {
-          grid-column: {{ right_large_start_col }} / span {{ large_span }};
-        }
-
-        .product-grid--{{ section.id }}:not([product-grid-view='zoom-out']):is(.product-grid--organic) {
-          --product-grid-columns-desktop: repeat(4, 1fr);
-        }
-    {% endcase %}
-
-    /* This logic helps prevent displaying one column for an large or extra-large product card size on a small screen. We want it to display at least two columns. */
-    {% case section.settings.product_card_size %}
-      {% when 'extra-large' or 'large' %}
-        @container product-grid (max-width: calc({{ product_card_size }} * 3 + {{ section.settings.columns_gap_horizontal }}px * 2)) {
-          .product-grid--{{ section.id }}:is(.product-grid--grid) {
-            --product-grid-columns-desktop: repeat(2, 1fr);
-          }
-        }
-    {% endcase %}
-
-    /* When zoomed out, fit as many 100px-wide columns as possible */
-    .product-grid--{{ section.id }}[product-grid-view='zoom-out'] {
-      --product-grid-columns-desktop: repeat(auto-fill, minmax(6.25rem, 1fr));
-    }
-
-    .product-grid--{{ section.id }}[product-grid-view='zoom-out'] .product-grid-view-zoom-out--details {
-      display: block;
-    }
-
-    .product-grid--{{ section.id }}[product-grid-view='zoom-out'] .product-grid__card {
-      padding-inline-start: var(--zoom-out-padding-inline-start, 0);
-      padding-inline-end: var(--zoom-out-padding-inline-end, 0);
-      padding-block-start: var(--zoom-out-padding-block-start, 0);
-      padding-block-end: var(--zoom-out-padding-block-end, 0);
-    }
+    /* Avoid accidental overflow causing horizontal scroll */
+    overflow: hidden;
   }
+
+  .main-collection-grid {
+    overflow-x: hidden;
+  }
+
+  /* Ensure images are responsive */
+  .product-grid--{{ section.id }} .product-grid__item img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+/* 2. TABLET (750px to 990px) */
+/* Use auto-fit and minmax: column count becomes fluid based on container width.
+   Set min column width for tablet so you usually see ~3 columns but it can drop to 2 if space is tight. */
+@media screen and (min-width: 750px) and (max-width: 990px) {
+  {% case section.settings.layout_type %}
+    {% when 'grid' %}
+      .product-grid--{{ section.id }}.product-grid--grid {
+        /* Typical target ~3 cols: min 200px, max 1fr adapts */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+    {% when 'organic' %}
+      .product-grid--{{ section.id }}.product-grid--organic {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      /* Organic spanning rules: keep spans bounded */
+      .product-grid--{{ section.id }}.product-grid--organic .product-grid__item:nth-child(4n + 1) { grid-column: span 2; }
+      .product-grid--{{ section.id }}.product-grid--organic .product-grid__item:nth-child(4n + 4) { grid-column: 2 / span 2; }
+
+      /* Safety: if there are fewer than 3 columns available, don’t overflow spans */
+      @supports(selector(:has(*))) {
+        .product-grid--{{ section.id }}.product-grid--organic:has(:where(:nth-child(1))) {
+          /* This block is a placeholder for future container queries; overridden by desktop rules below */
+        }
+      }
+  {% endcase %}
+}
+
+/* 3. DESKTOP (991px and up) */
+/* Target ~4 columns but fluid: increase min width so columns don’t get too narrow or too many. */
+@media screen and (min-width: 991px) {
+  {% case section.settings.layout_type %}
+    {% when 'grid' %}
+      .product-grid--{{ section.id }}.product-grid--grid {
+        /* Typical target ~4 cols: min 240px; adjusts to container width */
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+    {% when 'organic' %}
+      .product-grid--{{ section.id }}.product-grid--organic {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      }
+
+      /* 6-item cycle hints preserved; dense flow reduces gaps */
+      .product-grid--{{ section.id }}.product-grid--organic .product-grid__item:nth-child(6n + 1) { grid-column: span 2; }
+      .product-grid--{{ section.id }}.product-grid--organic .product-grid__item:nth-child(6n + 6) { grid-column: 3 / span 2; }
+      .product-grid--{{ section.id }}.product-grid--organic .product-grid__item:nth-child(6n + 2),
+      .product-grid--{{ section.id }}.product-grid--organic .product-grid__item:nth-child(6n + 5) { align-self: end; }
+
+      /* Guard: if the grid ends up with only 3 columns (narrow desktop),
+         force spans to not exceed available columns to prevent overflow. */
+      .product-grid--{{ section.id }}.product-grid--organic {
+        /* This relies on dense flow; if you still see overflow, cap span width: */
+      }
+      .product-grid--{{ section.id }}.product-grid--organic .product-grid__item {
+        /* Optional hard cap: never span more than 2 columns */
+        /* grid-column: span min(2, var(--available-columns, 4)); */
+      }
+  {% endcase %}
+}
+
+/* 4. ZOOM VIEW & UTILITIES */
+/* Smaller min size so more items fit when zooming out, but cap max to keep items legible */
+@media screen and (min-width: 750px) {
+  .product-grid--{{ section.id }}[product-grid-view='zoom-out'] {
+    /* auto-fill packs as many columns as fit, even with partial last row */
+    grid-template-columns: repeat(auto-fill, minmax(100px, 180px));
+  }
+}
+
 {% endstyle %}
 
 <div
@@ -176,6 +221,7 @@
       --product-grid-gap: var(--product-grid-gap-desktop);
     }
   }
+
 
   .product-grid slideshow-arrows .slideshow-control {
     display: none;

@@ -114,14 +114,14 @@
      ======================================== */
   .main-collection-grid {
     /* Preserve existing logic */
-    grid-column: var(--grid-column--mobile);
+    /* grid-column: var(--grid-column--mobile); */
     
     /* ADDED LOGIC: Enable intelligent dense packing */
-    display: grid;
+    /* display: grid;
     grid-auto-flow: dense; 
-    grid-auto-rows: minmax(0, 1fr);
+    grid-auto-rows: minmax(0, 1fr); */
     @media screen and (min-width: 750px) {
-      grid-column: var(--grid-column--desktop);
+      /* grid-column: var(--grid-column--desktop); */
     }
   }
 
@@ -129,9 +129,9 @@
      HERO ITEMS: Base Logic
      ======================================== */
   @media (min-width: 990px) {
-  .product-grid__item--hero {
+  /* .product-grid__item--hero {
     grid-column: 1 / span 2;
-  }
+  } */
 }
 
 /* Tablet */
@@ -288,6 +288,14 @@
   height: 100%;
   width: 100%;
   object-fit: cover;
+}
+@media screen and (min-width: 750px) {
+    .grid {
+        display: unset;
+        gap: 0;
+        grid-template-columns: var(--margin-4xl) repeat(var(--centered-column-number), minmax(0, 1fr)) var(--margin-4xl);
+        grid-template-areas: 'column-0 column-1 column-2 column-3 column-4 column-5 column-6 column-7 column-8 column-9 column-10 column-11 column-12 column-13';
+    }
 }
 
 {% endstylesheet %}
