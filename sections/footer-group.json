@@ -14,7 +14,7 @@
     "export_collage_AK4FpE": {
       "type": "export-collage",
       "custom_css": [
-        ".collage-container {max-width: 1120px; margin: auto;}"
+        ".collage-container {max-width: 1440px; margin: auto;}"
       ],
       "name": "Expert Collage",
       "settings": {
@@ -303,7 +303,7 @@
         "group_acXtYY"
       ],
       "custom_css": [
-        ".section--page-width {max-width: 1120px; margin: auto;}"
+        ".section--page-width {max-width: 1440px; margin: auto;}"
       ],
       "settings": {
         "section_width": "page-width",

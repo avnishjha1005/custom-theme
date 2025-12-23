@@ -98,8 +98,8 @@
         "@media screen and(max-width:750px) {.header__column--left {display: none; } .header__column--right {}}",
         ".header-logo__image {width: 168px; height: 36px;}",
         ".header__column--left {font-size: 10px; padding-left: 0;}",
-        ".section--page-width {max-width: 1120px; margin: auto;}",
-        ".header__columns{margin:0;}"
+        ".section--page-width {max-width: 1440px; margin: auto;}",
+        ".header__columns {margin: 0; max-width: 1440px;}"
       ],
       "settings": {
         "logo_position": "center",

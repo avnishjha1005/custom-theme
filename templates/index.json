@@ -81,7 +81,7 @@
         "@media screen and (min-width: 768px) {.logo-block__image-wrapper {display: none; }}",
         ".header__column--right {stroke: white;}",
         "h3 {max-width: 452px; font-size: 30px; font-weight: normal; letter-spacing: -0.02rem;}",
-        ".hero__content-wrapper {max-width: 1120px; margin: auto;}",
+        ".hero__content-wrapper {max-width: 1440px; margin: auto;}",
         ".hero__media-wrapper {mix-blend-mode: overlay;}",
         ".hero__container {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}"
       ],
@@ -207,7 +207,7 @@
         "button_aHmjT7"
       ],
       "custom_css": [
-        ".spacing-style {max-width: 1120px; margin: auto;}"
+        ".spacing-style {max-width: 1440px; margin: auto;}"
       ],
       "name": "t:names.rich_text_section",
       "settings": {
@@ -623,7 +623,7 @@
       },
       "custom_css": [
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
-        "slideshow-slides {overflow: unset; max-width: 1120px; margin: auto;}",
+        "slideshow-slides {overflow: unset; max-width: 1440px; margin: auto;}",
         "slideshow-container {overflow: scroll;}"
       ],
       "name": "Featured collection",
@@ -688,7 +688,7 @@
         "ai_gen_block_4ce6f26_pz87jb"
       ],
       "custom_css": [
-        ".section--page-width {max-width: 1120px; margin: auto;}"
+        ".section--page-width {max-width: 1440px; margin: auto;}"
       ],
       "name": "Image with Text",
       "settings": {
@@ -907,7 +907,7 @@
       "custom_css": [
         "a {font-weight: bold; text-decoration: underline;}",
         ".image-block__image {object-position: center center;}",
-        ".section--page-width {max-width: 1120px; margin: auto;}",
+        ".section--page-width {max-width: 1440px; margin: auto;}",
         ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}"
       ],
       "name": "t:names.collections_grid",
