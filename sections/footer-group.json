@@ -38,8 +38,8 @@
       "name": "Mobile Tab Bar",
       "settings": {
         "menu": "mobile-bottom-menu",
+        "drawer_menu": "desktop-left-menu",
         "mobile_tab_bar_variant": "solid",
-        "mobile_tab_bar_height": "standard",
         "mobile_tab_bar_show_on_tablet": false
       }
     },
