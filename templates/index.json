@@ -688,7 +688,8 @@
         "ai_gen_block_4ce6f26_pz87jb"
       ],
       "custom_css": [
-        ".section--page-width {max-width: 1440px; margin: auto;}"
+        ".section--page-width {max-width: 1440px; margin: auto;}",
+        "@media screen and (min-width: 750px) {.ai-quote-section__content-wrapper-acdnkzxltvkfzzhvbtaigenblock4ce6f26pz87jb {width: 60%; background-color: #692c23; order: 2; }}"
       ],
       "name": "Image with Text",
       "settings": {

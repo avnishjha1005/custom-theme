@@ -33,10 +33,10 @@
             "menu": "desktop-left-menu",
             "color_scheme": "",
             "type_font_primary_size": "var(--font-size--body-sm)",
-            "menu_font_style": "inverse",
-            "type_font_primary_link": "primary",
+            "menu_font_style": "regular",
+            "type_font_primary_link": "body",
             "type_case_primary_link": "uppercase",
-            "menu_style": "featured_collections",
+            "menu_style": "featured_products",
             "featured_products_aspect_ratio": "4 / 5",
             "featured_collections_aspect_ratio": "16 / 9",
             "image_border_radius": 0,
@@ -99,7 +99,10 @@
         ".header-logo__image {width: 168px; height: 36px;}",
         ".header__column--left {font-size: 10px; padding-left: 0;}",
         ".section--page-width {max-width: 1440px; margin: auto;}",
-        ".header__columns {margin: 0; max-width: 1440px;}"
+        ".header__columns {margin: 0; max-width: 1440px;}",
+        ".mega-menu__link {font-size: 12px; text-transform: none;}",
+        ".menu-list__submenu {border-top: 1px solid #e2ddd4;}",
+        ".mega-menu__grid {margin-top: 44px;}"
       ],
       "settings": {
         "logo_position": "center",
