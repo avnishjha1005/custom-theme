@@ -1,286 +1,263 @@
 {% comment %}
-  Mobile Tab Bar Navigation - Sticky bottom navigation for mobile
-  Uses Shopify menu object (section.settings.menu) and displays SVG icons per link.
+  Mobile Tab Bar - Figma Tab-Path Version
 {% endcomment %}
 
 {% liquid
   assign menu = section.settings.menu
-  assign tab_bar_variant = section.settings.mobile_tab_bar_variant
-  assign tab_bar_height = section.settings.mobile_tab_bar_height
+  assign drawer_menu = section.settings.drawer_menu
+  assign tab_bar_variant = section.settings.mobile_tab_bar_variant | default: 'solid'
   assign show_on_tablet = section.settings.mobile_tab_bar_show_on_tablet
-
-  if tab_bar_variant == blank
-    assign tab_bar_variant = 'solid'
-  endif
-  if tab_bar_height == blank
-    assign tab_bar_height = 'standard'
-  endif
-  if show_on_tablet == blank
-    assign show_on_tablet = false
-  endif
 %}
 
-{% comment %}
-  Helper: returns an icon name for a given link.
-  Priority:
-    1) link.metafields.custom.icon (string)
-    2) match by title keywords
-    3) match by URL path keywords
-    4) default 'dot'
-{% endcomment %}
-{% liquid
-  # No custom Liquid functions, so we'll compute per-link inline in the loop.
-%}
+<div class="mobile-tab-bar-wrapper" data-section-id="{{ section.id }}">
+  
+  {% comment %} Mobile Menu Drawer (Slides Up) {% endcomment %}
+  <div class="mobile-tab-bar__drawer-container" data-drawer-container>
+    <div class="mobile-tab-bar__drawer-overlay" data-drawer-overlay></div>
+    <div class="mobile-tab-bar__drawer" id="mobile-drawer" data-drawer role="dialog">
+      
+      <div class="mobile-tab-bar__drawer-header">
+        <div class="drawer-header-actions">
+           <button class="drawer-back-btn is-hidden" data-drawer-back aria-label="Back">
+             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+          <button class="mobile-tab-bar__drawer-close" data-drawer-close>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
 
-<nav class="mobile-tab-bar mobile-tab-bar--{{ tab_bar_variant }} mobile-tab-bar--{{ tab_bar_height }}{% if show_on_tablet %} mobile-tab-bar--show-on-tablet{% endif %}" data-mobile-tab-bar="true" role="navigation" aria-label="Mobile tab bar">
-  <div class="mobile-tab-bar__container">
-    {% if menu and menu.links.size > 0 %}
+        {% comment %} Level 1 Tabs - These will update their text when drilling down {% endcomment %}
+        <div class="drawer-l1-nav">
+          <div class="l1-nav-inner" data-l1-container>
+            {% for link in drawer_menu.links %}
+              <button type="button" 
+                class="l1-nav-item {% if forloop.first %}is-active{% endif %}" 
+                data-l1-id="{{ forloop.index }}"
+                data-original-title="{{ link.title}}">
+                {{ link.title}}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="mobile-tab-bar__drawer-content" data-drawer-panels>
+        {% for l1_link in drawer_menu.links %}
+          <div class="drawer-panel {% if forloop.first %}is-active{% endif %}" data-panel-l1="{{ forloop.index }}">
+            
+            {% comment %} Level 2 List {% endcomment %}
+            <ul class="drawer-links-list" data-level="2">
+              {% for l2_link in l1_link.links %}
+                <li class="drawer-item-container">
+                  <button type="button" class="drawer-link-btn" 
+                    {% if l2_link.links.size > 0 %}data-drill-down{% endif %}
+                    {% if l2_link.links.size == 0 %}onclick="window.location.href='{{ l2_link.url }}'"{% endif %}
+                    data-target="l3-{{ forloop.parentloop.index }}-{{ forloop.index }}"
+                    data-path="{{ l1_link.title}} / {{ l2_link.title }}">
+                    {{ l2_link.title }}
+                    {% if l2_link.links.size > 0 %}
+                      <span class="arrow-icon">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                      </span>
+                    {% endif %}
+                  </button>
+                  
+                  {% comment %} Level 3 Nested Panel {% endcomment %}
+                  {% if l2_link.links.size > 0 %}
+                    <div class="drawer-panel-nested" id="l3-{{ forloop.parentloop.index }}-{{ forloop.index }}">
+                      <ul class="drawer-links-list" data-level="3">
+                        {% for l3_link in l2_link.links %}
+                          <li>
+                            <a href="{{ l3_link.url }}" class="drawer-link-btn">
+                              {{ l3_link.title }}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="drawer-footer">
+        <span>INDIA (INR)</span>
+        <a href="/pages/contact">CONTACT US</a>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} Bottom Tab Bar (Icons Only) {% endcomment %}
+  <nav class="mobile-tab-bar">
+    <div class="mobile-tab-bar__container">
       {% for link in menu.links %}
         {% liquid
-          assign icon_name = ''
-          # Use metafield if present (namespace:key -> custom.icon). Adjust to your namespace/key.
-          if link.metafields.custom.icon != blank
-            assign icon_name = link.metafields.custom.icon | downcase
-          endif
-
-          # If no metafield, match common titles
-          if icon_name == ''
-            case link.title | downcase
-              when 'home'
-                assign icon_name = 'home'
-              when 'shop', 'store'
-                assign icon_name = 'shop'
-              when 'search', 'find'
-                assign icon_name = 'search'
-              when 'cart', 'bag'
-                assign icon_name = 'cart'
-              when 'account', 'profile', 'login'
-                assign icon_name = 'account'
-              else
-                assign icon_name = ''
-            endcase
-          endif
-
-          # If still empty, match URL keywords
-          if icon_name == ''
-            assign url_lower = link.url | downcase
-            if url_lower contains '/cart'
-              assign icon_name = 'cart'
-            elsif url_lower contains '/search'
-              assign icon_name = 'search'
-            elsif url_lower contains '/account'
-              assign icon_name = 'account'
-              elsif url_lower contains '/collections' or url_lower contains '/products'
-                assign icon_name = 'shop'
-            elsif url_lower == '/' or url_lower contains '/home'
-              assign icon_name = 'home'
-            endif
-          endif
-
-          # Final fallback
-          if icon_name == ''
-            assign icon_name = 'dot'
+          assign title = link.title | downcase
+          assign is_menu = false
+          if link.url contains '#menu' or title contains 'menu'
+            assign is_menu = true
           endif
         %}
-
-        <a
-          href="{{ link.url }}"
-          class="mobile-tab-bar__item{% if link.active %} mobile-tab-bar__item--active{% endif %}"
-          title="{{ link.title }}"
-          aria-label="{{ link.title }}"
-          {% if link.active %}aria-current="page"{% endif %}
-        >
-          <span class="mobile-tab-bar__icon" aria-hidden="true">
-            {% assign icon_lower = icon_name | downcase %}
-            {% if icon_lower contains 'home' %}
-              <svg class="icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 10.5L12 3l9 7.5"></path>
-                <path d="M5 10v9a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-9"></path>
-              </svg>
-            {% elsif icon_lower contains 'shop' %}
-              {{- 'icon-cart.svg' | inline_asset_content -}}
-            {% elsif icon_lower contains 'search' or icon_lower contains 'find' %}
+        <button type="button" class="mobile-tab-bar__item" {% if is_menu %}data-drawer-trigger{% endif %} {% unless is_menu %}onclick="window.location.href='{{ link.url }}'"{% endunless %}>
+          <span class="mobile-tab-bar__icon">
+            {% if title contains 'search' %}
               {{- 'icon-search.svg' | inline_asset_content -}}
-            {% elsif icon_lower contains 'cart' or icon_lower contains 'bag' or icon_lower contains 'basket' %}
-             {{- 'icon-cart.svg' | inline_asset_content -}}
-            {% elsif icon_lower contains 'account' or icon_lower contains 'login' or icon_lower contains 'user' or icon_lower contains 'profile' or icon_lower contains 'sign' %}
-              {{- 'icon-account.svg' | inline_asset_content -}}
-            {% elsif icon_lower contains 'menu' or icon_lower contains 'hamburger' or icon_lower contains 'nav' %}
-             {{- 'icon-menu.svg' | inline_asset_content -}}
-            {% else %}
-             {{- 'icon-menu.svg' | inline_asset_content -}}
+            {% elsif title contains 'cart' %}
+              {{- 'icon-cart.svg' | inline_asset_content -}}
+            {% elsif title contains 'account' or  title contains 'login' %}{{- 'icon-account.svg' | inline_asset_content -}}
+            {% else %}{{- 'icon-menu.svg' | inline_asset_content -}}
             {% endif %}
           </span>
-        </a>
+        </button>
       {% endfor %}
-    {% endif %}
-  </div>
-</nav>
+    </div>
+  </nav>
+</div>
+
+<script>
+  function initMobileMenu() {
+    const section = document.querySelector('[data-section-id="{{ section.id }}"]');
+    if(!section) return;
+
+    const drawer = section.querySelector('[data-drawer-container]');
+    const l1Btns = section.querySelectorAll('[data-l1-id]');
+    const drillBtns = section.querySelectorAll('[data-drill-down]');
+    const backBtn = section.querySelector('[data-drawer-back]');
+    const panels = section.querySelectorAll('.drawer-panel');
+
+    // Handle Level 1 Tab Swaps
+    l1Btns.forEach(btn => {
+      btn.onclick = () => {
+        l1Btns.forEach(b => {
+          b.classList.remove('is-active');
+          b.innerText = b.dataset.originalTitle; // Reset other tabs text
+        });
+        btn.classList.add('is-active');
+        
+        panels.forEach(p => p.classList.remove('is-active'));
+        section.querySelector(`[data-panel-l1="${btn.dataset.l1Id}"]`).classList.add('is-active');
+        
+        backBtn.classList.add('is-hidden');
+        resetNested();
+      };
+    });
+
+    // Handle Drill Down (Level 2 to Level 3)
+    drillBtns.forEach(btn => {
+      btn.onclick = (e) => {
+        e.preventDefault();
+        const targetId = btn.dataset.target;
+        const nestedPanel = section.querySelector(`#${targetId}`);
+        const activeTab = section.querySelector('.l1-nav-item.is-active');
+
+        if(nestedPanel && activeTab) {
+          nestedPanel.classList.add('is-open');
+          activeTab.innerText = btn.dataset.path; // UPDATE THE TAB TEXT
+          backBtn.classList.remove('is-hidden');
+        }
+      };
+    });
+
+    // Handle Back Button
+    backBtn.onclick = () => {
+      resetNested();
+      const activeTab = section.querySelector('.l1-nav-item.is-active');
+      activeTab.innerText = activeTab.dataset.originalTitle; // REVERT THE TAB TEXT
+      backBtn.classList.add('is-hidden');
+    };
+
+    function resetNested() {
+      section.querySelectorAll('.drawer-panel-nested').forEach(p => p.classList.remove('is-open'));
+    }
+
+    // Drawer Controls
+    section.querySelector('[data-drawer-trigger]').onclick = () => {
+      drawer.classList.add('is-active');
+      document.body.style.overflow = 'hidden';
+    };
+    section.querySelector('[data-drawer-close]').onclick = () => {
+      drawer.classList.remove('is-active');
+      document.body.style.overflow = '';
+      // Optional: Reset menu state on close
+      backBtn.click(); 
+    };
+  }
+
+  document.addEventListener('DOMContentLoaded', initMobileMenu);
+  document.addEventListener('shopify:section:load', initMobileMenu);
+</script>
 
 {% stylesheet %}
 .mobile-tab-bar {
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  border-top: 1px solid rgba(var(--color-foreground-rgb), 0.1);
-  background-color: var(--color-background);
-  box-shadow: 0 -2px 8px rgba(var(--color-foreground-rgb), 0.08);
-  padding-bottom: env(safe-area-inset-bottom, 0);
+  position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; z-index: 500;
+  border-top: 1px solid #eee; padding-bottom: env(safe-area-inset-bottom);
+}
+.mobile-tab-bar__container { display: flex; height: 65px; }
+.mobile-tab-bar__item { flex: 1; display: flex; align-items: center; justify-content: center; background: none; border: none; cursor: pointer; color: #000; }
+
+/* Drawer */
+.mobile-tab-bar__drawer-container { position: fixed; inset: 0; z-index: 1000; visibility: hidden; }
+.mobile-tab-bar__drawer-container.is-active { visibility: visible; }
+.mobile-tab-bar__drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.3); opacity: 0; transition: 0.3s; }
+.is-active .mobile-tab-bar__drawer-overlay { opacity: 1; }
+
+.mobile-tab-bar__drawer {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+  background: #fff; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
+  display: flex; flex-direction: column;
+}
+.is-active .mobile-tab-bar__drawer { transform: translateY(0); }
+
+/* Header & Tab Path Nav */
+.drawer-header-actions { display: flex; justify-content: space-between; padding: 15px 20px 5px; align-items: center; min-height: 50px; }
+.drawer-back-btn, .mobile-tab-bar__drawer-close { background: none; border: none; padding: 5px; cursor: pointer; display: flex; align-items: center; }
+
+.drawer-l1-nav { border-bottom: 1px solid #f2f2f2; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 5px; }
+.l1-nav-inner { display: flex; padding: 0 20px; gap: 5px; }
+.l1-nav-item { 
+  padding: 15px 0; margin-right: 25px; white-space: nowrap; background: none; border: none; font-size: 11px; 
+  letter-spacing: 0.12em; color: #999; border-bottom: 2px solid transparent; text-transform: uppercase;
+  transition: all 0.2s ease; cursor: pointer;
+}
+.l1-nav-item.is-active { color: #000; border-bottom-color: #000; font-weight: 500; }
+
+/* Content & Panels */
+.mobile-tab-bar__drawer-content { flex: 1; position: relative; overflow-y: auto; }
+.drawer-panel { display: none; padding: 10px 25px; }
+.drawer-panel.is-active { display: block; }
+
+.drawer-links-list { list-style: none; padding: 0; margin: 0; }
+.drawer-link-btn { 
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 0; background: none; border: none; font-size: 15px; text-align: left; color: #000;
+  text-decoration: none; cursor: pointer; font-weight: 400; border-bottom: 0px;
 }
 
-@media screen and (max-width: 749px) {
-  .mobile-tab-bar {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Height variants */
-  .mobile-tab-bar--compact .mobile-tab-bar__container { min-height: 48px; }
-  .mobile-tab-bar--standard .mobile-tab-bar__container { min-height: 56px; }
-  .mobile-tab-bar--spacious .mobile-tab-bar__container { min-height: 64px; }
-
-  /* Background style variants */
-  .mobile-tab-bar--solid {
-    background-color: var(--color-background);
-    box-shadow: 0 -2px 8px rgba(var(--color-foreground-rgb), 0.08);
-  }
-  .mobile-tab-bar--translucent {
-    background-color: rgba(var(--color-background-rgb), 0.95);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 -2px 8px rgba(var(--color-foreground-rgb), 0.08);
-  }
-  .mobile-tab-bar--minimal {
-    background-color: var(--color-background);
-    border-top: none;
-    box-shadow: none;
-  }
-
-  .mobile-tab-bar__container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height: 100%;
-  }
-
-  .mobile-tab-bar__item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    padding: 6px 4px;
-    text-decoration: none;
-    color: var(--color-foreground);
-    font-size: 0.6875rem;
-    font-weight: 500;
-    line-height: 1.2;
-    text-align: center;
-    transition: color 0.2s ease, background-color 0.2s ease, border-bottom-color 0.2s ease;
-    cursor: pointer;
-    border-bottom: 3px solid transparent;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-    position: relative;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-
-  .mobile-tab-bar__icon {
-    display: inline-flex;
-    width: 24px;
-    height: 24px;
-    margin-bottom: 4px;
-    color: currentColor;
-  }
-
-  .mobile-tab-bar__item:active { background-color: rgba(var(--color-foreground-rgb), 0.05); }
-  .mobile-tab-bar__item:hover { color: var(--color-foreground-accent); background-color: rgba(var(--color-foreground-rgb), 0.02); }
-  .mobile-tab-bar__item--active { color: var(--color-button); border-bottom-color: var(--color-button); background-color: rgba(var(--color-foreground-rgb), 0.02); }
-
-  .mobile-tab-bar__link-text { display: block; word-break: break-word; }
-
-  /* Ensure main content doesn't get hidden behind fixed tab bar */
-  body {
-    padding-bottom: 56px;
-  }
-  
-  .mobile-tab-bar--compact ~ main {
-    padding-bottom: 48px;
-  }
-  
-  .mobile-tab-bar--spacious ~ main {
-    padding-bottom: 64px;
-  }
+/* Drill Down Panel */
+.drawer-panel-nested { 
+  position: absolute; inset: 0; background: #fff; padding: 10px 25px;
+  transform: translateX(100%); transition: transform 0.3s ease-out; visibility: hidden; z-index: 10;
 }
+.drawer-panel-nested.is-open { transform: translateX(0); visibility: visible; }
 
-/* Tablet visibility option */
-@media screen and (min-width: 750px) and (max-width: 989px) {
-  .mobile-tab-bar--show-on-tablet { display: block; }
+.drawer-footer { 
+  padding: 20px 25px; border-top: 1px solid #f2f2f2; display: flex; justify-content: space-between; 
+  font-size: 10px; color: #888; letter-spacing: 0.05em; 
 }
-
-/* Tablet and Desktop - Tab Bar is hidden */
-@media screen and (min-width: 750px) {
-  .mobile-tab-bar:not(.mobile-tab-bar--show-on-tablet) { display: none !important; }
-}
-
-/* Keyboard focus styles for accessibility */
-.mobile-tab-bar__item:focus-visible {
-  outline: 2px solid var(--color-button);
-  outline-offset: -2px;
-}
+.drawer-footer a { text-decoration: none; color: inherit; }
+.is-hidden { visibility: hidden; pointer-events: none; }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Mobile Tab Bar",
-  "tag": "section",
-  "class": "section",
+  "name": "Figma Mobile Menu",
   "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "Menu"
-    },
-    {
-      "type": "select",
-      "id": "mobile_tab_bar_variant",
-      "label": "Background style",
-      "default": "solid",
-      "options": [
-        { "value": "solid", "label": "Solid" },
-        { "value": "translucent", "label": "Translucent" },
-        { "value": "minimal", "label": "Minimal" }
-      ]
-    },
-    {
-      "type": "select",
-      "id": "mobile_tab_bar_height",
-      "label": "Height",
-      "default": "standard",
-      "options": [
-        { "value": "compact", "label": "Compact" },
-        { "value": "standard", "label": "Standard" },
-        { "value": "spacious", "label": "Spacious" }
-      ]
-    },
-    {
-      "type": "checkbox",
-      "id": "mobile_tab_bar_show_on_tablet",
-      "label": "Show on tablet",
-      "default": false
-    }
+    { "type": "link_list", "id": "menu", "label": "Bottom Bar Icons" },
+    { "type": "link_list", "id": "drawer_menu", "label": "Drawer Menu (3 Levels)" }
   ],
-  "presets": [
-    {
-      "name": "Mobile Tab Bar",
-      "category": "Navigation"
-    }
-  ]
+  "presets": [{ "name": "Figma Mobile Menu" }]
 }
 {% endschema %}
