@@ -39,7 +39,7 @@
             "image_mobile": "{{ metaobjects.hero_image[\"limited-collection-the-party-edit\"].image.value }}",
             "heading": "<h3>{{ metaobjects.hero_image[\"limited-collection-the-party-edit\"].hero_text.value }}</h3>",
             "text_max_width": 400,
-            "button_link": "",
+            "button_link": "shopify://collections/all",
             "button_label": "SHOP NOW",
             "open_in_new_tab": false
           }
@@ -52,7 +52,7 @@
             "image_mobile": "{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].image.value }}",
             "heading": "<h3>{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].hero_text.value }}</h3>",
             "text_max_width": 300,
-            "button_link": "",
+            "button_link": "shopify://collections/all",
             "button_label": "SHOP NOW",
             "open_in_new_tab": false
           }
