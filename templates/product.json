@@ -634,7 +634,7 @@
         "phone": "919972320665",
         "message": "Hi there! I would like to chat.",
         "offset_x": 0,
-        "offset_y": 0,
+        "offset_y": -90,
         "button_style": "fab",
         "label_text": "Chat on WhatsApp",
         "show_on_mobile": true,
