@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "product-information",
@@ -405,7 +406,6 @@
             "group_396y6r": {
               "type": "_product-card-group",
               "settings": {
-                "open_in_new_tab": false,
                 "content_direction": "row",
                 "vertical_on_mobile": true,
                 "horizontal_alignment": "space-between",
@@ -433,6 +433,8 @@
                 "overlay_color": "#00000026",
                 "overlay_style": "solid",
                 "gradient_direction": "to top",
+                "link": "",
+                "open_in_new_tab": false,
                 "padding-block-start": 2,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -443,7 +445,6 @@
                   "type": "_product-card-group",
                   "name": "t:names.group",
                   "settings": {
-                    "open_in_new_tab": false,
                     "content_direction": "column",
                     "vertical_on_mobile": true,
                     "horizontal_alignment": "flex-start",
@@ -471,6 +472,8 @@
                     "overlay_color": "#00000026",
                     "overlay_style": "solid",
                     "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
@@ -534,7 +537,6 @@
                   "type": "_product-card-group",
                   "name": "t:names.group",
                   "settings": {
-                    "open_in_new_tab": false,
                     "content_direction": "column",
                     "vertical_on_mobile": true,
                     "horizontal_alignment": "flex-start",
@@ -562,6 +564,8 @@
                     "overlay_color": "#00000026",
                     "overlay_style": "solid",
                     "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
@@ -621,10 +625,26 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "whatsapp_fab_epht6r": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button (Bottom Right)",
+      "settings": {
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi there! I would like to chat.",
+        "offset_x": 0,
+        "offset_y": 0,
+        "button_style": "fab",
+        "label_text": "Chat on WhatsApp",
+        "show_on_mobile": true,
+        "z_index": 9999
+      }
     }
   },
   "order": [
     "main",
-    "product_recommendations_qnzPkn"
+    "product_recommendations_qnzPkn",
+    "whatsapp_fab_epht6r"
   ]
 }
