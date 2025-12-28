@@ -62,7 +62,6 @@
           "source": "{{ metaobjects.hero_image[\"new-image\"] }}",
           "settings": {
             "image": "{{ metaobjects.hero_image[\"new-image\"].image.value }}",
-            "image_mobile": "shopify://shop_images/man-adjusts-blue-tuxedo-bowtie_925x_51da4103-49a0-4d06-9930-8e5a796818aa.jpg",
             "heading": "<h4>{{ metaobjects.hero_image[\"new-image\"].hero_text.value }}</h4>",
             "text_max_width": 300,
             "button_link": "",
@@ -914,10 +913,10 @@
       "name": "t:names.collections_grid",
       "settings": {
         "collection_list": [
-          "mens-collection",
-          "womens-collection",
-          "frontpage",
-          "sales"
+          "the-editorial",
+          "the-wedding-edit",
+          "everyday-essentials",
+          "the-silk-route"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
