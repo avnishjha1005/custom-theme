@@ -267,7 +267,7 @@
                   "type": "menu",
                   "name": "t:names.menu",
                   "settings": {
-                    "menu": "footer-policy-menu",
+                    "menu": "footer",
                     "heading": "",
                     "menu_spacing": 12,
                     "show_as_accordion": false,
@@ -331,7 +331,7 @@
         "show_localization": true,
         "show_country": true,
         "show_language": true,
-        "country_selector_style": "dropdown",
+        "country_selector_style": "modal",
         "show_copyright": true,
         "copyright_text": "© AltaRasa 2025. All rights reserved.",
         "section_width": "page-width",

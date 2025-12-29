@@ -626,92 +626,25 @@
         "padding-block-end": 48
       }
     },
-    "1766981812acfcf51a": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_5430b1f_bxJFfa": {
-          "type": "ai_gen_block_5430b1f",
-          "settings": {
-            "main_image": "shopify://shop_images/6ad184443bc753efd4b9d769a740c7a3_4fc8914d-97a9-4bba-aaf2-122e07ff85e2.jpg",
-            "hotspot_size": 40,
-            "hotspot_color": "#ffffff",
-            "hotspot_icon_color": "#000000",
-            "hotspot_border_width": 2,
-            "hotspot_border_color": "#000000",
-            "hotspot_active_color": "#000000",
-            "hotspot_active_icon_color": "#ffffff",
-            "hotspot_active_border_color": "#000000",
-            "product_1": "white-cotton-shirt",
-            "hotspot_1_x": 52,
-            "hotspot_1_y": 37,
-            "product_2": "olive-green-jacket",
-            "hotspot_2_x": 50,
-            "hotspot_2_y": 50,
-            "product_3": "blue-silk-tuxedo",
-            "hotspot_3_x": 70,
-            "hotspot_3_y": 60,
-            "product_4": "",
-            "hotspot_4_x": 40,
-            "hotspot_4_y": 70,
-            "product_5": "",
-            "hotspot_5_x": 60,
-            "hotspot_5_y": 30,
-            "product_card_bg_color": "#ffffff",
-            "product_text_color": "#000000",
-            "product_card_padding": 40,
-            "product_image_radius": 0,
-            "product_title_size": 24,
-            "product_price_size": 18,
-            "variant_bg_color": "#ffffff",
-            "variant_border_color": "#e6e6e6",
-            "variant_hover_bg_color": "#f5f5f5",
-            "variant_hover_border_color": "#000000",
-            "variant_selected_bg_color": "#000000",
-            "variant_selected_text_color": "#ffffff",
-            "variant_selected_border_color": "#000000",
-            "button_bg_color": "#000000",
-            "button_text_color": "#ffffff",
-            "button_hover_bg_color": "#383838"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_5430b1f_bxJFfa"
-      ],
-      "name": "Shop the Look",
+    "whatsapp_fab_epht6r": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button (Bottom Right)",
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi there! I would like to chat.",
+        "offset_x": 0,
+        "offset_y": -90,
+        "button_style": "fab",
+        "label_text": "Chat on WhatsApp",
+        "show_on_mobile": true,
+        "z_index": 9999
       }
     }
   },
   "order": [
     "main",
     "product_recommendations_qnzPkn",
-    "1766981812acfcf51a"
+    "whatsapp_fab_epht6r"
   ]
 }
