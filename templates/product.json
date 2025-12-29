@@ -626,41 +626,58 @@
         "padding-block-end": 48
       }
     },
-    "17669804582479e620": {
+    "1766981812acfcf51a": {
       "type": "_blocks",
       "blocks": {
-        "ai_gen_block_016aff9_fJfFPG": {
-          "type": "ai_gen_block_016aff9",
+        "ai_gen_block_5430b1f_bxJFfa": {
+          "type": "ai_gen_block_5430b1f",
           "settings": {
             "main_image": "shopify://shop_images/6ad184443bc753efd4b9d769a740c7a3_4fc8914d-97a9-4bba-aaf2-122e07ff85e2.jpg",
             "hotspot_size": 40,
             "hotspot_color": "#ffffff",
+            "hotspot_icon_color": "#000000",
+            "hotspot_border_width": 2,
             "hotspot_border_color": "#000000",
-            "card_background": "#ffffff",
-            "card_border_color": "#e6e6e6",
-            "card_active_border": "#000000",
-            "text_color": "#000000",
-            "button_background": "#000000",
-            "button_text_color": "#ffffff",
-            "button_hover_background": "#383838",
-            "hotspot_1_enabled": true,
-            "hotspot_1_x": 30,
-            "hotspot_1_y": 40,
+            "hotspot_active_color": "#000000",
+            "hotspot_active_icon_color": "#ffffff",
+            "hotspot_active_border_color": "#000000",
             "product_1": "white-cotton-shirt",
-            "hotspot_2_enabled": true,
-            "hotspot_2_x": 60,
+            "hotspot_1_x": 52,
+            "hotspot_1_y": 37,
+            "product_2": "olive-green-jacket",
+            "hotspot_2_x": 50,
             "hotspot_2_y": 50,
-            "product_2": "blue-silk-tuxedo",
-            "hotspot_3_enabled": true,
-            "hotspot_3_x": 45,
-            "hotspot_3_y": 70,
-            "product_3": "striped-skirt-and-top"
+            "product_3": "blue-silk-tuxedo",
+            "hotspot_3_x": 70,
+            "hotspot_3_y": 60,
+            "product_4": "",
+            "hotspot_4_x": 40,
+            "hotspot_4_y": 70,
+            "product_5": "",
+            "hotspot_5_x": 60,
+            "hotspot_5_y": 30,
+            "product_card_bg_color": "#ffffff",
+            "product_text_color": "#000000",
+            "product_card_padding": 40,
+            "product_image_radius": 0,
+            "product_title_size": 24,
+            "product_price_size": 18,
+            "variant_bg_color": "#ffffff",
+            "variant_border_color": "#e6e6e6",
+            "variant_hover_bg_color": "#f5f5f5",
+            "variant_hover_border_color": "#000000",
+            "variant_selected_bg_color": "#000000",
+            "variant_selected_text_color": "#ffffff",
+            "variant_selected_border_color": "#000000",
+            "button_bg_color": "#000000",
+            "button_text_color": "#ffffff",
+            "button_hover_bg_color": "#383838"
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_016aff9_fJfFPG"
+        "ai_gen_block_5430b1f_bxJFfa"
       ],
       "name": "Shop the Look",
       "settings": {
@@ -695,6 +712,6 @@
   "order": [
     "main",
     "product_recommendations_qnzPkn",
-    "17669804582479e620"
+    "1766981812acfcf51a"
   ]
 }
