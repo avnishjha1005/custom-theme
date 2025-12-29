@@ -8,6 +8,30 @@
  * ------------------------------------------------------------
  */
 {
+  "sections":{"shop_the_look": {
+      "name": "Shop the look",
+      "popover_title": "Mobile popover title",
+      "blocks": {
+        "look": {
+          "name": "Look",
+          "image_size_recommendation": "1200 x 1200px .jpg recommended. For best results, use the same image dimension for each look.",
+          "product_1_category": "Product 1",
+          "product_2_category": "Product 2",
+          "product_3_category": "Product 3",
+          "product_4_category": "Product 4",
+          "product": "Product",
+          "product_horizontal_position": "Horizontal position",
+          "product_vertical_position": "Vertical position",
+          "hot_spots_background": "Hot spots background"
+        }
+      },
+      "presets": {
+        "shop_the_look": {
+          "name": "Shop the look"
+        }
+      }
+    },},
+  "general": { "accessibility": {"go_to_item": "Go to item {{ index }}"}},
   "categories": {
     "banners": "Banners",
     // Category for fundamental content blocks (text, images, buttons)

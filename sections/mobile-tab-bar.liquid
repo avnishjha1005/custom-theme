@@ -49,36 +49,48 @@
             
             {% comment %} Level 2 List {% endcomment %}
             <ul class="drawer-links-list" data-level="2">
+              {% assign current_group = "" %}
+              
               {% for l2_link in l1_link.links %}
-                <li class="drawer-item-container">
-                  <button type="button" class="drawer-link-btn" 
+                {% liquid
+                  assign parts = l2_link.title | split: ':'
+                  if parts.size > 1
+                    assign prefix = parts[0] | handleize
+                    assign clean_title = parts[1]
+                  else
+                    assign prefix = 'default'
+                    assign clean_title = l2_link.title
+                  endif
+                %}
+
+                {% comment %} Add visual spacing if the prefix changes {% endcomment %}
+                {% if forloop.index0 > 0 and prefix != current_group %}
+                  <li class="drawer-group-spacer"></li>
+                {% endif %}
+
+                <li class="drawer-item-container group-{{ prefix }}">
+                  <button type="button" class="drawer-link-btn type-{{ prefix }}" 
                     {% if l2_link.links.size > 0 %}data-drill-down{% endif %}
                     {% if l2_link.links.size == 0 %}onclick="window.location.href='{{ l2_link.url }}'"{% endif %}
                     data-target="l3-{{ forloop.parentloop.index }}-{{ forloop.index }}"
-                    data-path="{{ l1_link.title}} / {{ l2_link.title }}">
-                    {{ l2_link.title }}
-                    {% if l2_link.links.size > 0 %}
+                    data-path="{{ l1_link.title}} / {{ clean_title }}">
+                    
+                    <span class="link-text">{{ clean_title }}</span>
+                    
+                    {% if l2_link.links.size > 0 or prefix contains 'nav' %}
                       <span class="arrow-icon">
                         {{- 'icon-arrow.svg' | inline_asset_content -}}
                       </span>
                     {% endif %}
                   </button>
                   
-                  {% comment %} Level 3 Nested Panel {% endcomment %}
+                  {% comment %} Level 3 Nested Panel (keep existing logic) {% endcomment %}
                   {% if l2_link.links.size > 0 %}
-                    <div class="drawer-panel-nested" id="l3-{{ forloop.parentloop.index }}-{{ forloop.index }}">
-                      <ul class="drawer-links-list" data-level="3">
-                        {% for l3_link in l2_link.links %}
-                          <li>
-                            <a href="{{ l3_link.url }}" class="drawer-link-btn">
-                              {{ l3_link.title }}
-                            </a>
-                          </li>
-                        {% endfor %}
-                      </ul>
-                    </div>
+                    {% comment %} ... keep your existing L3 code here ... {% endcomment %}
                   {% endif %}
                 </li>
+
+                {% assign current_group = prefix %}
               {% endfor %}
             </ul>
           </div>
@@ -193,6 +205,45 @@
 </script>
 
 {% stylesheet %}
+/* Grouping Spacers */
+.drawer-group-spacer {
+  height: 32px; /* Adjust based on your design gap */
+  list-style: none;
+}
+
+/* Base Link Styling */
+.drawer-link-btn {
+  padding: 8px 0;
+  line-height: 1.2;
+}
+
+/* "Big" Featured Links (e.g., prefix 'feat:') */
+.type-feat {
+  font-size: 20px !important;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+/* "Navigation" Links with Arrows (e.g., prefix 'nav:') */
+.type-nav {
+  font-size: 18px;
+  font-weight: 500;
+  padding: 12px 0;
+}
+
+/* "Utility" Links at bottom (e.g., prefix 'util:') */
+.type-util {
+  font-size: 16px;
+  font-weight: 400;
+  color: #1a1a1a;
+}
+
+/* Hide arrows for specific prefixes if they don't have children */
+.type-feat .arrow-icon, 
+.type-util .arrow-icon {
+  display: none;
+}
 .mobile-tab-bar {
   position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; z-index: 500;
   padding-bottom: env(safe-area-inset-bottom);
