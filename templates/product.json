@@ -12,6 +12,10 @@
     "main": {
       "type": "product-information",
       "blocks": {
+        "shiprocket_promise_promise_widget_TmR8EW": {
+          "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
+          "settings": {}
+        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -334,6 +338,9 @@
           ]
         }
       },
+      "block_order": [
+        "shiprocket_promise_promise_widget_TmR8EW"
+      ],
       "settings": {
         "content_width": "content-full-width",
         "desktop_media_position": "left",
