@@ -12,10 +12,6 @@
     "main": {
       "type": "product-information",
       "blocks": {
-        "shiprocket_promise_promise_widget_TmR8EW": {
-          "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
-          "settings": {}
-        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -71,10 +67,6 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "shiprocket_promise_promise_widget_J4MFhC": {
-              "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
-              "settings": {}
-            },
             "product_title_9WaLn7": {
               "type": "product-title",
               "name": "t:names.title",
@@ -134,18 +126,9 @@
               },
               "blocks": {}
             },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": true,
-                "alignment": "left",
-                "padding-block-start": 12,
-                "padding-block-end": 24,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
+            "shiprocket_promise_promise_widget_yXkjfA": {
+              "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
+              "settings": {}
             },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
@@ -325,22 +308,37 @@
                 "accordion_row_iJM37V",
                 "accordion_row_pLFDcD"
               ]
+            },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": true,
+                "alignment": "left",
+                "padding-block-start": 12,
+                "padding-block-end": 24,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "shiprocket_promise_promise_widget_J4MFhC": {
+              "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
+              "settings": {}
             }
           },
           "block_order": [
-            "shiprocket_promise_promise_widget_J4MFhC",
             "product_title_9WaLn7",
             "price_a7krng",
             "divider_HrJgFt",
-            "variant_picker_R3rGDr",
+            "shiprocket_promise_promise_widget_yXkjfA",
             "buy_buttons_eYQEYi",
-            "accordion_NKWPiW"
+            "accordion_NKWPiW",
+            "variant_picker_R3rGDr",
+            "shiprocket_promise_promise_widget_J4MFhC"
           ]
         }
       },
-      "block_order": [
-        "shiprocket_promise_promise_widget_TmR8EW"
-      ],
       "settings": {
         "content_width": "content-full-width",
         "desktop_media_position": "left",
