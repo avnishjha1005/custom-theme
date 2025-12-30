@@ -624,7 +624,7 @@
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
         "slideshow-slides {overflow: unset; max-width: 1440px; margin: auto;}",
         "slideshow-container {overflow: scroll;}",
-        ".wishlist-button{margin-top:10px;}"
+        ".wishlist-button {margin-top: 10px;}"
       ],
       "name": "Featured collection",
       "settings": {
@@ -689,7 +689,7 @@
       ],
       "custom_css": [
         ".section--page-width {max-width: 1440px; margin: auto;}",
-        "@media screen and (min-width: 750px) {.ai-quote-section__content-wrapper-acdnkzxltvkfzzhvbtaigenblock4ce6f26pz87jb {width: 60%; background-color: #692c23; order: 2; }}"
+        "@media screen and (min-width: 750px) {.ai-quote-section__content-wrapper-abs9mvhpiswndkzu0eaigenblock4ce6f26pz87jb {width: 60%; background-color: #692c23; order: 2; }}"
       ],
       "name": "Image with Text",
       "settings": {
