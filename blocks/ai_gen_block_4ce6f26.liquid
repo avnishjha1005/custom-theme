@@ -1,4 +1,5 @@
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% assign ai_gen_id_upper = block.id %}
 
 {% style %}
   /* --- Base Layout --- */
@@ -14,11 +15,11 @@
     max-width: var(--page-width);
     background: #692c23;
   }
-  #shopify-block-AcDNkZXlTVkFzZHVBT__ai_gen_block_4ce6f26_pz87jb{
+  #shopify-block-{{ai_gen_id_upper}}{
     width:100%;
   }
   @media screen and (max-width:749px){
-    #shopify-block-AcDNkZXlTVkFzZHVBT__ai_gen_block_4ce6f26_pz87jb{
+    #shopify-block-{{ai_gen_id_upper}}{
        width: 100vw;
     }
     blockquote{
@@ -118,7 +119,7 @@
     }
 
     .ai-quote-section__content-wrapper-{{ ai_gen_id }} {
-      width: 50%;
+      width: 60%;
       background-color: {{ block.settings.text_background_color }};
       {% if block.settings.desktop_image_position == 'right' %}
         order: 1;
