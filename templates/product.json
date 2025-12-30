@@ -67,6 +67,10 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "shiprocket_promise_promise_widget_J4MFhC": {
+              "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
+              "settings": {}
+            },
             "product_title_9WaLn7": {
               "type": "product-title",
               "name": "t:names.title",
@@ -320,6 +324,7 @@
             }
           },
           "block_order": [
+            "shiprocket_promise_promise_widget_J4MFhC",
             "product_title_9WaLn7",
             "price_a7krng",
             "divider_HrJgFt",
