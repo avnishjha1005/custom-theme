@@ -98,9 +98,6 @@
 <div
   class="
     resource-list
-    {% if settings.layout_type == 'carousel' %}
-      force-full-width
-    {% endif %}
     {% if settings.carousel_on_mobile and settings.layout_type != 'carousel' %}
       hidden--mobile
     {% endif %}
@@ -153,7 +150,6 @@
       resource-list
       hidden--desktop
       resource-list__carousel
-      force-full-width
     "
     style="
       --resource-list-column-gap-desktop: {{ mobile_carousel_gap }}px;
