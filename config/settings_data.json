@@ -677,8 +677,6 @@
     }
   },
   "platform_customizations": {
-    "custom_css": [
-      "[data-test-id=\"product-list\"] {margin-inline: auto; max-width: var(--page-content-width);}"
-    ]
+    "custom_css": []
   }
 }
