@@ -78,6 +78,49 @@
     {%- content_for 'blocks' -%}
   </div>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+  document.addEventListener('shopify:section:load', initSwipers);
+  document.addEventListener('DOMContentLoaded', initSwipers);
+
+  function initSwipers() {
+    // 1. Target the resource list when layout is 'carousel'
+    const productLists = document.querySelectorAll('.section-resource-list[data-layout="carousel"] .resource-list');
+    
+    productLists.forEach(list => {
+      // Add Swiper classes dynamically so Liquid doesn't break
+      list.classList.add('swiper');
+      const wrapper = list.querySelector('.resource-list__grid');
+      if (wrapper) {
+        wrapper.classList.add('swiper-wrapper');
+        wrapper.querySelectorAll('.resource-list__item').forEach(item => {
+          item.classList.add('swiper-slide');
+        });
+
+        new Swiper(list, {
+          slidesPerView: 'auto',
+          freeMode: true,
+          grabCursor: true,
+          nested: true, // Key for nested card sliders
+          spaceBetween: {{ section.settings.columns_gap | default: 8 }},
+          watchSlidesProgress: true
+        });
+      }
+    });
+
+    // 2. Target Inner Card Swipers (Gallery inside card)
+    const cardGalleries = document.querySelectorAll('.product-card-gallery-swiper');
+    cardGalleries.forEach(gallery => {
+      new Swiper(gallery, {
+        nested: true,
+        slidesPerView: 1,
+        pagination: { el: '.swiper-pagination', clickable: true }
+      });
+    });
+  }
+</script>
 
 <style>
   /* Featured product styling - spans 2 columns and 2 rows in grid layout */
