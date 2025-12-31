@@ -126,19 +126,6 @@
               },
               "blocks": {}
             },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": true,
-                "alignment": "left",
-                "padding-block-start": 12,
-                "padding-block-end": 24,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
             "buy_buttons_eYQEYi": {
               "type": "buy-buttons",
               "settings": {
@@ -317,15 +304,33 @@
                 "accordion_row_iJM37V",
                 "accordion_row_pLFDcD"
               ]
+            },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": true,
+                "alignment": "left",
+                "padding-block-start": 12,
+                "padding-block-end": 24,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "shiprocket_promise_promise_widget_J4MFhC": {
+              "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
+              "settings": {}
             }
           },
           "block_order": [
             "product_title_9WaLn7",
             "price_a7krng",
             "divider_HrJgFt",
-            "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "accordion_NKWPiW"
+            "accordion_NKWPiW",
+            "variant_picker_R3rGDr",
+            "shiprocket_promise_promise_widget_J4MFhC"
           ]
         }
       },

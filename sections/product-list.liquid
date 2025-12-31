@@ -78,6 +78,49 @@
     {%- content_for 'blocks' -%}
   </div>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+<script async src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+<script>
+  document.addEventListener('shopify:section:load', initSwipers);
+  document.addEventListener('DOMContentLoaded', initSwipers);
+
+  function initSwipers() {
+    // 1. Target the resource list when layout is 'carousel'
+    const productLists = document.querySelectorAll('.section-resource-list[data-layout="carousel"] .resource-list');
+    
+    productLists.forEach(list => {
+      // Add Swiper classes dynamically so Liquid doesn't break
+      list.classList.add('swiper');
+      const wrapper = list.querySelector('.resource-list__grid');
+      if (wrapper) {
+        wrapper.classList.add('swiper-wrapper');
+        wrapper.querySelectorAll('.resource-list__item').forEach(item => {
+          item.classList.add('swiper-slide');
+        });
+
+        new Swiper(list, {
+          slidesPerView: 'auto',
+          freeMode: true,
+          grabCursor: true,
+          nested: true, // Key for nested card sliders
+          spaceBetween: {{ section.settings.columns_gap | default: 8 }},
+          watchSlidesProgress: true
+        });
+      }
+    });
+
+    // 2. Target Inner Card Swipers (Gallery inside card)
+    const cardGalleries = document.querySelectorAll('.product-card-gallery-swiper');
+    cardGalleries.forEach(gallery => {
+      new Swiper(gallery, {
+        nested: true,
+        slidesPerView: 1,
+        pagination: { el: '.swiper-pagination', clickable: true }
+      });
+    });
+  }
+</script>
 
 <style>
   /* Featured product styling - spans 2 columns and 2 rows in grid layout */
@@ -91,6 +134,30 @@
     .resource-list__item--featured {
       grid-column: span 2;
       grid-row: span 2;
+    }
+  }
+  /* Only apply swiper layout when JS is active and layout is carousel */
+  .section-resource-list[data-layout="carousel"] .swiper-wrapper {
+    display: flex !important;
+    grid-template-columns: none !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .section-resource-list[data-layout="carousel"] .swiper-slide {
+    width: auto; /* Required for Free Mode + slidesPerView: auto */
+    flex-shrink: 0;
+  }
+
+  /* Adjust the width of your cards in the carousel */
+  @media screen and (min-width: 750px) {
+    .section-resource-list[data-layout="carousel"] .swiper-slide {
+      width: calc((100% / {{ section.settings.columns }}) - {{ section.settings.columns_gap }}px);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .section-resource-list[data-layout="carousel"] .swiper-slide {
+      width: 70vw; /* Mobile peek effect */
     }
   }
 </style>
