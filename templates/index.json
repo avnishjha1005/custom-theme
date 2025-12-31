@@ -360,7 +360,7 @@
                 "aria_label_add": "Add to wishlist",
                 "aria_label_remove": "Remove from wishlist",
                 "require_login": false,
-                "show_notification": true,
+                "show_notification": false,
                 "padding": 8
               },
               "blocks": {}
