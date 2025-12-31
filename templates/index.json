@@ -359,7 +359,7 @@
                 "tooltip_remove": "Remove from wishlist",
                 "aria_label_add": "Add to wishlist",
                 "aria_label_remove": "Remove from wishlist",
-                "require_login": true,
+                "require_login": false,
                 "show_notification": true,
                 "padding": 8
               },
