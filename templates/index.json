@@ -622,7 +622,8 @@
       },
       "custom_css": [
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
-        ".wishlist-button {margin-top: 10px;}"
+        ".wishlist-button {margin-top: 10px;}",
+        "slideshow-controls{}"
       ],
       "name": "Featured collection",
       "settings": {
