@@ -678,7 +678,7 @@
   },
   "platform_customizations": {
     "custom_css": [
-      ".product-list {margin-inline: auto;}"
+      ".product-list {margin-inline: auto; max-width: var(--page-content-width);}"
     ]
   }
 }
