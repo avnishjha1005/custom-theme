@@ -28,7 +28,7 @@
 >
   {% if header != blank %}{{ header }}{% endif %}
 
-  <slideshow-container ref="slideshowContainer" class="swiper-container-box">
+  <slideshow-container ref="slideshowContainer" class="swiper-container">
     {% if show_arrows and disabled != true %}
       {% render 'slideshow-arrows', icon_style: icon_style, arrows_position: arrows_position %}
     {% endif %}
