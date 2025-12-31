@@ -17,7 +17,7 @@
 
 <slideshow-component
   {% if ref != blank %}ref="{{ ref }}"{% endif %}
-  class="slideshow-wrapper resource-list__carousel{{ class }}"
+  class="slideshow-wrapper resource-list__carousel {{ class }}"
   data-is-child="{{ is_child }}"
   {% if autoplay == true %}autoplay="{{ autoplay_speed }}" aria-live="polite"{% endif %}
   initial-slide="{{ initial_slide | default: 0 }}"
