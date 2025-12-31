@@ -32,14 +32,6 @@
     {% if show_arrows and disabled != true %}
       {% render 'slideshow-arrows', icon_style: icon_style, arrows_position: arrows_position %}
     {% endif %}
-
-    {% comment %} 
-      Swiper Structure: 
-      1. Container (scroller) -> class "swiper"
-      2. Wrapper -> class "swiper-wrapper"
-      3. Slides -> class "swiper-slide" (needs to be applied in the block rendering the slides)
-    {% endcomment %}
-    
     <div 
       ref="scroller" 
       class="swiper-container"
