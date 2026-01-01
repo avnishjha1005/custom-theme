@@ -376,6 +376,60 @@ body:has(> #header-group:empty) { --header-group-height: 0px; }
     min-height: 44px; /* Accessible touch target */
   }
 }
+@media screen and (max-width: 749px) {
+  /* 1. Reset the container to a clean flex row */
+  .header__columns {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between; /* Spacing between icons */
+    align-items: center;
+    padding: 10px var(--padding-sm);
+    gap: 0; /* Let space-between handle it */
+  }
+
+  /* 2. Strip the 'header-actions' wrapper so its children join the flex row */
+  header-actions {
+    display: contents !important; 
+  }
+
+  /* 3. Hide the logo and wishlist as requested */
+  .header-logo, 
+  .header-actions__wishlist, 
+  wishlist-icon {
+    display: none !important;
+  }
+
+  /* 4. The Specific Order: Search, Cart, Account, Menu */
+  .search-action { 
+    order: 1; 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
+  }
+
+  .action__cart { 
+    order: 2; 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
+  }
+
+  /* Matches both popover and drawer versions of account */
+  header-actions account-popover, 
+  header-actions account-drawer { 
+    order: 3; 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
+  }
+
+  .header__drawer { 
+    order: 4; 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
+  }
+}
 
 /* --- Interaction Effects --- */
 @media (hover: hover) {
