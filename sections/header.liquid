@@ -525,37 +525,53 @@
     }
 
     @media screen and (max-width: 749px) {
-      --header-template-columns: var(--header-mobile-bookend) var(--header-mobile-bookend) 1fr
-        var(--header-mobile-bookend) var(--header-mobile-bookend);
+  .header__columns {
+    /* Four equal columns for search, cart, account, menu */
+    --header-mobile-bookend: 1fr;
+    --header-template-columns: 1fr 1fr 1fr 1fr;
+    
+    grid-template-columns: var(--header-template-columns);
+    grid-template-areas: 'leftA leftB rightA rightB';
+    grid-column: span 4;
+    column-gap: 0;
+    align-items: center;
+    justify-items: center;
+    margin: auto;
+    padding-block: 0;
+    padding-inline: var(--padding-3xs);
+  }
 
-      grid-template-areas: 'leftA leftB rightA rightB';
-      grid-column: span 4;
-      margin: auto;
-      column-gap: 0;
-      align-items: center;
-      padding-block: 0;
-      padding-inline: 0 var(--padding-3xs);
+  /* Hide logo on mobile */
+  .header__columns .header-logo {
+    display: none;
+  }
 
-      .header-logo {
-        grid-area: center;
-      }
+  /* Break header-actions into individual items */
+  .header__columns header-actions {
+    display: contents;
+  }
 
-      &:not(:has(header-actions)) .search-action {
-        grid-area: leftB;
-      }
+  /* Position search in first column */
+  .header__columns .search-action {
+    grid-area: leftA;
+  }
 
-      &:not(:has(.account-actions)) .search-action {
-        grid-area: rightA;
-      }
+  /* Position cart in second column */
+  header-actions .action__cart {
+    grid-area: leftB;
+  }
 
-      .search-action {
-        grid-area: leftB;
-      }
+  /* Position account in third column */
+  header-actions account-popover,
+  header-actions account-drawer {
+    grid-area: rightA;
+  }
 
-      header-actions {
-        grid-area: rightB;
-      }
-    }
+  /* Position menu drawer in fourth column */
+  .header__drawer {
+    grid-area: rightB;
+  }
+}
   }
 
   /* Single column layout if there are no columns within */
