@@ -658,6 +658,53 @@
       padding-bottom: var(--header-height);
     }
   }
+  {% stylesheet %}
+  /* Mobile layout changes - place this in your header section stylesheet */
+  
+  @media screen and (max-width: 749px) {
+    .header__columns {
+      --header-template-columns: var(--header-mobile-bookend) 1fr var(--header-mobile-bookend) 
+        var(--header-mobile-bookend) var(--header-mobile-bookend);
+
+      /* Grid areas: search, spacer, cart, account, menu */
+      grid-template-areas: 'leftA center rightA rightB rightC';
+      grid-column: span 3;
+      column-gap: 0;
+      align-items: center;
+      padding-block: 0;
+      padding-inline: 0 var(--padding-3xs);
+
+      /* Hide logo on mobile */
+      .header-logo {
+        display: none;
+      }
+
+      /* Search on far left */
+      .search-action {
+        grid-area: leftA !important;
+      }
+
+      /* Cart icon */
+      .action__cart {
+        grid-area: rightA;
+      }
+
+      /* Account icon */
+      .account-actions {
+        grid-area: rightB;
+      }
+
+      /* Menu drawer icon on far right */
+      .header__icon--menu {
+        grid-area: rightC;
+      }
+
+      /* Header actions container */
+      header-actions {
+        display: contents;
+      }
+    }
+  }
 
 {% endstylesheet %}
 
