@@ -23,7 +23,9 @@
     {% render 'account-popover' %}
     {% render 'account-drawer' %}
   {% endif %}
-   {% render 'wishlist-icon-component' %}
+   <div class="header-actions__wishlist desktop:block mobile:hidden">
+    {% render 'wishlist-icon-component' %}
+  </div>
   
 
 </header-actions>
