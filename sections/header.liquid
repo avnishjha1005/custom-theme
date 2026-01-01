@@ -274,23 +274,29 @@
 ></script>
 
 {% stylesheet %}
-/* --- 1. Core Variables & Logic --- */
+/* --- 1. GENERAL STYLES --- */
 body {
   --header-height: 0px;
   --header-group-height: var(--header-height);
 }
-
 body:has(> #header-group > header) { --header-height: 60px; }
 
-/* --- 2. Desktop Layout (750px+) --- */
+.header__row {
+  position: relative;
+  background-color: var(--header-bg-color, var(--color-background));
+  transition: background-color var(--animation-values-slow);
+}
+
+/* --- 2. DESKTOP ONLY (750px+) --- */
 @media screen and (min-width: 750px) {
+  /* Re-enable Transparency Logic for Desktop */
   .header[transparent] {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    background-color: transparent;
     z-index: var(--layer-overlay);
+    background-color: transparent !important;
     --header-bg-color: transparent;
   }
 
@@ -298,8 +304,8 @@ body:has(> #header-group > header) { --header-height: 60px; }
     display: grid !important;
     grid-template-areas: 'left center right' !important;
     grid-template-columns: 1fr auto 1fr !important;
-    grid-gap: var(--gap-xl);
     align-items: center;
+    gap: var(--gap-xl);
   }
 
   .header__column--left { grid-area: left; display: flex; }
@@ -311,30 +317,32 @@ body:has(> #header-group > header) { --header-height: 60px; }
     align-items: center; 
     gap: 1.5rem; 
   }
+
+  /* Fix for the localization vs actions vertical stacking */
+  .header__column--right > * {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+  }
 }
 
-/* --- 3. Mobile Layout (Strictly Under 750px) --- */
+/* --- 3. MOBILE ONLY (Under 749px) --- */
 @media screen and (max-width: 749px) {
-  /* Prevent transparency logic from affecting mobile bottom bar */
-  .header[transparent] {
-    position: fixed !important; /* Keep it pinned to bottom */
-    top: auto !important;      /* Undo the top: 0 from desktop */
-    bottom: 0 !important;
-    background-color: white !important; /* Ensure it's never transparent on mobile */
-    width: 100%;
-  }
-
   body {
     padding-bottom: var(--header-height); 
   }
 
-  .header-section {
-    position: fixed;
-    bottom: 0;
+  /* Force Mobile Header to the bottom, regardless of "Transparent" settings */
+  .header-section, 
+  header-component.header {
+    position: fixed !important;
+    top: auto !important;
+    bottom: 0 !important;
     left: 0;
     right: 0;
-    z-index: 1000; /* High z-index to stay above content */
-    background-color: white;
+    width: 100%;
+    z-index: 1000;
+    background-color: white !important; /* Forces bottom bar to stay solid */
     border-top: 1px solid var(--color-border);
   }
 
@@ -343,17 +351,16 @@ body:has(> #header-group > header) { --header-height: 60px; }
     flex-direction: row !important;
     justify-content: space-evenly !important; 
     align-items: center;
-    width: 100%;
-    padding: 10px 0;
+    padding: 8px 0;
   }
 
-  /* Flatten wrappers */
+  /* Flatten structure for 4-icon layout */
   .header__column,
   header-actions {
     display: contents !important;
   }
 
-  /* Hide Desktop-only elements */
+  /* Hide Desktop Elements */
   .header-logo, 
   .header__column--center,
   .header-actions__wishlist, 
@@ -361,16 +368,17 @@ body:has(> #header-group > header) { --header-height: 60px; }
     display: none !important;
   }
 
-  /* Mobile Order: Search (1), Cart (2), Account (3), Menu (4) */
+  /* Exact Ordering: Search, Cart, Account, Menu */
   .search-action { order: 1 !important; flex: 1; display: flex; justify-content: center; }
   .header__icon--cart, .action__cart, .cart-drawer { order: 2 !important; flex: 1; display: flex; justify-content: center; }
   :is(account-popover, .account-drawer, .header-actions__account) { order: 3 !important; flex: 1; display: flex; justify-content: center; }
   .header__drawer { order: 4 !important; flex: 1; display: flex; justify-content: center; }
 
-  /* Ensure icons are visible (Not white-on-white) */
+  /* Reset icon colors for mobile to prevent black blobs */
   .header__columns svg {
-    color: rgb(var(--color-foreground)) !important;
-    fill: currentColor;
+    width: 24px;
+    height: 24px;
+    /* We remove the 'fill' override to let the original icon design show through */
   }
 }
 {% endstylesheet %}
