@@ -698,7 +698,101 @@
     margin: auto !important;
   }
 }
+.header__row {
+    padding-inline: var(--padding-sm);
+  }
 
+  /* Switch from grid → flex for responsiveness */
+  .header__columns {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between; /* EVEN spacing */
+    gap: 0 !important;
+    padding: 0;
+  }
+
+  /* Each icon gets equal space */
+  .header__columns > * {
+    flex: 1 1 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+  }
+
+  /* =====================================
+     ICON VISIBILITY / ORDER
+     ===================================== */
+
+  /* Hide logo on mobile (as requested) */
+  .header-logo {
+    display: none !important;
+  }
+
+  /* Break header-actions into individual icons */
+  header-actions {
+    display: contents !important;
+  }
+
+  /* Hide wishlist (optional, keeps 4 icons clean) */
+  header-actions wishlist-icon,
+  header-actions .header-actions__wishlist {
+    display: none !important;
+  }
+
+  /* =====================================
+     ICON ALIGNMENT (EDGE REFINEMENT)
+     ===================================== */
+
+  /* Menu (hamburger) — far left */
+  .header__drawer {
+    justify-content: flex-start;
+  }
+
+  /* Search */
+  .search-action {
+    justify-content: center;
+  }
+
+  /* Account */
+  header-actions account-popover,
+  header-actions account-drawer {
+    justify-content: center;
+  }
+
+  /* Cart — far right */
+  header-actions .action__cart {
+    justify-content: flex-end;
+  }
+
+  /* =====================================
+     TAP TARGETS / UX POLISH
+     ===================================== */
+
+  .header__drawer,
+  .search-action,
+  header-actions account-popover,
+  header-actions account-drawer,
+  header-actions .action__cart {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Smooth hover / tap transitions */
+  .header__drawer,
+  .search-action,
+  header-actions > * {
+    transition: opacity var(--animation-speed) var(--animation-easing),
+                transform var(--animation-speed) var(--animation-easing);
+  }
+
+  .header__drawer:active,
+  .search-action:active,
+  header-actions > *:active {
+    transform: scale(0.95);
+  }
+
+}
 {% endstylesheet %}
 
 {% unless request.design_mode %}
