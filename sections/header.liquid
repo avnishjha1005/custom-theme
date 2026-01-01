@@ -1,8 +1,8 @@
 {% liquid
-  assign order = 'logo,menu,localization,search,mobile_search,actions'
+  assign order = 'mobile_search,actions,logo,menu,localization,search'
 
   if shop.customer_accounts_enabled
-    assign order = 'mobile_search,logo,menu,localization,search,actions'
+    assign order = 'mobile_search,actions,logo,menu,localization,search'
   endif
 
   assign rows = 'top,bottom' | split: ','
