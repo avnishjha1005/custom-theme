@@ -1154,6 +1154,46 @@
     border-radius: var(--menu-image-border-radius);
   }
 
+  .menu-drawer__l1-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: var(--padding-md) var(--drawer-padding);
+  scrollbar-width: none; /* Hide scrollbar for Chrome/Safari */
+  -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+}
+
+.menu-drawer__l1-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.pill-button {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.pill-button--active {
+  background-color: var(--color-foreground);
+  color: var(--color-background);
+  border-color: var(--color-foreground);
+}
+
+.menu-drawer__back-button .menu-drawer__menu-item-text {
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
   @keyframes menu-drawer-nav-open {
     0% {
       visibility: hidden;
