@@ -658,47 +658,52 @@
       padding-bottom: var(--header-height);
     }
   }
+
   @media screen and (max-width: 749px) {
-  /* Hide logo on mobile */
-  .header__columns .header-logo {
-    display: none;
-  }
+    /* Hide logo on mobile */
+    .header__columns .header-logo {
+      display: none;
+    }
 
-  /* Break header-actions into individual items */
-  .header__columns header-actions {
-    display: contents;
-  }
+    /* Break header-actions into individual items */
+    .header__columns header-actions {
+      display: contents;
+    }
 
-  /* Hide wishlist on mobile */
-  header-actions wishlist-icon,
-  header-actions .header-actions__wishlist {
-    display: none;
-  }
+    /* Hide wishlist on mobile */
+    header-actions wishlist-icon,
+    header-actions .header-actions__wishlist {
+      display: none;
+    }
 
-  /* Ensure proper grid positioning - keep existing grid but adjust items */
-  .header__columns .search-action {
-    grid-area: leftA;
-  }
+    /* Replace grid with flexbox for even spacing */
+    .header__columns {
+      display: flex !important;
+      justify-content: space-evenly;
+      align-items: center;
+      gap: clamp(12px, 4vw, 30px);
+      margin: auto !important;
+      padding-inline: var(--padding-3xs);
+    }
 
-  header-actions .action__cart {
-    grid-area: rightA;
-  }
+    /* Ensure icons maintain proper order */
+    .header__columns .search-action {
+      order: 1;
+    }
 
-  header-actions account-popover,
-  header-actions account-drawer {
-    grid-area: leftB;
-  }
+    header-actions account-popover,
+    header-actions account-drawer {
+      order: 2;
+    }
 
-  .header__drawer {
-    grid-area: rightB;
-  }
+    header-actions .action__cart {
+      order: 3;
+    }
 
-  .header__columns{
-    gap:30px;
-    margin: auto !important;
+    .header__drawer {
+      order: 4;
+    }
   }
-  
-}
 
 {% endstylesheet %}
 
