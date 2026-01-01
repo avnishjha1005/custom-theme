@@ -439,53 +439,59 @@ body:has(> #header-group:empty) { --header-group-height: 0px; }
   }
 }
 @media screen and (max-width: 749px) {
-  /* 1. Kill the grid and the reserved center space */
+  /* 1. Reset the main container to a flat flex row */
   .header__columns {
     display: flex !important;
     grid-template-columns: none !important;
     grid-template-areas: none !important;
-    justify-content: space-around !important; /* Perfect even spacing */
+    justify-content: space-evenly !important; 
+    align-items: center;
     width: 100%;
+    padding-inline: var(--padding-sm);
   }
 
-  /* 2. Make the column wrappers "invisible" to the layout */
-  /* This prevents left/center/right grouping logic from applying */
+  /* 2. Strip away the column and action wrappers */
+  /* This prevents the "Left vs Right" grouping logic */
   .header__column,
   header-actions {
     display: contents !important;
   }
 
-  /* 3. Hide the logo completely */
+  /* 3. Hide the logo and empty center column */
   .header-logo,
   .header__column--center {
     display: none !important;
   }
 
-  /* 4. Force the 4-icon Order: Search, Cart, Account, Menu */
+  /* 4. Exact Ordering: Search (1), Cart (2), Account (3), Menu (4) */
   .search-action { 
-    order: 1; 
+    order: 1 !important; 
   }
 
-  .action__cart { 
-    order: 2; 
+  /* Ensure the cart is specifically 2nd */
+  .action__cart,
+  .header__icon--cart { 
+    order: 2 !important; 
   }
 
-  /* Targets account regardless of the theme's specific component name */
-  :is(account-popover, account-drawer, .header__icon--account) { 
-    order: 3; 
+  /* Ensure account is specifically 3rd */
+  :is(account-popover, account-drawer, .header-actions__account, .header__icon--account) { 
+    order: 3 !important;
     display: flex !important;
     justify-content: center;
   }
 
-  .header__drawer { 
-    order: 4; 
+  /* Ensure menu/drawer is specifically 4th */
+  .header__drawer,
+  .header__icon--menu { 
+    order: 4 !important; 
   }
 
-  /* 5. Ensure all 4 items take up equal space */
+  /* 5. Force equal distribution so they are spaced perfectly */
   .header__columns > *,
-  .header__columns .search-action,
-  .header__columns .header__drawer {
-    flex: 1;
+  .search-action,
+  .header__drawer {
+    flex: 1 1 0; /* Forces all 4 slots to be identical in width */
     display: flex;
     justify-content: center;
     align-items: center;
