@@ -298,17 +298,14 @@
                     >
                       <div class="menu-drawer__inner-submenu">
                         <div class="menu-drawer__nav-buttons">
-                          <button
-                            class="button menu-drawer__back-button focus-inset"
-                            aria-expanded="true"
-                            on:click="header-drawer/back"
-                            aria-label="{{ 'actions.back' | t }}"
-                          >
-                            <span class="svg-wrapper icon-caret icon-caret--backward">
-                              {{- 'icon-caret.svg' | inline_asset_content -}}
-                            </span>
-                            <span class="menu-drawer__menu-item-text wrap-text">{{ link.title | escape }}</span>
-                          </button>
+                          <button class="button menu-drawer__back-button focus-inset" on:click="header-drawer/back">
+  <span class="svg-wrapper icon-caret icon-caret--backward">
+    {{- 'icon-caret.svg' | inline_asset_content -}}
+  </span>
+  <span class="menu-drawer__menu-item-text wrap-text">
+    {{ linklist.title | escape }} / {{ link.title | escape }}
+  </span>
+</button>
                           <button
                             class="button close-button menu-drawer__close-button"
                             type="button"
