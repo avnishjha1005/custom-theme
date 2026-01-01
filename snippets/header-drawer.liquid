@@ -1,16 +1,16 @@
 {%- comment -%}
-  Figma-Style Mobile Menu Drawer
-  - Similar styling to reference: 10px Uppercase Tabs, 16px Links
-  - No Duplicates: L1 only exists in the Pill/Tab bar
-  - Breadcrumb: Active tab updates text to "L1 / L2"
+  Figma-Style Mobile Menu Drawer - V2 (Icon Fix)
+  - L1: Horizontal Pills (No duplicates)
+  - L2: List View with Drill-down
+  - Breadcrumb: Active pill updates to "L1 / L2" path
 {%- endcomment -%}
 
 <header-drawer>
   <details id="Details-menu-drawer-container" class="menu-drawer-container">
-    <summary class="header__icon header__icon--menu focus-inset" aria-label="Menu">
+    <summary class="header__icon header__icon--menu header__icon--summary focus-inset" aria-label="{{ 'sections.shop_the_look.view_product' | t }}">
       <span class="menu-drawer-icon-wrapper">
-        <span class="icon-hamburger-container">
-          {{- 'icon-hamburger.svg' | inline_asset_content -}}
+        <span class="header-drawer-icon header-drawer-icon--open icon-hamburger-container">
+          {{- 'icon-menu.svg' | inline_asset_content -}}
         </span>
         <span class="icon-close-container">
           {{- 'icon-close.svg' | inline_asset_content -}}
@@ -21,25 +21,25 @@
     <div id="menu-drawer" class="menu-drawer gradient motion-reduce" tabindex="-1">
       <div class="menu-drawer__inner-container">
         
-        {% comment %} 1. Header Actions (Back & Close) {% endcomment %}
+        {% comment %} Header Actions (Internal Back/Close) {% endcomment %}
         <div class="drawer-header-actions">
           <button type="button" class="drawer-back-btn is-hidden" id="Drawer-Back-Btn" aria-label="Back">
-            <span class="arrow-back arrow-icon">
-              {{- 'icon-arrow.svg' | inline_asset_content -}}
+            <span class="arrow-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
             </span>
           </button>
           <button type="button" class="drawer-close-btn" id="Drawer-Close-Btn" aria-label="Close">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
         </div>
 
-        {% comment %} 2. Level 1 Tabs (Horizontal Pills) {% endcomment %}
+        {% comment %} Level 1: Horizontal Pill Navigation {% endcomment %}
         <nav class="drawer-l1-nav">
-          <div class="l1-nav-inner" id="L1-Tab-Container">
+          <div class="l1-nav-inner" id="L1-Pill-Container">
             {%- for link in linklist.links -%}
               <button type="button" 
-                class="l1-nav-item {% if forloop.first %}is-active{% endif %}" 
-                data-l1-id="{{ forloop.index }}"
+                class="pill-item {% if forloop.first %}is-active{% endif %}" 
+                data-l1-index="{{ forloop.index }}"
                 data-original-title="{{ link.title | escape }}">
                 {{ link.title | escape }}
               </button>
@@ -47,11 +47,10 @@
           </div>
         </nav>
 
-        {% comment %} 3. Content Panels {% endcomment %}
-        <div class="drawer-panels-wrapper">
+        {% comment %} Main Content Panels {% endcomment %}
+        <div class="drawer-panels-container">
           {%- for l1_link in linklist.links -%}
             <div class="drawer-panel {% if forloop.first %}is-active{% endif %}" data-panel-l1="{{ forloop.index }}">
-              
               <ul class="drawer-links-list" role="list">
                 {%- for l2_link in l1_link.links -%}
                   <li class="drawer-item-container">
@@ -62,17 +61,16 @@
                         data-path="{{ l1_link.title | escape }} / {{ l2_link.title | escape }}">
                         <span class="link-text">{{ l2_link.title | escape }}</span>
                         <span class="arrow-icon">
-                          {{- 'icon-arrow.svg' | inline_asset_content -}}
+                          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                         </span>
                       </button>
 
-                      {% comment %} Level 3 Nested Panel {% endcomment %}
+                      {% comment %} Level 3: Nested Slide-in Panel {% endcomment %}
                       <div class="drawer-panel-nested" id="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}">
                         <ul class="drawer-links-list" role="list">
                           {%- for l3_link in l2_link.links -%}
                             <li>
                               <a href="{{ l3_link.url }}" class="drawer-link-btn">
-                                <span class="link-text">{{ l3_link.url | split: '/' | last | replace: '-', ' ' | capitalize }}</span>
                                 {{ l3_link.title | escape }}
                               </a>
                             </li>
@@ -101,64 +99,77 @@
 </header-drawer>
 
 <style>
-  /* Header Icon States */
+  /* Header Icon Fix */
   .icon-close-container { display: none; }
   details[open] .icon-hamburger-container { display: none; }
   details[open] .icon-close-container { display: block; }
-
-  /* Drawer Layout (From Reference) */
-  .menu-drawer {
-    position: fixed; inset: 0; width: 100%; height: 100vh;
-    background: #fff; z-index: 1000;
-    transform: translateY(100%); 
-    transition: transform 0.4s cubic-bezier(0.1, 0.9, 0.2, 1);
-    display: flex; flex-direction: column;
-  }
-  details[open] > .menu-drawer { transform: translateY(0); }
-
-  .drawer-header-actions { display: flex; justify-content: space-between; padding: 40px 10px 0; align-items: center; }
-  .drawer-back-btn, .drawer-close-btn { background: none; border: none; cursor: pointer; padding: 16px; display: flex; align-items: center; }
   
-  .arrow-back { transform: rotateZ(180deg); }
-  .arrow-icon svg { width: 20px; height: 20px; }
-
-  /* L1 Nav (From Reference) */
-  .drawer-l1-nav { border-top: 1px solid #f2f2f2; overflow-x: auto; scrollbar-width: none; }
-  .drawer-l1-nav::-webkit-scrollbar { display: none; }
-  .l1-nav-inner { display: flex; padding: 0 16px; gap: 12px; }
-
-  .l1-nav-item { 
-    padding: 15px 0; white-space: nowrap; background: none; border: none;
-    font-size: 10px; letter-spacing: 0.12em; color: black; border-bottom: 2px solid transparent; 
-    text-transform: uppercase; transition: all 0.2s ease; cursor: pointer;
+  .menu-drawer-icon-wrapper svg {
+    width: 24px;
+    height: 24px;
+    display: block;
   }
-  .l1-nav-item.is-active { text-decoration: underline; font-weight: bold; }
 
-  /* Panels & Links (From Reference) */
-  .drawer-panels-wrapper { flex: 1; position: relative; overflow: hidden; }
-  .drawer-panel { display: none; padding: 41px 16px 0; height: 100%; overflow-y: auto; }
+  /* Drawer Styling */
+  .menu-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #fff;
+    z-index: 1000;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  details[open] > .menu-drawer { transform: translateX(0); }
+
+  .drawer-header-actions {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    min-height: 50px;
+  }
+
+  .drawer-back-btn, .drawer-close-btn {
+    background: none; border: none; cursor: pointer; padding: 12px;
+  }
+
+  /* L1 Pills */
+  .drawer-l1-nav { border-bottom: 1px solid #f2f2f2; overflow-x: auto; scrollbar-width: none; }
+  .drawer-l1-nav::-webkit-scrollbar { display: none; }
+  .l1-nav-inner { display: flex; padding: 12px 16px; gap: 10px; }
+
+  .pill-item {
+    white-space: nowrap; background: #f4f4f4; border: none; border-radius: 20px;
+    padding: 8px 18px; font-size: 13px; font-weight: 500; cursor: pointer; color: #000;
+  }
+  .pill-item.is-active { background: #000; color: #fff; }
+
+  /* Content */
+  .drawer-panels-container { flex: 1; position: relative; overflow: hidden; }
+  .drawer-panel { display: none; padding: 10px 16px; height: 100%; overflow-y: auto; }
   .drawer-panel.is-active { display: block; }
 
   .drawer-links-list { list-style: none; padding: 0; margin: 0; }
-  .drawer-link-btn { 
+  .drawer-link-btn {
     width: 100%; display: flex; justify-content: space-between; align-items: center;
-    padding: 6px 0; background: none; border: none; font-size: 16px; text-align: left; 
-    color: #000; text-decoration: none; cursor: pointer;
+    padding: 15px 0; background: none; border: none; border-bottom: 1px solid #f9f9f9;
+    font-size: 16px; text-align: left; color: #000; text-decoration: none;
   }
 
-  /* Drill Down Slide-in */
-  .drawer-panel-nested { 
-    position: absolute; inset: 0; background: #fff; padding: 0 16px;
-    transform: translateX(100%); transition: transform 0.3s ease-out; visibility: hidden; z-index: 10;
+  /* L3 Drill-down */
+  .drawer-panel-nested {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: #fff; padding: 10px 16px; transform: translateX(100%);
+    transition: transform 0.3s ease; visibility: hidden; z-index: 10;
   }
   .drawer-panel-nested.is-open { transform: translateX(0); visibility: visible; }
 
-  .drawer-footer { 
-    padding: 20px 25px; border-top: 1px solid #f2f2f2; display: flex; 
-    justify-content: space-between; font-size: 10px; color: #888; letter-spacing: 0.05em; 
-  }
-  .drawer-footer a { text-decoration: none; color: inherit; }
-
+  .drawer-footer { padding: 20px 16px; border-top: 1px solid #f2f2f2; display: flex; justify-content: space-between; font-size: 12px; color: #888; }
   .is-hidden { visibility: hidden; pointer-events: none; }
 </style>
 
@@ -170,7 +181,7 @@
         this.details = this.querySelector('details');
         this.backBtn = this.querySelector('#Drawer-Back-Btn');
         this.closeBtn = this.querySelector('#Drawer-Close-Btn');
-        this.l1Tabs = this.querySelectorAll('.l1-nav-item');
+        this.pillBtns = this.querySelectorAll('.pill-item');
         this.drillBtns = this.querySelectorAll('[data-drill-down]');
         this.panels = this.querySelectorAll('.drawer-panel');
         this.nestedPanels = this.querySelectorAll('.drawer-panel-nested');
@@ -178,50 +189,45 @@
       }
 
       init() {
-        // Level 1 Tab Swapping
-        this.l1Tabs.forEach(tab => {
-          tab.addEventListener('click', () => {
-            this.resetNested();
-            this.l1Tabs.forEach(t => {
-              t.classList.remove('is-active');
-              t.innerText = t.dataset.originalTitle; // Reset breadcrumbs when switching tabs
-            });
-            tab.classList.add('is-active');
-            
+        // Pill Navigation logic
+        this.pillBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            this.resetMenuState();
+            this.pillBtns.forEach(b => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
             this.panels.forEach(p => p.classList.remove('is-active'));
-            const target = this.querySelector(`[data-panel-l1="${tab.dataset.l1Id}"]`);
+            const target = this.querySelector(`[data-panel-l1="${btn.dataset.l1Index}"]`);
             if (target) target.classList.add('is-active');
           });
         });
 
-        // Drill Down (L2 to L3)
+        // Drill down to L3 logic
         this.drillBtns.forEach(btn => {
           btn.addEventListener('click', () => {
-            const nested = this.querySelector(`#${btn.dataset.target}`);
-            const activeTab = this.querySelector('.l1-nav-item.is-active');
-            if (nested && activeTab) {
+            const targetId = btn.dataset.target;
+            const nested = this.querySelector(`#${targetId}`);
+            const activePill = this.querySelector('.pill-item.is-active');
+            if (nested && activePill) {
               nested.classList.add('is-open');
-              activeTab.innerText = btn.dataset.path; // Update the path label
+              activePill.innerText = btn.dataset.path; // Update Breadcrumb path
               this.backBtn.classList.remove('is-hidden');
             }
           });
         });
 
-        // Back Button
-        this.backBtn.addEventListener('click', () => this.resetNested());
-
-        // Close Drawer
+        this.backBtn.addEventListener('click', () => this.resetMenuState());
         this.closeBtn.addEventListener('click', () => {
           this.details.removeAttribute('open');
-          this.resetNested();
+          this.resetMenuState();
         });
       }
 
-      resetNested() {
+      resetMenuState() {
         this.nestedPanels.forEach(p => p.classList.remove('is-open'));
         this.backBtn.classList.add('is-hidden');
-        const activeTab = this.querySelector('.l1-nav-item.is-active');
-        if(activeTab) activeTab.innerText = activeTab.dataset.originalTitle;
+        this.pillBtns.forEach(btn => {
+          btn.innerText = btn.dataset.originalTitle;
+        });
       }
     });
   }
