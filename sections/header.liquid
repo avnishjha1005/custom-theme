@@ -659,56 +659,38 @@
     }
   }
   @media screen and (max-width: 749px) {
-  /* Update the grid template to have 4 columns: search, cart, account, menu */
-  .header__columns {
-    --header-mobile-bookend: 44px;
-    --header-template-columns: var(--header-mobile-bookend) 1fr var(--header-mobile-bookend) var(--header-mobile-bookend);
-    
-    grid-template-areas: 'search center cart account menu' !important;
-    grid-template-columns: var(--header-mobile-bookend) 1fr var(--header-mobile-bookend) var(--header-mobile-bookend) var(--header-mobile-bookend) !important;
-  }
-
   /* Hide logo on mobile */
   .header__columns .header-logo {
-    display: none !important;
-  }
-
-  /* Position search on the left */
-  .header__columns .search-action {
-    grid-column: 1 !important;
-    justify-self: start;
+    display: none;
   }
 
   /* Break header-actions into individual items */
   .header__columns header-actions {
-    display: contents !important;
+    display: contents;
   }
 
   /* Hide wishlist on mobile */
-  .header__columns header-actions .header-actions__wishlist,
-  .header__columns header-actions wishlist-icon {
-    display: none !important;
+  header-actions wishlist-icon,
+  header-actions .header-actions__wishlist {
+    display: none;
   }
 
-  /* Position cart icon */
-  .header__columns header-actions .action__cart {
-    grid-column: 3 !important;
-    justify-self: center;
+  /* Ensure proper grid positioning - keep existing grid but adjust items */
+  .header__columns .search-action {
+    grid-area: leftA;
   }
 
-  /* Position account (both popover and drawer) */
-  .header__columns header-actions account-popover,
-  .header__columns header-actions account-drawer,
-  .header__columns header-actions .account-actions {
-    grid-column: 4 !important;
-    justify-self: center;
+  header-actions .action__cart {
+    grid-area: rightA;
   }
 
-  /* Position menu drawer trigger on the right */
-  .header__columns .header__drawer,
-  .header__columns .header__icon--menu {
-    grid-column: 5 !important;
-    justify-self: end;
+  header-actions account-popover,
+  header-actions account-drawer {
+    grid-area: leftB;
+  }
+
+  .header__drawer {
+    grid-area: rightB;
   }
 }
 
