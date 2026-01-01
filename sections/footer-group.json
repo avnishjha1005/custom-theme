@@ -34,9 +34,10 @@
     },
     "mobile_tab_bar_hUiGjD": {
       "type": "mobile-tab-bar",
+      "disabled": true,
       "custom_css": [
         ".mobile-tab-bar__drawer {min-height: calc(100svh - 56px);}",
-        ".mobile-tab-bar{height:56px;}"
+        ".mobile-tab-bar {height: 56px;}"
       ],
       "name": "Mobile Tab Bar",
       "settings": {
