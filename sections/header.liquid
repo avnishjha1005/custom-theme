@@ -705,6 +705,34 @@
     }
   }
   }
+  @media screen and (max-width: 749px) {
+
+  .header__columns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-inline: var(--padding-sm);
+  }
+
+  /* Hide logo on mobile */
+  .header-logo {
+    display: none;
+  }
+
+  /* Actions split evenly */
+  header-actions {
+    display: flex;
+    flex: 2;
+    justify-content: space-evenly;
+  }
+
+  header-actions > * {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+}
 {% endstylesheet %}
 
 {% unless request.design_mode %}
