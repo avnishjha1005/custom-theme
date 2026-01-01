@@ -320,15 +320,57 @@ body:has(> #header-group:empty) { --header-group-height: 0px; }
     align-items: center;
   }
 
-  .header__column--left { grid-area: left; }
-  .header__column--center { grid-area: center; justify-content: center; }
-  .header__column--right { grid-area: right; justify-content: flex-end; }
+  .header__column--left { 
+    grid-area: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-md);
+  }
+  
+  .header__column--center { 
+    grid-area: center; 
+    justify-content: center;
+    display: flex;
+    align-items: center;
+  }
+  
+  .header__column--right { 
+    grid-area: right; 
+    justify-content: flex-end;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-md);
+  }
+
+  /* Make header-actions display horizontally */
+  header-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-md);
+  }
+
+  /* Ensure localization and search are inline */
+  .header__column--right > * {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Dynamic color inheritance */
+  .header__row,
+  .header__column,
+  header-actions,
+  .header-actions__action {
+    color: inherit;
+  }
 }
 
 /* --- Mobile Layout (Under 750px) --- */
 @media screen and (max-width: 749px) {
   body {
-    padding-bottom: var(--header-height); /* Space for the fixed bottom bar */
+    padding-bottom: var(--header-height);
   }
 
   .header-section {
@@ -341,105 +383,7 @@ body:has(> #header-group:empty) { --header-group-height: 0px; }
     border-top: 1px solid var(--color-border);
   }
 
-  /* Target the 4-icon container */
-  .header__columns {
-    display: flex !important;
-    justify-content: space-around; /* Spaced evenly across width */
-    align-items: center;
-    padding: var(--padding-2xs) var(--padding-sm);
-    width: 100%;
-  }
-
-  /* Hide elements as requested */
-  .header-logo, 
-  .header-actions__wishlist, 
-  wishlist-icon {
-    display: none !important;
-  }
-
-  /* Flatten nested structures so icons are direct flex children */
-  header-actions {
-    display: contents; 
-  }
-
-  /* Icon Ordering (Search, Account, Cart, Menu) */
-  .search-action { order: 1; }
-  account-popover, .account-drawer { order: 2; }
-  .cart-drawer{ order: 2; }
-  .header__drawer { order: 4; }
-
-  /* Ensure consistent sizing for hit targets */
-  .header__columns > * {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    min-height: 44px; /* Accessible touch target */
-  }
-}
-@media screen and (max-width: 749px) {
-  /* 1. Reset the container to a clean flex row */
-  .header__columns {
-    display: flex !important;
-    flex-direction: row !important;
-    justify-content: space-between; /* Spacing between icons */
-    align-items: center;
-    padding: 10px var(--padding-sm);
-    gap: 0; /* Let space-between handle it */
-  }
-
-  /* 2. Strip the 'header-actions' wrapper so its children join the flex row */
-  header-actions {
-    display: contents !important; 
-  }
-
-  /* 3. Hide the logo and wishlist as requested */
-  .header-logo, 
-  .header-actions__wishlist, 
-  wishlist-icon {
-    display: none !important;
-  }
-
-  /* 4. The Specific Order: Search, Cart, Account, Menu */
-  .search-action { 
-    order: 1; 
-    flex: 1; 
-    display: flex; 
-    justify-content: center; 
-  }
-
-  .cart-drawer { 
-    order: 2; 
-    flex: 1; 
-    display: flex; 
-    justify-content: center; 
-  }
-
-  /* Matches both popover and drawer versions of account */
-  header-actions account-popover, 
-  header-actions .account-drawer { 
-    order: 3; 
-    flex: 1; 
-    display: flex; 
-    justify-content: center; 
-  }
-
-  .header__drawer { 
-    order: 4; 
-    flex: 1; 
-    display: flex; 
-    justify-content: center; 
-  }
-}
-
-/* --- Interaction Effects --- */
-@media (hover: hover) {
-  .header__column:hover .header-actions__action:not(:hover),
-  .header__column:hover header-menu:not(:hover) {
-    opacity: var(--opacity-subdued-text);
-  }
-}
-@media screen and (max-width: 749px) {
-  /* 1. Reset the main container to a flat flex row */
+  /* Reset the main container to a flat flex row */
   .header__columns {
     display: flex !important;
     grid-template-columns: none !important;
@@ -450,51 +394,58 @@ body:has(> #header-group:empty) { --header-group-height: 0px; }
     padding-inline: var(--padding-sm);
   }
 
-  /* 2. Strip away the column and action wrappers */
-  /* This prevents the "Left vs Right" grouping logic */
+  /* Strip away the column and action wrappers */
   .header__column,
   header-actions {
     display: contents !important;
   }
 
-  /* 3. Hide the logo and empty center column */
+  /* Hide the logo and empty center column */
   .header-logo,
-  .header__column--center {
+  .header__column--center,
+  .header-actions__wishlist,
+  wishlist-icon {
     display: none !important;
   }
 
-  /* 4. Exact Ordering: Search (1), Cart (2), Account (3), Menu (4) */
+  /* Exact Ordering: Search (1), Cart (2), Account (3), Menu (4) */
   .search-action { 
     order: 1 !important; 
   }
 
-  /* Ensure the cart is specifically 2nd */
   .action__cart,
-  .header__icon--cart { 
+  .header__icon--cart,
+  .cart-drawer { 
     order: 2 !important; 
   }
 
-  /* Ensure account is specifically 3rd */
   :is(account-popover, account-drawer, .header-actions__account, .header__icon--account) { 
     order: 3 !important;
     display: flex !important;
     justify-content: center;
   }
 
-  /* Ensure menu/drawer is specifically 4th */
   .header__drawer,
   .header__icon--menu { 
     order: 4 !important; 
   }
 
-  /* 5. Force equal distribution so they are spaced perfectly */
+  /* Force equal distribution */
   .header__columns > *,
   .search-action,
   .header__drawer {
-    flex: 1 1 0; /* Forces all 4 slots to be identical in width */
+    flex: 1 1 0;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+}
+
+/* --- Interaction Effects --- */
+@media (hover: hover) {
+  .header__column:hover .header-actions__action:not(:hover),
+  .header__column:hover header-menu:not(:hover) {
+    opacity: var(--opacity-subdued-text);
   }
 }
 {% endstylesheet %}
