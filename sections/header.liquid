@@ -438,6 +438,59 @@ body:has(> #header-group:empty) { --header-group-height: 0px; }
     opacity: var(--opacity-subdued-text);
   }
 }
+@media screen and (max-width: 749px) {
+  /* 1. Kill the grid and the reserved center space */
+  .header__columns {
+    display: flex !important;
+    grid-template-columns: none !important;
+    grid-template-areas: none !important;
+    justify-content: space-around !important; /* Perfect even spacing */
+    width: 100%;
+  }
+
+  /* 2. Make the column wrappers "invisible" to the layout */
+  /* This prevents left/center/right grouping logic from applying */
+  .header__column,
+  header-actions {
+    display: contents !important;
+  }
+
+  /* 3. Hide the logo completely */
+  .header-logo,
+  .header__column--center {
+    display: none !important;
+  }
+
+  /* 4. Force the 4-icon Order: Search, Cart, Account, Menu */
+  .search-action { 
+    order: 1; 
+  }
+
+  .action__cart { 
+    order: 2; 
+  }
+
+  /* Targets account regardless of the theme's specific component name */
+  :is(account-popover, account-drawer, .header__icon--account) { 
+    order: 3; 
+    display: flex !important;
+    justify-content: center;
+  }
+
+  .header__drawer { 
+    order: 4; 
+  }
+
+  /* 5. Ensure all 4 items take up equal space */
+  .header__columns > *,
+  .header__columns .search-action,
+  .header__columns .header__drawer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
 {% endstylesheet %}
 
 {% unless request.design_mode %}
