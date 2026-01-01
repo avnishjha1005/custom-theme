@@ -327,53 +327,57 @@ body:has(> #header-group:empty) { --header-group-height: 0px; }
 
 /* --- Mobile Layout (Under 750px) --- */
 @media screen and (max-width: 749px) {
-  body {
-    padding-bottom: var(--header-height); /* Space for the fixed bottom bar */
-  }
-
-  .header-section {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: var(--layer-sticky);
-    background-color: white;
-    border-top: 1px solid var(--color-border);
-  }
-
-  /* Target the 4-icon container */
+  /* 1. Reset the container to a clean flex row */
   .header__columns {
     display: flex !important;
-    justify-content: space-around; /* Spaced evenly across width */
+    flex-direction: row !important;
+    justify-content: space-between; /* Spacing between icons */
     align-items: center;
-    padding: var(--padding-2xs) var(--padding-sm);
-    width: 100%;
+    padding: 10px var(--padding-sm);
+    gap: 0; /* Let space-between handle it */
   }
 
-  /* Hide elements as requested */
+  /* 2. Strip the 'header-actions' wrapper so its children join the flex row */
+  header-actions {
+    display: contents !important; 
+  }
+
+  /* 3. Hide the logo and wishlist as requested */
   .header-logo, 
   .header-actions__wishlist, 
   wishlist-icon {
     display: none !important;
   }
 
-  /* Flatten nested structures so icons are direct flex children */
-  header-actions {
-    display: contents; 
+  /* 4. The Specific Order: Search, Cart, Account, Menu */
+  .search-action { 
+    order: 1; 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
   }
 
-  /* Icon Ordering (Search, Account, Cart, Menu) */
-  .search-action { order: 1; }
-  account-popover, account-drawer { order: 2; }
-  .action__cart { order: 3; }
-  .header__drawer { order: 4; }
+  .action__cart { 
+    order: 2; 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
+  }
 
-  /* Ensure consistent sizing for hit targets */
-  .header__columns > * {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    min-height: 44px; /* Accessible touch target */
+  /* Matches both popover and drawer versions of account */
+  header-actions account-popover, 
+  header-actions account-drawer { 
+    order: 3; 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
+  }
+
+  .header__drawer { 
+    order: 4; 
+    flex: 1; 
+    display: flex; 
+    justify-content: center; 
   }
 }
 
