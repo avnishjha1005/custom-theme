@@ -425,4 +425,62 @@
     --button-color: var(--color-foreground);
     --button-background-color: transparent;
   }
+
+  @media screen and (max-width: 749px) {
+  /* 1. Remove the background and border from the main header container */
+  .predictive-search-form__header {
+    flex-direction: column;
+    align-items: flex-end; /* Pushes the 'X' to the right */
+    background-color: transparent;
+    border: none;
+    padding: var(--padding-md) var(--padding-sm);
+  }
+
+  /* 2. Position the Close Button (X) at the top */
+  .predictive-search__close-modal-button {
+    margin-bottom: var(--margin-lg);
+    margin-inline-start: 0;
+  }
+
+  /* 3. Style the Input Container as a simple underline */
+  .predictive-search-form__header-inner {
+    border: none;
+    border-bottom: 1px solid var(--color-border);
+    border-radius: 0;
+    background: transparent;
+    padding-inline: 0;
+    position: relative;
+  }
+
+  /* 4. Adjust the Input Text and Placeholder */
+  .search-input {
+    padding-inline: 0 var(--padding-xl); /* Space for the arrow on the right */
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: var(--font-size--sm); /* Matches the 'TYPE HERE' look */
+  }
+
+  .search-input::placeholder {
+    color: var(--color-foreground);
+    opacity: 0.5;
+  }
+
+  /* 5. Move Search Icon/Arrow to the Right */
+  .predictive-search__icon {
+    left: auto;
+    right: 0;
+    bottom: var(--padding-xs);
+  }
+
+  /* 6. Titles (e.g., "You might like these") */
+  /* This targets the title inside the empty state component */
+  .predictive-search-results__suggestions-title, 
+  .predictive-search__heading {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-top: var(--margin-xl);
+    text-align: left;
+  }
+}
 {% endstylesheet %}
