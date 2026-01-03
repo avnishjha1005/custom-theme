@@ -677,6 +677,13 @@
     }
   },
   "platform_customizations": {
-    "custom_css": []
+    "custom_css": [
+      "/* We use the unique block ID to make the selector \"stronger\" */[id^=\"shopify-block\"] #PromiseEddSection, div.promise-product-page #PromiseEddSection {border: 1px solid #222 !important; /* Darker border to ensure visibility */ border-radius: 8px !important; padding: 15px !important; background-color: #f9f9f9 !important; /* Light grey background */ margin: 15px 0 !important; display: block !important;}",
+      "/* Force the text to change color even with inline styles */[id^=\"shopify-block\"] #PromiseEddSection .sr-promise-theme2-text,[id^=\"shopify-block\"] #PromiseEddSection .sr-promise-theme2-text span {color: #000000 !important; font-family: inherit !important;}",
+      "/* Make the Date Green and Bold */[id^=\"shopify-block\"] #PromiseEddSection .sr-promise-theme2-text span {color: #008a00 !important; font-weight: 800 !important;}",
+      "/* Hide those default horizontal lines */[id^=\"shopify-block\"] #PromiseEddSection hr {display: none !important;}",
+      "/* Style the Pincode section specifically */[id^=\"shopify-block\"] #enter-pincode .sr-promise-flexbox {border-top: 1px solid #ddd !important; margin-top: 10px !important; padding-top: 10px !important;}",
+      "/* Ensure icons are visible */[id^=\"shopify-block\"] #PromiseEddSection img {max-height: 16px !important; width: auto !important; display: inline-block !important;}"
+    ]
   }
 }
