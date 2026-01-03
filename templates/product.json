@@ -125,7 +125,7 @@
                 "show_tax_info": true,
                 "type_preset": "h5",
                 "width": "100%",
-                "alignment": "center",
+                "alignment": "left",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
