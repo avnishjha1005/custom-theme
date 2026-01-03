@@ -84,12 +84,12 @@
     </div> {% endcomment %}
   {% else %}
     <h4 class="predictive-search-results__title">
-      {{ title }}
+       You might like these 
     </h4>
     <ul
       class="predictive-search-results__list predictive-search-results__wrapper-products list-unstyled"
       role="listbox"
-      aria-label="{{ title }}"
+      aria-label=" You might like these "
     >
       {% liquid
         assign limit = limit | default: 8
