@@ -14,7 +14,8 @@
     "export_collage_AK4FpE": {
       "type": "export-collage",
       "custom_css": [
-        ".collage-container {max-width: 1440px; margin: auto;}"
+        ".collage-container {max-width: 1440px; margin: auto;}",
+        ".collage-heading{font-size:30px;}"
       ],
       "name": "Expert Collage",
       "settings": {
@@ -305,7 +306,7 @@
     "logo_RVGHD7": {
       "type": "logo",
       "custom_css": [
-        "@media screen and (min-width: 768px) {.logo-section__content {display: flex; flex-direction: row-reverse; justify-content: space-between; align-items: flex-end; } .logo-section__image-wrapper {width: 50%; } .logo-section__footer-info {display: flex; flex-direction: row; align-items: flex-end; } .dropdown-localization__button{padding:0px }}",
+        "@media screen and (min-width: 768px) {.logo-section__content {display: flex; flex-direction: row-reverse; justify-content: space-between; align-items: flex-end; } .logo-section__image-wrapper {width: 50%; } .logo-section__footer-info {display: flex; flex-direction: row; align-items: flex-end; } .dropdown-localization__button {padding: 0px; }}",
         ".section--page-width {max-width: 1440px; margin: auto;}"
       ],
       "name": "t:names.logo",
