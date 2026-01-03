@@ -667,23 +667,11 @@
                         "padding-inline-end": 0
                       },
                       "blocks": {}
-                    },
-                    "product_card_quick_add_bm84b7": {
-                      "type": "_product-card-quick-add",
-                      "name": "t:names.quick_add",
-                      "settings": {
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
                     }
                   },
                   "block_order": [
                     "text_CayfE3",
-                    "price_ahRCgD",
-                    "product_card_quick_add_bm84b7"
+                    "price_ahRCgD"
                   ]
                 },
                 "group_PihxwT": {
@@ -742,11 +730,23 @@
                   "block_order": [
                     "swatches_EdNBpW"
                   ]
+                },
+                "product_card_quick_add_pHXztE": {
+                  "type": "_product-card-quick-add",
+                  "name": "t:names.quick_add",
+                  "settings": {
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
                 "group_tEHPmM",
-                "group_PihxwT"
+                "group_PihxwT",
+                "product_card_quick_add_pHXztE"
               ]
             }
           },
