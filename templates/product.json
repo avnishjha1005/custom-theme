@@ -760,6 +760,9 @@
       "block_order": [
         "text_GbxcYC"
       ],
+      "custom_css": [
+        "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}"
+      ],
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",
