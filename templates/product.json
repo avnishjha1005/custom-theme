@@ -621,17 +621,6 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {
-                    "product_card_quick_add_bm84b7": {
-                      "type": "_product-card-quick-add",
-                      "name": "t:names.quick_add",
-                      "settings": {
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    },
                     "text_CayfE3": {
                       "type": "text",
                       "settings": {
@@ -678,12 +667,23 @@
                         "padding-inline-end": 0
                       },
                       "blocks": {}
+                    },
+                    "product_card_quick_add_bm84b7": {
+                      "type": "_product-card-quick-add",
+                      "name": "t:names.quick_add",
+                      "settings": {
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     }
                   },
                   "block_order": [
-                    "product_card_quick_add_bm84b7",
                     "text_CayfE3",
-                    "price_ahRCgD"
+                    "price_ahRCgD",
+                    "product_card_quick_add_bm84b7"
                   ]
                 },
                 "group_PihxwT": {
