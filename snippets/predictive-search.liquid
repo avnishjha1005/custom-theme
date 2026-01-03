@@ -67,7 +67,7 @@
         <span class="svg-wrapper predictive-search__icon">
           {{ 'icon-search.svg' | inline_asset_content }}
         </span>
-        <button
+        {% comment %} <button
           type="button"
           class="button-unstyled predictive-search__reset-button"
           ref="resetButton"
@@ -75,7 +75,7 @@
           on:click="/resetSearch"
         >
           {{ 'actions.clear' | t }}
-        </button>
+        </button> {% endcomment %}
       </div>
       <button
         type="button"
