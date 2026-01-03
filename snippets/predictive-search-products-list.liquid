@@ -18,7 +18,7 @@
   {% endif %}
 >
   {% if title == recently_viewed_title_text %}
-    <div
+    {% comment %} <div
       class="recently-viewed-wrapper"
       ref="recentlyViewedWrapper"
     >
@@ -81,7 +81,7 @@
           {% endfor %}
         {% endif %}
       </ul>
-    </div>
+    </div> {% endcomment %}
   {% else %}
     <h4 class="predictive-search-results__title">
       {{ title }}
