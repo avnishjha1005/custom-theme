@@ -305,8 +305,8 @@
     "logo_RVGHD7": {
       "type": "logo",
       "custom_css": [
-        "@media screen and (min-width: 768px) {.logo-section__content {display: flex; flex-direction: row-reverse; justify-content: space-between; } .logo-section__image-wrapper {width: 50%; } .logo-section__foter-info {display: flex; flex-direction: row; align-items: center; }}",
-        ".section--page-width {max-width: 1120px; margin: auto;}"
+        "@media screen and (min-width: 768px) {.logo-section__content {display: flex; flex-direction: row-reverse; justify-content: space-between; } .logo-section__image-wrapper {width: 50%; } .logo-section__fo0ter-info {display: flex; flex-direction: row; align-items: center; }}",
+        ".section--page-width {max-width: 1440px; margin: auto;}"
       ],
       "name": "t:names.logo",
       "settings": {
