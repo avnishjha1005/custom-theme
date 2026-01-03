@@ -678,15 +678,13 @@
   },
   "platform_customizations": {
     "custom_css": [
-      "/* 1) The list scrolls horizontally; avoid vertical hijack */.resource-list__carousel {overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; /* softer than mandatory */ touch-action: pan-x; /* bias toward horizontal pan */}",
-      "/* Hide scrollbar while keeping scroll functional */.resource-list__carousel::-webkit-scrollbar {display: none; }",
-      ".resource-list__carousel {scrollbar-width: none; }",
-      "/* 2) Lay out slides so they can overflow horizontally */.resource-list__carousel .swiper-wrapper {display: flex; gap: var(--resource-list-column-gap-desktop, 26px);}",
-      ".resource-list__carousel .resource-list__slide,.resource-list__carousel .resource-list__item {flex: 0 0 auto; scroll-snap-align: start; /* gentle snapping per card */}",
-      "/* 3) Interactive elements must not initiate drag */.resource-list__carousel button,.resource-list__carousel a,.resource-list__carousel input,.resource-list__carousel [role=\"button\"],.resource-list__carousel wishlist-button,.resource-list__carousel add-to-cart-component,.resource-list__carousel slideshow-controls {touch-action: auto; /* allow taps, media swipes to work */ pointer-events: auto; /* Optional: slightly larger hit targets improve reliability */}",
-      "/* 4) Product media can still handle its own horizontal swipe */.resource-list__carousel .product-media-container {touch-action: pan-x; /* media swipes OK */}",
-      "/* 5) Desktop affordance: show grab on non-interactive areas */.resource-list__carousel .resource-list__item {cursor: grab;}",
-      ".resource-list__carousel .resource-list__item:active {cursor: grabbing;}"
+      "/* 1. Main Container - Layout and Spacing */.sr-promise-container, #shiprocket-promise-widget {border: 1px solid #e8e8e8 !important; /* Thin light border like your image */ padding: 15px !important; border-radius: 8px !important; background-color: #ffffff !important; margin: 20px 0 !important; display: flex; flex-direction: column; gap: 10px;}",
+      "/* 2. Style the \"Estimated Delivery\" Label Text */.sr-promise-title, .sr-promise-label {font-size: 14px !important; font-weight: 600 !important; color: #333 !important; margin-bottom: 5px !important;}",
+      "/* 3. Style the Input Field (Pincode Box) */.sr-promise-input, .sr-pincode-input-field {border: 1px solid #cccccc !important; border-radius: 4px !important; padding: 8px 12px !important; font-size: 14px !important; width: 100% !important; outline: none !important;}",
+      "/* 4. Style the \"Check\" Button */.sr-promise-button, .sr-check-btn {background-color: #000000 !important; /* Change to your brand color */ color: #ffffff !important; border-radius: 4px !important; font-weight: bold !important; padding: 10px 20px !important; text-transform: uppercase !important; border: none !important; cursor: pointer !important; transition: background 0.3s ease;}",
+      ".sr-promise-button:hover {background-color: #333333 !important;}",
+      "/* 5. Style the Result Text (Estimated Date) */.sr-promise-edd-text {font-size: 15px !important; color: #27ae60 !important; /* Green for the delivery date */ font-weight: 500 !important; margin-top: 8px !important;}",
+      "/* 6. Hide the Shiprocket Logo (Optional) */.sr-promise-logo {display: none !important;}"
     ]
   }
 }
