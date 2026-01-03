@@ -102,7 +102,8 @@
         ".header__columns {margin: 0; max-width: 1440px;}",
         ".mega-menu__link {font-size: 12px; text-transform: none;}",
         ".menu-list__submenu {border-top: 1px solid #e2ddd4;}",
-        ".mega-menu__grid {margin-top: 44px;}"
+        ".mega-menu__grid {margin-top: 44px;}",
+        "ma.search-modal__content{}"
       ],
       "settings": {
         "logo_position": "center",
