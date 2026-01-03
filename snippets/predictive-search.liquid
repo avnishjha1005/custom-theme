@@ -182,7 +182,7 @@
     left: 0;
     z-index: var(--layer-raised);
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     border-radius: 0 0 var(--search-border-radius) var(--search-border-radius);
     transition: box-shadow var(--animation-speed) var(--animation-easing);
     transform: translateZ(0);
@@ -429,7 +429,7 @@
   @media screen and (max-width: 749px) {
   /* 1. Remove the background and border from the main header container */
   .predictive-search-form__header {
-    flex-direction: column;
+    flex-direction: column-reverse;
     align-items: flex-end; /* Pushes the 'X' to the right */
     background-color: transparent;
     border: none;
