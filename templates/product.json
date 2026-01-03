@@ -67,14 +67,14 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "product_title_9WaLn7": {
-              "type": "product-title",
-              "name": "t:names.title",
+            "product_vendor_qBEjXn": {
+              "type": "product-vendor",
+              "name": "Product Vendor",
               "settings": {
-                "width": "100%",
+                "width": "fit-content",
                 "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "h3",
+                "alignment": "left",
+                "type_preset": "rte",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -85,7 +85,32 @@
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
-                "padding-block-start": 50,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "product_title_9WaLn7": {
+              "type": "product-title",
+              "name": "t:names.title",
+              "settings": {
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "h4",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-foreground)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 17,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
@@ -407,6 +432,7 @@
             }
           },
           "block_order": [
+            "product_vendor_qBEjXn",
             "product_title_9WaLn7",
             "price_a7krng",
             "divider_HrJgFt",
