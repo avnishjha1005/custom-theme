@@ -12,26 +12,22 @@
     "main": {
       "type": "main-page",
       "blocks": {
-        "heading": {
-          "type": "text",
-          "name": "Title",
+        "custom_liquid_4D8ChC": {
+          "type": "custom-liquid",
+          "name": "t:names.custom_liquid",
           "settings": {
-            "text": "<h1>{{ closest.page.title }}</h1>",
-            "type_preset": "h2",
-            "width": "100%"
-          }
-        },
-        "page-content": {
-          "type": "page-content",
-          "settings": {}
+            "custom_liquid": "<style>\n  /* Style for product display can be added based on your design requirements */\n  @media only screen and (min-width: 750px) {\n      .js-wishlistBlock {\n          display: grid;\n          grid-template-columns: 1fr 1fr 1fr 1fr;\n          column-gap: var(--grid-desktop-horizontal-spacing);\n      }\n  }\n\n  .c-product {\n      cursor: pointer;\n      margin-bottom: 20px;\n  }\n\n  .c-product img {\n      width: 100%;\n      max-height: 300px;\n      object-fit: cover;\n      border-radius: 5px;\n      transition: all .5s ease;\n  }\n\n  .c-product img:hover {\n      transform: scale(1.03);\n  }\n\n  .c-product h3.c-product__title {\n      margin-top: 10px;\n      position: relative;\n  }\n</style>\n\n<div class=\"recently-title\">\n  <h2 class=\"title inline-richtext h2 scroll-trigger animate--slide-in\"><b>Wishlist</b></h2>\n</div>\n<div class=\"js-wishlistBlock\">\n  <!-- Wishlist items will be displayed here -->\n</div>"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "heading",
-        "page-content"
+        "custom_liquid_4D8ChC"
       ],
       "settings": {
+        "content_direction": "column",
         "gap": 32,
+        "color_scheme": "",
         "padding-block-start": 40,
         "padding-block-end": 80
       }
