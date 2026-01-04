@@ -297,6 +297,38 @@
         grid-template-areas: 'column-0 column-1 column-2 column-3 column-4 column-5 column-6 column-7 column-8 column-9 column-10 column-11 column-12 column-13';
     }
 }
+.slideshow-wrapper.resource-list__carousel {
+  max-width: none !important;
+  width: 100vw !important;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw !important;
+  margin-right: -50vw !important;
+  overflow: hidden;
+}
+.slideshow-wrapper.resource-list__carousel .swiper-container {
+padding-left: max(20px, calc((100vw - 1440px) / 2)) !important;
+overflow: visible !important; 
+margin-left: 0 !important;
+margin-right: 0 !important;
+width: auto !important;
+}
+.slideshow-wrapper.resource-list__carousel .swiper-wrapper {
+  display: flex !important;
+  overflow: visible !important;
+}
+.slideshow-wrapper.resource-list__carousel .resource-list__slide {
+  opacity: 1 !important;
+  visibility: visible !important;
+  flex: 0 0 320px !important;
+  width: 320px !important;
+  margin-right: 20px !important;
+}
+.slideshow-wrapper.resource-list__carousel .swiper-wrapper::after {
+  content: "";
+  flex: 0 0 max(20px, calc((100vw - 1440px) / 2));
+}
 
 {% endstylesheet %}
 
