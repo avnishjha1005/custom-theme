@@ -56,7 +56,7 @@
   style="
     {% render 'spacing-padding', settings: block_settings %}
     {% render 'typography-style', settings: block_settings %}
-    font-weight: {{ block_settings.weight }}
+    font-weight: {{ block_settings.weight }};
     --width: {{ text_width }};
     --max-width: var(--max-width--{{ type }}-{{ block_settings.max_width }});
     {% if text_width == "100%" %}
