@@ -356,6 +356,7 @@
                         "width": "fit-content",
                         "max_width": "normal",
                         "alignment": "left",
+                        "font-weight": "bold",
                         "type_preset": "h5",
                         "font": "var(--font-body--family)",
                         "font_size": "1rem",
