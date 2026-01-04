@@ -1681,7 +1681,16 @@ zoom-dialog dialog {
     background: transparent;
   }
 }
-
+.swiper-container{
+  height: 100%;
+}
+swiper-wrapper{
+  height: 100%;
+  padding: 0px;
+}
+slideshow-slide{
+  height: 100%;
+}
 /* Animate the UI elements in only after the view transition is complete */
 .close-button {
   position: fixed;
@@ -2772,6 +2781,18 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
   @media screen and (min-width: 750px) {
     font-size: var(--font-size--xs);
   }
+}
+.product-grid__item--hero .swiper-container {
+  height: 100% !important;
+}
+
+.product-grid__item--hero .swiper-wrapper {
+  height: 102% !important;
+  padding-bottom: 0px;
+}
+
+.product-grid__item--hero slideshow-slide {
+  height: -webkit-fill-available !important;
 }
 
 /* Fly to cart animation */
