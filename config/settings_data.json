@@ -173,8 +173,8 @@
           "icon_size": 11,
           "icon_stroke_width": 1.4,
           "app_integration_preset": "none",
-          "product_link_selector": "product-card-link > product-card > a",
-          "floating_reference_js": "target.closest(\".product-card-link\").find(\".img\")"
+          "product_link_selector": ".card-gallery > a[href*=\"/products/\"]",
+          "floating_reference_js": "target.closest(\".product-media\").find(\".img\")"
         }
       }
     },
