@@ -283,13 +283,16 @@
 
     async addToWishlist() {
       let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-      
-      // Check if already exists
       const exists = wishlistData.some(item => item.productId === this.productData.productId);
+      
       if (!exists) {
         wishlistData.push(this.productData);
         localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-        console.log('Added to wishlist:', this.productData.productTitle);
+        
+        // If logged in, push to metafield
+        if (this.isLoggedIn) {
+          await this.updateServerMetafield(wishlistData);
+        }
       }
     }
 
@@ -297,7 +300,11 @@
       let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
       wishlistData = wishlistData.filter(item => item.productId !== this.productData.productId);
       localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-      console.log('Removed from wishlist:', this.productData.productId);
+      
+      // If logged in, update metafield
+      if (this.isLoggedIn) {
+        await this.updateServerMetafield(wishlistData);
+      }
     }
 
     showNotification(action) {
