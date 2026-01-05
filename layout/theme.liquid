@@ -341,7 +341,29 @@
         console.error('Error updating wishlist count:', error);
       }
     }
-    renderWishlistGrid() {
+
+    // Helper to allow removal from the grid specifically
+    removeFromWishlistById(id) {
+        let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlistData = wishlistData.filter(item => item.productId !== id);
+        localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+        
+        // Refresh all wishlist UI components
+        this.renderWishlistGrid();
+        this.updateWishlistCount();
+        
+        // If the current page is a product page for this ID, toggle its button state
+        if (this.productData?.productId === id) {
+             this.button?.classList.remove('wishlist-button--active');
+             this.button?.setAttribute('aria-pressed', 'false');
+        }
+    }
+  }
+
+  customElements.define('wishlist-button', WishlistButton);
+})();
+
+renderWishlistGrid() {
       const wishlistBlock = document.querySelector('.js-wishlistBlock');
       if (!wishlistBlock) {
         console.log('no block');
@@ -380,27 +402,7 @@
         console.error('Error rendering wishlist grid:', error);
       }
     }
-
-    // Helper to allow removal from the grid specifically
-    removeFromWishlistById(id) {
-        let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-        wishlistData = wishlistData.filter(item => item.productId !== id);
-        localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-        
-        // Refresh all wishlist UI components
-        this.renderWishlistGrid();
-        this.updateWishlistCount();
-        
-        // If the current page is a product page for this ID, toggle its button state
-        if (this.productData?.productId === id) {
-             this.button?.classList.remove('wishlist-button--active');
-             this.button?.setAttribute('aria-pressed', 'false');
-        }
-    }
-  }
-
-  customElements.define('wishlist-button', WishlistButton);
-})();
+    renderWishlistGrid();
 </script>
 
 </html>
