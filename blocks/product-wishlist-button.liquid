@@ -215,8 +215,16 @@
         
         // Try multiple ways to find the product card
         this.productCard = this.closest('product-card') || 
-                          this.parentElement?.closest('product-card') ||
-                          document.querySelector(`product-card:has(#${this.id})`);
+                          this.parentElement?.closest('product-card');
+        
+        // If still not found, traverse up the DOM manually
+        if (!this.productCard) {
+          let el = this.parentElement;
+          while (el && el.tagName !== 'PRODUCT-CARD') {
+            el = el.parentElement;
+          }
+          this.productCard = el;
+        }
         
         // Wait for DOM to be fully loaded before getting product data
         if (document.readyState === 'loading') {
