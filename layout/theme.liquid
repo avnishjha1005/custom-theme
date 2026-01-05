@@ -340,6 +340,38 @@
         console.error('Error updating wishlist count:', error);
       }
     }
+    function displayWishlist(pdpData) {
+        const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        
+        if (wishlistData.length === 0) {
+            console.log('Wishlist is empty');
+            return;
+        }
+
+        const wishlistHtml = wishlistData.map(item => `
+            <div class="wishlist-product__list">
+                <div class="c-product">
+                <a href="${item.productUrl}">
+                    <img src="${item.productImg}" alt="${item.productTitle}">
+                    </a>
+                    <h3 class="c-product__title card__heading h5">
+                        <a class="full-unstyled-link" href="${item.productUrl}">${item.productTitle}</a>
+                    </h3>
+                    <p>${item.productPrice}</p>
+      {% comment %}<button onclick="removeFromWishlist('${item.productTitle}')">Remove</button> {% endcomment %}
+                </div>
+            </div>
+        `).join('');
+
+        const wishlistBlock = document.querySelector('.js-wishlistBlock');
+
+        // Add a check to ensure the element is not null before setting innerHTML
+        if (wishlistBlock) {
+            wishlistBlock.innerHTML = wishlistHtml;
+        } else {
+            console.error('Element with class "js-wishlistBlock" not found');
+        }
+    }
   }
 
   customElements.define('wishlist-button', WishlistButton);
