@@ -23,6 +23,10 @@
   data-wishlist-button
   data-product-id="{{ product.id }}"
   data-product-handle="{{ product.handle }}"
+  data-product-title="{{ product.title | escape }}"
+  data-product-image="{{ product.featured_image | image_url: width: 300 }}"
+  data-product-price="{{ product.price | money }}"
+  data-product-url="{{ product.url }}"
   aria-label="{% if in_wishlist %}{{ block.settings.aria_label_remove }}{% else %}{{ block.settings.aria_label_add }}{% endif %}"
   aria-pressed="{{ in_wishlist }}"
   {% if block.settings.require_login and customer == null %}
@@ -40,12 +44,13 @@
   "
 >
   
-    <svg class="wishlist-icon wishlist-icon--filled" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <span class="svg-wrapper">
-        {{- 'icon-wishlist.svg' | inline_asset_content -}}
-      </span>
-    </svg>
+  <svg class="wishlist-icon wishlist-icon--outline" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16.5 4.5c2.206 0 4 1.794 4 4 0 4.67-5.543 8.94-8.5 11.023C9.043 17.44 3.5 13.17 3.5 8.5c0-2.206 1.794-4 4-4 1.298 0 2.522.638 3.273 1.706L12 7.953l1.227-1.746c.75-1.07 1.975-1.707 3.273-1.707m0-1.5c-1.862 0-3.505.928-4.5 2.344C11.005 3.928 9.362 3 7.5 3 4.462 3 2 5.462 2 8.5c0 5.72 6.5 10.438 10 12.85 3.5-2.412 10-7.13 10-12.85C22 5.462 19.538 3 16.5 3z" stroke="currentColor" stroke-width="1.5"/>
+  </svg>
   
+  <svg class="wishlist-icon wishlist-icon--filled" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M19.3 5.71002C18.841 5.24601 18.2943 4.87797 17.6917 4.62731C17.0891 4.37666 16.4426 4.2484 15.79 4.25002C15.1373 4.2484 14.4909 4.37666 13.8883 4.62731C13.2857 4.87797 12.739 5.24601 12.28 5.71002L12 6.00002L11.72 5.72001C10.7917 4.79182 9.53273 4.27037 8.22 4.27037C6.90726 4.27037 5.64829 4.79182 4.72 5.72001C3.80386 6.65466 3.29071 7.91125 3.29071 9.22002C3.29071 10.5288 3.80386 11.7854 4.72 12.72L11.49 19.51C11.6306 19.6505 11.8212 19.7294 12.02 19.7294C12.2187 19.7294 12.4094 19.6505 12.55 19.51L19.32 12.72C20.2365 11.7823 20.7479 10.5221 20.7442 9.21092C20.7405 7.89973 20.2218 6.64248 19.3 5.71002Z" fill="currentColor"/>
+  </svg>
 
   {%- if block.settings.button_style == 'icon-text' -%}
     <span class="wishlist-text">
@@ -54,12 +59,12 @@
     </span>
   {%- endif -%}
 
-  {% comment %} {%- if block.settings.tooltip_add != blank or block.settings.tooltip_remove != blank -%}
+  {%- if block.settings.tooltip_add != blank or block.settings.tooltip_remove != blank -%}
     <span class="wishlist-tooltip" role="tooltip">
       <span class="wishlist-tooltip--add">{{ block.settings.tooltip_add }}</span>
       <span class="wishlist-tooltip--remove">{{ block.settings.tooltip_remove }}</span>
     </span>
-  {%- endif -%} {% endcomment %}
+  {%- endif -%}
 </button>
 
 <style>
@@ -106,6 +111,18 @@
     height: var(--wishlist-icon-size);
     color: var(--wishlist-icon-color);
     transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .wishlist-icon--filled {
+    display: none;
+  }
+
+  .wishlist-button--active .wishlist-icon--outline {
+    display: none;
+  }
+
+  .wishlist-button--active .wishlist-icon--filled {
+    display: block;
   }
 
   .wishlist-button--active .wishlist-icon {
@@ -198,6 +215,25 @@
         this.requireLogin = this.button?.dataset.requireLogin === 'true';
         
         this.button?.addEventListener('click', this.handleClick.bind(this));
+        
+        // Check if product is already in wishlist on load
+        this.checkWishlistState();
+      }
+
+      checkWishlistState() {
+        if (!this.button) return;
+        
+        try {
+          const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+          const isInWishlist = wishlistData.some(item => item.productId === this.productId);
+          
+          if (isInWishlist) {
+            this.button.classList.add('wishlist-button--active');
+            this.button.setAttribute('aria-pressed', 'true');
+          }
+        } catch (error) {
+          console.error('Error checking wishlist state:', error);
+        }
       }
 
       async handleClick(e) {
@@ -213,7 +249,7 @@
         const isActive = this.button.classList.contains('wishlist-button--active');
         
         try {
-          // Toggle wishlist state (implement your wishlist logic here)
+          // Toggle wishlist state
           if (isActive) {
             await this.removeFromWishlist();
           } else {
@@ -234,32 +270,115 @@
             bubbles: true,
             detail: { productId: this.productId, inWishlist: !isActive }
           }));
+
+          // Update wishlist count if there's a counter element
+          this.updateWishlistCount();
         } catch (error) {
           console.error('Wishlist error:', error);
         }
       }
 
       async addToWishlist() {
-        // Implement your add to wishlist logic
-        // Example: API call, localStorage, customer metafields, etc.
-        console.log('Adding to wishlist:', this.productId);
+        const productData = {
+          productId: this.productId,
+          productHandle: this.productHandle,
+          productTitle: this.button.dataset.productTitle,
+          productImg: this.button.dataset.productImage,
+          productPrice: this.button.dataset.productPrice,
+          productUrl: this.button.dataset.productUrl
+        };
+
+        let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        
+        // Check if already exists (shouldn't happen, but just in case)
+        const exists = wishlistData.some(item => item.productId === this.productId);
+        if (!exists) {
+          wishlistData.push(productData);
+          localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+          console.log('Added to wishlist:', productData.productTitle);
+        }
       }
 
       async removeFromWishlist() {
-        // Implement your remove from wishlist logic
-        console.log('Removing from wishlist:', this.productId);
+        let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlistData = wishlistData.filter(item => item.productId !== this.productId);
+        localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+        console.log('Removed from wishlist:', this.productId);
       }
 
       showNotification(action) {
-        // Implement notification display
         const message = action === 'added' 
           ? '{{ block.settings.add_text }}' 
           : '{{ block.settings.remove_text }}';
-        console.log(message);
+        
+        // Simple notification - you can customize this
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: #000;
+          color: #fff;
+          padding: 1rem 1.5rem;
+          border-radius: 0.5rem;
+          z-index: 9999;
+          animation: slideIn 0.3s ease;
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => notification.remove(), 300);
+        }, 3000);
+      }
+
+      updateWishlistCount() {
+        try {
+          const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+          const countElement = document.querySelector('[data-wishlist-count]');
+          if (countElement) {
+            countElement.textContent = wishlistData.length;
+            countElement.style.display = wishlistData.length > 0 ? 'block' : 'none';
+          }
+        } catch (error) {
+          console.error('Error updating wishlist count:', error);
+        }
       }
     }
 
     customElements.define('wishlist-button', WishlistButton);
+  }
+
+  // Add notification animations
+  if (!document.querySelector('#wishlist-notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'wishlist-notification-styles';
+    style.textContent = `
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   }
 </script>
 
@@ -274,7 +393,7 @@
     },
     {
       "type": "header",
-      "content": "t:content.layout"
+      "content": "Layout"
     },
     {
       "type": "select",
@@ -331,22 +450,6 @@
       "default": 24
     },
     {
-      "type": "select",
-      "id": "icon_style",
-      "label": "Icon Style",
-      "options": [
-        {
-          "value": "outline",
-          "label": "Outline"
-        },
-        {
-          "value": "filled",
-          "label": "Filled"
-        }
-      ],
-      "default": "outline"
-    },
-    {
       "type": "color",
       "id": "icon_color",
       "label": "Icon Color",
@@ -372,9 +475,7 @@
       "type": "color",
       "id": "background_color",
       "label": "Background Color",
-      "alpha": true,
-      "default": "#ffffff",
-      "visible_if": "{{ block.settings.show_background }}"
+      "default": "#ffffff"
     },
     {
       "type": "range",
@@ -384,8 +485,17 @@
       "max": 50,
       "step": 1,
       "unit": "px",
-      "default": 50,
-      "visible_if": "{{ block.settings.show_background }}"
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Button Padding",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
     },
     {
       "type": "header",
@@ -416,8 +526,7 @@
           "label": "Pulse"
         }
       ],
-      "default": "scale",
-      "visible_if": "{{ block.settings.enable_animation }}"
+      "default": "scale"
     },
     {
       "type": "header",
@@ -427,15 +536,13 @@
       "type": "text",
       "id": "add_text",
       "label": "Add to Wishlist Text",
-      "default": "Add to Wishlist",
-      "visible_if": "{{ block.settings.button_style == 'icon-text' }}"
+      "default": "Added to Wishlist"
     },
     {
       "type": "text",
       "id": "remove_text",
       "label": "Remove from Wishlist Text",
-      "default": "Remove from Wishlist",
-      "visible_if": "{{ block.settings.button_style == 'icon-text' }}"
+      "default": "Removed from Wishlist"
     },
     {
       "type": "text",
@@ -475,7 +582,7 @@
       "type": "checkbox",
       "id": "require_login",
       "label": "Require Customer Login",
-      "default": true,
+      "default": false,
       "info": "Redirect to login page if customer is not logged in"
     },
     {
@@ -484,21 +591,6 @@
       "label": "Show Notification",
       "default": true,
       "info": "Display a notification when item is added/removed"
-    },
-    {
-      "type": "header",
-      "content": "Spacing"
-    },
-    {
-      "type": "range",
-      "id": "padding",
-      "label": "Button Padding",
-      "min": 0,
-      "max": 24,
-      "step": 2,
-      "unit": "px",
-      "default": 8,
-      "visible_if": "{{ block.settings.show_background }}"
     }
   ],
   "presets": [
