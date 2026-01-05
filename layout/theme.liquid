@@ -140,6 +140,7 @@
         let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
         wishlistData = wishlistData.filter(item => item.productTitle !== productTitle);
         localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+        console.log(JSON.Parse(wishlistData));
         // Update the display after removing from the wishlist
         displayWishlist(pdpData);
     }
