@@ -94,7 +94,10 @@
 (function() {
   'use strict';
   
-  if (customElements.get('wishlist-button')) return;
+  // Only define the custom element once
+  if (customElements.get('wishlist-button')) {
+    return;
+  }
 
   class WishlistButton extends HTMLElement {
     constructor() {
@@ -103,9 +106,11 @@
       this.button = this.querySelector('[data-wishlist-button]');
       this.requireLogin = this.button?.dataset.requireLogin === 'true';
       
+      // Try multiple ways to find the product card
       this.productCard = this.closest('product-card') || 
                         this.parentElement?.closest('product-card');
       
+      // If still not found, traverse up the DOM manually
       if (!this.productCard) {
         let el = this.parentElement;
         while (el && el.tagName !== 'PRODUCT-CARD') {
@@ -114,44 +119,67 @@
         this.productCard = el;
       }
       
+      // Wait for DOM to be fully loaded before getting product data
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => this.init());
       } else {
+        // Use longer timeout to ensure slideshow elements load first
         setTimeout(() => this.init(), 100);
       }
     }
 
     init() {
+      // Prevent double initialization
       if (this.initialized) return;
       this.initialized = true;
       
       this.productData = this.getProductDataFromCard();
-      if (!this.productData) return;
       
-      // Merge cloud data (from login) into local storage immediately on load
-      this.mergeCloudWishlist();
-
+      if (!this.productData) {
+        console.warn('Wishlist button: Could not find product data');
+        return;
+      }
+      
+      // Remove any existing listeners before adding new one
       if (this.button) {
         this.button.replaceWith(this.button.cloneNode(true));
         this.button = this.querySelector('[data-wishlist-button]');
         this.button.addEventListener('click', this.handleClick.bind(this), { once: false });
       }
       
+      // Check if product is already in wishlist on load
       this.checkWishlistState();
-      this.updateWishlistCount();
       this.renderWishlistGrid();
     }
 
     getProductDataFromCard() {
-      if (!this.productCard) return null;
+      if (!this.productCard) {
+        console.error('No product card found');
+        return null;
+      }
+
       const productId = this.productCard.dataset.productId;
-      if (!productId) return null;
+      if (!productId) {
+        console.error('No product ID found');
+        return null;
+      }
       
+      // Get product link and URL
       const productLink = this.productCard.querySelector('.product-card__link, a[href*="/products/"]');
       const productUrl = productLink?.href || '';
       const productHandle = productUrl.split('/products/')[1]?.split('?')[0] || '';
       
-      const titleSelectors = ['.text-block h5 p', '.text-block p', 'h3', '.h4', '.h5', '[class*="product_title"]', '.card__heading'];
+      // Get product title - try multiple selectors
+      const titleSelectors = [
+        '.text-block h5 p',
+        '.text-block p',
+        'h3',
+        '.h4',
+        '.h5',
+        '[class*="product_title"]',
+        '.card__heading'
+      ];
+      
       let productTitle = '';
       for (const selector of titleSelectors) {
         const titleEl = this.productCard.querySelector(selector);
@@ -161,37 +189,58 @@
         }
       }
       
+      // Fallback to visually-hidden text
+      if (!productTitle) {
+        const hiddenTitle = this.productCard.querySelector('.visually-hidden');
+        productTitle = hiddenTitle?.textContent?.trim() || 'Product';
+      }
+      
+      // Get product image
       const productImage = this.productCard.querySelector('img');
       const productImg = productImage?.src || productImage?.dataset?.src || '';
+      
+      // Get product price
       const priceEl = this.productCard.querySelector('product-price .price, .price');
       const productPrice = priceEl?.textContent?.trim() || '';
 
-      return {
+      const data = {
         productId: productId,
         productHandle: productHandle,
-        productTitle: productTitle || 'Product',
+        productTitle: productTitle,
         productImg: productImg,
         productPrice: productPrice,
         productUrl: productUrl || `/products/${productHandle}`
       };
+      
+      return data;
     }
 
     checkWishlistState() {
       if (!this.button || !this.productData) return;
-      const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-      const isInWishlist = wishlistData.some(item => item.productId === this.productData.productId);
-      if (isInWishlist) {
-        this.button.classList.add('wishlist-button--active');
-        this.button.setAttribute('aria-pressed', 'true');
+      
+      try {
+        const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const isInWishlist = wishlistData.some(item => item.productId === this.productData.productId);
+        
+        if (isInWishlist) {
+          this.button.classList.add('wishlist-button--active');
+          this.button.setAttribute('aria-pressed', 'true');
+        }
+      } catch (error) {
+        console.error('Error checking wishlist state:', error);
       }
     }
 
     async handleClick(e) {
       e.preventDefault();
       e.stopPropagation();
+      e.stopImmediatePropagation(); // Prevent other listeners from firing
+
+      // Prevent rapid double-clicks
       if (this.isProcessing) return;
       this.isProcessing = true;
 
+      // Check if login is required
       if (this.requireLogin && !window.Shopify?.customer) {
         window.location.href = '/account/login';
         return;
@@ -200,96 +249,47 @@
       const isActive = this.button.classList.contains('wishlist-button--active');
       
       try {
+        // Toggle wishlist state
         if (isActive) {
           await this.removeFromWishlist();
         } else {
           await this.addToWishlist();
         }
 
+        // Toggle UI state
         this.button.classList.toggle('wishlist-button--active');
         this.button.setAttribute('aria-pressed', !isActive);
+
+        // Show notification
         this.showNotification(isActive ? 'removed' : 'added');
-        
-        // Refresh grid and count
+
+        // Dispatch custom event
+        this.dispatchEvent(new CustomEvent('wishlist:toggle', {
+          bubbles: true,
+          detail: { productId: this.productData.productId, inWishlist: !isActive }
+        }));
+
+        // Update wishlist count if there's a counter element
         this.updateWishlistCount();
-        this.renderWishlistGrid();
-        
       } catch (error) {
         console.error('Wishlist error:', error);
       } finally {
-        setTimeout(() => { this.isProcessing = false; }, 300);
+        // Re-enable after a short delay
+        setTimeout(() => {
+          this.isProcessing = false;
+        }, 300);
       }
     }
-
-    // --- NEW PERSISTENCE & RENDERING METHODS ---
-
-    async syncWithShopify(wishlistData) {
-      // Only sync if customer is logged in and the hidden form exists
-      const form = document.querySelector('#WishlistSyncForm');
-      const input = document.querySelector('#wishlist-metafield-input');
-      if (!form || !input) return;
-
-      input.value = JSON.stringify(wishlistData);
-      const formData = new FormData(form);
-
-      try {
-        await fetch('/contact', { method: 'POST', body: formData });
-      } catch (err) { console.error('Metafield sync failed', err); }
-    }
-
-    mergeCloudWishlist() {
-      // Pull data from the global variable we will set in Liquid
-      if (!window.wishlistConfig?.cloudData) return;
-      
-      const local = JSON.parse(localStorage.getItem('wishlist')) || [];
-      const cloud = window.wishlistConfig.cloudData;
-      
-      // Merge unique items
-      const merged = [...local, ...cloud].reduce((acc, current) => {
-        const x = acc.find(item => item.productId === current.productId);
-        return !x ? acc.concat([current]) : acc;
-      }, []);
-
-      localStorage.setItem('wishlist', JSON.stringify(merged));
-    }
-
-    renderWishlistGrid() {
-      const wishlistBlock = document.querySelector('.js-wishlistBlock');
-      if (!wishlistBlock) return;
-
-      const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-      
-      if (wishlistData.length === 0) {
-        wishlistBlock.innerHTML = '<p class="wishlist-empty">Your wishlist is empty.</p>';
-        return;
-      }
-
-      wishlistBlock.innerHTML = wishlistData.map(item => `
-        <div class="wishlist-product__list">
-            <div class="c-product">
-                <a href="${item.productUrl}">
-                    <img src="${item.productImg}" alt="${item.productTitle}">
-                </a>
-                <h3 class="c-product__title card__heading h5">
-                    <a class="full-unstyled-link" href="${item.productUrl}">${item.productTitle}</a>
-                </h3>
-                <p class="price">${item.productPrice}</p>
-                <button class="wishlist-remove-btn" onclick="document.querySelector('wishlist-button').removeFromWishlistById('${item.productId}')">
-                  Remove
-                </button>
-            </div>
-        </div>
-      `).join('');
-    }
-
-    // --- UPDATED STORAGE METHODS ---
 
     async addToWishlist() {
       let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-      if (!wishlistData.some(item => item.productId === this.productId)) {
+      
+      // Check if already exists
+      const exists = wishlistData.some(item => item.productId === this.productData.productId);
+      if (!exists) {
         wishlistData.push(this.productData);
         localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-        await this.syncWithShopify(wishlistData);
+        console.log('Added to wishlist:', this.productData.productTitle);
       }
     }
 
@@ -297,42 +297,66 @@
       let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
       wishlistData = wishlistData.filter(item => item.productId !== this.productData.productId);
       localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-      await this.syncWithShopify(wishlistData);
-    }
-
-    removeFromWishlistById(id) {
-      let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-      wishlistData = wishlistData.filter(item => item.productId !== id);
-      localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-      
-      this.syncWithShopify(wishlistData);
-      this.renderWishlistGrid();
-      this.updateWishlistCount();
-
-      // Update button state if we are on the page of the product we just removed
-      if (this.productData?.productId === id) {
-        this.button?.classList.remove('wishlist-button--active');
-        this.button?.setAttribute('aria-pressed', 'false');
-      }
+      console.log('Removed from wishlist:', this.productData.productId);
     }
 
     showNotification(action) {
-      const message = action === 'added' ? 'Added to Wishlist' : 'Removed from Wishlist';
+      const message = action === 'added' 
+        ? 'Added to Wishlist' 
+        : 'Removed from Wishlist';
+      
+      // Simple notification
       const notification = document.createElement('div');
       notification.textContent = message;
       notification.className = 'wishlist-notification';
-      notification.style.cssText = `position: fixed; top: 20px; right: 20px; background: #000; color: #fff; padding: 1rem 1.5rem; border-radius: 0.5rem; z-index: 9999;`;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #000;
+        color: #fff;
+        padding: 1rem 1.5rem;
+        border-radius: 0.5rem;
+        z-index: 9999;
+        animation: slideIn 0.3s ease;
+      `;
+      
       document.body.appendChild(notification);
-      setTimeout(() => notification.remove(), 3000);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
     }
 
     updateWishlistCount() {
-      const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-      const countElement = document.querySelector('[data-wishlist-count]');
-      if (countElement) {
-        countElement.textContent = wishlistData.length;
-        countElement.style.display = wishlistData.length > 0 ? 'block' : 'none';
+      try {
+        const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const countElement = document.querySelector('[data-wishlist-count]');
+        if (countElement) {
+          countElement.textContent = wishlistData.length;
+          countElement.style.display = wishlistData.length > 0 ? 'block' : 'none';
+        }
+      } catch (error) {
+        console.error('Error updating wishlist count:', error);
       }
+    }
+
+    // Helper to allow removal from the grid specifically
+    removeFromWishlistById(id) {
+        let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        wishlistData = wishlistData.filter(item => item.productId !== id);
+        localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+        
+        // Refresh all wishlist UI components
+        this.renderWishlistGrid();
+        this.updateWishlistCount();
+        
+        // If the current page is a product page for this ID, toggle its button state
+        if (this.productData?.productId === id) {
+             this.button?.classList.remove('wishlist-button--active');
+             this.button?.setAttribute('aria-pressed', 'false');
+        }
     }
   }
 
