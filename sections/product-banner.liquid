@@ -1,7 +1,7 @@
 {% comment %}
   Filename: sections/product-banner.liquid
-  Two-product banner rendering via theme snippet API (`render`).
-  Replace 'card-product' with your theme’s product card snippet name.
+  Uses render to call your theme’s product-card with a children slot.
+  Replace 'product-card' with your snippet’s actual filename if different.
 {% endcomment %}
 
 <div class="product-banner" style="padding: 40px 0;">
@@ -17,15 +17,33 @@
         {% assign p = block.settings.product %}
         <div class="product-card-wrapper" style="flex: 1; min-width: 300px; max-width: 500px;" {{ block.shopify_attributes }}>
           {% if p %}
+
             {%- comment -%}
-              Render your theme’s product card snippet.
-              Common names: 'card-product', 'product-card', 'product-grid-item'.
-              Pass any required params your snippet expects.
+              Build the children slot content. This can be dynamic per block.
+              You can include extra CTAs, badges, etc.
+            {%- endcomment -%}
+            {% capture children %}
+              {% if section.settings.badge_text != blank %}
+                <div class="meta-badge" style="display:inline-block;font-size:12px;background:#e5e7eb;color:#1f2937;padding:2px 8px;border-radius:999px;margin-top:8px;">
+                  {{ section.settings.badge_text }}
+                </div>
+              {% endif %}
+              <div class="extra-cta" style="margin-top:10px;">
+                <a href="{{ p.url }}" class="btn btn-secondary" style="display:inline-block;border:1px solid #d1d5db;padding:8px 12px;border-radius:8px;text-decoration:none;color:#111827;">
+                  View details
+                </a>
+              </div>
+            {% endcapture %}
+
+            {%- comment -%}
+              Render the theme snippet and pass the children string.
+              If your snippet expects other params (e.g. show_vendor), add them here.
             {%- endcomment -%}
             {% render 'product-card',
-             product: p,
-             children: children
+              product: p,
+              children: children
             %}
+
           {% else %}
             <div style="border: 1px dashed #ccc; padding: 20px; text-align: center;">
               <p>Select a product to display the card.</p>
@@ -41,18 +59,13 @@
 {
   "name": "Two Product Banner",
   "settings": [
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "Featured products"
-    }
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Featured products" },
+    { "type": "text", "id": "badge_text", "label": "Optional badge", "default": "text" }
   ],
   "blocks": [
     {
       "type": "product_card",
       "name": "Product",
-      "limit": 2,
       "settings": [
         { "type": "product", "id": "product", "label": "Product" }
       ]
