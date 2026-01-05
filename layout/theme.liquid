@@ -343,7 +343,10 @@
     }
     renderWishlistGrid() {
       const wishlistBlock = document.querySelector('.js-wishlistBlock');
-      if (!wishlistBlock) return;
+      if (!wishlistBlock) {
+        console.log('no block');
+        return;
+      }
 
       try {
         const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
