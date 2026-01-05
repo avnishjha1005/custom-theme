@@ -285,9 +285,6 @@
 
         // Update wishlist count if there's a counter element
         this.updateWishlistCount();
-        {% if customer %}
-    this.syncWithShopify(wishlistData.join(','));
-  {% endif %}
       } catch (error) {
         console.error('Wishlist error:', error);
       } finally {
@@ -307,6 +304,10 @@
         wishlistData.push(this.productData);
         localStorage.setItem('wishlist', JSON.stringify(wishlistData));
         console.log('Added to wishlist:', this.productData.productTitle);
+        {% if customer %}
+          console.log('synced')
+          this.syncWithShopify(wishlistData.join(','));
+        {% endif %}
       }
     }
 
