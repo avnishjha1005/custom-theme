@@ -362,6 +362,46 @@
 
   customElements.define('wishlist-button', WishlistButton);
 })();
+function toggleWishlist(button) {
+  const handle = button.getAttribute('data-product-handle');
+  
+  // 1. Get current wishlist from a hidden field or liquid variable
+  // We use the contact form to update the customer note
+  let currentWishlist = {{ customer.note | json }} || "";
+  let wishlistArray = currentWishlist ? currentWishlist.split(',') : [];
+
+  if (wishlistArray.includes(handle)) {
+    // Remove if already there
+    wishlistArray = wishlistArray.filter(item => item !== handle);
+    button.querySelector('.wishlist-text').innerText = "Add to Wishlist";
+  } else {
+    // Add if not there
+    wishlistArray.push(handle);
+    button.querySelector('.wishlist-text').innerText = "Remove from Wishlist";
+  }
+
+  const newNote = wishlistArray.join(',');
+
+  // 2. Submit to Shopify via the Contact Form hack
+  updateCustomerNote(newNote);
+}
+
+function updateCustomerNote(noteValue) {
+  const formData = new FormData();
+  formData.append('form_type', 'customer');
+  formData.append('utf8', '✓');
+  formData.append('customer[note]', noteValue);
+  formData.append('customer[email]', '{{ customer.email }}'); // Required for identification
+
+  fetch('/contact', {
+    method: 'POST',
+    body: formData
+  })
+  .then(() => {
+    console.log('Wishlist updated successfully');
+  })
+  .catch(err => console.error('Error updating wishlist:', err));
+}
 
 function renderWishlistGrid() {
       const wishlistBlock = document.querySelector('.js-wishlistBlock');
