@@ -1,151 +1,120 @@
 {% comment %} Filename: sections/product-banner.liquid {% endcomment %}
 
-{% assign product_handles = '' %}
-{% if section.settings.product_1 %}
-  {% assign product_handles = product_handles | append: section.settings.product_1.handle %}
-{% endif %}
-{% if section.settings.product_2 %}
-  {% if product_handles != '' %}
-    {% assign product_handles = product_handles | append: ',' %}
-  {% endif %}
-  {% assign product_handles = product_handles | append: section.settings.product_2.handle %}
-{% endif %}
-{% assign handles_array = product_handles | split: ',' %}
+<section class="product-banner-section" role="region" aria-label="{{ section.settings.heading | escape }}">
+  <div class="banner-container">
+    
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <header class="banner-header">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="banner-heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <p class="banner-subheading">{{ section.settings.subheading }}</p>
+        {%- endif -%}
+      </header>
+    {%- endif -%}
 
-<section class="two-product-banner" role="region" aria-label="{{ section.settings.heading | escape }}">
-  {% if section.settings.heading != blank %}
-    <h2 class="banner-heading">{{ section.settings.heading }}</h2>
-  {% endif %}
-  {% if section.settings.subheading != blank %}
-    <p class="banner-subheading">{{ section.settings.subheading }}</p>
-  {% endif %}
-
-  <div class="banner-grid">
-    {% if handles_array.size == 0 %}
-      <article class="banner-card">
-        <div class="card-empty">
-          <div class="image-placeholder" aria-hidden="true">Select a product</div>
-          <p class="empty-text">Choose products in the section settings.</p>
-        </div>
-      </article>
-      <article class="banner-card">
-        <div class="card-empty">
-          <div class="image-placeholder" aria-hidden="true">Select a product</div>
-          <p class="empty-text">Choose products in the section settings.</p>
-        </div>
-      </article>
-    {% else %}
-      {% for handle in handles_array %}
-        {% assign p = all_products[handle] %}
-        <article class="banner-card">
-          {% if p %}
-            <a class="image-link" href="{{ p.url }}" aria-label="{{ p.title | escape }}">
-              {% if p.featured_image %}
-                <img
-                  class="product-image"
-                  src="{{ p.featured_image | image_url: width: 800 }}"
-                  srcset="
-                    {{ p.featured_image | image_url: width: 400 }} 400w,
-                    {{ p.featured_image | image_url: width: 600 }} 600w,
-                    {{ p.featured_image | image_url: width: 800 }} 800w
-                  "
-                  sizes="(max-width: 720px) 100vw, 50vw"
-                  alt="{{ p.featured_image.alt | default: p.title | escape }}"
-                  loading="lazy"
-                  width="{{ p.featured_image.width }}"
-                  height="{{ p.featured_image.height }}"
-                >
-              {% else %}
-                <div class="image-placeholder" aria-hidden="true">No image</div>
-              {% endif %}
+    <div class="banner-grid">
+      {%- for block in section.blocks -%}
+        {%- assign p = block.settings.product -%}
+        
+        <article class="banner-card" {{ block.shopify_attributes }}>
+          {%- if p != blank -%}
+            {% comment %} Product Image {% endcomment %}
+            <a href="{{ p.url }}" class="card-image-wrapper">
+              <img
+                src="{{ p.featured_image | image_url: width: 600 }}"
+                alt="{{ p.featured_image.alt | escape }}"
+                loading="lazy"
+                class="product-image"
+              >
             </a>
 
-            <div class="card-body">
-              <h3 class="product-title">
-                <a href="{{ p.url }}">{{ p.title }}</a>
-              </h3>
-
-              {% assign current_variant = p.selected_or_first_available_variant %}
-              {% if current_variant %}
-                {% assign price = current_variant.price %}
-                {% assign compare_price = current_variant.compare_at_price %}
-              {% endif %}
-
-              <div class="price-row">
-                {% if current_variant and compare_price and compare_price > price %}
-                  <span class="price price--sale">{{ price | money }}</span>
-                  <span class="price price--compare"><s>{{ compare_price | money }}</s></span>
-                  {% assign discount = compare_price | minus: price %}
-                  {% assign percent_off = discount | times: 100 | divided_by: compare_price %}
-                  <span class="price-badge">Save {{ percent_off }}%</span>
-                {% elsif current_variant %}
-                  <span class="price">{{ price | money }}</span>
-                {% else %}
-                  <span class="price">—</span>
-                {% endif %}
+            <div class="card-content">
+              <h3 class="product-title">{{ p.title }}</h3>
+              
+              <div class="product-price">
+                <span class="price-current">{{ p.price | money }}</span>
+                {%- if p.compare_at_price > p.price -%}
+                  <span class="price-old">{{ p.compare_at_price | money }}</span>
+                {%- endif -%}
               </div>
 
-              {% if section.settings.badge_text != blank %}
-                <div class="meta-badge">{{ section.settings.badge_text }}</div>
-              {% endif %}
-
-              <div class="cta-row">
-                {% if current_variant and current_variant.available %}
-                  <form method="post" action="/cart/add" class="add-to-cart-form">
-                    <input type="hidden" name="id" value="{{ current_variant.id }}">
-                    <button type="submit" class="btn btn-primary">
-                      {{ section.settings.cta_text | default: 'Add to cart' }}
-                    </button>
-                  </form>
-                {% else %}
-                  <a class="btn btn-secondary" href="{{ p.url }}">View details</a>
-                {% endif %}
-              </div>
+              {%- if block.settings.show_cta -%}
+                <form method="post" action="/cart/add">
+                  <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
+                  <button type="submit" class="btn btn-primary">
+                    {{ section.settings.cta_text }}
+                  </button>
+                </form>
+              {%- endif -%}
             </div>
-          {% else %}
-            <div class="card-empty">
-              <div class="image-placeholder" aria-hidden="true">Select a product</div>
-              <p class="empty-text">Choose a product in the section settings.</p>
-            </div>
-          {% endif %}
-        </article>
-      {% endfor %}
 
-      {% if handles_array.size == 1 %}
-        <article class="banner-card">
-          <div class="card-empty">
-            <div class="image-placeholder" aria-hidden="true">Select a product</div>
-            <p class="empty-text">Choose a second product in the section settings.</p>
-          </div>
+          {%- else -%}
+            {% comment %} Onboarding/Placeholder State {% endcomment %}
+            <div class="card-placeholder">
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              <p>Select a product to display</p>
+            </div>
+          {%- endif -%}
         </article>
-      {% endif %}
-    {% endif %}
+      {%- endfor -%}
+    </div>
+
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Two Product Banner",
-  "tag": "section",
-  "class": "section-two-product-banner",
+  "name": "Product Banner",
+  "max_blocks": 2,
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Featured products" },
-    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Hand-picked for this story" },
-    { "type": "product", "id": "product_1", "label": "Product 1" },
-    { "type": "product", "id": "product_2", "label": "Product 2" },
-    { "type": "text", "id": "badge_text", "label": "Optional badge (e.g., Limited)", "default": "text" },
-    { "type": "text", "id": "cta_text", "label": "Primary CTA text", "default": "Add to cart" }
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured Collection"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Add a short description here"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Label",
+      "default": "Add to Cart"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_card",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_cta",
+          "label": "Show Buy Button",
+          "default": true
+        }
+      ]
+    }
   ],
   "presets": [
-    { "name": "Two Product Banner", "category": "Blog" }
+    {
+      "name": "Two Product Banner",
+      "blocks": [
+        { "type": "product_card" },
+        { "type": "product_card" }
+      ]
+    }
   ]
 }
 {% endschema %}
-
-{% stylesheet %}
-/* same CSS as before */
-{% endstylesheet %}
-
-{% javascript %}
-(function() {})();
-{% endjavascript %}
