@@ -4487,3 +4487,22 @@ text-component {
     opacity: 0;
   }
 }
+.wishlist-button svg {
+  transition: fill 0.3s ease, transform 0.2s ease;
+}
+
+.wishlist-button--active svg {
+  fill: #ff0000; /* Red for filled heart */
+  transform: scale(1.1);
+}
+
+.wishlist-button--active .heart-outline {
+  display: none;
+}
+
+/* Add styles for your .js-wishlistBlock grid here */
+.js-wishlistBlock {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
