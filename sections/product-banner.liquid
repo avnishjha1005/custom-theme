@@ -22,12 +22,9 @@
               Common names: 'card-product', 'product-card', 'product-grid-item'.
               Pass any required params your snippet expects.
             {%- endcomment -%}
-            {% render 'card-product',
-              product: p,
-              show_vendor: false,
-              show_rating: true,
-              grid_item_width: 'small',
-              show_quick_add: true
+            {% render 'product-card',
+             product: p,
+             children: children
             %}
           {% else %}
             <div style="border: 1px dashed #ccc; padding: 20px; text-align: center;">
