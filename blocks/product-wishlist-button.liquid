@@ -6,62 +6,270 @@
   if block.settings.show_background
     assign button_class = button_class | append: ' wishlist-button--with-bg'
   endif
-
-  assign target_product = product | default: card_product
 -%}
 
-{%- comment -%} 
-  This block only outputs the CSS and JS once, but it works for every instance 
-  because it defines a global "Template" for the wishlist behavior.
-{%- endcomment -%}
-
-
-<wishlist-button 
-  data-id="{{ target_product.id }}"
-  data-title="{{ target_product.title | escape }}"
-  data-handle="{{ target_product.handle }}"
-  data-img="{{ target_product.featured_image | image_url: width: 300 }}"
-  class="wishlist-button-container"
->
+<wishlist-button>
   <button
     type="button"
     class="{{ button_class }}"
+    data-wishlist-button
+    aria-label="{{ block.settings.aria_label_add }}"
+    aria-pressed="false"
+    {% if block.settings.require_login and customer == null %}
+      data-require-login="true"
+    {% endif %}
     style="
-      --wl-size: {{ block.settings.icon_size }}px;
-      --wl-color: {{ block.settings.icon_color }};
-      --wl-color-active: {{ block.settings.icon_color_active }};
-      --wl-bg: {{ block.settings.background_color }};
-      --wl-radius: {{ block.settings.corner_radius }}px;
-      --wl-padding: {{ block.settings.padding }}px;
+      --wishlist-icon-size: {{ block.settings.icon_size }}px;
+      --wishlist-icon-color: {{ block.settings.icon_color }};
+      --wishlist-icon-color-active: {{ block.settings.icon_color_active }};
+      {% if block.settings.show_background %}
+        --wishlist-bg-color: {{ block.settings.background_color }};
+        --wishlist-corner-radius: {{ block.settings.corner_radius }}px;
+        --wishlist-padding: {{ block.settings.padding }}px;
+      {% endif %}
     "
   >
-    <svg class="wishlist-icon wishlist-icon--outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-       <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+    
+    <svg class="wishlist-icon wishlist-icon--outline" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M16.5 4.5c2.206 0 4 1.794 4 4 0 4.67-5.543 8.94-8.5 11.023C9.043 17.44 3.5 13.17 3.5 8.5c0-2.206 1.794-4 4-4 1.298 0 2.522.638 3.273 1.706L12 7.953l1.227-1.746c.75-1.07 1.975-1.707 3.273-1.707m0-1.5c-1.862 0-3.505.928-4.5 2.344C11.005 3.928 9.362 3 7.5 3 4.462 3 2 5.462 2 8.5c0 5.72 6.5 10.438 10 12.85 3.5-2.412 10-7.13 10-12.85C22 5.462 19.538 3 16.5 3z" stroke="currentColor" stroke-width="1.5"/>
     </svg>
-    <svg class="wishlist-icon wishlist-icon--filled" viewBox="0 0 24 24">
-       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
+    
+    <svg class="wishlist-icon wishlist-icon--filled" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M19.3 5.71002C18.841 5.24601 18.2943 4.87797 17.6917 4.62731C17.0891 4.37666 16.4426 4.2484 15.79 4.25002C15.1373 4.2484 14.4909 4.37666 13.8883 4.62731C13.2857 4.87797 12.739 5.24601 12.28 5.71002L12 6.00002L11.72 5.72001C10.7917 4.79182 9.53273 4.27037 8.22 4.27037C6.90726 4.27037 5.64829 4.79182 4.72 5.72001C3.80386 6.65466 3.29071 7.91125 3.29071 9.22002C3.29071 10.5288 3.80386 11.7854 4.72 12.72L11.49 19.51C11.6306 19.6505 11.8212 19.7294 12.02 19.7294C12.2187 19.7294 12.4094 19.6505 12.55 19.51L19.32 12.72C20.2365 11.7823 20.7479 10.5221 20.7442 9.21092C20.7405 7.89973 20.2218 6.64248 19.3 5.71002Z" fill="currentColor"/>
     </svg>
+
+    {%- if block.settings.button_style == 'icon-text' -%}
+      <span class="wishlist-text">
+        <span class="wishlist-text--add">{{ block.settings.add_text }}</span>
+        <span class="wishlist-text--remove">{{ block.settings.remove_text }}</span>
+      </span>
+    {%- endif -%}
+
+    {%- if block.settings.tooltip_add != blank or block.settings.tooltip_remove != blank -%}
+      <span class="wishlist-tooltip" role="tooltip">
+        <span class="wishlist-tooltip--add">{{ block.settings.tooltip_add }}</span>
+        <span class="wishlist-tooltip--remove">{{ block.settings.tooltip_remove }}</span>
+      </span>
+    {%- endif -%}
   </button>
 </wishlist-button>
 
 {% schema %}
 {
   "name": "Wishlist Button",
+  "tag": "wishlist-button",
   "settings": [
-    { "type": "select", "id": "position", "label": "Position", "options": [
-        { "value": "top-left", "label": "Top Left" },
-        { "value": "top-right", "label": "Top Right" },
-        { "value": "bottom-left", "label": "Bottom Left" },
-        { "value": "bottom-right", "label": "Bottom Right" }
-      ], "default": "top-right" },
-    { "type": "range", "id": "icon_size", "label": "Icon Size", "min": 10, "max": 50, "default": 24 },
-    { "type": "color", "id": "icon_color", "label": "Icon Color", "default": "#000000" },
-    { "type": "color", "id": "icon_color_active", "label": "Icon Color (Active)", "default": "#ff0000" },
-    { "type": "checkbox", "id": "show_background", "label": "Show Background", "default": true },
-    { "type": "color", "id": "background_color", "label": "Background Color", "default": "#ffffff" },
-    { "type": "range", "id": "corner_radius", "label": "Corner Radius", "min": 0, "max": 50, "default": 50 },
-    { "type": "range", "id": "padding", "label": "Padding", "min": 0, "max": 20, "default": 8 }
+    {
+      "type": "paragraph",
+      "content": "Display a wishlist button on product cards to allow customers to save products"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Position",
+      "options": [
+        {
+          "value": "top-left",
+          "label": "Top Left"
+        },
+        {
+          "value": "top-right",
+          "label": "Top Right"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom Left"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom Right"
+        }
+      ],
+      "default": "top-right"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Button Style",
+      "options": [
+        {
+          "value": "icon-only",
+          "label": "Icon Only"
+        },
+        {
+          "value": "icon-text",
+          "label": "Icon with Text"
+        }
+      ],
+      "default": "icon-only"
+    },
+    {
+      "type": "header",
+      "content": "Icon Settings"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Icon Size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_color_active",
+      "label": "Icon Color (Active)",
+      "default": "#ff0000"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_background",
+      "label": "Show Background",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "corner_radius",
+      "label": "Corner Radius",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Button Padding",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animation",
+      "label": "Enable Animation",
+      "default": true,
+      "info": "Animate icon when added to wishlist"
+    },
+    {
+      "type": "select",
+      "id": "animation_type",
+      "label": "Animation Type",
+      "options": [
+        {
+          "value": "scale",
+          "label": "Scale"
+        },
+        {
+          "value": "bounce",
+          "label": "Bounce"
+        },
+        {
+          "value": "pulse",
+          "label": "Pulse"
+        }
+      ],
+      "default": "scale"
+    },
+    {
+      "type": "header",
+      "content": "Button Text"
+    },
+    {
+      "type": "text",
+      "id": "add_text",
+      "label": "Add to Wishlist Text",
+      "default": "Added to Wishlist"
+    },
+    {
+      "type": "text",
+      "id": "remove_text",
+      "label": "Remove from Wishlist Text",
+      "default": "Removed from Wishlist"
+    },
+    {
+      "type": "text",
+      "id": "tooltip_add",
+      "label": "Tooltip - Add",
+      "default": "Add to wishlist",
+      "info": "Tooltip shown on hover when not in wishlist"
+    },
+    {
+      "type": "text",
+      "id": "tooltip_remove",
+      "label": "Tooltip - Remove",
+      "default": "Remove from wishlist",
+      "info": "Tooltip shown on hover when in wishlist"
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "aria_label_add",
+      "label": "ARIA Label - Add",
+      "default": "Add to wishlist"
+    },
+    {
+      "type": "text",
+      "id": "aria_label_remove",
+      "label": "ARIA Label - Remove",
+      "default": "Remove from wishlist"
+    },
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "require_login",
+      "label": "Require Customer Login",
+      "default": false,
+      "info": "Redirect to login page if customer is not logged in"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_notification",
+      "label": "Show Notification",
+      "default": true,
+      "info": "Display a notification when item is added/removed"
+    }
   ],
-  "presets": [{ "name": "Wishlist Button" }]
+  "presets": [
+    {
+      "name": "Wishlist Button",
+      "category": "Product"
+    }
+  ]
 }
 {% endschema %}
