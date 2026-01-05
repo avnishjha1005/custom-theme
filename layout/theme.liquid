@@ -123,22 +123,55 @@
       this.initialized = true;
       
       this.productData = this.getProductDataFromCard();
+      if (!this.productData) return;
+
+      // Initial Sync: Merge Liquid data into LocalStorage on first load
+      this.syncLiquidToLocal();
       
-      if (!this.productData) {
-        console.warn('Wishlist button: Could not find product data');
-        return;
-      }
-      
-      // Remove any existing listeners before adding new one
       if (this.button) {
-        this.button.replaceWith(this.button.cloneNode(true));
-        this.button = this.querySelector('[data-wishlist-button]');
-        this.button.addEventListener('click', this.handleClick.bind(this), { once: false });
+        this.button.addEventListener('click', this.handleClick.bind(this));
       }
       
-      // Check if product is already in wishlist on load
       this.checkWishlistState();
-      this.renderWishlistGrid();
+    }
+    syncLiquidToLocal() {
+      if (!this.isLoggedIn || !window.wishlistConfig?.customerData) return;
+      
+      try {
+        const serverData = window.wishlistConfig.customerData; // Injected via Liquid
+        let localData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        
+        // Merge server and local, keeping unique productIds
+        const merged = [...serverData, ...localData].reduce((acc, current) => {
+          const x = acc.find(item => item.productId === current.productId);
+          return !x ? acc.concat([current]) : acc;
+        }, []);
+
+        localStorage.setItem('wishlist', JSON.stringify(merged));
+      } catch (e) {
+        console.error('Wishlist sync error:', e);
+      }
+    }
+    async saveToShopify(wishlistArray) {
+      if (!this.isLoggedIn) return;
+
+      const jsonString = JSON.stringify(wishlistArray);
+      
+      // We use the standard Shopify account update endpoint
+      const formData = new FormData();
+      formData.append('customer[note]', jsonString); 
+      formData.append('form_type', 'customer');
+
+      try {
+        await fetch('/account', {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/javascript' }
+        });
+        console.log('Wishlist saved to customer note');
+      } catch (error) {
+        console.error('Failed to save wishlist to Shopify:', error);
+      }
     }
 
     getProductDataFromCard() {
