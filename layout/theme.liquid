@@ -233,17 +233,30 @@
 
     async handleClick(e) {
       e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation(); // Prevent other listeners from firing
-
-      // Prevent rapid double-clicks
       if (this.isProcessing) return;
       this.isProcessing = true;
 
-      // Check if login is required
-      if (this.requireLogin && !window.Shopify?.customer) {
-        window.location.href = '/account/login';
-        return;
+      const isActive = this.button.classList.contains('wishlist-button--active');
+      let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+
+      if (isActive) {
+        wishlistData = wishlistData.filter(item => item.productId !== this.productData.productId);
+      } else {
+        wishlistData.push(this.productData);
+      }
+
+      // Update LocalStorage
+      localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+      
+      // Update UI
+      this.button.classList.toggle('wishlist-button--active');
+      
+      // Save to Shopify silently
+      if (this.isLoggedIn) {
+        await this.saveToShopify(wishlistData);
+      }
+
+      this.isProcessing = false;
       }
 
       const isActive = this.button.classList.contains('wishlist-button--active');
