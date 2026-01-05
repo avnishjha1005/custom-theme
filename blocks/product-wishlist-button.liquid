@@ -62,65 +62,71 @@
 
   .wishlist-button:hover { transform: scale(1.1); }
 </style>
-
 <script>
-  if (!window.WishlistButtonDefined) {
-    window.WishlistButtonDefined = true;
+  console.log('[Wishlist] script loaded');
 
-    class WishlistButton extends HTMLElement {
-      connectedCallback() {
-        this.button = this.querySelector('button');
-        this.productId = String(this.dataset.id);
+  if (!window.WishlistInit) {
+    window.WishlistInit = true;
 
-        if (!this.button || !this.productId) return;
+    const getList = () =>
+      JSON.parse(localStorage.getItem('shopify-wishlist') || '[]');
 
-        this.button.addEventListener('click', e => {
-          e.preventDefault();
-          e.stopPropagation();
-          this.toggle();
-        });
+    const saveList = list => {
+      localStorage.setItem('shopify-wishlist', JSON.stringify(list));
+      window.dispatchEvent(new Event('wishlist:updated'));
+    };
 
-        this.refresh();
-        window.addEventListener('wishlist:updated', () => this.refresh());
-      }
+    const initButton = el => {
+      if (el.__wishlistReady) return;
+      el.__wishlistReady = true;
 
-      getList() {
-        return JSON.parse(localStorage.getItem('shopify-wishlist') || '[]');
-      }
+      const button = el.querySelector('button');
+      if (!button) return;
 
-      saveList(list) {
-        localStorage.setItem('shopify-wishlist', JSON.stringify(list));
-        window.dispatchEvent(new Event('wishlist:updated'));
-      }
+      const id = String(el.dataset.id);
 
-      refresh() {
-        const list = this.getList();
-        const active = list.some(item => item.id === this.productId);
-        this.button.classList.toggle('wishlist-button--active', active);
-      }
+      const refresh = () => {
+        const active = getList().some(i => i.id === id);
+        button.classList.toggle('wishlist-button--active', active);
+      };
 
-      toggle() {
-        let list = this.getList();
-        const index = list.findIndex(item => item.id === this.productId);
+      button.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        let list = getList();
+        const index = list.findIndex(i => i.id === id);
 
         if (index > -1) {
           list.splice(index, 1);
         } else {
           list.push({
-            id: this.productId,
-            title: this.dataset.title,
-            handle: this.dataset.handle,
-            image: this.dataset.img
+            id,
+            title: el.dataset.title,
+            handle: el.dataset.handle,
+            image: el.dataset.img
           });
         }
 
-        this.saveList(list);
-      }
-    }
+        saveList(list);
+      });
 
-    customElements.define('wishlist-button', WishlistButton);
+      refresh();
+      window.addEventListener('wishlist:updated', refresh);
+    };
+
+    const scan = () =>
+      document.querySelectorAll('wishlist-button').forEach(initButton);
+
+    scan();
+
+    new MutationObserver(scan).observe(document.body, {
+      childList: true,
+      subtree: true
+    });
   }
 </script>
+
 
   {%- assign wishlist_script_printed = true -%}
 {%- endunless -%}
