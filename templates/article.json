@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "section": {
       "type": "main-blog-post",
@@ -54,8 +55,7 @@
           "blocks": {}
         },
         "blog-post-image": {
-          "type": "image",
-          "name": "Featured image",
+          "type": "_blog-post-featured-image",
           "static": true,
           "settings": {
             "image_ratio": "adapt",
@@ -89,9 +89,36 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
+    },
+    "product_banner_ixRMG4": {
+      "type": "product-banner",
+      "blocks": {
+        "product_card_QEV47G": {
+          "type": "product_card",
+          "settings": {
+            "product": "olive-green-jacket"
+          }
+        },
+        "product_card_fBNTHe": {
+          "type": "product_card",
+          "settings": {
+            "product": "blue-silk-tuxedo"
+          }
+        }
+      },
+      "block_order": [
+        "product_card_QEV47G",
+        "product_card_fBNTHe"
+      ],
+      "name": "Two Product Banner",
+      "settings": {
+        "heading": "Featured products",
+        "badge_text": "text"
+      }
     }
   },
   "order": [
-    "section"
+    "section",
+    "product_banner_ixRMG4"
   ]
 }
