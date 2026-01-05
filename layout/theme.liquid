@@ -340,7 +340,7 @@
         console.error('Error updating wishlist count:', error);
       }
     }
-    function displayWishlist(pdpData) {
+    displayWishlist(pdpData) {
         const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
         
         if (wishlistData.length === 0) {
