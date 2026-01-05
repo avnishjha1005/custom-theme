@@ -377,7 +377,7 @@
         }
     }
     
-    syncWithShopify(noteValue) {
+    async syncWithShopify(noteValue) {
       const formData = new FormData();
       formData.append('form_type', 'customer');
       formData.append('utf8', '✓');
