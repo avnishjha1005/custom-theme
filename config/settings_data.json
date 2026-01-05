@@ -9,7 +9,7 @@
  */
 {
   "current": {
-    "enable-wishlist": true,
+    "enable-wishlist": false,
     "logo": "shopify://shop_images/AR_Wordmark_Terracotta.svg",
     "logo_inverse": "shopify://shop_images/AR_Wordmark_Soft_Beige.svg",
     "logo_symbol": "shopify://shop_images/AR_Symbol_Soft_Beige.svg",
