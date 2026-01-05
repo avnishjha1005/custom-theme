@@ -16,95 +16,112 @@
 {%- endcomment -%}
 {%- unless wishlist_script_printed -%}
   <style>
-    /* Prevent layout shift: custom elements are inline by default */
-    wishlist-button { 
-      display: inline-block !important; 
-      position: absolute !important; 
-      z-index: 20 !important;
-      line-height: 0;
-    }
-    
-    .wishlist-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border: none;
-      background: none;
-      padding: 0;
-      margin: 0;
-      transition: transform 0.2s ease;
-    }
+  wishlist-button {
+    display: inline-block;
+    position: absolute;
+    z-index: 20;
+    line-height: 0;
+  }
 
-    .wishlist-button--with-bg {
-      background: var(--wl-bg);
-      border-radius: var(--wl-radius);
-      padding: var(--wl-padding) !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
+  .wishlist-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+    transition: transform 0.2s ease;
+  }
 
-    /* Positioning */
-    .wishlist-button--top-left { top: 10px; left: 10px; }
-    .wishlist-button--top-right { top: 10px; right: 10px; }
-    .wishlist-button--bottom-left { bottom: 10px; left: 10px; }
-    .wishlist-button--bottom-right { bottom: 10px; right: 10px; }
+  .wishlist-button--with-bg {
+    background: var(--wl-bg);
+    border-radius: var(--wl-radius);
+    padding: var(--wl-padding);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
 
-    .wishlist-icon {
-      width: var(--wl-size);
-      height: var(--wl-size);
-      color: var(--wl-color);
-    }
+  .wishlist-button--top-left { top: 10px; left: 10px; }
+  .wishlist-button--top-right { top: 10px; right: 10px; }
+  .wishlist-button--bottom-left { bottom: 10px; left: 10px; }
+  .wishlist-button--bottom-right { bottom: 10px; right: 10px; }
 
-    .wishlist-icon--filled { display: none; fill: var(--wl-color-active); }
-    .wishlist-button--active .wishlist-icon--outline { display: none; }
-    .wishlist-button--active .wishlist-icon--filled { display: block; color: var(--wl-color-active); }
-    .wishlist-button:hover { transform: scale(1.1); }
-  </style>
+  .wishlist-icon {
+    width: var(--wl-size);
+    height: var(--wl-size);
+    color: var(--wl-color);
+  }
 
-  <script>
-    if (!customElements.get('wishlist-button')) {
-      class WishlistButton extends HTMLElement {
-        constructor() {
-          super();
-          this.btn = this.querySelector('button');
-        }
-        connectedCallback() {
-          this.id = this.getAttribute('data-id');
-          if (!this.id || !this.btn) return;
-          
-          this.btn.addEventListener('click', (e) => this.toggle(e));
-          this.refresh();
-          
-          // Listen for changes from any other button on the page
-          window.addEventListener('wishlist:updated', () => this.refresh());
-        }
-        refresh() {
-          const list = JSON.parse(localStorage.getItem('shopify-wishlist') || '[]');
-          const isAdded = list.some(item => item.id === this.id);
-          this.btn.classList.toggle('wishlist-button--active', isAdded);
-        }
-        toggle(e) {
-          e.preventDefault(); e.stopPropagation();
-          let list = JSON.parse(localStorage.getItem('shopify-wishlist') || '[]');
-          const idx = list.findIndex(item => item.id === this.id);
-          
-          if (idx > -1) {
-            list.splice(idx, 1);
-          } else {
-            list.push({
-              id: this.id,
-              t: this.getAttribute('data-title'),
-              h: this.getAttribute('data-handle'),
-              i: this.getAttribute('data-img')
-            });
-          }
-          localStorage.setItem('shopify-wishlist', JSON.stringify(list));
-          window.dispatchEvent(new CustomEvent('wishlist:updated'));
-        }
+  .wishlist-icon--filled { display: none; }
+  .wishlist-button--active .wishlist-icon--outline { display: none; }
+  .wishlist-button--active .wishlist-icon--filled {
+    display: block;
+    color: var(--wl-color-active);
+  }
+
+  .wishlist-button:hover { transform: scale(1.1); }
+</style>
+
+<script>
+  if (!window.WishlistButtonDefined) {
+    window.WishlistButtonDefined = true;
+
+    class WishlistButton extends HTMLElement {
+      connectedCallback() {
+        this.button = this.querySelector('button');
+        this.productId = String(this.dataset.id);
+
+        if (!this.button || !this.productId) return;
+
+        this.button.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          this.toggle();
+        });
+
+        this.refresh();
+        window.addEventListener('wishlist:updated', () => this.refresh());
       }
-      customElements.define('wishlist-button', WishlistButton);
+
+      getList() {
+        return JSON.parse(localStorage.getItem('shopify-wishlist') || '[]');
+      }
+
+      saveList(list) {
+        localStorage.setItem('shopify-wishlist', JSON.stringify(list));
+        window.dispatchEvent(new Event('wishlist:updated'));
+      }
+
+      refresh() {
+        const list = this.getList();
+        const active = list.some(item => item.id === this.productId);
+        this.button.classList.toggle('wishlist-button--active', active);
+      }
+
+      toggle() {
+        let list = this.getList();
+        const index = list.findIndex(item => item.id === this.productId);
+
+        if (index > -1) {
+          list.splice(index, 1);
+        } else {
+          list.push({
+            id: this.productId,
+            title: this.dataset.title,
+            handle: this.dataset.handle,
+            image: this.dataset.img
+          });
+        }
+
+        this.saveList(list);
+      }
     }
-  </script>
+
+    customElements.define('wishlist-button', WishlistButton);
+  }
+</script>
+
   {%- assign wishlist_script_printed = true -%}
 {%- endunless -%}
 
