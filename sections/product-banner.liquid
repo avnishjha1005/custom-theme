@@ -1,110 +1,69 @@
 {% comment %} Filename: sections/product-banner.liquid {% endcomment %}
 
-<section class="product-banner-section" role="region" aria-label="{{ section.settings.heading | escape }}">
-  <div class="banner-container">
+<div class="product-banner" style="padding: 40px 0;">
+  <div class="page-width">
     
-    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
-      <header class="banner-header">
-        {%- if section.settings.heading != blank -%}
-          <h2 class="banner-heading">{{ section.settings.heading }}</h2>
-        {%- endif -%}
-        {%- if section.settings.subheading != blank -%}
-          <p class="banner-subheading">{{ section.settings.subheading }}</p>
-        {%- endif -%}
-      </header>
+    {%- if section.settings.heading != blank -%}
+      <h2 class="banner-title" style="text-align: center; margin-bottom: 30px;">
+        {{ section.settings.heading }}
+      </h2>
     {%- endif -%}
 
-    <div class="banner-grid">
+    {% comment %} The Horizontal Container {% endcomment %}
+    <div class="product-card-grid" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
       {%- for block in section.blocks -%}
-        {%- assign p = block.settings.product -%}
-        
-        <article class="banner-card" {{ block.shopify_attributes }}>
-          {%- if p != blank -%}
-            {% comment %} Product Image {% endcomment %}
-            <a href="{{ p.url }}" class="card-image-wrapper">
-              <img
-                src="{{ p.featured_image | image_url: width: 600 }}"
-                alt="{{ p.featured_image.alt | escape }}"
-                height="auto"
-                width="auto"
-                loading="lazy"
-                class="product-image"
-              >
-            </a>
-
-            <div class="card-content">
-              <h3 class="product-title">{{ p.title }}</h3>
-              
-              <div class="product-price">
-                <span class="price-current">{{ p.price | money }}</span>
-                {%- if p.compare_at_price > p.price -%}
-                  <span class="price-old">{{ p.compare_at_price | money }}</span>
-                {%- endif -%}
-              </div>
-
-              {%- if block.settings.show_cta -%}
-                <form method="post" action="/cart/add">
-                  <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
-                  <button type="submit" class="btn btn-primary">
-                    {{ section.settings.cta_text }}
-                  </button>
-                </form>
-              {%- endif -%}
-            </div>
-
+        <div class="product-card-wrapper" style="flex: 1; min-width: 300px; max-width: 500px;" {{ block.shopify_attributes }}>
+          
+          {%- if block.settings.product != blank -%}
+            {% comment %} 
+              REPLACING CUSTOM HTML WITH YOUR THEME'S SNIPPET
+              Note: Change 'product-card' to 'card-product' if that is your file name
+            {% endcomment %}
+            {% render 'product-card', 
+               product: block.settings.product,
+               show_vendor: section.settings.show_vendor 
+            %}
           {%- else -%}
-            {% comment %} Onboarding/Placeholder State {% endcomment %}
-            <div class="card-placeholder">
-              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-              <p>Select a product to display</p>
+            {% comment %} Fallback for empty blocks in the editor {% endcomment %}
+            <div style="border: 1px dashed #ccc; padding: 20px; text-align: center;">
+              <p>Select a product to display the card.</p>
             </div>
           {%- endif -%}
-        </article>
+
+        </div>
       {%- endfor -%}
     </div>
 
   </div>
-</section>
+</div>
 
 {% schema %}
 {
-  "name": "Product Banner",
-  "max_blocks": 2,
+  "name": "Two Product Banner",
   "settings": [
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Featured Collection"
+      "default": "Our Favorites"
     },
     {
-      "type": "text",
-      "id": "subheading",
-      "label": "Subheading",
-      "default": "Add a short description here"
-    },
-    {
-      "type": "text",
-      "id": "cta_text",
-      "label": "Button Label",
-      "default": "Add to Cart"
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show Vendor",
+      "default": false
     }
   ],
   "blocks": [
     {
-      "type": "product_card",
+      "type": "product_card_block",
       "name": "Product Card",
+      "limit": 2,
       "settings": [
         {
           "type": "product",
           "id": "product",
-          "label": "Select Product"
-        },
-        {
-          "type": "checkbox",
-          "id": "show_cta",
-          "label": "Show Buy Button",
-          "default": true
+          "label": "Product"
         }
       ]
     }
@@ -113,8 +72,8 @@
     {
       "name": "Two Product Banner",
       "blocks": [
-        { "type": "product_card" },
-        { "type": "product_card" }
+        { "type": "product_card_block" },
+        { "type": "product_card_block" }
       ]
     }
   ]
