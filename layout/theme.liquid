@@ -372,6 +372,25 @@
              this.button?.setAttribute('aria-pressed', 'false');
         }
     }
+    async syncWithShopify(noteValue) {
+  const formData = new FormData();
+  formData.append('form_type', 'customer');
+  formData.append('utf8', '✓');
+  formData.append('customer[note]', noteValue);
+  formData.append('customer[email]', '{{ customer.email }}');
+
+  try {
+    // We send this to the /contact endpoint which updates the Customer Note
+    await fetch('/contact', {
+      method: 'POST',
+      body: formData,
+      keepalive: true // Ensures it finishes even if the user clicks a link
+    });
+    console.log('Synced to Shopify Account');
+  } catch (err) {
+    console.error('Sync failed', err);
+  }
+}
   }
 
   customElements.define('wishlist-button', WishlistButton);
