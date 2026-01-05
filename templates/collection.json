@@ -490,7 +490,8 @@
       "custom_css": [
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
         ".product-grid-container {max-width: 1440px; margin: auto;}",
-        "#ResultsList > .grid {display: unset;}"
+        "#ResultsList > .grid {display: unset;}",
+        ".wishlist-button{z-index: 100;}"
       ],
       "settings": {
         "layout_type": "grid",
