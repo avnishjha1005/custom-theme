@@ -2,21 +2,7 @@
 <html
   class="no-js{% if request.design_mode %} shopify-design-mode{% endif %}"
   lang="{{ request.locale.iso_code }}"
-><script>
-  window.Shopify = window.Shopify || {};
-  window.wishlistConfig = {
-    customerLoggedIn: {% if customer %}true{% else %}false{% endif %},
-    // Pull the JSON metafield data safely
-    cloudData: {% if customer.metafields.custom.wishlist != blank %}{{ customer.metafields.custom.wishlist.value | json }}{% else %}[]{% endif %}
-  };
-</script>
-
-{% if customer %}
-  {% comment %} Hidden form to allow JS to save data back to the customer metafield {% endcomment %}
-  {% form 'customer', id: 'WishlistSyncForm', style: 'display:none;' %}
-    <input type="hidden" name="customer[metafields][custom][wishlist]" id="wishlist-metafield-input">
-  {% endform %}
-{% endif %}
+>
   <head>
     {%- if settings.favicon != blank -%}
       <link
@@ -107,14 +93,26 @@
     // Wishlist Button Web Component
 (function() {
   'use strict';
+  
   if (customElements.get('wishlist-button')) return;
 
   class WishlistButton extends HTMLElement {
     constructor() {
       super();
       this.initialized = false;
-      this.isProcessing = false;
       this.button = this.querySelector('[data-wishlist-button]');
+      this.requireLogin = this.button?.dataset.requireLogin === 'true';
+      
+      this.productCard = this.closest('product-card') || 
+                        this.parentElement?.closest('product-card');
+      
+      if (!this.productCard) {
+        let el = this.parentElement;
+        while (el && el.tagName !== 'PRODUCT-CARD') {
+          el = el.parentElement;
+        }
+        this.productCard = el;
+      }
       
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => this.init());
@@ -126,108 +124,127 @@
     init() {
       if (this.initialized) return;
       this.initialized = true;
-
+      
       this.productData = this.getProductDataFromCard();
       if (!this.productData) return;
-
-      // Clean up and attach listeners
-      if (this.button) {
-        this.button.addEventListener('click', this.handleClick.bind(this));
-      }
-
-      // 1. Initial Merge: If logged in, merge cloud data into local storage
+      
+      // Merge cloud data (from login) into local storage immediately on load
       this.mergeCloudWishlist();
-      // 2. Initial UI Sync
+
+      if (this.button) {
+        this.button.replaceWith(this.button.cloneNode(true));
+        this.button = this.querySelector('[data-wishlist-button]');
+        this.button.addEventListener('click', this.handleClick.bind(this), { once: false });
+      }
+      
       this.checkWishlistState();
       this.updateWishlistCount();
       this.renderWishlistGrid();
     }
 
     getProductDataFromCard() {
-      // Find the closest product card container
-      const card = this.closest('product-card') || this.closest('.product-grid-item') || document;
-      const productId = card.dataset?.productId || "{{ product.id }}"; // Fallback for PDP
+      if (!this.productCard) return null;
+      const productId = this.productCard.dataset.productId;
+      if (!productId) return null;
       
+      const productLink = this.productCard.querySelector('.product-card__link, a[href*="/products/"]');
+      const productUrl = productLink?.href || '';
+      const productHandle = productUrl.split('/products/')[1]?.split('?')[0] || '';
+      
+      const titleSelectors = ['.text-block h5 p', '.text-block p', 'h3', '.h4', '.h5', '[class*="product_title"]', '.card__heading'];
+      let productTitle = '';
+      for (const selector of titleSelectors) {
+        const titleEl = this.productCard.querySelector(selector);
+        if (titleEl && titleEl.textContent.trim()) {
+          productTitle = titleEl.textContent.trim();
+          break;
+        }
+      }
+      
+      const productImage = this.productCard.querySelector('img');
+      const productImg = productImage?.src || productImage?.dataset?.src || '';
+      const priceEl = this.productCard.querySelector('product-price .price, .price');
+      const productPrice = priceEl?.textContent?.trim() || '';
+
       return {
-        productId: productId.toString(),
-        productHandle: window.location.pathname.split('/products/')[1] || "",
-        productTitle: card.querySelector('.card__heading, h3, h1')?.textContent.trim() || "Product",
-        productImg: card.querySelector('img')?.src || "",
-        productPrice: card.querySelector('.price')?.textContent.trim() || "",
-        productUrl: card.querySelector('a')?.href || window.location.href
+        productId: productId,
+        productHandle: productHandle,
+        productTitle: productTitle || 'Product',
+        productImg: productImg,
+        productPrice: productPrice,
+        productUrl: productUrl || `/products/${productHandle}`
       };
+    }
+
+    checkWishlistState() {
+      if (!this.button || !this.productData) return;
+      const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const isInWishlist = wishlistData.some(item => item.productId === this.productData.productId);
+      if (isInWishlist) {
+        this.button.classList.add('wishlist-button--active');
+        this.button.setAttribute('aria-pressed', 'true');
+      }
     }
 
     async handleClick(e) {
       e.preventDefault();
+      e.stopPropagation();
       if (this.isProcessing) return;
       this.isProcessing = true;
 
+      if (this.requireLogin && !window.Shopify?.customer) {
+        window.location.href = '/account/login';
+        return;
+      }
+
       const isActive = this.button.classList.contains('wishlist-button--active');
       
-      if (isActive) {
-        await this.removeFromWishlist();
-      } else {
-        await this.addToWishlist();
-      }
-
-      this.updateUI(!isActive);
-      this.isProcessing = false;
-    }
-
-    updateUI(isInWishlist) {
-      // Update all buttons for this product on the page
-      const allSameProductButtons = document.querySelectorAll(`wishlist-button`);
-      allSameProductButtons.forEach(btn => {
-        if (btn.productData?.productId === this.productData.productId) {
-          btn.button?.classList.toggle('wishlist-button--active', isInWishlist);
-          btn.button?.setAttribute('aria-pressed', isInWishlist);
+      try {
+        if (isActive) {
+          await this.removeFromWishlist();
+        } else {
+          await this.addToWishlist();
         }
-      });
 
-      this.updateWishlistCount();
-      this.renderWishlistGrid();
-    }
-
-    async addToWishlist() {
-      let data = JSON.parse(localStorage.getItem('wishlist')) || [];
-      if (!data.some(item => item.productId === this.productData.productId)) {
-        data.push(this.productData);
-        localStorage.setItem('wishlist', JSON.stringify(data));
-        await this.syncWithShopify(data);
+        this.button.classList.toggle('wishlist-button--active');
+        this.button.setAttribute('aria-pressed', !isActive);
+        this.showNotification(isActive ? 'removed' : 'added');
+        
+        // Refresh grid and count
+        this.updateWishlistCount();
+        this.renderWishlistGrid();
+        
+      } catch (error) {
+        console.error('Wishlist error:', error);
+      } finally {
+        setTimeout(() => { this.isProcessing = false; }, 300);
       }
     }
 
-    async removeFromWishlist() {
-      let data = JSON.parse(localStorage.getItem('wishlist')) || [];
-      data = data.filter(item => item.productId !== this.productData.productId);
-      localStorage.setItem('wishlist', JSON.stringify(data));
-      await this.syncWithShopify(data);
-    }
+    // --- NEW PERSISTENCE & RENDERING METHODS ---
 
     async syncWithShopify(wishlistData) {
-      if (!window.wishlistConfig.customerLoggedIn) return;
-
-      const input = document.querySelector('#wishlist-metafield-input');
+      // Only sync if customer is logged in and the hidden form exists
       const form = document.querySelector('#WishlistSyncForm');
-      if (!input || !form) return;
+      const input = document.querySelector('#wishlist-metafield-input');
+      if (!form || !input) return;
 
       input.value = JSON.stringify(wishlistData);
       const formData = new FormData(form);
 
       try {
         await fetch('/contact', { method: 'POST', body: formData });
-        console.log('Wishlist synced to Shopify Metafields');
-      } catch (err) { console.error('Sync failed', err); }
+      } catch (err) { console.error('Metafield sync failed', err); }
     }
 
     mergeCloudWishlist() {
-      if (!window.wishlistConfig.customerLoggedIn) return;
+      // Pull data from the global variable we will set in Liquid
+      if (!window.wishlistConfig?.cloudData) return;
       
       const local = JSON.parse(localStorage.getItem('wishlist')) || [];
-      const cloud = window.wishlistConfig.cloudData || [];
+      const cloud = window.wishlistConfig.cloudData;
       
-      // Merge unique items by productId
+      // Merge unique items
       const merged = [...local, ...cloud].reduce((acc, current) => {
         const x = acc.find(item => item.productId === current.productId);
         return !x ? acc.concat([current]) : acc;
@@ -237,50 +254,91 @@
     }
 
     renderWishlistGrid() {
-      const grid = document.querySelector('.js-wishlistBlock');
-      if (!grid) return;
+      const wishlistBlock = document.querySelector('.js-wishlistBlock');
+      if (!wishlistBlock) return;
 
-      const data = JSON.parse(localStorage.getItem('wishlist')) || [];
-      if (data.length === 0) {
-        grid.innerHTML = '<p>Your wishlist is empty.</p>';
+      const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+      
+      if (wishlistData.length === 0) {
+        wishlistBlock.innerHTML = '<p class="wishlist-empty">Your wishlist is empty.</p>';
         return;
       }
 
-      grid.innerHTML = data.map(item => `
-        <div class="wishlist-item">
-          <img src="${item.productImg}" width="100">
-          <h4>${item.productTitle}</h4>
-          <p>${item.productPrice}</p>
-          <button onclick="document.querySelector('wishlist-button').removeById('${item.productId}')">Remove</button>
+      wishlistBlock.innerHTML = wishlistData.map(item => `
+        <div class="wishlist-product__list">
+            <div class="c-product">
+                <a href="${item.productUrl}">
+                    <img src="${item.productImg}" alt="${item.productTitle}">
+                </a>
+                <h3 class="c-product__title card__heading h5">
+                    <a class="full-unstyled-link" href="${item.productUrl}">${item.productTitle}</a>
+                </h3>
+                <p class="price">${item.productPrice}</p>
+                <button class="wishlist-remove-btn" onclick="document.querySelector('wishlist-button').removeFromWishlistById('${item.productId}')">
+                  Remove
+                </button>
+            </div>
         </div>
       `).join('');
     }
 
-    removeById(id) {
-        let data = JSON.parse(localStorage.getItem('wishlist')) || [];
-        data = data.filter(item => item.productId !== id);
-        localStorage.setItem('wishlist', JSON.stringify(data));
-        this.syncWithShopify(data);
-        this.updateUI(false);
+    // --- UPDATED STORAGE METHODS ---
+
+    async addToWishlist() {
+      let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+      if (!wishlistData.some(item => item.productId === this.productId)) {
+        wishlistData.push(this.productData);
+        localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+        await this.syncWithShopify(wishlistData);
+      }
     }
 
-    checkWishlistState() {
-      const data = JSON.parse(localStorage.getItem('wishlist')) || [];
-      const isMatch = data.some(item => item.productId === this.productData.productId);
-      this.button?.classList.toggle('wishlist-button--active', isMatch);
+    async removeFromWishlist() {
+      let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+      wishlistData = wishlistData.filter(item => item.productId !== this.productData.productId);
+      localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+      await this.syncWithShopify(wishlistData);
+    }
+
+    removeFromWishlistById(id) {
+      let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+      wishlistData = wishlistData.filter(item => item.productId !== id);
+      localStorage.setItem('wishlist', JSON.stringify(wishlistData));
+      
+      this.syncWithShopify(wishlistData);
+      this.renderWishlistGrid();
+      this.updateWishlistCount();
+
+      // Update button state if we are on the page of the product we just removed
+      if (this.productData?.productId === id) {
+        this.button?.classList.remove('wishlist-button--active');
+        this.button?.setAttribute('aria-pressed', 'false');
+      }
+    }
+
+    showNotification(action) {
+      const message = action === 'added' ? 'Added to Wishlist' : 'Removed from Wishlist';
+      const notification = document.createElement('div');
+      notification.textContent = message;
+      notification.className = 'wishlist-notification';
+      notification.style.cssText = `position: fixed; top: 20px; right: 20px; background: #000; color: #fff; padding: 1rem 1.5rem; border-radius: 0.5rem; z-index: 9999;`;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
     }
 
     updateWishlistCount() {
-      const count = (JSON.parse(localStorage.getItem('wishlist')) || []).length;
-      document.querySelectorAll('[data-wishlist-count]').forEach(el => {
-        el.textContent = count;
-        el.style.display = count > 0 ? 'block' : 'none';
-      });
+      const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const countElement = document.querySelector('[data-wishlist-count]');
+      if (countElement) {
+        countElement.textContent = wishlistData.length;
+        countElement.style.display = wishlistData.length > 0 ? 'block' : 'none';
+      }
     }
   }
 
   customElements.define('wishlist-button', WishlistButton);
 })();
+
 function renderWishlistGrid() {
       const wishlistBlock = document.querySelector('.js-wishlistBlock');
       if (!wishlistBlock) {
