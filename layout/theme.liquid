@@ -105,7 +105,7 @@
   </body>
   <script>
     // Wishlist Button Web Component
-((function() {
+(function() {
   'use strict';
   if (customElements.get('wishlist-button')) return;
 
@@ -281,6 +281,45 @@
 
   customElements.define('wishlist-button', WishlistButton);
 })();
+function renderWishlistGrid() {
+      const wishlistBlock = document.querySelector('.js-wishlistBlock');
+      if (!wishlistBlock) {
+        console.log('no block');
+        return;
+      }
+
+      try {
+        const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
+        
+        if (wishlistData.length === 0) {
+          wishlistBlock.innerHTML = '<p class="wishlist-empty-msg">Your wishlist is currently empty.</p>';
+          console.log('wishlist is empty');
+          return;
+        }
+
+        const wishlistHtml = wishlistData.map(item => `
+          <div class="wishlist-product__list" data-id="${item.productId}">
+            <div class="c-product">
+              <a href="${item.productUrl}">
+                <img src="${item.productImg}" alt="${item.productTitle}" loading="lazy">
+              </a>
+              <h3 class="c-product__title card__heading h5">
+                <a class="full-unstyled-link" href="${item.productUrl}">${item.productTitle}</a>
+              </h3>
+              <p class="price">${item.productPrice}</p>
+              <button class="button button--secondary" 
+                      onclick="this.closest('wishlist-button')?.removeFromWishlistById('${item.productId}')">
+                Remove
+              </button>
+            </div>
+          </div>
+        `).join('');
+
+        wishlistBlock.innerHTML = wishlistHtml;
+      } catch (error) {
+        console.error('Error rendering wishlist grid:', error);
+      }
+    }
     renderWishlistGrid();
 </script>
 
