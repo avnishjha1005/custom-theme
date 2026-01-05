@@ -214,6 +214,17 @@
         
         // Get product data from the parent product card
         this.productCard = this.closest('product-card');
+        
+        // Wait for DOM to be fully loaded before getting product data
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => this.init());
+        } else {
+          // Use setTimeout to ensure all elements are rendered
+          setTimeout(() => this.init(), 0);
+        }
+      }
+
+      init() {
         this.productData = this.getProductDataFromCard();
         
         if (!this.productData) {
@@ -228,40 +239,63 @@
       }
 
       getProductDataFromCard() {
-        console.log('Looking for product card...');
         if (!this.productCard) {
           console.error('No product card found');
           return null;
         }
 
-        console.log('Product card found:', this.productCard);
         const productId = this.productCard.dataset.productId;
-        console.log('Product ID:', productId);
-        
-        const productLink = this.productCard.querySelector('.product-card__link');
-        console.log('Product link:', productLink);
-        
-        const productTitle = this.productCard.querySelector('.card__heading, [class*="product-card__title"], h3, .product-card__title');
-        console.log('Product title element:', productTitle, productTitle?.textContent);
-        
-        const productImage = this.productCard.querySelector('img');
-        console.log('Product image:', productImage?.src);
-        
-        const productPrice = this.productCard.querySelector('.price');
-        console.log('Product price:', productPrice?.textContent);
-
         if (!productId) {
           console.error('No product ID found');
           return null;
         }
+        
+        // Get product link and URL
+        const productLink = this.productCard.querySelector('.product-card__link, a[href*="/products/"]');
+        const productUrl = productLink?.href || '';
+        const productHandle = productUrl.split('/products/')[1]?.split('?')[0] || '';
+        
+        // Get product title - try multiple selectors
+        const titleSelectors = [
+          '.text-block h5 p',
+          '.text-block p',
+          'h3',
+          '.h4',
+          '.h5',
+          '[class*="product_title"]',
+          '.card__heading'
+        ];
+        
+        let productTitle = '';
+        for (const selector of titleSelectors) {
+          const titleEl = this.productCard.querySelector(selector);
+          if (titleEl && titleEl.textContent.trim()) {
+            productTitle = titleEl.textContent.trim();
+            break;
+          }
+        }
+        
+        // Fallback to visually-hidden text
+        if (!productTitle) {
+          const hiddenTitle = this.productCard.querySelector('.visually-hidden');
+          productTitle = hiddenTitle?.textContent?.trim() || 'Product';
+        }
+        
+        // Get product image
+        const productImage = this.productCard.querySelector('img');
+        const productImg = productImage?.src || productImage?.dataset?.src || '';
+        
+        // Get product price
+        const priceEl = this.productCard.querySelector('product-price .price, .price');
+        const productPrice = priceEl?.textContent?.trim() || '';
 
         const data = {
           productId: productId,
-          productHandle: productLink?.href?.split('/products/')[1]?.split('?')[0] || '',
-          productTitle: productTitle?.textContent?.trim() || '',
-          productImg: productImage?.src || productImage?.dataset?.src || '',
-          productPrice: productPrice?.textContent?.trim() || '',
-          productUrl: productLink?.href || `/products/${productId}`
+          productHandle: productHandle,
+          productTitle: productTitle,
+          productImg: productImg,
+          productPrice: productPrice,
+          productUrl: productUrl || `/products/${productHandle}`
         };
         
         console.log('Final product data:', data);
