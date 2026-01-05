@@ -11,11 +11,110 @@
   "sections": {
     "main": {
       "type": "main-blog-post",
-      "settings": {}
+      "blocks": {
+        "blog-post-title": {
+          "type": "text",
+          "static": true,
+          "settings": {
+            "text": "",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "blog-post-details": {
+          "type": "_blog-post-info-text",
+          "static": true,
+          "settings": {
+            "show_date": true,
+            "show_author": true,
+            "type_preset": "",
+            "alignment": "left",
+            "show_alignment": true,
+            "padding-block-start": 24,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "blog-post-image": {
+          "type": "_blog-post-featured-image",
+          "static": true,
+          "settings": {
+            "image_ratio": "adapt",
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "blog-post-content": {
+          "type": "_blog-post-content",
+          "static": true,
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "settings": {
+        "content_direction": "column",
+        "gap": 12,
+        "color_scheme": "",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     },
     "banner": {
       "type": "product-banner",
-      "settings": {}
+      "blocks": {
+        "product_card_nfDMbq": {
+          "type": "product_card",
+          "settings": {
+            "product": "blue-silk-tuxedo",
+            "show_cta": true
+          }
+        },
+        "product_card_3FNctE": {
+          "type": "product_card",
+          "settings": {
+            "product": "blue-silk-tuxedo",
+            "show_cta": true
+          }
+        }
+      },
+      "block_order": [
+        "product_card_nfDMbq",
+        "product_card_3FNctE"
+      ],
+      "settings": {
+        "heading": "Featured Collection",
+        "subheading": "Add a short description here",
+        "cta_text": "Add to Cart"
+      }
     }
   },
   "order": [
