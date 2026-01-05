@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
     </script>
 
-    {% if settings.wishlist-floating-button-position' %}
+    {% if settings.wishlist-floating-button-position %}
       <a href="/pages/wishlist" class="button-floating">
         <svg width="30px" height="30px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <rect x="0" fill="none" width="24" height="24"/>
@@ -230,14 +230,14 @@ document.addEventListener('DOMContentLoaded', function () {
     {% endif %}
 
     <style>
-.wishlist-button{
+  .wishlist_button{
               background: none;
               border: none;
               display: flex;
               align-items: center;
             }
 
-            .wishlist-button svg{
+            .wishlist_button svg{
               border-radius: 50%;
               margin: 10px 0;
                 display: flex;
