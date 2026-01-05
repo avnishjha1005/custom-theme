@@ -358,6 +358,43 @@
              this.button?.setAttribute('aria-pressed', 'false');
         }
     }
+    async syncWithServer() {
+      try {
+        // 1. Fetch current metafield data from your backend/proxy
+        // This endpoint must be set up via an App Proxy (e.g., /apps/my-app/wishlist)
+        const response = await fetch('/apps/your-proxy/get-wishlist');
+        const serverData = await response.json();
+
+        if (serverData && Array.isArray(serverData)) {
+          let localData = JSON.parse(localStorage.getItem('wishlist')) || [];
+          
+          // 2. Merge logic: Combine and remove duplicates based on productId
+          const merged = [...localData, ...serverData].reduce((acc, current) => {
+            const x = acc.find(item => item.productId === current.productId);
+            return !x ? acc.concat([current]) : acc;
+          }, []);
+
+          localStorage.setItem('wishlist', JSON.stringify(merged));
+        }
+      } catch (e) {
+        console.error('Wishlist: Could not sync with server', e);
+      }
+    }
+
+    async updateServerMetafield(data) {
+      if (!this.isLoggedIn) return;
+
+      try {
+        // Send the updated wishlist to your App Proxy
+        await fetch('/apps/your-proxy/update-wishlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ wishlist: data })
+        });
+      } catch (e) {
+        console.error('Wishlist: Failed to update customer metafield', e);
+      }
+    }
   }
 
   customElements.define('wishlist-button', WishlistButton);
