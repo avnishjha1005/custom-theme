@@ -23,7 +23,7 @@
               You can include extra CTAs, badges, etc.
             {%- endcomment -%}
             {% capture children %}
-              {% if section.settings.badge_text != blank %}
+              {% comment %} {% if section.settings.badge_text != blank %}
                 <div class="meta-badge" style="display:inline-block;font-size:12px;background:#e5e7eb;color:#1f2937;padding:2px 8px;border-radius:999px;margin-top:8px;">
                   {{ section.settings.badge_text }}
                 </div>
@@ -32,7 +32,7 @@
                 <a href="{{ p.url }}" class="btn btn-secondary" style="display:inline-block;border:1px solid #d1d5db;padding:8px 12px;border-radius:8px;text-decoration:none;color:#111827;">
                   View details
                 </a>
-              </div>
+              </div> {% endcomment %}
             {% endcapture %}
 
             {%- comment -%}
