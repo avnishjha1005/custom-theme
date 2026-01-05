@@ -4319,7 +4319,7 @@ text-component {
   padding-bottom:0;
   height: 102% !important;
 }
-.ResultsList > div {
+#ResultsList > div {
   padding-left:0px;
   padding-right:0px;
 }
