@@ -1,40 +1,42 @@
-{% comment %} Filename: sections/product-banner.liquid {% endcomment %}
+{% comment %}
+  Filename: sections/product-banner.liquid
+  Two-product banner rendering via theme snippet API (`render`).
+  Replace 'card-product' with your theme’s product card snippet name.
+{% endcomment %}
 
 <div class="product-banner" style="padding: 40px 0;">
   <div class="page-width">
-    
-    {%- if section.settings.heading != blank -%}
+    {% if section.settings.heading != blank %}
       <h2 class="banner-title" style="text-align: center; margin-bottom: 30px;">
         {{ section.settings.heading }}
       </h2>
-    {%- endif -%}
-    {% capture children %}
-        {% content_for 'blocks', closest.product: product %}
-    {% endcapture %}
-    {% comment %} The Horizontal Container {% endcomment %}
+    {% endif %}
+
     <div class="product-card-grid" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-      {%- for block in section.blocks -%}
+      {% for block in section.blocks %}
+        {% assign p = block.settings.product %}
         <div class="product-card-wrapper" style="flex: 1; min-width: 300px; max-width: 500px;" {{ block.shopify_attributes }}>
-          
-          {%- if block.settings.product != blank -%}
-            {% comment %} 
-              REPLACING CUSTOM HTML WITH YOUR THEME'S SNIPPET
-              Note: Change 'product-card' to 'card-product' if that is your file name
-            {% endcomment %}
-            {% render 'product-card', children: children
-               product: block.settings.product,
+          {% if p %}
+            {%- comment -%}
+              Render your theme’s product card snippet.
+              Common names: 'card-product', 'product-card', 'product-grid-item'.
+              Pass any required params your snippet expects.
+            {%- endcomment -%}
+            {% render 'card-product',
+              product: p,
+              show_vendor: false,
+              show_rating: true,
+              grid_item_width: 'small',
+              show_quick_add: true
             %}
-          {%- else -%}
-            {% comment %} Fallback for empty blocks in the editor {% endcomment %}
+          {% else %}
             <div style="border: 1px dashed #ccc; padding: 20px; text-align: center;">
               <p>Select a product to display the card.</p>
             </div>
-          {%- endif -%}
-
+          {% endif %}
         </div>
-      {%- endfor -%}
+      {% endfor %}
     </div>
-
   </div>
 </div>
 
@@ -46,37 +48,22 @@
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Our Favorites"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "label": "Show Vendor",
-      "default": false
+      "default": "Featured products"
     }
   ],
   "blocks": [
     {
-      "type": "product_card_block",
-      "name": "Product Card",
+      "type": "product_card",
+      "name": "Product",
       "limit": 2,
       "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Product"
-        }
+        { "type": "product", "id": "product", "label": "Product" }
       ]
     }
   ],
+  "max_blocks": 2,
   "presets": [
-    {
-      "name": "Two Product Banner",
-      "blocks": [
-        { "type": "product_card_block" },
-        { "type": "product_card_block" }
-      ]
-    }
+    { "name": "Two Product Banner" }
   ]
 }
 {% endschema %}
