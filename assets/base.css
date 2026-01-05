@@ -4433,7 +4433,7 @@ text-component {
 }
 
 /* Tooltip styles */
-.wishlist-tooltip {
+/* .wishlist-tooltip {
   position: absolute;
   bottom: calc(100% + 0.5rem);
   left: 50%;
@@ -4447,7 +4447,7 @@ text-component {
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.2s ease;
-}
+} */
 
 .wishlist-button:hover .wishlist-tooltip {
   opacity: 1;
