@@ -99,7 +99,7 @@
     {% when 'grid' %}
       .product-grid--{{ section.id }}.product-grid--grid {
         /* Typical target ~4 cols: min 240px; adjusts to container width */
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        grid-template-columns: repeat(auto-fit, 1fr);
       }
     {% when 'organic' %}
       .product-grid--{{ section.id }}.product-grid--organic {
