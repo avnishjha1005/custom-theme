@@ -9,27 +9,28 @@
 -%}
 
 {%- comment -%} 
-  This logic ensures the CSS and JS are only output once per page render.
+  CRITICAL FIX: Using a global variable that persists during the page render 
+  to ensure CSS/JS only loads ONCE.
 {%- endcomment -%}
-{%- unless shop.metafields.temp.wishlist_loaded -%}
+{%- unless content_for_header contains 'wishlist_logic_loaded' -%}
   <style>
-    wishlist-button { display: contents; } /* Ensure the custom tag doesn't break layout */
+    wishlist-button { display: block; position: relative; } 
     .wishlist-button {
       position: absolute;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
       border: none;
       cursor: pointer;
       background: transparent;
       transition: transform 0.2s ease;
       z-index: 10;
+      padding: 0;
     }
     .wishlist-button--with-bg {
       background: var(--wishlist-bg-color, #fff);
       border-radius: var(--wishlist-corner-radius, 50px);
-      padding: var(--wishlist-padding, 8px);
+      padding: var(--wishlist-padding, 8px) !important;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .wishlist-button--top-left { top: 10px; left: 10px; }
@@ -41,27 +42,16 @@
       width: var(--wishlist-icon-size, 24px);
       height: var(--wishlist-icon-size, 24px);
       color: var(--wishlist-icon-color, #000);
-      pointer-events: none;
+      display: block;
     }
     .wishlist-icon--filled { display: none; }
     .wishlist-button--active .wishlist-icon--outline { display: none; }
     .wishlist-button--active .wishlist-icon--filled { display: block; color: var(--wishlist-icon-color-active, red); }
     
-    .wishlist-tooltip {
-      position: absolute;
-      bottom: 110%;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #000;
-      color: #fff;
-      padding: 4px 8px;
-      font-size: 11px;
-      border-radius: 4px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
+    .wishlist-notification {
+      position: fixed; bottom: 20px; right: 20px; background: #000; color: #fff;
+      padding: 1rem 1.5rem; border-radius: 0.5rem; z-index: 10000;
     }
-    .wishlist-button:hover .wishlist-tooltip { opacity: 1; }
   </style>
 
   <script>
@@ -70,20 +60,16 @@
         constructor() {
           super();
           this.button = this.querySelector('button');
-          this.productId = this.getAttribute('data-product-id');
         }
 
         connectedCallback() {
-          this.init();
-        }
-
-        init() {
-          if (!this.productId) return;
+          this.productId = this.getAttribute('data-product-id');
+          if (!this.productId || !this.button) return;
+          
           this.button.addEventListener('click', (e) => this.toggleWishlist(e));
           this.updateState();
           
-          // Sync all buttons for the same product on the page
-          window.addEventListener('wishlist:change', (e) => {
+          window.addEventListener('wishlist:updated', (e) => {
             if (e.detail.id === this.productId) this.updateState();
           });
         }
@@ -108,33 +94,34 @@
               id: this.productId,
               title: this.getAttribute('data-product-title'),
               handle: this.getAttribute('data-product-handle'),
-              image: this.getAttribute('data-product-img')
+              image: this.getAttribute('data-product-img'),
+              url: this.getAttribute('data-product-url')
             });
           }
 
           localStorage.setItem('wishlist', JSON.stringify(wishlist));
-          window.dispatchEvent(new CustomEvent('wishlist:change', { detail: { id: this.productId } }));
+          window.dispatchEvent(new CustomEvent('wishlist:updated', { detail: { id: this.productId } }));
         }
       }
       customElements.define('wishlist-button', WishlistButton);
     }
   </script>
-  {%- assign wishlist_loaded = true -%}
+  {%- capture wishlist_logic_loaded -%}done{%- endcapture -%}
 {%- endunless -%}
 
-{%- comment -%} 
-  The actual HTML for the button. Note how we pass product data directly to the custom element.
-{%- endcomment -%}
+{%- comment -%} Determine which product object to use (Product Page vs Collection Grid) {%- endcomment -%}
+{%- assign target_product = product | default: card_product -%}
+
 <wishlist-button 
-  data-product-id="{{ product.id | default: card_product.id | escape }}"
-  data-product-title="{{ product.title | default: card_product.title | escape }}"
-  data-product-handle="{{ product.handle | default: card_product.handle }}"
-  data-product-img="{{ product.featured_image | default: card_product.featured_image | image_url: width: 300 }}"
+  data-product-id="{{ target_product.id }}"
+  data-product-title="{{ target_product.title | escape }}"
+  data-product-handle="{{ target_product.handle }}"
+  data-product-url="{{ target_product.url }}"
+  data-product-img="{{ target_product.featured_image | image_url: width: 300 }}"
 >
   <button
     type="button"
     class="{{ button_class }}"
-    aria-label="Wishlist"
     style="
       --wishlist-icon-size: {{ block.settings.icon_size }}px;
       --wishlist-icon-color: {{ block.settings.icon_color }};
@@ -152,229 +139,28 @@
     <svg class="wishlist-icon wishlist-icon--filled" viewBox="0 0 24 24" fill="currentColor">
        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
     </svg>
-    
-    {%- if block.settings.tooltip_add != blank -%}
-      <span class="wishlist-tooltip">{{ block.settings.tooltip_add }}</span>
-    {%- endif -%}
   </button>
 </wishlist-button>
 
 {% schema %}
 {
   "name": "Wishlist Button",
-  "tag": "wishlist-button",
+  "tag": "section",
   "settings": [
-    {
-      "type": "paragraph",
-      "content": "Display a wishlist button on product cards to allow customers to save products"
-    },
-    {
-      "type": "header",
-      "content": "Layout"
-    },
-    {
-      "type": "select",
-      "id": "position",
-      "label": "Position",
-      "options": [
-        {
-          "value": "top-left",
-          "label": "Top Left"
-        },
-        {
-          "value": "top-right",
-          "label": "Top Right"
-        },
-        {
-          "value": "bottom-left",
-          "label": "Bottom Left"
-        },
-        {
-          "value": "bottom-right",
-          "label": "Bottom Right"
-        }
-      ],
-      "default": "top-right"
-    },
-    {
-      "type": "select",
-      "id": "button_style",
-      "label": "Button Style",
-      "options": [
-        {
-          "value": "icon-only",
-          "label": "Icon Only"
-        },
-        {
-          "value": "icon-text",
-          "label": "Icon with Text"
-        }
-      ],
-      "default": "icon-only"
-    },
-    {
-      "type": "header",
-      "content": "Icon Settings"
-    },
-    {
-      "type": "range",
-      "id": "icon_size",
-      "label": "Icon Size",
-      "min": 16,
-      "max": 48,
-      "step": 2,
-      "unit": "px",
-      "default": 24
-    },
-    {
-      "type": "color",
-      "id": "icon_color",
-      "label": "Icon Color",
-      "default": "#000000"
-    },
-    {
-      "type": "color",
-      "id": "icon_color_active",
-      "label": "Icon Color (Active)",
-      "default": "#ff0000"
-    },
-    {
-      "type": "header",
-      "content": "Background"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_background",
-      "label": "Show Background",
-      "default": true
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background Color",
-      "default": "#ffffff"
-    },
-    {
-      "type": "range",
-      "id": "corner_radius",
-      "label": "Corner Radius",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "unit": "px",
-      "default": 50
-    },
-    {
-      "type": "range",
-      "id": "padding",
-      "label": "Button Padding",
-      "min": 0,
-      "max": 24,
-      "step": 2,
-      "unit": "px",
-      "default": 8
-    },
-    {
-      "type": "header",
-      "content": "Animation"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_animation",
-      "label": "Enable Animation",
-      "default": true,
-      "info": "Animate icon when added to wishlist"
-    },
-    {
-      "type": "select",
-      "id": "animation_type",
-      "label": "Animation Type",
-      "options": [
-        {
-          "value": "scale",
-          "label": "Scale"
-        },
-        {
-          "value": "bounce",
-          "label": "Bounce"
-        },
-        {
-          "value": "pulse",
-          "label": "Pulse"
-        }
-      ],
-      "default": "scale"
-    },
-    {
-      "type": "header",
-      "content": "Button Text"
-    },
-    {
-      "type": "text",
-      "id": "add_text",
-      "label": "Add to Wishlist Text",
-      "default": "Added to Wishlist"
-    },
-    {
-      "type": "text",
-      "id": "remove_text",
-      "label": "Remove from Wishlist Text",
-      "default": "Removed from Wishlist"
-    },
-    {
-      "type": "text",
-      "id": "tooltip_add",
-      "label": "Tooltip - Add",
-      "default": "Add to wishlist",
-      "info": "Tooltip shown on hover when not in wishlist"
-    },
-    {
-      "type": "text",
-      "id": "tooltip_remove",
-      "label": "Tooltip - Remove",
-      "default": "Remove from wishlist",
-      "info": "Tooltip shown on hover when in wishlist"
-    },
-    {
-      "type": "header",
-      "content": "Accessibility"
-    },
-    {
-      "type": "text",
-      "id": "aria_label_add",
-      "label": "ARIA Label - Add",
-      "default": "Add to wishlist"
-    },
-    {
-      "type": "text",
-      "id": "aria_label_remove",
-      "label": "ARIA Label - Remove",
-      "default": "Remove from wishlist"
-    },
-    {
-      "type": "header",
-      "content": "Behavior"
-    },
-    {
-      "type": "checkbox",
-      "id": "require_login",
-      "label": "Require Customer Login",
-      "default": false,
-      "info": "Redirect to login page if customer is not logged in"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_notification",
-      "label": "Show Notification",
-      "default": true,
-      "info": "Display a notification when item is added/removed"
-    }
+    { "type": "select", "id": "position", "label": "Position", "options": [
+        { "value": "top-left", "label": "Top Left" },
+        { "value": "top-right", "label": "Top Right" },
+        { "value": "bottom-left", "label": "Bottom Left" },
+        { "value": "bottom-right", "label": "Bottom Right" }
+      ], "default": "top-right" },
+    { "type": "range", "id": "icon_size", "label": "Icon Size", "min": 16, "max": 48, "default": 24 },
+    { "type": "color", "id": "icon_color", "label": "Icon Color", "default": "#000000" },
+    { "type": "color", "id": "icon_color_active", "label": "Icon Color (Active)", "default": "#ff0000" },
+    { "type": "checkbox", "id": "show_background", "label": "Show Background", "default": true },
+    { "type": "color", "id": "background_color", "label": "Background Color", "default": "#ffffff" },
+    { "type": "range", "id": "corner_radius", "label": "Corner Radius", "min": 0, "max": 50, "default": 50 },
+    { "type": "range", "id": "padding", "label": "Button Padding", "min": 0, "max": 24, "default": 8 }
   ],
-  "presets": [
-    {
-      "name": "Wishlist Button",
-      "category": "Product"
-    }
-  ]
+  "presets": [{ "name": "Wishlist Button" }]
 }
 {% endschema %}
