@@ -1,6 +1,3 @@
-<div style="background: red; color: white; padding: 5px; font-size: 10px;">
-  Product: {{ product.id }} - {{ product.title }}
-</div>
 {%- liquid
   assign in_wishlist = false
   if customer and block.settings.require_login
@@ -29,7 +26,7 @@
   data-product-title="{{ product.title | escape }}"
   data-product-image="{{ product.featured_image | image_url: width: 300 }}"
   data-product-price="{{ product.price | money }}"
- data-product-url="/products/{{ product.handle }}"
+  data-product-url="{{ product.url }}"
   aria-label="{% if in_wishlist %}{{ block.settings.aria_label_remove }}{% else %}{{ block.settings.aria_label_add }}{% endif %}"
   aria-pressed="{{ in_wishlist }}"
   {% if block.settings.require_login and customer == null %}
@@ -213,9 +210,16 @@
       constructor() {
         super();
         this.button = this.querySelector('[data-wishlist-button]');
-        this.productId = this.button?.dataset.productId;
-        this.productHandle = this.button?.dataset.productHandle;
         this.requireLogin = this.button?.dataset.requireLogin === 'true';
+        
+        // Get product data from the parent product card
+        this.productCard = this.closest('product-card');
+        this.productData = this.getProductDataFromCard();
+        
+        if (!this.productData) {
+          console.warn('Wishlist button: Could not find product data');
+          return;
+        }
         
         this.button?.addEventListener('click', this.handleClick.bind(this));
         
@@ -223,12 +227,33 @@
         this.checkWishlistState();
       }
 
+      getProductDataFromCard() {
+        if (!this.productCard) return null;
+
+        const productId = this.productCard.dataset.productId;
+        const productLink = this.productCard.querySelector('.product-card__link');
+        const productTitle = this.productCard.querySelector('.card__heading, [class*="product-card__title"], h3');
+        const productImage = this.productCard.querySelector('img');
+        const productPrice = this.productCard.querySelector('.price');
+
+        if (!productId) return null;
+
+        return {
+          productId: productId,
+          productHandle: productLink?.href?.split('/products/')[1]?.split('?')[0] || '',
+          productTitle: productTitle?.textContent?.trim() || '',
+          productImg: productImage?.src || productImage?.dataset?.src || '',
+          productPrice: productPrice?.textContent?.trim() || '',
+          productUrl: productLink?.href || `/products/${productId}`
+        };
+      }
+
       checkWishlistState() {
-        if (!this.button) return;
+        if (!this.button || !this.productData) return;
         
         try {
           const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-          const isInWishlist = wishlistData.some(item => item.productId === this.productId);
+          const isInWishlist = wishlistData.some(item => item.productId === this.productData.productId);
           
           if (isInWishlist) {
             this.button.classList.add('wishlist-button--active');
@@ -271,7 +296,7 @@
           // Dispatch custom event
           this.dispatchEvent(new CustomEvent('wishlist:toggle', {
             bubbles: true,
-            detail: { productId: this.productId, inWishlist: !isActive }
+            detail: { productId: this.productData.productId, inWishlist: !isActive }
           }));
 
           // Update wishlist count if there's a counter element
@@ -282,31 +307,22 @@
       }
 
       async addToWishlist() {
-        const productData = {
-          productId: this.productId,
-          productHandle: this.productHandle,
-          productTitle: this.button.dataset.productTitle,
-          productImg: this.button.dataset.productImage,
-          productPrice: this.button.dataset.productPrice,
-          productUrl: this.button.dataset.productUrl
-        };
-
         let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
         
         // Check if already exists (shouldn't happen, but just in case)
-        const exists = wishlistData.some(item => item.productId === this.productId);
+        const exists = wishlistData.some(item => item.productId === this.productData.productId);
         if (!exists) {
-          wishlistData.push(productData);
+          wishlistData.push(this.productData);
           localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-          console.log('Added to wishlist:', productData.productTitle);
+          console.log('Added to wishlist:', this.productData.productTitle);
         }
       }
 
       async removeFromWishlist() {
         let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-        wishlistData = wishlistData.filter(item => item.productId !== this.productId);
+        wishlistData = wishlistData.filter(item => item.productId !== this.productData.productId);
         localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-        console.log('Removed from wishlist:', this.productId);
+        console.log('Removed from wishlist:', this.productData.productId);
       }
 
       showNotification(action) {
