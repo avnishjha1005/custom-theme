@@ -104,26 +104,15 @@
       super();
       this.initialized = false;
       this.button = this.querySelector('[data-wishlist-button]');
-      this.requireLogin = this.button?.dataset.requireLogin === 'true';
       
-      // Try multiple ways to find the product card
-      this.productCard = this.closest('product-card') || 
-                        this.parentElement?.closest('product-card');
+      // Check if customer is logged in via global variable (we'll set this in Liquid)
+      this.isLoggedIn = window.wishlistConfig?.customerLoggedIn;
       
-      // If still not found, traverse up the DOM manually
-      if (!this.productCard) {
-        let el = this.parentElement;
-        while (el && el.tagName !== 'PRODUCT-CARD') {
-          el = el.parentElement;
-        }
-        this.productCard = el;
-      }
+      this.productCard = this.closest('product-card') || this.parentElement?.closest('product-card');
       
-      // Wait for DOM to be fully loaded before getting product data
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => this.init());
       } else {
-        // Use longer timeout to ensure slideshow elements load first
         setTimeout(() => this.init(), 100);
       }
     }
