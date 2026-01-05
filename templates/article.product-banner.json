@@ -91,29 +91,26 @@
     "banner": {
       "type": "product-banner",
       "blocks": {
-        "product_card_nfDMbq": {
-          "type": "product_card",
+        "product_card_block_nUTDAD": {
+          "type": "product_card_block",
           "settings": {
-            "product": "blue-silk-tuxedo",
-            "show_cta": true
+            "product": "olive-green-jacket"
           }
         },
-        "product_card_3FNctE": {
-          "type": "product_card",
+        "product_card_block_eq3waL": {
+          "type": "product_card_block",
           "settings": {
-            "product": "blue-silk-tuxedo",
-            "show_cta": true
+            "product": "chequered-red-shirt"
           }
         }
       },
       "block_order": [
-        "product_card_nfDMbq",
-        "product_card_3FNctE"
+        "product_card_block_nUTDAD",
+        "product_card_block_eq3waL"
       ],
       "settings": {
         "heading": "Featured Collection",
-        "subheading": "Add a short description here",
-        "cta_text": "Add to Cart"
+        "show_vendor": false
       }
     }
   },
