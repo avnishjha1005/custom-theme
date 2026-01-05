@@ -247,34 +247,55 @@
 
     async handleClick(e) {
       e.preventDefault();
-  e.stopPropagation();
+      e.stopPropagation();
+      e.stopImmediatePropagation(); // Prevent other listeners from firing
 
-  if (this.isProcessing) return;
-  this.isProcessing = true;
+      // Prevent rapid double-clicks
+      if (this.isProcessing) return;
+      this.isProcessing = true;
 
-  // 1. Get current state from LocalStorage
-  let wishlistData = JSON.parse(localStorage.getItem('wishlist_handles')) || [];
-  const handle = this.productData.productHandle;
-  const isAdding = !wishlistData.includes(handle);
+      // Check if login is required
+      if (this.requireLogin && !window.Shopify?.customer) {
+        window.location.href = '/account/login';
+        return;
+      }
 
-  // 2. Update LocalStorage immediately
-  if (isAdding) {
-    wishlistData.push(handle);
-  } else {
-    wishlistData = wishlistData.filter(h => h !== handle);
-  }
-  localStorage.setItem('wishlist_handles', JSON.stringify(wishlistData));
+      const isActive = this.button.classList.contains('wishlist-button--active');
+      
+      try {
+        // Toggle wishlist state
+        if (isActive) {
+          await this.removeFromWishlist();
+        } else {
+          await this.addToWishlist();
+        }
 
-  // 3. Update UI
-  this.button.classList.toggle('wishlist-button--active', isAdding);
-  this.showNotification(isAdding ? 'added' : 'removed');
+        // Toggle UI state
+        this.button.classList.toggle('wishlist-button--active');
+        this.button.setAttribute('aria-pressed', !isActive);
 
-  // 4. Persistence: Sync to Shopify Customer Note (if logged in)
-  {% if customer %}
+        // Show notification
+        this.showNotification(isActive ? 'removed' : 'added');
+
+        // Dispatch custom event
+        this.dispatchEvent(new CustomEvent('wishlist:toggle', {
+          bubbles: true,
+          detail: { productId: this.productData.productId, inWishlist: !isActive }
+        }));
+
+        // Update wishlist count if there's a counter element
+        this.updateWishlistCount();
+        {% if customer %}
     this.syncWithShopify(wishlistData.join(','));
   {% endif %}
-
-  this.isProcessing = false;
+      } catch (error) {
+        console.error('Wishlist error:', error);
+      } finally {
+        // Re-enable after a short delay
+        setTimeout(() => {
+          this.isProcessing = false;
+        }, 300);
+      }
     }
 
     async addToWishlist() {
