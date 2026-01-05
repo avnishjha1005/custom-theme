@@ -228,17 +228,34 @@
       }
 
       getProductDataFromCard() {
-        if (!this.productCard) return null;
+        console.log('Looking for product card...');
+        if (!this.productCard) {
+          console.error('No product card found');
+          return null;
+        }
 
+        console.log('Product card found:', this.productCard);
         const productId = this.productCard.dataset.productId;
+        console.log('Product ID:', productId);
+        
         const productLink = this.productCard.querySelector('.product-card__link');
-        const productTitle = this.productCard.querySelector('.card__heading, [class*="product-card__title"], h3');
+        console.log('Product link:', productLink);
+        
+        const productTitle = this.productCard.querySelector('.card__heading, [class*="product-card__title"], h3, .product-card__title');
+        console.log('Product title element:', productTitle, productTitle?.textContent);
+        
         const productImage = this.productCard.querySelector('img');
+        console.log('Product image:', productImage?.src);
+        
         const productPrice = this.productCard.querySelector('.price');
+        console.log('Product price:', productPrice?.textContent);
 
-        if (!productId) return null;
+        if (!productId) {
+          console.error('No product ID found');
+          return null;
+        }
 
-        return {
+        const data = {
           productId: productId,
           productHandle: productLink?.href?.split('/products/')[1]?.split('?')[0] || '',
           productTitle: productTitle?.textContent?.trim() || '',
@@ -246,6 +263,9 @@
           productPrice: productPrice?.textContent?.trim() || '',
           productUrl: productLink?.href || `/products/${productId}`
         };
+        
+        console.log('Final product data:', data);
+        return data;
       }
 
       checkWishlistState() {
