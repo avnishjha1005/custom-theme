@@ -4,6 +4,20 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    <script id="wishlist-data">
+  window.wishlistConfig = {
+    customerLoggedIn: {% if customer %}true{% else %}false{% endif %},
+    {% if customer %}
+      {% comment %} 
+         If you strictly want to try the metafield, replace 'note' with your metafield path below.
+         Note: Liquid can READ metafields, but the JS fetch above can only WRITE to 'note'.
+      {% endcomment %}
+      customerData: {{ customer.note | default: '[]' }} 
+    {% else %}
+      customerData: []
+    {% endif %}
+  };
+</script>
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
