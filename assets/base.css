@@ -4324,6 +4324,37 @@ text-component {
   padding-right:0px;
 }
 }
+[data-wishlist] {
+  position: absolute;
+  z-index: 20;
+}
+
+.wishlist-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: transform 0.2s ease;
+}
+
+.wishlist-button:hover {
+  transform: scale(1.1);
+}
+
+.wishlist-icon--filled {
+  display: none;
+}
+
+.wishlist-button--active .wishlist-icon--outline {
+  display: none;
+}
+
+.wishlist-button--active .wishlist-icon--filled {
+  display: block;
+}
+
 
 
 
