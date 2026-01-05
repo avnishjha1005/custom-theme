@@ -6,52 +6,59 @@
   if block.settings.show_background
     assign button_class = button_class | append: ' wishlist-button--with-bg'
   endif
+
+  assign target_product = product | default: card_product
 -%}
 
 {%- comment -%} 
-  CRITICAL FIX: Using a global variable that persists during the page render 
-  to ensure CSS/JS only loads ONCE.
+  This block only outputs the CSS and JS once, but it works for every instance 
+  because it defines a global "Template" for the wishlist behavior.
 {%- endcomment -%}
-{%- unless content_for_header contains 'wishlist_logic_loaded' -%}
+{%- unless wishlist_script_printed -%}
   <style>
-    wishlist-button { display: block; position: relative; } 
+    /* Prevent layout shift: custom elements are inline by default */
+    wishlist-button { 
+      display: inline-block !important; 
+      position: absolute !important; 
+      z-index: 20 !important;
+      line-height: 0;
+    }
+    
     .wishlist-button {
-      position: absolute;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      border: none;
       cursor: pointer;
-      background: transparent;
-      transition: transform 0.2s ease;
-      z-index: 10;
+      border: none;
+      background: none;
       padding: 0;
+      margin: 0;
+      transition: transform 0.2s ease;
     }
+
     .wishlist-button--with-bg {
-      background: var(--wishlist-bg-color, #fff);
-      border-radius: var(--wishlist-corner-radius, 50px);
-      padding: var(--wishlist-padding, 8px) !important;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: var(--wl-bg);
+      border-radius: var(--wl-radius);
+      padding: var(--wl-padding) !important;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
+
+    /* Positioning */
     .wishlist-button--top-left { top: 10px; left: 10px; }
     .wishlist-button--top-right { top: 10px; right: 10px; }
     .wishlist-button--bottom-left { bottom: 10px; left: 10px; }
     .wishlist-button--bottom-right { bottom: 10px; right: 10px; }
 
     .wishlist-icon {
-      width: var(--wishlist-icon-size, 24px);
-      height: var(--wishlist-icon-size, 24px);
-      color: var(--wishlist-icon-color, #000);
-      display: block;
+      width: var(--wl-size);
+      height: var(--wl-size);
+      color: var(--wl-color);
     }
-    .wishlist-icon--filled { display: none; }
+
+    .wishlist-icon--filled { display: none; fill: var(--wl-color-active); }
     .wishlist-button--active .wishlist-icon--outline { display: none; }
-    .wishlist-button--active .wishlist-icon--filled { display: block; color: var(--wishlist-icon-color-active, red); }
-    
-    .wishlist-notification {
-      position: fixed; bottom: 20px; right: 20px; background: #000; color: #fff;
-      padding: 1rem 1.5rem; border-radius: 0.5rem; z-index: 10000;
-    }
+    .wishlist-button--active .wishlist-icon--filled { display: block; color: var(--wl-color-active); }
+    .wishlist-button:hover { transform: scale(1.1); }
   </style>
 
   <script>
@@ -59,85 +66,72 @@
       class WishlistButton extends HTMLElement {
         constructor() {
           super();
-          this.button = this.querySelector('button');
+          this.btn = this.querySelector('button');
         }
-
         connectedCallback() {
-          this.productId = this.getAttribute('data-product-id');
-          if (!this.productId || !this.button) return;
+          this.id = this.getAttribute('data-id');
+          if (!this.id || !this.btn) return;
           
-          this.button.addEventListener('click', (e) => this.toggleWishlist(e));
-          this.updateState();
+          this.btn.addEventListener('click', (e) => this.toggle(e));
+          this.refresh();
           
-          window.addEventListener('wishlist:updated', (e) => {
-            if (e.detail.id === this.productId) this.updateState();
-          });
+          // Listen for changes from any other button on the page
+          window.addEventListener('wishlist:updated', () => this.refresh());
         }
-
-        updateState() {
-          const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-          const isAdded = wishlist.some(item => item.id === this.productId);
-          this.button.classList.toggle('wishlist-button--active', isAdded);
+        refresh() {
+          const list = JSON.parse(localStorage.getItem('shopify-wishlist') || '[]');
+          const isAdded = list.some(item => item.id === this.id);
+          this.btn.classList.toggle('wishlist-button--active', isAdded);
         }
-
-        toggleWishlist(e) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-          const index = wishlist.findIndex(item => item.id === this.productId);
-
-          if (index > -1) {
-            wishlist.splice(index, 1);
+        toggle(e) {
+          e.preventDefault(); e.stopPropagation();
+          let list = JSON.parse(localStorage.getItem('shopify-wishlist') || '[]');
+          const idx = list.findIndex(item => item.id === this.id);
+          
+          if (idx > -1) {
+            list.splice(idx, 1);
           } else {
-            wishlist.push({
-              id: this.productId,
-              title: this.getAttribute('data-product-title'),
-              handle: this.getAttribute('data-product-handle'),
-              image: this.getAttribute('data-product-img'),
-              url: this.getAttribute('data-product-url')
+            list.push({
+              id: this.id,
+              t: this.getAttribute('data-title'),
+              h: this.getAttribute('data-handle'),
+              i: this.getAttribute('data-img')
             });
           }
-
-          localStorage.setItem('wishlist', JSON.stringify(wishlist));
-          window.dispatchEvent(new CustomEvent('wishlist:updated', { detail: { id: this.productId } }));
+          localStorage.setItem('shopify-wishlist', JSON.stringify(list));
+          window.dispatchEvent(new CustomEvent('wishlist:updated'));
         }
       }
       customElements.define('wishlist-button', WishlistButton);
     }
   </script>
-  {%- capture wishlist_logic_loaded -%}done{%- endcapture -%}
+  {%- assign wishlist_script_printed = true -%}
 {%- endunless -%}
 
-{%- comment -%} Determine which product object to use (Product Page vs Collection Grid) {%- endcomment -%}
-{%- assign target_product = product | default: card_product -%}
-
 <wishlist-button 
-  data-product-id="{{ target_product.id }}"
-  data-product-title="{{ target_product.title | escape }}"
-  data-product-handle="{{ target_product.handle }}"
-  data-product-url="{{ target_product.url }}"
-  data-product-img="{{ target_product.featured_image | image_url: width: 300 }}"
+  data-id="{{ target_product.id }}"
+  data-title="{{ target_product.title | escape }}"
+  data-handle="{{ target_product.handle }}"
+  data-img="{{ target_product.featured_image | image_url: width: 300 }}"
+  class="wishlist-button-container"
 >
   <button
     type="button"
     class="{{ button_class }}"
     style="
-      --wishlist-icon-size: {{ block.settings.icon_size }}px;
-      --wishlist-icon-color: {{ block.settings.icon_color }};
-      --wishlist-icon-color-active: {{ block.settings.icon_color_active }};
-      {% if block.settings.show_background %}
-        --wishlist-bg-color: {{ block.settings.background_color }};
-        --wishlist-corner-radius: {{ block.settings.corner_radius }}px;
-        --wishlist-padding: {{ block.settings.padding }}px;
-      {% endif %}
+      --wl-size: {{ block.settings.icon_size }}px;
+      --wl-color: {{ block.settings.icon_color }};
+      --wl-color-active: {{ block.settings.icon_color_active }};
+      --wl-bg: {{ block.settings.background_color }};
+      --wl-radius: {{ block.settings.corner_radius }}px;
+      --wl-padding: {{ block.settings.padding }}px;
     "
   >
     <svg class="wishlist-icon wishlist-icon--outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
        <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
     </svg>
-    <svg class="wishlist-icon wishlist-icon--filled" viewBox="0 0 24 24" fill="currentColor">
-       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    <svg class="wishlist-icon wishlist-icon--filled" viewBox="0 0 24 24">
+       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="currentColor"/>
     </svg>
   </button>
 </wishlist-button>
@@ -145,7 +139,6 @@
 {% schema %}
 {
   "name": "Wishlist Button",
-  "tag": "section",
   "settings": [
     { "type": "select", "id": "position", "label": "Position", "options": [
         { "value": "top-left", "label": "Top Left" },
@@ -153,13 +146,13 @@
         { "value": "bottom-left", "label": "Bottom Left" },
         { "value": "bottom-right", "label": "Bottom Right" }
       ], "default": "top-right" },
-    { "type": "range", "id": "icon_size", "label": "Icon Size", "min": 16, "max": 48, "default": 24 },
+    { "type": "range", "id": "icon_size", "label": "Icon Size", "min": 10, "max": 50, "default": 24 },
     { "type": "color", "id": "icon_color", "label": "Icon Color", "default": "#000000" },
     { "type": "color", "id": "icon_color_active", "label": "Icon Color (Active)", "default": "#ff0000" },
     { "type": "checkbox", "id": "show_background", "label": "Show Background", "default": true },
     { "type": "color", "id": "background_color", "label": "Background Color", "default": "#ffffff" },
     { "type": "range", "id": "corner_radius", "label": "Corner Radius", "min": 0, "max": 50, "default": 50 },
-    { "type": "range", "id": "padding", "label": "Button Padding", "min": 0, "max": 24, "default": 8 }
+    { "type": "range", "id": "padding", "label": "Padding", "min": 0, "max": 20, "default": 8 }
   ],
   "presets": [{ "name": "Wishlist Button" }]
 }
