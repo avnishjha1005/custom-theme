@@ -96,11 +96,12 @@
     // Grab the wishlist string from Shopify Liquid
     const savedNote = {{ customer.note | json }} || "";
     if (savedNote) {
+      console.
       const savedArray = savedNote.split(',').filter(i => i !== "");
       // Merge with local storage so we don't lose anything
-      let localData = JSON.parse(localStorage.getItem('wishlist_handles')) || [];
+      let localData = JSON.parse(localStorage.getItem('wishlist')) || [];
       let combined = [...new Set([...localData, ...savedArray])];
-      localStorage.setItem('wishlist_handles', JSON.stringify(combined));
+      localStorage.setItem('wishlist', JSON.stringify(combined));
     }
   {% endif %}
 });
