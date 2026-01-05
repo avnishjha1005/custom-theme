@@ -4310,6 +4310,8 @@ text-component {
     font-size: max(1rem, 100%);
   }
 }
+
+@media screen and (min-width: 750px){
 .product-grid__item--hero > .swiper-container{
   height: -webkit-fill-available;
 }
@@ -4317,5 +4319,7 @@ text-component {
   padding-bottom:0;
   height: 102%:
 }
+}
+
 
 
