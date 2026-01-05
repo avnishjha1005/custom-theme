@@ -96,7 +96,7 @@
     // Grab the wishlist string from Shopify Liquid
     const savedNote = {{ customer.note | json }} || "";
     if (savedNote) {
-      console.
+      console.log(savedNote);
       const savedArray = savedNote.split(',').filter(i => i !== "");
       // Merge with local storage so we don't lose anything
       let localData = JSON.parse(localStorage.getItem('wishlist')) || [];
