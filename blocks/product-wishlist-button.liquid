@@ -205,6 +205,7 @@
 </style>
 
 <script>
+  try {
   if (!customElements.get('wishlist-button')) {
     class WishlistButton extends HTMLElement {
       constructor() {
@@ -212,15 +213,17 @@
         this.button = this.querySelector('[data-wishlist-button]');
         this.requireLogin = this.button?.dataset.requireLogin === 'true';
         
-        // Get product data from the parent product card
-        this.productCard = this.closest('product-card');
+        // Try multiple ways to find the product card
+        this.productCard = this.closest('product-card') || 
+                          this.parentElement?.closest('product-card') ||
+                          document.querySelector(`product-card:has(#${this.id})`);
         
         // Wait for DOM to be fully loaded before getting product data
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', () => this.init());
         } else {
-          // Use setTimeout to ensure all elements are rendered
-          setTimeout(() => this.init(), 0);
+          // Use longer timeout to ensure slideshow elements load first
+          setTimeout(() => this.init(), 100);
         }
       }
 
@@ -422,6 +425,9 @@
     }
 
     customElements.define('wishlist-button', WishlistButton);
+  }
+  } catch (error) {
+    console.error('Wishlist button error:', error);
   }
 
   // Add notification animations
