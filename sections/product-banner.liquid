@@ -22,7 +22,7 @@
               Build the children slot content. This can be dynamic per block.
               You can include extra CTAs, badges, etc.
             {%- endcomment -%}
-            {% capture children %}
+            {% comment %} {% capture children %}
               {% if section.settings.badge_text != blank %}
                 <div class="meta-badge" style="display:inline-block;font-size:12px;background:#e5e7eb;color:#1f2937;padding:2px 8px;border-radius:999px;margin-top:8px;">
                   {{ section.settings.badge_text }}
@@ -33,7 +33,7 @@
                   View details
                 </a>
               </div>
-            {% endcapture %}
+            {% endcapture %} {% endcomment %}
 
             {%- comment -%}
               Render the theme snippet and pass the children string.
