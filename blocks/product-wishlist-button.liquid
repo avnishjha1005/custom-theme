@@ -8,13 +8,17 @@
   endif
 -%}
 
-{%- comment -%} Only load styles once per page {%- endcomment -%}
-{%- unless request.page_type == 'wishlist-styles-loaded' -%}
-  <style id="wishlist-button-styles">
+{%- comment -%} 
+  This logic ensures the CSS and JS are only output once per page render.
+{%- endcomment -%}
+{%- unless shop.metafields.temp.wishlist_loaded -%}
+  <style>
+    wishlist-button { display: contents; } /* Ensure the custom tag doesn't break layout */
     .wishlist-button {
       position: absolute;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
       border: none;
       cursor: pointer;
@@ -22,425 +26,138 @@
       transition: transform 0.2s ease;
       z-index: 10;
     }
-
     .wishlist-button--with-bg {
-      background: var(--wishlist-bg-color);
-      border-radius: var(--wishlist-corner-radius);
-      padding: var(--wishlist-padding);
+      background: var(--wishlist-bg-color, #fff);
+      border-radius: var(--wishlist-corner-radius, 50px);
+      padding: var(--wishlist-padding, 8px);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-
-    .wishlist-button--top-left {
-      top: 0.75rem;
-      left: 0.75rem;
-    }
-
-    .wishlist-button--top-right {
-      top: 0.75rem;
-      right: 0.75rem;
-    }
-
-    .wishlist-button--bottom-left {
-      bottom: 0.75rem;
-      left: 0.75rem;
-    }
-
-    .wishlist-button--bottom-right {
-      bottom: 0.75rem;
-      right: 0.75rem;
-    }
+    .wishlist-button--top-left { top: 10px; left: 10px; }
+    .wishlist-button--top-right { top: 10px; right: 10px; }
+    .wishlist-button--bottom-left { bottom: 10px; left: 10px; }
+    .wishlist-button--bottom-right { bottom: 10px; right: 10px; }
 
     .wishlist-icon {
-      width: var(--wishlist-icon-size);
-      height: var(--wishlist-icon-size);
-      color: var(--wishlist-icon-color);
-      transition: color 0.2s ease, transform 0.2s ease;
+      width: var(--wishlist-icon-size, 24px);
+      height: var(--wishlist-icon-size, 24px);
+      color: var(--wishlist-icon-color, #000);
+      pointer-events: none;
     }
-
-    .wishlist-icon--filled {
-      display: none;
-    }
-
-    .wishlist-button--active .wishlist-icon--outline {
-      display: none;
-    }
-
-    .wishlist-button--active .wishlist-icon--filled {
-      display: block;
-    }
-
-    .wishlist-button--active .wishlist-icon {
-      color: var(--wishlist-icon-color-active);
-    }
-
-    .wishlist-button:hover {
-      transform: scale(1.1);
-    }
-
-    @keyframes wishlist-scale {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.3); }
-    }
-
-    @keyframes wishlist-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    @keyframes wishlist-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-
-    .wishlist-text {
-      font-size: 0.875rem;
-      white-space: nowrap;
-    }
-
-    .wishlist-text--remove {
-      display: none;
-    }
-
-    .wishlist-button--active .wishlist-text--add {
-      display: none;
-    }
-
-    .wishlist-button--active .wishlist-text--remove {
-      display: inline;
-    }
-
+    .wishlist-icon--filled { display: none; }
+    .wishlist-button--active .wishlist-icon--outline { display: none; }
+    .wishlist-button--active .wishlist-icon--filled { display: block; color: var(--wishlist-icon-color-active, red); }
+    
     .wishlist-tooltip {
       position: absolute;
-      bottom: calc(100% + 0.5rem);
+      bottom: 110%;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.9);
-      color: white;
-      padding: 0.375rem 0.75rem;
-      border-radius: 0.25rem;
-      font-size: 0.75rem;
-      white-space: nowrap;
-      pointer-events: none;
+      background: #000;
+      color: #fff;
+      padding: 4px 8px;
+      font-size: 11px;
+      border-radius: 4px;
       opacity: 0;
-      transition: opacity 0.2s ease;
+      pointer-events: none;
+      transition: opacity 0.2s;
     }
-
-    .wishlist-button:hover .wishlist-tooltip {
-      opacity: 1;
-    }
-
-    .wishlist-tooltip--remove {
-      display: none;
-    }
-
-    .wishlist-button--active .wishlist-tooltip--add {
-      display: none;
-    }
-
-    .wishlist-button--active .wishlist-tooltip--remove {
-      display: inline;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-    
-    @keyframes slideOut {
-      from {
-        transform: translateX(0);
-        opacity: 1;
-      }
-      to {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-    }
+    .wishlist-button:hover .wishlist-tooltip { opacity: 1; }
   </style>
 
   <script>
-    try {
-      if (!customElements.get('wishlist-button')) {
-        class WishlistButton extends HTMLElement {
-          constructor() {
-            super();
-            this.button = this.querySelector('[data-wishlist-button]');
-            this.requireLogin = this.button?.dataset.requireLogin === 'true';
-            
-            // Try multiple ways to find the product card
-            this.productCard = this.closest('product-card') || 
-                              this.parentElement?.closest('product-card');
-            
-            // If still not found, traverse up the DOM manually
-            if (!this.productCard) {
-              let el = this.parentElement;
-              while (el && el.tagName !== 'PRODUCT-CARD') {
-                el = el.parentElement;
-              }
-              this.productCard = el;
-            }
-            
-            // Wait for DOM to be fully loaded before getting product data
-            if (document.readyState === 'loading') {
-              document.addEventListener('DOMContentLoaded', () => this.init());
-            } else {
-              // Use longer timeout to ensure slideshow elements load first
-              setTimeout(() => this.init(), 100);
-            }
-          }
-
-          init() {
-            this.productData = this.getProductDataFromCard();
-            
-            if (!this.productData) {
-              console.warn('Wishlist button: Could not find product data');
-              return;
-            }
-            
-            this.button?.addEventListener('click', this.handleClick.bind(this));
-            
-            // Check if product is already in wishlist on load
-            this.checkWishlistState();
-          }
-
-          getProductDataFromCard() {
-            if (!this.productCard) {
-              console.error('No product card found');
-              return null;
-            }
-
-            const productId = this.productCard.dataset.productId;
-            if (!productId) {
-              console.error('No product ID found');
-              return null;
-            }
-            
-            // Get product link and URL
-            const productLink = this.productCard.querySelector('.product-card__link, a[href*="/products/"]');
-            const productUrl = productLink?.href || '';
-            const productHandle = productUrl.split('/products/')[1]?.split('?')[0] || '';
-            
-            // Get product title - try multiple selectors
-            const titleSelectors = [
-              '.text-block h5 p',
-              '.text-block p',
-              'h3',
-              '.h4',
-              '.h5',
-              '[class*="product_title"]',
-              '.card__heading'
-            ];
-            
-            let productTitle = '';
-            for (const selector of titleSelectors) {
-              const titleEl = this.productCard.querySelector(selector);
-              if (titleEl && titleEl.textContent.trim()) {
-                productTitle = titleEl.textContent.trim();
-                break;
-              }
-            }
-            
-            // Fallback to visually-hidden text
-            if (!productTitle) {
-              const hiddenTitle = this.productCard.querySelector('.visually-hidden');
-              productTitle = hiddenTitle?.textContent?.trim() || 'Product';
-            }
-            
-            // Get product image
-            const productImage = this.productCard.querySelector('img');
-            const productImg = productImage?.src || productImage?.dataset?.src || '';
-            
-            // Get product price
-            const priceEl = this.productCard.querySelector('product-price .price, .price');
-            const productPrice = priceEl?.textContent?.trim() || '';
-
-            const data = {
-              productId: productId,
-              productHandle: productHandle,
-              productTitle: productTitle,
-              productImg: productImg,
-              productPrice: productPrice,
-              productUrl: productUrl || `/products/${productHandle}`
-            };
-            
-            return data;
-          }
-
-          checkWishlistState() {
-            if (!this.button || !this.productData) return;
-            
-            try {
-              const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-              const isInWishlist = wishlistData.some(item => item.productId === this.productData.productId);
-              
-              if (isInWishlist) {
-                this.button.classList.add('wishlist-button--active');
-                this.button.setAttribute('aria-pressed', 'true');
-              }
-            } catch (error) {
-              console.error('Error checking wishlist state:', error);
-            }
-          }
-
-          async handleClick(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Check if login is required
-            if (this.requireLogin && !window.Shopify?.customer) {
-              window.location.href = '/account/login';
-              return;
-            }
-
-            const isActive = this.button.classList.contains('wishlist-button--active');
-            
-            try {
-              // Toggle wishlist state
-              if (isActive) {
-                await this.removeFromWishlist();
-              } else {
-                await this.addToWishlist();
-              }
-
-              // Toggle UI state
-              this.button.classList.toggle('wishlist-button--active');
-              this.button.setAttribute('aria-pressed', !isActive);
-
-              // Show notification if enabled
-              {% if block.settings.show_notification %}
-              this.showNotification(isActive ? 'removed' : 'added');
-              {% endif %}
-
-              // Dispatch custom event
-              this.dispatchEvent(new CustomEvent('wishlist:toggle', {
-                bubbles: true,
-                detail: { productId: this.productData.productId, inWishlist: !isActive }
-              }));
-
-              // Update wishlist count if there's a counter element
-              this.updateWishlistCount();
-            } catch (error) {
-              console.error('Wishlist error:', error);
-            }
-          }
-
-          async addToWishlist() {
-            let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-            
-            // Check if already exists (shouldn't happen, but just in case)
-            const exists = wishlistData.some(item => item.productId === this.productData.productId);
-            if (!exists) {
-              wishlistData.push(this.productData);
-              localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-              console.log('Added to wishlist:', this.productData.productTitle);
-            }
-          }
-
-          async removeFromWishlist() {
-            let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-            wishlistData = wishlistData.filter(item => item.productId !== this.productData.productId);
-            localStorage.setItem('wishlist', JSON.stringify(wishlistData));
-            console.log('Removed from wishlist:', this.productData.productId);
-          }
-
-          showNotification(action) {
-            const message = action === 'added' 
-              ? 'Added to Wishlist' 
-              : 'Removed from Wishlist';
-            
-            // Simple notification - you can customize this
-            const notification = document.createElement('div');
-            notification.textContent = message;
-            notification.style.cssText = `
-              position: fixed;
-              top: 20px;
-              right: 20px;
-              background: #000;
-              color: #fff;
-              padding: 1rem 1.5rem;
-              border-radius: 0.5rem;
-              z-index: 9999;
-              animation: slideIn 0.3s ease;
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-              notification.style.animation = 'slideOut 0.3s ease';
-              setTimeout(() => notification.remove(), 300);
-            }, 3000);
-          }
-
-          updateWishlistCount() {
-            try {
-              const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
-              const countElement = document.querySelector('[data-wishlist-count]');
-              if (countElement) {
-                countElement.textContent = wishlistData.length;
-                countElement.style.display = wishlistData.length > 0 ? 'block' : 'none';
-              }
-            } catch (error) {
-              console.error('Error updating wishlist count:', error);
-            }
-          }
+    if (!customElements.get('wishlist-button')) {
+      class WishlistButton extends HTMLElement {
+        constructor() {
+          super();
+          this.button = this.querySelector('button');
+          this.productId = this.getAttribute('data-product-id');
         }
 
-        customElements.define('wishlist-button', WishlistButton);
+        connectedCallback() {
+          this.init();
+        }
+
+        init() {
+          if (!this.productId) return;
+          this.button.addEventListener('click', (e) => this.toggleWishlist(e));
+          this.updateState();
+          
+          // Sync all buttons for the same product on the page
+          window.addEventListener('wishlist:change', (e) => {
+            if (e.detail.id === this.productId) this.updateState();
+          });
+        }
+
+        updateState() {
+          const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+          const isAdded = wishlist.some(item => item.id === this.productId);
+          this.button.classList.toggle('wishlist-button--active', isAdded);
+        }
+
+        toggleWishlist(e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+          const index = wishlist.findIndex(item => item.id === this.productId);
+
+          if (index > -1) {
+            wishlist.splice(index, 1);
+          } else {
+            wishlist.push({
+              id: this.productId,
+              title: this.getAttribute('data-product-title'),
+              handle: this.getAttribute('data-product-handle'),
+              image: this.getAttribute('data-product-img')
+            });
+          }
+
+          localStorage.setItem('wishlist', JSON.stringify(wishlist));
+          window.dispatchEvent(new CustomEvent('wishlist:change', { detail: { id: this.productId } }));
+        }
       }
-    } catch (error) {
-      console.error('Wishlist button initialization error:', error);
+      customElements.define('wishlist-button', WishlistButton);
     }
   </script>
+  {%- assign wishlist_loaded = true -%}
 {%- endunless -%}
 
-<button
-  type="button"
-  class="{{ button_class }}"
-  data-wishlist-button
-  aria-label="{{ block.settings.aria_label_add }}"
-  aria-pressed="false"
-  {% if block.settings.require_login and customer == null %}
-    data-require-login="true"
-  {% endif %}
-  style="
-    --wishlist-icon-size: {{ block.settings.icon_size }}px;
-    --wishlist-icon-color: {{ block.settings.icon_color }};
-    --wishlist-icon-color-active: {{ block.settings.icon_color_active }};
-    {% if block.settings.show_background %}
-      --wishlist-bg-color: {{ block.settings.background_color }};
-      --wishlist-corner-radius: {{ block.settings.corner_radius }}px;
-      --wishlist-padding: {{ block.settings.padding }}px;
-    {% endif %}
-  "
+{%- comment -%} 
+  The actual HTML for the button. Note how we pass product data directly to the custom element.
+{%- endcomment -%}
+<wishlist-button 
+  data-product-id="{{ product.id | default: card_product.id | escape }}"
+  data-product-title="{{ product.title | default: card_product.title | escape }}"
+  data-product-handle="{{ product.handle | default: card_product.handle }}"
+  data-product-img="{{ product.featured_image | default: card_product.featured_image | image_url: width: 300 }}"
 >
-  
-  <svg class="wishlist-icon wishlist-icon--outline" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M16.5 4.5c2.206 0 4 1.794 4 4 0 4.67-5.543 8.94-8.5 11.023C9.043 17.44 3.5 13.17 3.5 8.5c0-2.206 1.794-4 4-4 1.298 0 2.522.638 3.273 1.706L12 7.953l1.227-1.746c.75-1.07 1.975-1.707 3.273-1.707m0-1.5c-1.862 0-3.505.928-4.5 2.344C11.005 3.928 9.362 3 7.5 3 4.462 3 2 5.462 2 8.5c0 5.72 6.5 10.438 10 12.85 3.5-2.412 10-7.13 10-12.85C22 5.462 19.538 3 16.5 3z" stroke="currentColor" stroke-width="1.5"/>
-  </svg>
-  
-  <svg class="wishlist-icon wishlist-icon--filled" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M19.3 5.71002C18.841 5.24601 18.2943 4.87797 17.6917 4.62731C17.0891 4.37666 16.4426 4.2484 15.79 4.25002C15.1373 4.2484 14.4909 4.37666 13.8883 4.62731C13.2857 4.87797 12.739 5.24601 12.28 5.71002L12 6.00002L11.72 5.72001C10.7917 4.79182 9.53273 4.27037 8.22 4.27037C6.90726 4.27037 5.64829 4.79182 4.72 5.72001C3.80386 6.65466 3.29071 7.91125 3.29071 9.22002C3.29071 10.5288 3.80386 11.7854 4.72 12.72L11.49 19.51C11.6306 19.6505 11.8212 19.7294 12.02 19.7294C12.2187 19.7294 12.4094 19.6505 12.55 19.51L19.32 12.72C20.2365 11.7823 20.7479 10.5221 20.7442 9.21092C20.7405 7.89973 20.2218 6.64248 19.3 5.71002Z" fill="currentColor"/>
-  </svg>
-
-  {%- if block.settings.button_style == 'icon-text' -%}
-    <span class="wishlist-text">
-      <span class="wishlist-text--add">{{ block.settings.add_text }}</span>
-      <span class="wishlist-text--remove">{{ block.settings.remove_text }}</span>
-    </span>
-  {%- endif -%}
-
-  {%- if block.settings.tooltip_add != blank or block.settings.tooltip_remove != blank -%}
-    <span class="wishlist-tooltip" role="tooltip">
-      <span class="wishlist-tooltip--add">{{ block.settings.tooltip_add }}</span>
-      <span class="wishlist-tooltip--remove">{{ block.settings.tooltip_remove }}</span>
-    </span>
-  {%- endif -%}
-</button>
+  <button
+    type="button"
+    class="{{ button_class }}"
+    aria-label="Wishlist"
+    style="
+      --wishlist-icon-size: {{ block.settings.icon_size }}px;
+      --wishlist-icon-color: {{ block.settings.icon_color }};
+      --wishlist-icon-color-active: {{ block.settings.icon_color_active }};
+      {% if block.settings.show_background %}
+        --wishlist-bg-color: {{ block.settings.background_color }};
+        --wishlist-corner-radius: {{ block.settings.corner_radius }}px;
+        --wishlist-padding: {{ block.settings.padding }}px;
+      {% endif %}
+    "
+  >
+    <svg class="wishlist-icon wishlist-icon--outline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+       <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/>
+    </svg>
+    <svg class="wishlist-icon wishlist-icon--filled" viewBox="0 0 24 24" fill="currentColor">
+       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+    
+    {%- if block.settings.tooltip_add != blank -%}
+      <span class="wishlist-tooltip">{{ block.settings.tooltip_add }}</span>
+    {%- endif -%}
+  </button>
+</wishlist-button>
 
 {% schema %}
 {
