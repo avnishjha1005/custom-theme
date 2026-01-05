@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
 
     // Set the initial button text based on whether the product is in the wishlist or not
-    const wishlistButton = document.querySelector('.wishlist_button'); // Use querySelector instead of getElementsByClassName
+    const wishlistButton = document.querySelector('.wishlist-button'); // Use querySelector instead of getElementsByClassName
     const productTitle = "{{ product.title }}";
     
     if (wishlistButton) {
