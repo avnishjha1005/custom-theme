@@ -8,7 +8,9 @@
         {{ section.settings.heading }}
       </h2>
     {%- endif -%}
-
+    {% capture children %}
+        {% content_for 'blocks', closest.product: product %}
+    {% endcapture %}
     {% comment %} The Horizontal Container {% endcomment %}
     <div class="product-card-grid" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
       {%- for block in section.blocks -%}
@@ -19,9 +21,8 @@
               REPLACING CUSTOM HTML WITH YOUR THEME'S SNIPPET
               Note: Change 'product-card' to 'card-product' if that is your file name
             {% endcomment %}
-            {% render 'product-card', 
+            {% render 'product-card', children: children
                product: block.settings.product,
-               show_vendor: section.settings.show_vendor 
             %}
           {%- else -%}
             {% comment %} Fallback for empty blocks in the editor {% endcomment %}
