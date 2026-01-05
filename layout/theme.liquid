@@ -101,7 +101,7 @@
 
         let wishlistData = JSON.parse(localStorage.getItem('wishlist')) || [];
         const isAlreadyInWishlist = wishlistData.some(item => item.productTitle === pdpData.productTitle);
-        const wishlistButton = document.getElementsByClassName('wishlist_button')[0];
+        const wishlistButton = document.getElementsByClassName('wishlist-button')[0];
 
         if (!isAlreadyInWishlist) {
             wishlistData.push(pdpData);
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 `;
     } else {
-        console.error('Element with class "wishlist_button" not found');
+        console.error('Element with class "wishlist-button" not found');
     }
 
     // Display wishlist items
@@ -213,14 +213,14 @@ document.addEventListener('DOMContentLoaded', function () {
 });
     </script>
     <style>
-.wishlist_button{
+.wishlist-button{
               background: none;
               border: none;
               display: flex;
               align-items: center;
             }
 
-            .wishlist_button svg{
+            .wishlist-button svg{
               border-radius: 50%;
               margin: 10px 0;
                 display: flex;
