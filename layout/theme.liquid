@@ -2,7 +2,21 @@
 <html
   class="no-js{% if request.design_mode %} shopify-design-mode{% endif %}"
   lang="{{ request.locale.iso_code }}"
->
+><script>
+  window.Shopify = window.Shopify || {};
+  window.wishlistConfig = {
+    customerLoggedIn: {% if customer %}true{% else %}false{% endif %},
+    // Pull the JSON metafield data safely
+    cloudData: {% if customer.metafields.custom.wishlist != blank %}{{ customer.metafields.custom.wishlist.value | json }}{% else %}[]{% endif %}
+  };
+</script>
+
+{% if customer %}
+  {% comment %} Hidden form to allow JS to save data back to the customer metafield {% endcomment %}
+  {% form 'customer', id: 'WishlistSyncForm', style: 'display:none;' %}
+    <input type="hidden" name="customer[metafields][custom][wishlist]" id="wishlist-metafield-input">
+  {% endform %}
+{% endif %}
   <head>
     {%- if settings.favicon != blank -%}
       <link
