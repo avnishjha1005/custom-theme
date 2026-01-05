@@ -26,7 +26,7 @@
   data-product-title="{{ product.title | escape }}"
   data-product-image="{{ product.featured_image | image_url: width: 300 }}"
   data-product-price="{{ product.price | money }}"
-  data-product-url="{{ product.url }}"
+ data-product-url="/products/{{ product.handle }}"
   aria-label="{% if in_wishlist %}{{ block.settings.aria_label_remove }}{% else %}{{ block.settings.aria_label_add }}{% endif %}"
   aria-pressed="{{ in_wishlist }}"
   {% if block.settings.require_login and customer == null %}
