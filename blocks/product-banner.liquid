@@ -16,9 +16,16 @@
         {% assign product = block.settings.product %}
         <div class="product-card-wrapper" style="flex: 1; min-width: 300px; max-width: 500px;" {{ block.shopify_attributes }}>
           {% if product %}
+            {% capture children %}
+              <div class="product-card-details">
+                <h3>{{ product.title }}</h3>
+                <p>{{ product.price | money }}</p>
+                <a href="{{ product.url }}" class="btn btn-primary">View Product</a>
+              </div>
+            {% endcapture %}
             {% render 'product-card',
               product: product,
-              children: {},
+              children: children,
               block: block,
               product_card_gap: 20
             %}
