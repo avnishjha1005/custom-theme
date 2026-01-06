@@ -39,8 +39,9 @@
               Render the theme snippet and pass the children string.
               If your snippet expects other params (e.g. show_vendor), add them here.
             {%- endcomment -%}
-            {% render children
-            %}
+            <div class="resource-list__item">
+            {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: product %}
+          </div>
 
           {% else %}
             <div style="border: 1px dashed #ccc; padding: 20px; text-align: center;">
