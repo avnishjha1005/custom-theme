@@ -4487,3 +4487,13 @@ text-component {
     opacity: 0;
   }
 }
+
+.swiper { width: 100%; height: 100%; }
+.swiper-wrapper { display: flex; }
+
+/* Your custom wrapper tag should not break layout; if you keep it */
+slideshow-slides { display: contents; } /* Lets inner slide divs be the flex items */
+
+/* Ensure nothing blocks pointer events */
+.swiper, [ref="scroller"] { pointer-events: auto; }
+.swiper-container-box, .slideshow-wrapper { position: relative; }
