@@ -23,6 +23,15 @@
                 <a href="{{ product.url }}" class="btn btn-primary">View Product</a>
               </div>
             {% endcapture %}
+
+            <!-- Debugging Output -->
+            <div style="border: 1px solid red; padding: 10px; margin-bottom: 10px;">
+              <p>Debug: Product Title - {{ product.title }}</p>
+              <p>Debug: Product Price - {{ product.price | money }}</p>
+              <p>Debug: Product URL - {{ product.url }}</p>
+              <p>Debug: Children Content - {{ children }}</p>
+            </div>
+
             {% render 'product-card',
               product: product,
               children: children,
