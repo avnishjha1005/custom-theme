@@ -62,7 +62,9 @@ export class Slideshow extends Component {
       
       // Autoplay
       autoplay: autoplayOptions,
-      allowTouchMove: true,
+       allowTouchMove: true,
+      grabCursor: true,        // visual cue and improves UX
+      touchStartPreventDefault: false,
       // Navigation Refs
       navigation: {
         nextEl: next || null,
