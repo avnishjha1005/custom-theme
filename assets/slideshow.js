@@ -86,7 +86,7 @@ export class Slideshow extends Component {
           // Update initial ARIA and states
           this.#updateAria(s);
           console.log('Slides length:', s.slides.length);
-    console.log('Pagination element:', s.pagination?.el);
+          console.log('Pagination element:', s.pagination?.el);
         }
       },
       
