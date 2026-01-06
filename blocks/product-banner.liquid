@@ -1,7 +1,6 @@
 {% comment %}
   Filename: sections/product-banner.liquid
-  Uses render to call your theme’s product-card with a children slot.
-  Replace 'product-card' with your snippet’s actual filename if different.
+  Uses render to call your theme’s product-card snippet.
 {% endcomment %}
 
 <div class="product-banner" style="padding: 40px 0;">
@@ -14,35 +13,15 @@
 
     <div class="product-card-grid" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
       {% for block in section.blocks %}
-        {% assign p = block.settings.product %}
+        {% assign product = block.settings.product %}
         <div class="product-card-wrapper" style="flex: 1; min-width: 300px; max-width: 500px;" {{ block.shopify_attributes }}>
-          {% if p %}
-
-            {%- comment -%}
-              Build the children slot content. This can be dynamic per block.
-              You can include extra CTAs, badges, etc.
-            {%- endcomment -%}
-            {% capture children %}
-              {% comment %} {% if section.settings.badge_text != blank %}
-                <div class="meta-badge" style="display:inline-block;font-size:12px;background:#e5e7eb;color:#1f2937;padding:2px 8px;border-radius:999px;margin-top:8px;">
-                  {{ section.settings.badge_text }}
-                </div>
-              {% endif %}
-              <div class="extra-cta" style="margin-top:10px;">
-                <a href="{{ p.url }}" class="btn btn-secondary" style="display:inline-block;border:1px solid #d1d5db;padding:8px 12px;border-radius:8px;text-decoration:none;color:#111827;">
-                  View details
-                </a>
-              </div> {% endcomment %}
-            {% endcapture %}
-
-            {%- comment -%}
-              Render the theme snippet and pass the children string.
-              If your snippet expects other params (e.g. show_vendor), add them here.
-            {%- endcomment -%}
-            <div class="resource-list__item">
-            {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: product %}
-          </div>
-
+          {% if product %}
+            {% render 'product-card',
+              product: product,
+              children: {},
+              block: block,
+              product_card_gap: 20
+            %}
           {% else %}
             <div style="border: 1px dashed #ccc; padding: 20px; text-align: center;">
               <p>Select a product to display the card.</p>
@@ -63,7 +42,7 @@
   ],
   "blocks": [
     {
-      "type": "_product-card-group",
+      "type": "_product-card"
     }
   ],
   "presets": [
@@ -71,4 +50,3 @@
   ]
 }
 {% endschema %}
-s
