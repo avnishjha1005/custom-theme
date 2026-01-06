@@ -4507,3 +4507,18 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
   width:100%;
   overflow: scroll;
 }
+
+[ref="resourceListCarousel"] > [ref="slideshowContainer"]{
+  width:100%;
+  overflow: scroll;
+}
+
+[ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"]{
+  width:100%;
+  overflow: visible;
+}
+
+[ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"] > .swiper-wrapper{
+  width:100%;
+  overflow: visible;
+}
