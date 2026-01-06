@@ -24,8 +24,8 @@ this.swiper = new Swiper(scroller, {
     prevEl: previous || null,
   },
   pagination: {
-    el: this.refs?.dots || this.querySelector('[ref="dotsContainer"]') || null,
-    clickable: true,
+    el: '.swiper-pagination',
+    type: 'bullets',
   },
 
   observer: true,
