@@ -341,6 +341,7 @@
             "product_wishlist_button_63VrDN": {
               "type": "product-wishlist-button",
               "name": "Wishlist Button",
+              "disabled": true,
               "settings": {
                 "position": "top-right",
                 "button_style": "icon-only",
