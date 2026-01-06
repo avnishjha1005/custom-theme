@@ -1,5 +1,5 @@
 import { Component } from '@theme/component';
-import Swiper from 'swiper';
+import Swiper from '/swiper';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 
 /**
