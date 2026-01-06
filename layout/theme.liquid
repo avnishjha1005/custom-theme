@@ -19,7 +19,10 @@
       blocking="render"
       id="view-transition-render-blocker"
     >
+    <link rel="stylesheet" href="https://unpkg.com/swiper@10/swiper-bundle.min.css">
 
+    <!-- Swiper JS UMD bundle (includes core + modules) -->
+    <script src="https://unpkg.com/swiper@10/swiper-bundle.min.js" async></script>
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
     {%- render 'fonts' -%}
@@ -95,6 +98,7 @@
   {% if customer %}
     // Grab the wishlist string from Shopify Liquid
     const savedNote = {{ customer.note | json }} || "";
+    console.log(customer.)
     if (savedNote) {
       console.log(savedNote);
       const savedArray = savedNote.split(',').filter(i => i !== "");
