@@ -39,9 +39,7 @@
               Render the theme snippet and pass the children string.
               If your snippet expects other params (e.g. show_vendor), add them here.
             {%- endcomment -%}
-            {% render '_product-card-group',
-              product: p,
-              children: children
+            {% render children
             %}
 
           {% else %}
