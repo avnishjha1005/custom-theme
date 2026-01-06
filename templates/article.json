@@ -80,32 +80,23 @@
           "static": true,
           "settings": {},
           "blocks": {}
-        }
-      },
-      "settings": {
-        "content_direction": "column",
-        "gap": 32,
-        "color_scheme": "",
-        "padding-block-start": 40,
-        "padding-block-end": 80
-      }
-    },
-    "product_banner_ixRMG4": {
-      "type": "product-banner",
-      "blocks": {
-        "product_card_QEV47G": {
-          "type": "product_card",
-          "settings": {
-            "product": "olive-green-jacket"
-          }
         },
-        "product_card_fBNTHe": {
-          "type": "product_card",
-          "settings": {
-            "product": "blue-silk-tuxedo"
-          }
-        }
-      },
+        "product_banner_ixRMG4": {
+          "type": "product-banner",
+          "blocks": {
+            "product_card_QEV47G": {
+              "type": "_product-card",
+              "settings": {
+                "product": "olive-green-jacket"
+              }
+            },
+            "product_card_fBNTHe": {
+              "type": "_product-card",
+              "settings": {
+                "product": "blue-silk-tuxedo"
+              }
+            }
+          },
       "block_order": [
         "product_card_QEV47G",
         "product_card_fBNTHe"
@@ -114,6 +105,15 @@
       "settings": {
         "heading": "Featured products",
         "badge_text": "text"
+      }
+    }
+      },
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "",
+        "padding-block-start": 40,
+        "padding-block-end": 80
       }
     }
   },
