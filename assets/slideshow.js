@@ -72,10 +72,10 @@ export class Slideshow extends Component {
       },
 
       // Pagination (Dots)
-      pagination: {
-        el: this.querySelector('.swiper-pagination') || null, // Assuming a wrapper for dots
-        clickable: true,
-      },
+       pagination: {
+    el: '.swiper-pagination',
+    type: 'bullets',
+  },
 
       // Events
       on: {
