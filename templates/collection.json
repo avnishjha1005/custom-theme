@@ -213,12 +213,12 @@
                 "position": "top-right",
                 "button_style": "icon-only",
                 "icon_size": 24,
-                "icon_style": "outline",
                 "icon_color": "#000000",
                 "icon_color_active": "#ff0000",
                 "show_background": false,
                 "background_color": "#ffffff",
                 "corner_radius": 50,
+                "padding": 8,
                 "enable_animation": true,
                 "animation_type": "pulse",
                 "add_text": "Add to Wishlist",
@@ -228,8 +228,7 @@
                 "aria_label_add": "Add to wishlist",
                 "aria_label_remove": "Remove from wishlist",
                 "require_login": false,
-                "show_notification": true,
-                "padding": 8
+                "show_notification": true
               },
               "blocks": {}
             },
