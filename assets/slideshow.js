@@ -62,9 +62,9 @@ export class Slideshow extends Component {
       
       // Autoplay
       autoplay: autoplayOptions,
-       allowTouchMove: true,
-      grabCursor: true,        // visual cue and improves UX
-      touchStartPreventDefault: false,
+      //draggable
+      allowTouchMove : true,
+
       // Navigation Refs
       navigation: {
         nextEl: next || null,
@@ -73,7 +73,7 @@ export class Slideshow extends Component {
 
       // Pagination (Dots)
       pagination: {
-        el: this.querySelector('[ref="dotsContainer"]') || null, // Assuming a wrapper for dots
+        el: this.querySelector('.swiper-pagination') || null, // Assuming a wrapper for dots
         clickable: true,
       },
 
