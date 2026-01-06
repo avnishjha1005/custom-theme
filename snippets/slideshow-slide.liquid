@@ -22,7 +22,7 @@
 <slideshow-slide
   ref="slides[]"
   aria-hidden="false"
-  style="view-timeline-name: --slide-{{ index }}; --product-media-fit: {{ media_fit | default: 'cover' }};"
+  style="swiper-slide view-timeline-name: --slide-{{ index }}; --product-media-fit: {{ media_fit | default: 'cover' }};"
   {% if class != blank %}
     class="{{ class }}"
   {% endif %}
