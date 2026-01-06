@@ -4497,7 +4497,7 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
 /* Ensure nothing blocks pointer events */
 .swiper, [ref="scroller"] { pointer-events: auto; }
 .swiper-container-box, .slideshow-wrapper { position: relative; }
-.wishlist-container {
+.wishlist-button-collection {
   position: absolute;
   top: 0;
   right: 0;
