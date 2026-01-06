@@ -4502,3 +4502,8 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
   top: 0;
   right: 0;
 }
+
+[ref="resourceListCarousel"] {
+  width:100%;
+  overflow: scroll;
+}
