@@ -17,20 +17,15 @@
         <div class="product-card-wrapper" style="flex: 1; min-width: 300px; max-width: 500px;" {{ block.shopify_attributes }}>
           {% if product %}
             {% capture children %}
+              <div class="product-card-media">
+                <img src="{{ product.featured_image | image_url: 'medium' }}" alt="{{ product.title }}" height="auto" width="auto">
+              </div>
               <div class="product-card-details">
                 <h3>{{ product.title }}</h3>
                 <p>{{ product.price | money }}</p>
                 <a href="{{ product.url }}" class="btn btn-primary">View Product</a>
               </div>
             {% endcapture %}
-
-            <!-- Debugging Output -->
-            <div style="border: 1px solid red; padding: 10px; margin-bottom: 10px;">
-              <p>Debug: Product Title - {{ product.title }}</p>
-              <p>Debug: Product Price - {{ product.price | money }}</p>
-              <p>Debug: Product URL - {{ product.url }}</p>
-              <p>Debug: Children Content - {{ children }}</p>
-            </div>
 
             {% render 'product-card',
               product: product,
