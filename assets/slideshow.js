@@ -76,6 +76,7 @@ export class Slideshow extends Component {
       // Events
       on: {
         slideChange: () => {
+          if (!this.swiper) return;
           this.#handleSlideChange();
         },
         init: (s) => {
