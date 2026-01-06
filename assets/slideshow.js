@@ -70,9 +70,9 @@ export class Slideshow extends Component {
 
       // Pagination (Dots)
        pagination: {
-    el: '.swiper-pagination',
-    type: 'bullets',
-  },
+        el: '.swiper-pagination',
+        type: 'bullets',
+      },
 
       // Events
       on: {
