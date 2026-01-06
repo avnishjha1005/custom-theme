@@ -91,6 +91,12 @@
     "banner": {
       "type": "product-banner",
       "blocks": {
+        "product_card_cyAppf": {
+          "type": "product_card",
+          "settings": {
+            "product": "chequered-red-shirt"
+          }
+        },
         "product_card_E3JGqB": {
           "type": "product_card",
           "settings": {
@@ -99,6 +105,7 @@
         }
       },
       "block_order": [
+        "product_card_cyAppf",
         "product_card_E3JGqB"
       ],
       "settings": {
