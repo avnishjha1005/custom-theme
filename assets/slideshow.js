@@ -47,7 +47,6 @@ export class Slideshow extends Component {
       : false;
 
     this.swiper = new Swiper(scroller, {
-      modules: [Navigation, Pagination, Autoplay],
       
       // Initial Setup
       initialSlide: parseInt(this.getAttribute('initial-slide'), 10) || 0,
