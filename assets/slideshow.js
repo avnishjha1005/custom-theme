@@ -95,23 +95,23 @@ export class Slideshow extends Component {
   }
 
   #handleSlideChange() {
-    const index = this.swiper.realIndex;
-    const activeSlide = this.swiper.slides[this.swiper.activeIndex];
+  if (!this.swiper) return;
+  const index = this.swiper.realIndex ?? this.swiper.activeIndex ?? 0;
+  const activeSlide = this.swiper.slides?.[this.swiper.activeIndex];
+  if (!activeSlide) return;
 
-    // Emit custom event to maintain compatibility with your theme
-    this.dispatchEvent(
-      new CustomEvent('slideshow:select', {
-        detail: {
-          index,
-          slide: activeSlide,
-          id: activeSlide.getAttribute('slide-id'),
-        },
-      })
-    );
-    
-    // Sync external thumbnails if they exist
-    this.#syncThumbnails(index);
-  }
+  this.dispatchEvent(
+    new CustomEvent('slideshow:select', {
+      detail: {
+        index,
+        slide: activeSlide,
+        id: activeSlide.getAttribute('slide-id'),
+      },
+    })
+  );
+
+  this.#syncThumbnails(index);
+}
 
   #syncThumbnails(index) {
     if (this.refs.thumbnails) {
