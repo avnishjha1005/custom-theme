@@ -682,6 +682,9 @@
           ]
         }
       },
+      "custom_css": [
+        ".view-product-title + .group-block > .group-block-content:last-child {display: flex; flex-direction: row;}"
+      ],
       "settings": {
         "content_width": "content-full-width",
         "desktop_media_position": "left",
