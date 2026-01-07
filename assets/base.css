@@ -4319,7 +4319,7 @@ text-component {
 }
 
 @media screen and (min-width: 750px){
-.product-grid__item--hero  .swiper-container{
+.product-grid__item--hero  .swiper-container-box{
   height: -webkit-fill-available;
 }
 .product-grid__item--hero .swiper-wrapper{
@@ -4494,6 +4494,7 @@ text-component {
     opacity: 0;
   }
 }
+
 
 .swiper { width: 100%; height: 100%; }
 .swiper-wrapper { display: flex; }
