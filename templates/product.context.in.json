@@ -14,17 +14,23 @@
   },
   "sections": {
     "main": {
-      "settings": {},
       "blocks": {
         "product-details": {
           "blocks": {
-            "price_a7krng": {
-              "settings": {
-                "show_tax_info": false
+            "group_tfYD6h": {
+              "blocks": {
+                "group_FxYU7a": {
+                  "blocks": {
+                    "price_xEzCKN": {
+                      "settings": {
+                        "show_tax_info": false
+                      }
+                    }
+                  }
+                }
               }
             }
-          },
-          "settings": {}
+          }
         }
       }
     }
