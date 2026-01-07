@@ -67,6 +67,19 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "buttons",
+                "show_swatches": true,
+                "alignment": "left",
+                "padding-block-start": 12,
+                "padding-block-end": 24,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "product_vendor_qBEjXn": {
               "type": "product-vendor",
               "name": "Product Vendor",
@@ -239,19 +252,6 @@
                 "corner_radius": 0,
                 "padding-block-start": 0,
                 "padding-block-end": 15,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "variant_picker_R3rGDr": {
-              "type": "variant-picker",
-              "settings": {
-                "variant_style": "buttons",
-                "show_swatches": true,
-                "alignment": "left",
-                "padding-block-start": 12,
-                "padding-block-end": 24,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
@@ -489,6 +489,7 @@
             }
           },
           "block_order": [
+            "variant_picker_R3rGDr",
             "product_vendor_qBEjXn",
             "product_title_9WaLn7",
             "buy_buttons_eYQEYi",
@@ -496,7 +497,6 @@
             "button_aVMepx",
             "price_a7krng",
             "text_kt7RMP",
-            "variant_picker_R3rGDr",
             "accordion_NKWPiW",
             "shiprocket_promise_promise_widget_J4MFhC"
           ]
