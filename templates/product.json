@@ -67,32 +67,6 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "text_kt7RMP": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "text": "<p>Price all incl of taxes</p>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
             "product_vendor_qBEjXn": {
               "type": "product-vendor",
               "name": "Product Vendor",
@@ -225,8 +199,8 @@
             "price_a7krng": {
               "type": "price",
               "settings": {
-                "show_sale_price_first": true,
-                "show_installments": true,
+                "show_sale_price_first": false,
+                "show_installments": false,
                 "show_tax_info": true,
                 "type_preset": "h5",
                 "width": "100%",
@@ -238,7 +212,33 @@
                 "case": "none",
                 "color": "var(--color-foreground)",
                 "padding-block-start": 34,
-                "padding-block-end": 50,
+                "padding-block-end": 8,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_kt7RMP": {
+              "type": "text",
+              "name": "t:names.text",
+              "settings": {
+                "text": "<p>MRP incl. of all taxes</p>",
+                "width": "fit-content",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.625rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "color": "var(--color-primary)",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 15,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
               },
@@ -489,13 +489,13 @@
             }
           },
           "block_order": [
-            "text_kt7RMP",
             "product_vendor_qBEjXn",
             "product_title_9WaLn7",
             "buy_buttons_eYQEYi",
             "product_description_K9M3dT",
             "button_aVMepx",
             "price_a7krng",
+            "text_kt7RMP",
             "variant_picker_R3rGDr",
             "accordion_NKWPiW",
             "shiprocket_promise_promise_widget_J4MFhC"
