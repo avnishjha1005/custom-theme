@@ -12,5 +12,22 @@
   "context": {
     "market": "united-states-and-canada"
   },
-  "sections": {}
+  "sections": {
+    "main": {
+      "settings": {},
+      "blocks": {
+        "product-details": {
+          "blocks": {
+            "price_a7krng": {
+              "settings": {
+                "show_installments": true,
+                "show_sale_price_first": true
+              }
+            }
+          },
+          "settings": {}
+        }
+      }
+    }
+  }
 }
