@@ -2508,7 +2508,7 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
   --checkbox-top: 50%;
   --checkbox-left: 1.5px;
   --checkbox-offset: 3px;
-  --checkbox-border-radius: 7px;
+  --checkbox-border-radius: 0;
   --checkbox-label-padding: 8px;
   --checkbox-path-opacity: 0;
   --checkbox-cursor: pointer;
@@ -2592,7 +2592,7 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
 }
 
 .checkbox__input:disabled + .checkbox__label {
-  color: var(--input-disabled-text-color);
+  color: var(--input-disabled-textx-color);
 }
 
 /* Add to cart button */
