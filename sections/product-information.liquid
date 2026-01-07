@@ -281,6 +281,54 @@
   body:has(#header-group #header-component[data-sticky-state='active']) .product-details.sticky-content--desktop {
     --sticky-header-offset: var(--header-height);
   }
+  .product-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal columns */
+  column-gap: 2rem;
+  row-gap: 1rem;
+  align-items: start;
+}
+
+/* 1. Elements that should stay on the LEFT (Column 1) */
+/* Targets: Brand, Title, Price, and short descriptions */
+.product-details > .product-title,
+.product-details > .product-vendor,
+.product-details > .product-price,
+.product-details > .product-text-block {
+  grid-column: 1;
+}
+
+/* 2. Elements that should stay on the RIGHT (Column 2) */
+/* Targets: Variant Pickers and Size Guides */
+.product-details > .product-variant-picker,
+.product-details > .product-size-chart,
+.product-details > .product-swatches {
+  grid-column: 2;
+}
+
+/* 3. Elements that should be FULL WIDTH (Column 1 to -1) */
+/* Targets: Buy buttons, Assist buttons, and Accordions */
+.product-details > .product-buy-buttons,
+.product-details > .product-stylist-assistance,
+.product-details > .product-description,
+.product-details > .product-accordion,
+.product-details > .collapsible-tab,
+.product-details > .group-block {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* Mobile Reset: Stack everything in one column on smaller screens */
+@media screen and (max-width: 749px) {
+  .product-details {
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem;
+  }
+  
+  .product-details > * {
+    grid-column: 1 / -1 !important;
+  }
+}
 {% endstylesheet %}
 
 {% schema %}
