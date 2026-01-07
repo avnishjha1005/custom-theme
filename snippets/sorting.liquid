@@ -34,18 +34,10 @@
         <span class="accordion__title">
           {{- 'actions.sort' | t -}}
         </span>
-        <span class="accordion__icon">
-          <svg
-            aria-hidden="true"
-            focusable="false"
-            class="icon icon-plus"
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-          >
-            <path d="M6 0v6H0v1h6v6h1V7h6V6H7V0H6z" />
-          </svg>
-        </span>
+        <span class="svg-wrapper icon-plus icon-animated">
+        {{- 'icon-plus.svg' | inline_asset_content -}}
+      </span>
+        
       </summary>
       <div class="accordion__content">
         {% for option in results.sort_options %}
