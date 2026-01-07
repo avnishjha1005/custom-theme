@@ -2520,7 +2520,7 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
 
   @media screen and (min-width: 750px) {
     --checkbox-size: 16px;
-    --checkbox-border-radius: 5px;
+    --checkbox-border-radius: 0px;
     --checkbox-label-padding: 6px;
   }
 
