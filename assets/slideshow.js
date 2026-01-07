@@ -133,6 +133,17 @@ export class Slideshow extends Component {
   previous() { this.swiper?.slidePrev(); }
   pause() { this.swiper?.autoplay.stop(); }
   play() { this.swiper?.autoplay.start(); }
+  select(index, event = null) {
+  if (event) event.preventDefault();
+  const targetIndex = typeof index === 'string' ? parseInt(index, 10) : index;
+  
+  if (this.swiper) {
+    // If infinite loop is on, use slideToLoop to handle virtual indexes
+    this.hasAttribute('infinite') 
+      ? this.swiper.slideToLoop(targetIndex) 
+      : this.swiper.slideTo(targetIndex);
+  }
+}
 }
 
 if (!customElements.get('slideshow-component')) {
