@@ -12,5 +12,21 @@
   "context": {
     "market": "in"
   },
-  "sections": {}
+  "sections": {
+    "main": {
+      "settings": {},
+      "blocks": {
+        "product-details": {
+          "blocks": {
+            "price_a7krng": {
+              "settings": {
+                "show_tax_info": true
+              }
+            }
+          },
+          "settings": {}
+        }
+      }
+    }
+  }
 }

@@ -11,6 +11,9 @@
   "markets": {
     "united-states-and-canada": {
       "parent": "@default"
+    },
+    "in": {
+      "parent": "@default"
     }
   }
 }
