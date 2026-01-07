@@ -20,7 +20,7 @@
           "blocks": {
             "price_a7krng": {
               "settings": {
-                "show_tax_info": true
+                "show_tax_info": false
               }
             }
           },
