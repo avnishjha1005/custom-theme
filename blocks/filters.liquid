@@ -326,7 +326,16 @@
             <div class="facets__filters-wrapper">
               {% assign total_active_values = 0 %}
               {% assign is_active = false %}
-
+              {% if block_settings.enable_sorting %}
+            {% render 'sorting',
+              results: results,
+              sort_by: sort_by,
+              filter_style: block_settings.filter_style,
+              suffix: 'overflow',
+              should_use_select_on_mobile: should_use_select_on_mobile,
+              section_id: section.id
+            %}
+          {% endif %}
               {%- for filter in filters -%}
                 {%- liquid
                   assign should_autofocus = false
@@ -357,17 +366,6 @@
                 {% endcase %}
               {%- endfor -%}
             </div>
-          {% endif %}
-
-          {% if block_settings.enable_sorting %}
-            {% render 'sorting',
-              results: results,
-              sort_by: sort_by,
-              filter_style: block_settings.filter_style,
-              suffix: 'overflow',
-              should_use_select_on_mobile: should_use_select_on_mobile,
-              section_id: section.id
-            %}
           {% endif %}
         </form>
       </facets-form-component>
