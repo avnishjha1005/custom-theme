@@ -71,17 +71,17 @@
               "type": "group",
               "name": "t:names.group",
               "settings": {
-                "content_direction": "column",
-                "vertical_on_mobile": true,
+                "content_direction": "row",
+                "vertical_on_mobile": false,
                 "horizontal_alignment": "flex-start",
                 "vertical_alignment": "center",
                 "align_baseline": false,
-                "horizontal_alignment_flex_direction_column": "flex-start",
+                "horizontal_alignment_flex_direction_column": "center",
                 "vertical_alignment_flex_direction_column": "center",
-                "gap": 12,
+                "gap": 7,
                 "width": "fill",
                 "custom_width": 100,
-                "width_mobile": "fill",
+                "width_mobile": "custom",
                 "custom_width_mobile": 100,
                 "height": "fit",
                 "custom_height": 100,
@@ -302,7 +302,7 @@
                         "alignment": "left",
                         "padding-block-start": 12,
                         "padding-block-end": 24,
-                        "padding-inline-start": 0,
+                        "padding-inline-start": 15,
                         "padding-inline-end": 0
                       },
                       "blocks": {}
@@ -682,9 +682,7 @@
           ]
         }
       },
-      "custom_css": [
-        ".view-product-title + .group-block > .group-block-content:last-child {display: flex; flex-direction: row;}"
-      ],
+      "custom_css": [],
       "settings": {
         "content_width": "content-full-width",
         "desktop_media_position": "left",
