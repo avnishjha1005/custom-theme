@@ -231,18 +231,6 @@
               },
               "blocks": {}
             },
-            "divider_HrJgFt": {
-              "type": "_divider",
-              "name": "t:names.divider",
-              "settings": {
-                "thickness": 1,
-                "corner_radius": "square",
-                "width_percent": 100,
-                "padding-block-start": 12,
-                "padding-block-end": 12
-              },
-              "blocks": {}
-            },
             "accordion_NKWPiW": {
               "type": "accordion",
               "name": "t:names.accordion",
@@ -482,7 +470,6 @@
             "button_aVMepx",
             "price_a7krng",
             "variant_picker_R3rGDr",
-            "divider_HrJgFt",
             "accordion_NKWPiW",
             "shiprocket_promise_promise_widget_J4MFhC"
           ]
