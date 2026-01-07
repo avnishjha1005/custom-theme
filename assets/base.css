@@ -4320,7 +4320,7 @@ text-component {
 
 @media screen and (min-width: 750px){
 .product-grid__item--hero  .swiper-container-box{
-  height: -webkit-fill-available;
+  height: 105%;
 }
 .product-grid__item--hero .swiper-wrapper{
   padding-bottom:0;
