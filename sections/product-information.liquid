@@ -288,44 +288,48 @@
   row-gap: 1rem;
   align-items: start;
 }
+/* 1. Set the main container to a 2-column grid */
+.group-block-content.layout-panel-flex--column {
+  display: grid !important; /* Overriding the flex-column default */
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
+  row-gap: 10px;
+  align-items: start;
+}
 
-/* 1. Elements that should stay on the LEFT (Column 1) */
-/* Targets: Brand, Title, Price, and short descriptions */
-.product-details > .product-title,
-.product-details > .product-vendor,
-.product-details > .product-price,
-.product-details > .product-text-block {
+/* 2. LEFT COLUMN (Vendor and Title) */
+/* Targets the vendor and title link wrappers */
+.group-block-content > a.contents:has(.text-block--...product_vendor),
+.group-block-content > a.contents:has(.text-block--...product_title),
+.group-block-content > .view-product-title {
   grid-column: 1;
 }
 
-/* 2. Elements that should stay on the RIGHT (Column 2) */
-/* Targets: Variant Pickers and Size Guides */
-.product-details > .product-variant-picker,
-.product-details > .product-size-chart,
-.product-details > .product-swatches {
+/* 3. RIGHT COLUMN (Variant Picker / Size & Color) */
+.group-block-content > .variant-picker {
   grid-column: 2;
+  /* Push it down slightly if it's taller than the title */
+  align-self: start; 
 }
 
-/* 3. Elements that should be FULL WIDTH (Column 1 to -1) */
-/* Targets: Buy buttons, Assist buttons, and Accordions */
-.product-details > .product-buy-buttons,
-.product-details > .product-stylist-assistance,
-.product-details > .product-description,
-.product-details > .product-accordion,
-.product-details > .collapsible-tab,
-.product-details > .group-block {
+/* 4. FULL WIDTH (Buy Buttons and Accordions) */
+/* This makes the buy buttons and everything else span both columns */
+.group-block-content > .buy-buttons-block,
+.group-block-content > .accelerated-checkout-block,
+.group-block-content > .product-description,
+.group-block-content > .product-accordion {
   grid-column: 1 / -1;
   width: 100%;
+  margin-top: 20px;
 }
 
-/* Mobile Reset: Stack everything in one column on smaller screens */
+/* 5. MOBILE RESET */
+/* Ensures it stacks vertically again on phones */
 @media screen and (max-width: 749px) {
-  .product-details {
+  .group-block-content.layout-panel-flex--column {
     grid-template-columns: 1fr;
-    row-gap: 1.5rem;
   }
-  
-  .product-details > * {
+  .group-block-content > * {
     grid-column: 1 / -1 !important;
   }
 }
