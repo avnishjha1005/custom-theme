@@ -63,8 +63,8 @@ export class Slideshow extends Component {
 
       // Navigation Refs
       navigation: {
-        nextEl: next || null,
-        prevEl: previous || null,
+        nextEl: this.refs.next?.[0] || this.refs.next || null,
+        prevEl: this.refs.previous?.[0] || this.refs.previous || null,
       },
 
       // Pagination (Dots)
