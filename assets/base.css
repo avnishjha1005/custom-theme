@@ -4531,5 +4531,5 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
 }
 
 .resource-list__carousel:has([ref="resourceListCarousel"]) {
-  width:100vw;
+  max-width:100vw;
 }
