@@ -743,7 +743,8 @@
         }
       },
       "custom_css": [
-        ".product-information__grid{max-width:1440px;}"
+        ".product-information__grid {max-width: 1440px;}",
+        "@media screen and (min-width: 750px) {.product-information__media{grid-column:2/3;}}"
       ],
       "settings": {
         "content_width": "content-center-aligned",
