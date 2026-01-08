@@ -28,7 +28,7 @@
   {% endcapture %}
 {%- endif -%}
 
-<div
+<a href={{ routes.root_url }}
   class="
     logo-block
     spacing-style
@@ -70,7 +70,7 @@
   {% else %}
     {% render 'jumbo-text', text: shop.name %}
   {% endif %}
-</div>
+</a>
 
 {% stylesheet %}
   .logo-block {
