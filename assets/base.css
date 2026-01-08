@@ -4512,7 +4512,6 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
 }
 
 [ref="resourceListCarousel"] {
-  width:100vw;
   overflow: scroll;
 }
 
@@ -4529,4 +4528,8 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"] > .swiper-wrapper{
   width:100%;
   overflow: visible;
+}
+
+.resource-list__carousel:has([ref="resourceListCarousel"]) {
+  width:100vw;
 }
