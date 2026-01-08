@@ -4533,6 +4533,6 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
 .resource-list__carousel:has([ref="resourceListCarousel"]) {
   width:100vw;
 }
-.product-list{
+[data-testid="product-list"]{
   overflow-x:hidden;
 }
