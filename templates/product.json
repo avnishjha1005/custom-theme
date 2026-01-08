@@ -38,7 +38,8 @@
         "logo_G8MWFP"
       ],
       "custom_css": [
-        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; }}"
+        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; padding: 0px; }}",
+        "@media screen and (m-width: 768px) {.spacing-style{padding:0px;} }"
       ],
       "name": "t:names.large_logo",
       "settings": {
