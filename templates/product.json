@@ -306,18 +306,33 @@
                         "padding-inline-end": 0
                       },
                       "blocks": {}
+                    },
+                    "variant_picker_66r8Lh": {
+                      "type": "variant-picker",
+                      "settings": {
+                        "variant_style": "buttons",
+                        "show_swatches": true,
+                        "alignment": "left",
+                        "padding-block-start": 12,
+                        "padding-block-end": 24,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
                     }
                   },
                   "block_order": [
                     "product_vendor_BLzrzQ",
                     "product_title_JmVbRp",
                     "price_xEzCKN",
-                    "text_t88HXC"
+                    "text_t88HXC",
+                    "variant_picker_66r8Lh"
                   ]
                 },
                 "group_VdNWtX": {
                   "type": "group",
                   "name": "t:names.group",
+                  "disabled": true,
                   "settings": {
                     "content_direction": "column",
                     "vertical_on_mobile": true,
@@ -354,24 +369,7 @@
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
-                  "blocks": {
-                    "variant_picker_dcVQ46": {
-                      "type": "variant-picker",
-                      "settings": {
-                        "variant_style": "buttons",
-                        "show_swatches": true,
-                        "alignment": "left",
-                        "padding-block-start": 12,
-                        "padding-block-end": 24,
-                        "padding-inline-start": 15,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "variant_picker_dcVQ46"
-                  ]
+                  "blocks": {}
                 }
               },
               "block_order": [
@@ -744,7 +742,7 @@
       },
       "custom_css": [
         ".product-information__grid {max-width: 1440px;}",
-        "@media screen and (min-width: 750px) {.product-information__media{grid-column:2/3;}}"
+        "@media screen and (min-width: 750px) {.product-information__media {grid-column: 2/3; }}"
       ],
       "settings": {
         "content_width": "content-center-aligned",
@@ -1069,12 +1067,95 @@
         "show_on_mobile": true,
         "z_index": 9999
       }
+    },
+    "blocks_xbc4aP": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_5430b1f_K3jXWB": {
+          "type": "ai_gen_block_5430b1f",
+          "settings": {
+            "main_image": "shopify://shop_images/6e6ca1821192e2248ec84d4fd2d7a3ca374bf391.jpg",
+            "hotspot_size": 40,
+            "hotspot_color": "#ffffff",
+            "hotspot_icon_color": "#000000",
+            "hotspot_border_width": 2,
+            "hotspot_border_color": "#000000",
+            "hotspot_active_color": "#000000",
+            "hotspot_active_icon_color": "#ffffff",
+            "hotspot_active_border_color": "#000000",
+            "product_1": "chequered-red-shirt",
+            "hotspot_1_x": 30,
+            "hotspot_1_y": 40,
+            "product_2": "",
+            "hotspot_2_x": 50,
+            "hotspot_2_y": 50,
+            "product_3": "",
+            "hotspot_3_x": 70,
+            "hotspot_3_y": 60,
+            "product_4": "",
+            "hotspot_4_x": 40,
+            "hotspot_4_y": 70,
+            "product_5": "",
+            "hotspot_5_x": 60,
+            "hotspot_5_y": 30,
+            "product_card_bg_color": "#ffffff",
+            "product_text_color": "#000000",
+            "product_card_padding": 40,
+            "product_image_radius": 0,
+            "product_title_size": 24,
+            "product_price_size": 18,
+            "variant_bg_color": "#ffffff",
+            "variant_border_color": "#e6e6e6",
+            "variant_hover_bg_color": "#f5f5f5",
+            "variant_hover_border_color": "#000000",
+            "variant_selected_bg_color": "#000000",
+            "variant_selected_text_color": "#ffffff",
+            "variant_selected_border_color": "#000000",
+            "button_bg_color": "#000000",
+            "button_text_color": "#ffffff",
+            "button_hover_bg_color": "#383838"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_5430b1f_K3jXWB"
+      ],
+      "name": "Shop the look",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
     "section_RmgHJD",
     "main",
     "product_recommendations_qnzPkn",
-    "whatsapp_fab_epht6r"
+    "whatsapp_fab_epht6r",
+    "blocks_xbc4aP"
   ]
 }
