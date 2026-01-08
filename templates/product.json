@@ -39,7 +39,7 @@
       ],
       "custom_css": [
         ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; padding: 0px; }}",
-        "@media screen and (m-width: 768px) {.spacing-style{padding:0px;} }"
+        "@media screen and (min-width: 768px) {.spacing-style {padding: 0px; }}"
       ],
       "name": "t:names.large_logo",
       "settings": {
@@ -744,7 +744,7 @@
       },
       "custom_css": [],
       "settings": {
-        "content_width": "content-full-width",
+        "content_width": "content-center-aligned",
         "desktop_media_position": "left",
         "equal_columns": true,
         "limit_details_width": true,
