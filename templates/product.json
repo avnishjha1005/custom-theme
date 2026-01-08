@@ -358,47 +358,6 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "button_NHFdjd": {
-                  "type": "button",
-                  "name": "t:names.button",
-                  "settings": {
-                    "label": "NEED ASSISTANCE? TALK TO OUR STYLIST",
-                    "link": "shopify://collections/all",
-                    "open_in_new_tab": false,
-                    "style_class": "button",
-                    "width": "custom",
-                    "custom_width": 100,
-                    "width_mobile": "custom",
-                    "custom_width_mobile": 100
-                  },
-                  "blocks": {}
-                },
-                "product_description_VBaHrR": {
-                  "type": "product-description",
-                  "name": "t:names.product_description",
-                  "settings": {
-                    "text": "{{ closest.product.description }}",
-                    "width": "fit-content",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 24,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
                 "buy_buttons_cz8Uep": {
                   "type": "buy-buttons",
                   "settings": {
@@ -435,12 +394,53 @@
                     }
                   },
                   "block_order": []
+                },
+                "product_description_VBaHrR": {
+                  "type": "product-description",
+                  "name": "t:names.product_description",
+                  "settings": {
+                    "text": "{{ closest.product.description }}",
+                    "width": "fit-content",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 24,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "button_NHFdjd": {
+                  "type": "button",
+                  "name": "t:names.button",
+                  "settings": {
+                    "label": "NEED ASSISTANCE? TALK TO OUR STYLIST",
+                    "link": "shopify://collections/all",
+                    "open_in_new_tab": false,
+                    "style_class": "button",
+                    "width": "custom",
+                    "custom_width": 100,
+                    "width_mobile": "custom",
+                    "custom_width_mobile": 100
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
-                "button_NHFdjd",
+                "buy_buttons_cz8Uep",
                 "product_description_VBaHrR",
-                "buy_buttons_cz8Uep"
+                "button_NHFdjd"
               ]
             },
             "accordion_NKWPiW": {
