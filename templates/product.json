@@ -755,7 +755,7 @@
             "gap": 12
           },
           "blocks": {
-            "static-product-card": {
+            "product-card": {
               "type": "_product-card",
               "static": true,
               "settings": {
@@ -772,11 +772,18 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "product_card_gallery_9zk49X": {
-                  "type": "_product-card-gallery",
-                  "name": "t:names.product_card_media",
+                "image_rHmLtG": {
+                  "type": "image",
+                  "name": "t:names.image",
                   "settings": {
+                    "image": "{{ closest.product.featured_image }}",
+                    "link": "",
                     "image_ratio": "portrait",
+                    "width": "custom",
+                    "custom_width": 18,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
                     "border": "none",
                     "border_width": 1,
                     "border_opacity": 100,
@@ -788,7 +795,7 @@
                   },
                   "blocks": {}
                 },
-                "product_card_group_YzNY8W": {
+                "product_card_group_nfMB8R": {
                   "type": "_product-card-group",
                   "name": "t:names.group",
                   "settings": {
@@ -827,7 +834,7 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {
-                    "product_vendor_zDaMNA": {
+                    "product_vendor_kGpRCA": {
                       "type": "product-vendor",
                       "name": "Product Vendor",
                       "settings": {
@@ -852,7 +859,7 @@
                       },
                       "blocks": {}
                     },
-                    "product_title_Tdrnz9": {
+                    "product_title_39KXxg": {
                       "type": "product-title",
                       "name": "t:names.title",
                       "settings": {
@@ -878,7 +885,7 @@
                       },
                       "blocks": {}
                     },
-                    "price_Lkqtt8": {
+                    "price_znQYFP": {
                       "type": "price",
                       "name": "t:names.product_price",
                       "settings": {
@@ -903,15 +910,15 @@
                     }
                   },
                   "block_order": [
-                    "product_vendor_zDaMNA",
-                    "product_title_Tdrnz9",
-                    "price_Lkqtt8"
+                    "product_vendor_kGpRCA",
+                    "product_title_39KXxg",
+                    "price_znQYFP"
                   ]
                 }
               },
               "block_order": [
-                "product_card_gallery_9zk49X",
-                "product_card_group_YzNY8W"
+                "image_rHmLtG",
+                "product_card_group_nfMB8R"
               ]
             }
           },
