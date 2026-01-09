@@ -67,12 +67,6 @@ export class Slideshow extends Component {
         prevEl: this.refs.previous?.[0] || this.refs.previous || null,
       },
 
-      // Pagination (Dots)
-       pagination: {
-        el: '.slideshow-controls',
-        type: 'bullets',
-      },
-
       // Events
       on: {
         slideChange: () => {
