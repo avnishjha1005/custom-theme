@@ -1,7 +1,7 @@
 {% liquid
   assign bundle_products = product.metafields.custom.bundle_products.value
   
-  case section.settings.layout_type
+  case block.settings.layout_type
     when 'grid'
       assign classes = 'resource-list--grid'
     when 'carousel'
@@ -41,8 +41,8 @@
     %}
 
      <div
-      class="resource-list {% if section.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
-      {% if section.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
+      class="resource-list {% if block.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
+      {% if block.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
     >
       
           {{ list_items }}
@@ -50,16 +50,16 @@
       
     </div> 
 
-    {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
+    {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}
       <div
         class="resource-list hidden--desktop force-full-width"
-        style="--resource-list-gap: {{ section.settings.columns_gap }}px; --column-count: {{ section.settings.columns }};"
+        style="--resource-list-gap: {{ block.settings.columns_gap }}px; --column-count: {{ block.settings.columns }};"
       >
         {% render 'resource-list-carousel',
           ref: 'bundleCarouselMobile',
           slides: slides,
           slide_count: bundle_products.size,
-          settings: section.settings
+          settings: block.settings
         %}
       </div>
     {% endif %} 
