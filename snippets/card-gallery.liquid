@@ -206,7 +206,7 @@
           {% if product.media.size > 1 %}
 
       {%- capture controls_markup -%}
-        {% render 'slideshow-controls', style: 'dots', item_count: product.media.size, icon_style: 'chevron', shape: 'circle' %}
+        {% render 'slideshow-controls', style: 'dots', item_count: product.variants.first.media.size, icon_style: 'chevron', shape: 'circle' %}
       {%- endcapture -%}
     {% endif %}
 
