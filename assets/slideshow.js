@@ -108,7 +108,7 @@ export class Slideshow extends Component {
   #syncThumbnails(index) {
   // Fallback: If this.refs.thumbnails is empty, query the DOM manually within the component
   const dots = this.refs.thumbnails || this.querySelectorAll('.slideshow-controls');
-  
+  console.log(this.refs.thumbnails);
   if (dots) {
     dots.forEach((thumb, i) => {
       // Use index0 comparison
