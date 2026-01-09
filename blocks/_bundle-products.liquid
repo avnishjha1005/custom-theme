@@ -19,10 +19,10 @@
 %}
 
 <div
-  class="bundle-products-section section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} section-resource-list spacing-style gap-style"
-  style="{% render 'spacing-style', settings: section.settings %}{% render 'gap-style', value: section.settings.gap %}{{ styles }}"
+  class="bundle-products-section section section--{{ block.settings.section_width }} color-{{ block.settings.color_scheme }} section-resource-list spacing-style gap-style"
+  style="{% render 'spacing-style', settings: block.settings %}{% render 'gap-style', value: block.settings.gap %}{{ styles }}"
 >
-  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
+  <div class="section-background color-{{ block.settings.color_scheme }}"></div>
 
 
   {%- if bundle_products != blank -%}
