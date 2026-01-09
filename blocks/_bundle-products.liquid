@@ -32,7 +32,7 @@
     
       {% for item in bundle_products %}
         <div class="resource-list__item">
-          {% render 'product-grid', id: 'product-card', closest.product: item %}
+          {% content_for 'block', type: '_product-card-gallery', id: 'product-card', closest.product: item %}
         </div>
         {% unless forloop.last %}{% endunless %}
       {% endfor %}
