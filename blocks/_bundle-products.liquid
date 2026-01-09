@@ -43,7 +43,7 @@
       assign slides = slide_content | split: ''
     %}
 
-    <div
+    {% comment %} <div
       class="resource-list {% if section.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
       {% if section.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
     >
@@ -51,7 +51,7 @@
           {{ list_items }}
         
       
-    </div>
+    </div> {% endcomment %}
 
     {% comment %} {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
       <div
