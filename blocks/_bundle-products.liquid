@@ -3,7 +3,7 @@
   Usage: {% render '_bundle-products' %}
 {% endcomment %}
 
-{%- assign bundle_list = product.metafields.custom.bundle_products -%}
+{%- assign bundle_list = product.metafields.custom.bundle_products.value -%}
 
 {%- if bundle_list != blank -%}
   <div class="bundle-products-wrapper page-width" style="margin-top: 2rem; margin-bottom: 2rem;">
