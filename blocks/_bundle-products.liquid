@@ -48,10 +48,10 @@
       </div>
 
       {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}
-        {% liquid
+        {% comment %} {% liquid
           # Split by the closing div tag to create an array for the carousel renderer
           assign slides = list_items | split: '</div>'
-        %}
+        %} {% endcomment %}
         <div
           class="resource-list hidden--desktop force-full-width"
           style="--resource-list-gap: {{ block.settings.columns_gap }}px; --column-count: {{ block.settings.columns }};"
