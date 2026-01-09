@@ -17,7 +17,7 @@
             data-product-id="{{ bundle_product.id }}"
             ref="cards[]"
           >
-            {% content_for 'block', type: '_product-card', id: 'product-card', bundle_product:product %}
+            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product:bundle_product %}
           </li>
       {%- endfor -%}
     </ul>
