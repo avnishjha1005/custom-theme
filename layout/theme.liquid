@@ -93,22 +93,8 @@
 
   </body>
   <script>
-    //hydrate
-    document.addEventListener('DOMContentLoaded', () => {
-  {% if customer %}
-    // Grab the wishlist string from Shopify Liquid
-    const savedNote = {{ customer.note | json }} || "";
-    if (savedNote) {
-      console.log(savedNote);
-      const savedArray = savedNote.split(',').filter(i => i !== "");
-      // Merge with local storage so we don't lose anything
-      let localData = JSON.parse(localStorage.getItem('wishlist')) || [];
-      let combined = [...new Set([...localData, ...savedArray])];
-      localStorage.setItem('wishlist', JSON.stringify(combined));
-    }
-  {% endif %}
 });
-    // Wishlist Button Web Component
+    {% comment %} // Wishlist Button Web Component
 (function() {
   'use strict';
   
@@ -403,9 +389,9 @@
   }
 
   customElements.define('wishlist-button', WishlistButton);
-})();
+})(); {% endcomment %}
 
-
+{% comment %} 
 function renderWishlistGrid() {
       const wishlistBlock = document.querySelector('.js-wishlistBlock');
       if (!wishlistBlock) {
@@ -446,7 +432,7 @@ function renderWishlistGrid() {
       }
     }
     renderWishlistGrid();
-</script>
+</script> {% endcomment %}
 
 </html>
 
