@@ -70,6 +70,7 @@ export class Slideshow extends Component {
       // Events
       on: {
         slideChange: () => {
+           console.log("event dispatched")
           if (!this.swiper) return;
           this.#handleSlideChange();
         },
@@ -87,6 +88,7 @@ export class Slideshow extends Component {
   }
 
   #handleSlideChange() {
+     console.log("event dispatched")
   if (!this.swiper) return;
   const index = this.swiper.realIndex ?? this.swiper.activeIndex ?? 0;
   const activeSlide = this.swiper.slides?.[this.swiper.activeIndex];
