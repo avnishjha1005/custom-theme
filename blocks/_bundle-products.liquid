@@ -1,6 +1,7 @@
 {% liquid
   assign bundle_products = product.metafields.custom.bundle_products.value
-  assign bundle_count = bundle_products.count
+  assign bundle_count = bundle_products.count | default: 0
+  
   case block.settings.layout_type
     when 'grid'
       assign classes = 'resource-list--grid'
@@ -16,6 +17,15 @@
     echo '--resource-list-columns-mobile: repeat(' | append: block.settings.mobile_columns | append: ', 1fr);'
     echo '--column-count: ' | append: block.settings.columns | append: ';'
   endcapture
+
+  # Capture the items once to use in both desktop and mobile layouts
+  capture list_items
+    for item in bundle_products limit: block.settings.max_products
+      echo '<div class="resource-list__item">'
+        content_for 'block', type: '_product-card', id: 'product-card', closest.product: item
+      echo '</div>'
+    endfor
+  endcapture
 %}
 
 <div
@@ -24,44 +34,37 @@
 >
   <div class="section-background color-{{ block.settings.color_scheme }}"></div>
 
-
   {%- if bundle_products != blank -%}
-      {% for item in bundle_products %}
-        <div class="resource-list__item">
-          {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: item %}
-        </div>
-        {% unless forloop.last %}{% endunless %}
-      {% endfor %}
-   
+    <div class="section__header page-width">
+      <h2 class="bundle-heading">Look of {{ bundle_count }} items</h2>
+    </div>
 
-    {% liquid
-      assign slide_content = list_items | strip
-      assign slides = slide_content | split: ''
-    %}
-
-     <div
-      class="resource-list {% if block.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
-      {% if block.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
-    >
-      
-          {{ list_items }}
-        
-      
-    </div> 
-
-    {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}
+    <div class="section__content page-width">
       <div
-        class="resource-list hidden--desktop force-full-width"
-        style="--resource-list-gap: {{ block.settings.columns_gap }}px; --column-count: {{ block.settings.columns }};"
+        class="resource-list {% if block.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
+        {% if block.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
       >
-        {% render 'resource-list-carousel',
-          ref: 'bundleCarouselMobile',
-          slides: slides,
-          slide_count: bundle_products.size,
-          settings: block.settings
-        %}
+        {{ list_items }}
       </div>
-    {% endif %} 
+
+      {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}
+        {% liquid
+          # Split by the closing div tag to create an array for the carousel renderer
+          assign slides = list_items | split: '</div>'
+        %}
+        <div
+          class="resource-list hidden--desktop force-full-width"
+          style="--resource-list-gap: {{ block.settings.columns_gap }}px; --column-count: {{ block.settings.columns }};"
+        >
+          {% render 'resource-list-carousel',
+            ref: 'bundleCarouselMobile',
+            slides: slides,
+            slide_count: bundle_count,
+            settings: block.settings
+          %}
+        </div>
+      {% endif %}
+    </div>
   {%- endif -%}
 </div>
 
@@ -179,8 +182,13 @@
   ]
 }
 {% endschema %}
+
 {% stylesheet %}
-  .bundle-products-section{
-    display: flex;
+  .bundle-products-section {
+    display: block; /* Changed from flex to block for standard stacking */
+  }
+  .bundle-heading {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
   }
 {% endstylesheet %}
