@@ -27,6 +27,7 @@
 
   {%- if bundle_products != blank -%}
     <div> Look of {{ bundle_count}} items </div>
+    <div class="product-list">
       {% for item in bundle_products %}
         <div class="resource-list__item">
           {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: item %}
