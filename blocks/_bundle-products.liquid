@@ -50,7 +50,8 @@
       {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}
         {% liquid
           # Split by the closing div tag to create an array for the carousel renderer
-           assign slides = slide_content | split: '<!--@list/split-->'
+          assign slides = list_items | split: '<!--@list/split-->'
+
         %} 
         <div
           class="resource-list hidden--desktop force-full-width"
