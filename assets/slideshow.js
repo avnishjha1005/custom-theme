@@ -18,6 +18,7 @@ export class Slideshow extends Component {
   swiper = null;
 
   async connectedCallback() {
+     console.log("event dispatched")
     super.connectedCallback();
     this.initSwiper();
   }
