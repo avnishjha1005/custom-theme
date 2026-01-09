@@ -47,20 +47,13 @@
       class="resource-list {% if section.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
       {% if section.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
     >
-      {% case section.settings.layout_type %}
-        {% when 'grid' %}
+      
           {{ list_items }}
-        {% when 'carousel' %}
-          {% render 'resource-list-carousel',
-            ref: 'bundleCarousel',
-            slides: slides,
-            slide_count: bundle_products.size,
-            settings: section.settings
-          %}
-      {% endcase %}
+        
+      
     </div>
 
-    {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
+    {% comment %} {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
       <div
         class="resource-list hidden--desktop force-full-width"
         style="--resource-list-gap: {{ section.settings.columns_gap }}px; --column-count: {{ section.settings.columns }};"
@@ -72,7 +65,7 @@
           settings: section.settings
         %}
       </div>
-    {% endif %}
+    {% endif %} {% endcomment %}
   {%- endif -%}
 </div>
 
