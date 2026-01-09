@@ -30,7 +30,7 @@
 
   {%- if bundle_products != blank -%}
     {% capture list_items %}
-      {% for item in bundle_products limit: section.settings.max_products %}
+      {% for item in bundle_products %}
         <div class="resource-list__item">
           {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: item %}
         </div>
