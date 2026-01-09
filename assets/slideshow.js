@@ -93,6 +93,7 @@ export class Slideshow extends Component {
   if (!activeSlide) return;
 
   this.dispatchEvent(
+    console.log("event dispatched")
     new CustomEvent('slideshow:select', {
       detail: {
         index,
