@@ -70,7 +70,7 @@ export class Slideshow extends Component {
       // Events
       on: {
         slideChange: () => {
-           console.log("event dispatched")
+           console.log("event dispatched");
           if (!this.swiper) return;
           this.#handleSlideChange();
         },
