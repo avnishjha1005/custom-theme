@@ -1,45 +1,192 @@
-{% comment %}
-  Renders a grid of product cards based on a product list metafield.
-  Usage: {% render '_bundle-products' %}
-{% endcomment %}
+{% liquid
+  assign bundle_products = product.metafields.custom.bundle_products.value
+  
+  case section.settings.layout_type
+    when 'grid'
+      assign classes = 'resource-list--grid'
+    when 'carousel'
+      assign classes = 'resource-list__carousel'
+  endcase
 
-{%- assign bundle_list = product.metafields.custom.bundle_products.value -%}
+  capture styles
+    echo '--column-count-mobile: ' | append: section.settings.mobile_columns | append: ';'
+    echo '--resource-list-column-gap-desktop: ' | append: section.settings.columns_gap | append: 'px;'
+    echo '--resource-list-row-gap-desktop: ' | append: section.settings.rows_gap | append: 'px;'
+    echo '--resource-list-columns: repeat(' | append: section.settings.columns | append: ', 1fr);'
+    echo '--resource-list-columns-mobile: repeat(' | append: section.settings.mobile_columns | append: ', 1fr);'
+    echo '--column-count: ' | append: section.settings.columns | append: ';'
+  endcapture
+%}
 
-{%- if bundle_list != blank -%}
-  <div class="bundle-products-wrapper page-width" style="margin-top: 2rem; margin-bottom: 2rem;">
-    <h2 class="inline-richtext {{ block.settings.heading_size }}">What's Included in this Bundle</h2>
-    
-    <ul class="product-card-list grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
-      {%- for bundle_product in bundle_list -%}
-       <li
-            id="{{ section.id }}-{{ bundle_product.id }}"
-            class="product-grid__item product-grid__item--{{ forloop.index0 }}"
-            data-product-id="{{ bundle_product.id }}"
-            ref="cards[]"
-          >
-            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product:bundle_product %}
-          </li>
-      {%- endfor -%}
-    </ul>
+<div
+  class="bundle-products-section section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }} section-resource-list spacing-style gap-style"
+  style="{% render 'spacing-style', settings: section.settings %}{% render 'gap-style', value: section.settings.gap %}{{ styles }}"
+>
+  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+  <div class="section-resource-list__content">
+    {% content_for 'blocks' %}
   </div>
-{%- endif -%}
 
-<style>
-  .bundle-products-wrapper .card__content {
-    padding-top: 1rem;
-  }
-  .bundle-products-wrapper .card__heading {
-    margin-bottom: 0.5rem;
-  }
-  .product-card-list{
-    display:flex;
-    flex-direction:row;
-    height:300px;
-}
-</style>
+  {%- if bundle_products != blank -%}
+    {% capture list_items %}
+      {% for item in bundle_products limit: section.settings.max_products %}
+        <div class="resource-list__item">
+          {% content_for 'block', type: '_product-card', id: 'static-product-card', closest.product: item %}
+        </div>
+        {% unless forloop.last %}{% endunless %}
+      {% endfor %}
+    {% endcapture %}
+
+    {% liquid
+      assign slide_content = list_items | strip
+      assign slides = slide_content | split: ''
+    %}
+
+    <div
+      class="resource-list {% if section.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
+      {% if section.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
+    >
+      {% case section.settings.layout_type %}
+        {% when 'grid' %}
+          {{ list_items }}
+        {% when 'carousel' %}
+          {% render 'resource-list-carousel',
+            ref: 'bundleCarousel',
+            slides: slides,
+            slide_count: bundle_products.size,
+            settings: section.settings
+          %}
+      {% endcase %}
+    </div>
+
+    {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
+      <div
+        class="resource-list hidden--desktop force-full-width"
+        style="--resource-list-gap: {{ section.settings.columns_gap }}px; --column-count: {{ section.settings.columns }};"
+      >
+        {% render 'resource-list-carousel',
+          ref: 'bundleCarouselMobile',
+          slides: slides,
+          slide_count: bundle_products.size,
+          settings: section.settings
+        %}
+      </div>
+    {% endif %}
+  {%- endif -%}
+</div>
+
 {% schema %}
 {
-  "name": "t:names.product_media",
-  "tag": null,
+  "name": "Bundle Products List",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Bundle Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout_type",
+      "label": "Layout Style",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "carousel", "label": "Carousel" }
+      ],
+      "default": "grid"
+    },
+    {
+      "type": "checkbox",
+      "id": "carousel_on_mobile",
+      "label": "Carousel on mobile",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Max products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns on desktop",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "mobile_columns",
+      "label": "Columns on mobile",
+      "options": [
+        { "value": "1", "label": "1" },
+        { "value": "2", "label": "2" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "columns_gap",
+      "label": "Horizontal gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "rows_gap",
+      "label": "Vertical gap",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        { "value": "page-width", "label": "Page width" },
+        { "value": "full-width", "label": "Full width" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between header and list",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 12
+    }
+  ],
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "presets": [
+    {
+      "name": "Bundle Products List"
+    }
+  ]
 }
 {% endschema %}
