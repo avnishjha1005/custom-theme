@@ -84,15 +84,14 @@
         {{ details }}
       {% endif %}
     {% endfor %}
-  </div>
-  <div>
+    <div>
     {%- content_for 'block',
         type: '_bundle-products',
         id: 'bundle',
         closest.product: closest.product
     -%}
   </div>
-
+  </div>
   {% content_for 'blocks' %}
 </div>
 
