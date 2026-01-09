@@ -9,7 +9,7 @@
   <div class="bundle-products-wrapper page-width" style="margin-top: 2rem; margin-bottom: 2rem;">
     <h2 class="inline-richtext {{ block.settings.heading_size }}">What's Included in this Bundle</h2>
     
-    <ul class="grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
+    <ul class="product-card-list grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
       {%- for bundle_product in bundle_list -%}
        <li
             id="{{ section.id }}-{{ bundle_product.id }}"
@@ -25,9 +25,6 @@
 {%- endif -%}
 
 <style>
-    .bundle-products-wrapper{
-        display:flex;
-    }
   .bundle-products-wrapper .card__content {
     padding-top: 1rem;
   }
