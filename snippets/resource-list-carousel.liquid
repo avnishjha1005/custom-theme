@@ -32,7 +32,7 @@
 
 {% if settings.icons_style != 'none' %}
   {% if settings.icons_style == 'dots' %}
-    {% render 'slideshow-controls' style: 'dots'%}
+    {% render 'slideshow-controls' style: 'dots' item_count: slide_count%}
   {% else %}
     {% capture slideshow_arrows %}
       {% render 'slideshow-arrows', icon_style: settings.icons_style, icon_shape: settings.icons_shape %}
