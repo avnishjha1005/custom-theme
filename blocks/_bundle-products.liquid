@@ -10,10 +10,15 @@
     <h2 class="inline-richtext {{ block.settings.heading_size }}">What's Included in this Bundle</h2>
     
     <ul class="grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
-      {%- for item in bundle_list -%}
-        <li class="grid__item">
-          {% render 'product-card' %}
-        </li>
+      {%- for product in bundle_list -%}
+       <li
+            id="{{ section.id }}-{{ product.id }}"
+            class="product-grid__item product-grid__item--{{ forloop.index0 }}"
+            data-product-id="{{ product.id }}"
+            ref="cards[]"
+          >
+            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+          </li>
       {%- endfor -%}
     </ul>
   </div>
