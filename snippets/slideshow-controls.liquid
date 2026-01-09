@@ -189,3 +189,10 @@
     {%- render 'slideshow-arrow', action: 'next', icon_style: icon_style, icon_shape: shape -%}
   </div>
 {% endif %}
+
+{% stylesheet %}
+  .slideshow-control{
+    position: fixed;
+    z-index: auto;
+  }
+{% endstylesheet %}
