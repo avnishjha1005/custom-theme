@@ -1,0 +1,66 @@
+{% comment %}
+  Renders a grid of product cards based on a product list metafield.
+  Usage: {% render '_bundle-products' %}
+{% endcomment %}
+
+{%- assign bundle_list = product.metafields.custom.bundle_products.value -%}
+
+{%- if bundle_list != blank -%}
+  <div class="bundle-products-wrapper page-width" style="margin-top: 2rem; margin-bottom: 2rem;">
+    <h2 class="inline-richtext {{ block.settings.heading_size }}">What's Included in this Bundle</h2>
+    
+    <ul class="grid grid--2-col-tablet-down grid--4-col-desktop" role="list">
+      {%- for item in bundle_list -%}
+        <li class="grid__item">
+          <div class="card-wrapper underline-links-hover">
+            <div class="card card--standard card--media" style="--ratio-percent: 100%;">
+              <div class="card__inner color-background-2 gradient ratio">
+                {%- if item.featured_media -%}
+                  <div class="card__media">
+                    <div class="media media--transparent media--hover-effect">
+                      <img
+                        src="{{ item.featured_media | image_url: width: 533 }}"
+                        alt="{{ item.featured_media.alt | escape }}"
+                        class="motion-reduce"
+                        loading="lazy"
+                        width="533"
+                        height="{{ 533 | divided_by: item.featured_media.aspect_ratio }}"
+                      >
+                    </div>
+                  </div>
+                {%- endif -%}
+              </div>
+              <div class="card__content">
+                <div class="card__information">
+                  <h3 class="card__heading h5">
+                    <a href="{{ item.url }}" class="full-unstyled-link">
+                      {{ item.title | escape }}
+                    </a>
+                  </h3>
+                  <div class="card-pill">
+                    <span class="badge badge--bottom-left color-accent-1">Included</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}
+
+<style>
+  .bundle-products-wrapper .card__content {
+    padding-top: 1rem;
+  }
+  .bundle-products-wrapper .card__heading {
+    margin-bottom: 0.5rem;
+  }
+</style>
+{% schema %}
+{
+  "name": "t:names.product_media",
+  "tag": null,
+}
+{% endschema %}
