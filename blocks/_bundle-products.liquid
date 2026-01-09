@@ -1,6 +1,6 @@
 {% liquid
   assign bundle_products = product.metafields.custom.bundle_products.value
-  
+  assign bundle_count = bundle_products.count
   case block.settings.layout_type
     when 'grid'
       assign classes = 'resource-list--grid'
@@ -28,6 +28,7 @@
   {%- if bundle_products != blank -%}
     
       {% for item in bundle_products %}
+        <div> Look of 4 items </div>
         <div class="resource-list__item">
           {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: item %}
         </div>
