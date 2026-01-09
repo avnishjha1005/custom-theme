@@ -98,7 +98,6 @@
   {% if customer %}
     // Grab the wishlist string from Shopify Liquid
     const savedNote = {{ customer.note | json }} || "";
-    console.log(customer.)
     if (savedNote) {
       console.log(savedNote);
       const savedArray = savedNote.split(',').filter(i => i !== "");
