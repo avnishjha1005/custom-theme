@@ -3566,7 +3566,7 @@ slideshow-controls:is([pagination-position='right'], [pagination-position='left'
 
 slideshow-controls:has(.slideshow-controls__dots),
 slideshow-component[autoplay] slideshow-controls {
-  mix-blend-mode: difference;
+  mix-blend-mode: normal;
 }
 
 .slideshow-controls__dots {
