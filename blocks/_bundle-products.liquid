@@ -40,7 +40,7 @@
       assign slides = slide_content | split: ''
     %}
 
-    {% comment %} <div
+     <div
       class="resource-list {% if section.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
       {% if section.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
     >
@@ -48,9 +48,9 @@
           {{ list_items }}
         
       
-    </div> {% endcomment %}
+    </div> 
 
-    {% comment %} {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
+    {% if section.settings.carousel_on_mobile and section.settings.layout_type != 'carousel' %}
       <div
         class="resource-list hidden--desktop force-full-width"
         style="--resource-list-gap: {{ section.settings.columns_gap }}px; --column-count: {{ section.settings.columns }};"
@@ -62,7 +62,7 @@
           settings: section.settings
         %}
       </div>
-    {% endif %} {% endcomment %}
+    {% endif %} 
   {%- endif -%}
 </div>
 
