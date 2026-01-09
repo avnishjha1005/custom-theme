@@ -106,12 +106,20 @@ export class Slideshow extends Component {
 }
 
   #syncThumbnails(index) {
-    if (this.refs.thumbnails) {
-      this.refs.thumbnails.forEach((thumb, i) => {
-        thumb.setAttribute('aria-selected', i === index);
-      });
-    }
+  // Fallback: If this.refs.thumbnails is empty, query the DOM manually within the component
+  const dots = this.refs.thumbnails || this.querySelectorAll('.dot-indicator');
+  
+  if (dots) {
+    dots.forEach((thumb, i) => {
+      // Use index0 comparison
+      const isSelected = i === index;
+      thumb.setAttribute('aria-selected', isSelected);
+      
+      // Also toggle a class for styling if aria-selected isn't enough for your CSS
+      thumb.classList.toggle('is-active', isSelected);
+    });
   }
+}
 
   #updateAria(s) {
     // Mimic the "auto-hide-controls" logic
