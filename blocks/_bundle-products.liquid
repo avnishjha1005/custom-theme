@@ -29,14 +29,14 @@
   </div>
 
   {%- if bundle_products != blank -%}
-    {% capture list_items %}
+    
       {% for item in bundle_products %}
         <div class="resource-list__item">
           {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: item %}
         </div>
         {% unless forloop.last %}{% endunless %}
       {% endfor %}
-    {% endcapture %}
+   
 
     {% liquid
       assign slide_content = list_items | strip
