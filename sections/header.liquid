@@ -677,7 +677,6 @@
     .header__icon--cart,
     .cart-drawer { 
       order: 2 !important; 
-      --button-color:unset;
     }
 
     :is(account-popover, account-drawer, .header-actions__account, .header__icon--account) { 
@@ -714,10 +713,11 @@
     .header__row{
       height:56px;
     }
-    .header-actions__cart-icon{
+    
+  }
+  .header-actions__cart-icon{
       --button-color:unset;
     }
-  }
 {% endstylesheet %}
 
 {% unless request.design_mode %}
