@@ -41,6 +41,10 @@
       </summary>
       <div class="accordion__content">
         {% for option in results.sort_options %}
+          {%  assign isChecked = false %}
+          {% if option.value == sort_by%}
+          {%  assign isChecked = true %}
+{% endif %}
           <label class="sorting-filter__checkbox-label" for="sort-option-{{ option.value }}-{{ section_id }}">
             {% comment %} <input
               type="checkbox"
@@ -59,7 +63,7 @@
                   name: option.name,
                   value: option.value,
                   label: option.label,
-                  checked: '{{ if option.value == sort_by?true:false  }}',
+                  checked: isChecked,
                   id: '"sort-option-{{ option.value }}-{{ section_id }}"',
                   disabled: option.is_disabled,
                   inputRef: 'facetInputs[]',
