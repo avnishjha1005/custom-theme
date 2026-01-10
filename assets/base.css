@@ -2586,7 +2586,7 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
 }
 
 .checkbox .icon-checkmark path {
-  stroke: var(--color-background);
+  stroke: var(--color-foreground);
   opacity: var(--checkbox-path-opacity);
   transition: opacity var(--animation-speed) var(--animation-easing);
 }
