@@ -59,7 +59,7 @@
                   name: option.name,
                   value: option.value,
                   label: option.label,
-                  checked: '{{ if option.value == sort_by  }}',
+                  checked: '{{ if option.value == sort_by?true:false  }}',
                   id: '"sort-option-{{ option.value }}-{{ section_id }}"',
                   disabled: option.is_disabled,
                   inputRef: 'facetInputs[]',
