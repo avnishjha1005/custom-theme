@@ -4538,7 +4538,7 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
   overflow-x:hidden;
 }
 
-wk-floating{
+wishlist-button-collection .wk-floating {
   transform:none !important;
   translate:none !important;
 }
