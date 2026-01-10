@@ -55,6 +55,17 @@
                 checked
               {% endif %}
             >
+              {% render 'checkbox',
+                  name: option.name,
+                  value: option.value,
+                  label: option.label,
+                  checked: option.active,
+                  id: '"sort-option-{{ option.value }}-{{ section_id }}"',
+                  disabled: option.is_disabled,
+                  inputRef: 'facetInputs[]',
+                  events: 'on:pointerenter="/prefetchPage" on:pointerleave="/cancelPrefetchPage"',
+                  autofocus: false
+                %}
             <span class="sorting-filter__checkbox-text">{{ option.name }}</span>
           </label>
         {% endfor %}
