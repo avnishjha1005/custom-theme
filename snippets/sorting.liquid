@@ -59,6 +59,8 @@
                 checked
               {% endif %}
             >  {% endcomment %}
+               {%- capture form_id -%}FacetFiltersForm--{{ section_id }}-{{ suffix }}{%- endcapture -%}
+{%- capture input_id -%}sort-option-{{ option.value }}-{{ section_id }}{%- endcapture -%}
               {% render 'checkbox',
                   name: option.name,
                   value: option.value,
