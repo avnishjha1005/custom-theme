@@ -484,8 +484,8 @@
                   "name": "t:names.button",
                   "settings": {
                     "label": "NEED ASSISTANCE? TALK TO OUR STYLIST",
-                    "link": "shopify://collections/all",
-                    "open_in_new_tab": false,
+                    "link": "https://wa.me/919972320665?text=Hi+there%21+I+would+like+to+chat.",
+                    "open_in_new_tab": true,
                     "style_class": "button",
                     "width": "custom",
                     "custom_width": 100,
