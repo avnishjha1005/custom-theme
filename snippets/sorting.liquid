@@ -42,19 +42,7 @@
       <div class="accordion__content">
         {% for option in results.sort_options %}
           <label class="sorting-filter__checkbox-label" for="sort-option-{{ option.value }}-{{ section_id }}">
-            <input
-              type="checkbox"
-              name="sort_by"
-              id="sort-option-{{ option.value }}-{{ section_id }}"
-              {% if suffix != blank %}
-                form="FacetFiltersForm--{{ section_id }}-{{ suffix }}"
-              {% endif %}
-              value="{{ option.value }}"
-              class="sorting-filter__checkbox-input"
-              {% if option.value == sort_by %}
-                checked
-              {% endif %}
-            >
+            
               {% render 'checkbox',
                   name: option.name,
                   value: option.value,
