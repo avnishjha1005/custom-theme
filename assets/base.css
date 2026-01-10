@@ -4542,3 +4542,8 @@ wishlist-button-collection .wk-floating {
   transform:none !important;
   translate:none !important;
 }
+wishlist-product-card .wk-meta {
+  display:flex !important;
+  flex-direction:row;
+
+}
