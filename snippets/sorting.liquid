@@ -66,7 +66,7 @@
                   checked: isChecked,
                   id: '"sort-option-{{ option.value }}-{{ section_id }}"',
                   disabled: option.is_disabled,
-                 
+                  inputRef: 'facetInputs[]',
                   events: 'on:pointerenter="/prefetchPage" on:pointerleave="/cancelPrefetchPage"',
                   autofocus: false
                 %}
