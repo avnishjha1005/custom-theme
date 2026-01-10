@@ -46,7 +46,7 @@
           {%  assign isChecked = true %}
 {% endif %}
           <label class="sorting-filter__checkbox-label" for="sort-option-{{ option.value }}-{{ section_id }}">
-            <input
+            {% comment %} <input
               type="checkbox"
               name="sort_by"
               id="sort-option-{{ option.value }}-{{ section_id }}"
@@ -58,7 +58,7 @@
               {% if option.value == sort_by %}
                 checked
               {% endif %}
-            > 
+            >  {% endcomment %}
               {% render 'checkbox',
                   name: option.name,
                   value: option.value,
