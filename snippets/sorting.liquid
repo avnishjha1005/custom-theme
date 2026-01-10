@@ -66,8 +66,8 @@
                   value: option.value,
                   label: option.label,
                   checked: isChecked,
-                 formId: 'FacetFiltersForm--' | append: section_id | append: '-' | append: suffix,
-    id: 'sort-option-' | append: option.value | append: '-' | append: section_id,
+                 formId: form_id,
+    id: input_id,
                   disabled: option.is_disabled,
                   
                   events: 'on:pointerenter="/prefetchPage" on:pointerleave="/cancelPrefetchPage"',
