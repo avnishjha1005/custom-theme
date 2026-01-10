@@ -52,7 +52,7 @@
     {% endif %}
     role="checkbox"
   >
-    {{- 'icon-checkmark.svg' | inline_asset_content -}}
+    {% comment %} {{- 'icon-checkmark.svg' | inline_asset_content -}} {% endcomment %}
     <span class="checkbox__label-text">{{- label -}}</span>
   </label>
 </div>
