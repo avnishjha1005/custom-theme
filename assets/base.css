@@ -4537,3 +4537,8 @@ slideshow-slides { display: contents; } /* Lets inner slide divs be the flex ite
 [data-testid="product-list"]{
   overflow-x:hidden;
 }
+
+.wk-button{
+  transform:none !important;
+  translate:none !important;
+}
