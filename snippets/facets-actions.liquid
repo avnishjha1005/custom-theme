@@ -18,7 +18,7 @@
       class="button-unstyled facets__see-results"
       type="button"
       on:click="dialog-component/closeDialog"
-      style="text-decoration:underline;"
+      style="text-decoration:underline;text-transform:uppercase;"
     >
       {{- 'actions.apply_filters' | t: count: products_count -}}
     </button>
@@ -38,7 +38,7 @@
           on:click="/removeFilter?form="
           on:keydown="/removeFilter?form="
         {% endif %}
-        style="text-decoration:underline;"
+        style="text-decoration:underline;text-transform:uppercase;"
       >
         {{- 'actions.clear_all' | t -}}
       </button>
