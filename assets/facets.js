@@ -296,61 +296,7 @@ class PriceFacetComponent extends Component {
 }
 
 if (!customElements.get('price-facet-component')) {
-  customElements.define('price-facet-component', class extends HTMLElement {
-    constructor() {
-      super();
-      this.minInput = this.querySelector('[ref="minInput"]');
-      this.maxInput = this.querySelector('[ref="maxInput"]');
-      this.minLabel = this.querySelector('[ref="minLabel"]');
-      this.maxLabel = this.querySelector('[ref="maxLabel"]');
-      this.track = this.querySelector('[ref="rangeTrack"]');
-      
-      // Get currency format from the facet status template if it exists
-      this.moneyFormat = document.querySelector('facet-status-component template[ref="moneyFormat"]')?.innerHTML || '${{amount}}';
-    }
-
-    connectedCallback() {
-      this.minInput.addEventListener('input', () => this.handleInput('min'));
-      this.maxInput.addEventListener('input', () => this.handleInput('max'));
-      this.minInput.addEventListener('change', () => this.triggerUpdate());
-      this.maxInput.addEventListener('change', () => this.triggerUpdate());
-      this.updateVisuals();
-    }
-
-    handleInput(type) {
-      const minVal = parseInt(this.minInput.value);
-      const maxVal = parseInt(this.maxInput.value);
-
-      // Prevent sliders from crossing
-      if (type === 'min' && minVal >= maxVal) {
-        this.minInput.value = maxVal - 1;
-      } else if (type === 'max' && maxVal <= minVal) {
-        this.maxInput.value = minVal + 1;
-      }
-
-      this.updateVisuals();
-    }
-
-    updateVisuals() {
-      this.minLabel.textContent = this.formatMoney(this.minInput.value);
-      this.maxLabel.textContent = this.formatMoney(this.maxInput.value);
-      
-      // Optional: Color the track between handles
-      const minPercent = (this.minInput.value / this.minInput.max) * 100;
-      const maxPercent = (this.maxInput.value / this.maxInput.max) * 100;
-      this.track.style.background = `linear-gradient(to right, #e0e0e0 ${minPercent}%, #000 ${minPercent}%, #000 ${maxPercent}%, #e0e0e0 ${maxPercent}%)`;
-    }
-
-    formatMoney(amount) {
-      // Basic formatter (adjust based on your shop's actual money format)
-      return this.moneyFormat.replace(/\{\{\s*amount\s*\}\}/, parseFloat(amount).toFixed(2));
-    }
-
-    triggerUpdate() {
-      // Dispatch the change event that the theme expects to trigger a refresh
-      this.dispatchEvent(new CustomEvent('change', { bubbles: true }));
-    }
-  });
+  customElements.define('price-facet-component', PriceFacetComponent);
 }
 
 /**
