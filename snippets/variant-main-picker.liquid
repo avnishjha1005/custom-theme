@@ -665,4 +665,26 @@
     text-align: right;
     justify-content: right;
   }
+  .variant-option__button-label:has(:checked) {
+    color: var(--color-selected-variant-text);
+    border-color: var(--color-selected-variant-border);
+  }
+
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked) {
+    text-decoration: underline;
+    background-color: transparent;
+  }
+
+  .variant-option__button-label:has(:checked):hover {
+    border-color: var(--color-selected-variant-hover-border);
+    color: var(--color-selected-variant-hover-text);
+
+    .variant-option__button-label__pill {
+      background-color: var(--color-selected-variant-hover-background);
+    }
+  }
+
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked):hover {
+    background-color: transparent;
+  }
 {% endstylesheet %}
