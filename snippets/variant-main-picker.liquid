@@ -688,4 +688,18 @@
   .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked):hover {
     background-color: transparent;
   }
+  .variant-option__button-label:has(:checked):hover {
+  border-color: var(--color-selected-variant-hover-border);
+  color: var(--color-selected-variant-hover-text);
+  text-decoration: underline;
+  background-color: var(--color-variant-background) !important;
+
+  .variant-option__button-label__pill {
+    background-color: transparent;
+  }
+}
+
+.variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked):hover {
+  background-color: var(--color-variant-background) !important;
+}
 {% endstylesheet %}
