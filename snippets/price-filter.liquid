@@ -92,13 +92,13 @@
           <div class="field price-facet__field">
             <input
               class="field__input price-facet__input"
-              [cite_start]name="{{ filter.min_value.param_name }}" [cite: 15]
+              name="{{ filter.min_value.param_name }}" 
               id="{{ filter.label | escape }}-GTE"
               {%- if filter.min_value.value -%}
                 value="{{ filter.min_value.value | money_without_currency }}"
               {%- endif -%}
               type="text"
-              [cite_start]inputmode="decimal" [cite: 16]
+              inputmode="decimal" 
               placeholder="0"
               data-min="0"
               data-max="{{ min_input_max_value | money_without_currency }}"
@@ -116,16 +116,16 @@
           <div class="field price-facet__field">
             <input
               class="field__input price-facet__input"
-              [cite_start]name="{{ filter.max_value.param_name }}" [cite: 19]
+              name="{{ filter.max_value.param_name }}" 
               id="{{ filter.label | escape }}-LTE"
               {%- if filter.max_value.value -%}
                 value="{{ filter.max_value.value | money_without_currency }}"
               {%- endif -%}
               type="text"
               inputmode="decimal"
-              [cite_start]placeholder="{{ filter.range_max | money_without_currency }}" [cite: 22]
+              placeholder="{{ filter.range_max | money_without_currency }}" 
               data-min="{{ max_input_min_value | money_without_currency }}"
-              [cite_start]data-max="{{ filter.range_max | money_without_currency }}" [cite: 24]
+              data-max="{{ filter.range_max | money_without_currency }}" 
               ref="maxInput"
               autocomplete="off"
               {% if autofocus %}autofocus{% endif %}
@@ -148,12 +148,12 @@
         {% if should_render_clear %}
           <facet-clear-component
             class="clear-filter"
-            [cite_start]tabindex="{% if has_active_values %}0{% else %}-1{% endif %}" [cite: 28]
+            tabindex="{% if has_active_values %}0{% else %}-1{% endif %}" 
             on:click="/clearFilter"
             on:keydown="/clearFilter"
           >
             <div class="facets__clear {% if has_active_values %}facets__clear--active{% endif %}" ref="clearButton">
-              {{- 'actions.clear' | t -}} [cite: 29]
+              {{- 'actions.clear' | t -}} 
             </div>
           </facet-clear-component>
         {% endif %}
