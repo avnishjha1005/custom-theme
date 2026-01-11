@@ -87,6 +87,7 @@
       // Button to view filtered product results and close filter dialog
       "other": "See {{ count }} items"
     },
+    "apply_filters":"Apply Filters",
     "show_filters": "Filter",
     "show_less": "Show less",
     "show_more": "Show more",
