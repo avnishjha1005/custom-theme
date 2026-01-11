@@ -709,56 +709,51 @@
 .variant-option__button-label {
   transition-property: border-color, color, background-color !important;
 }
-/* Layout Alignments */
-  .variant-picker--center,
-  .variant-picker--center .variant-option {
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-  }
+/* 1. Layout Alignments */
+.variant-picker--center, 
+.variant-picker--center .variant-option {
+  text-align: center;
+  justify-content: center;
+}
 
-  .variant-picker--right,
-  .variant-picker--right .variant-option {
-    text-align: right;
-    justify-content: right;
-  }
+.variant-picker--right, 
+.variant-picker--right .variant-option {
+  text-align: right;
+  justify-content: flex-end;
+}
 
-  /* Corrected Button Variant Styles (Non-Swatches) */
-  .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
-    transition: border-color var(--animation-speed) var(--animation-easing), 
-                color var(--animation-speed) var(--animation-easing), 
-                background-color var(--animation-speed) var(--animation-easing);
-  }
+/* 2. Reset the "Pill" for Text Buttons */
+/* This stops the background-color from sliding around so the underline is visible */
+.variant-option__button-label:not(.variant-option__button-label--has-swatch) .variant-option__button-label__pill {
+  display: none !important;
+}
 
-  /* Selected State for Buttons */
-  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked) {
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 1px;
-    color: var(--color-selected-variant-text);
-    border-color: var(--color-selected-variant-border);
-    background-color: var(--color-variant-background);
-  }
+/* 3. Base Button Styling (Non-Swatches) */
+.variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+  border: var(--options-border-width) solid var(--color-variant-border);
+  background-color: var(--color-variant-background);
+  transition: all var(--animation-speed) var(--animation-easing);
+  text-decoration: none;
+}
 
-  /* Hover State for Buttons while Selected */
-  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked):hover {
-    text-decoration: underline;
-    color: var(--color-selected-variant-hover-text);
-    border-color: var(--color-selected-variant-hover-border);
-    background-color: var(--color-variant-background); /* Keep background stable */
-  }
+/* 4. THE SELECTED STATE (Force Underline) */
+.variant-option__button-label:not(.variant-option__button-label--has-swatch):has(input:checked) {
+  border-color: var(--color-selected-variant-border) !important;
+  color: var(--color-selected-variant-text) !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 4px !important;
+}
 
-  /* Handle Unavailable + Selected State */
-  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has([data-option-available='false']):has(:checked) {
-    background-color: var(--color-variant-background);
-    opacity: 0.7;
-    text-decoration: underline;
-  }
+/* 5. Hover State when Selected */
+.variant-option__button-label:not(.variant-option__button-label--has-swatch):has(input:checked):hover {
+  color: var(--color-selected-variant-hover-text) !important;
+  border-color: var(--color-selected-variant-hover-border) !important;
+}
 
-  /* Reset the Pill for Underlined Style */
-  /* If you want the 'underline' to be the focus, we disable the moving pill background for buttons */
-  .variant-option__button-label:not(.variant-option__button-label--has-swatch) .variant-option__button-label__pill {
-    display: none;
-  }
+/* 6. Clean up the "Fake Border" Pseudoelements */
+/* Your theme uses ::before as a border; we need to make sure it doesn't overlap the text */
+.variant-option__button-label:not(.variant-option__button-label--has-swatch)::before {
+  display: none !important; /* Disabling the complex fake border for text buttons */
+}
 {% endstylesheet %}
