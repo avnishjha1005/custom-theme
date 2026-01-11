@@ -273,7 +273,7 @@
       transition-timing-function: var(--animation-easing);
     }
     .variant-option__button-label__pill {
-      transition-property: transform;
+      transition-property: none;
     }
     .variant-option__button-label:not(.variant-option__button-label--has-swatch) svg line:last-of-type {
       transition-property: clip-path;
@@ -676,7 +676,7 @@
   }
 
   .variant-option__button-label:has(:checked):hover {
-    border-color: var(--color-selected-variant-hover-border);
+    border-color: none);
     color: black;
 
     .variant-option__button-label__pill {
