@@ -1,5 +1,5 @@
 {%- doc -%}
-  Renders a price filter.
+  Renders a price filter with dual range sliders.
 
   @param {object} filter - The filter object to render.
   @param {string} filter_style - The filter style, can be 'horizontal' or 'vertical'.
@@ -74,67 +74,74 @@
         id="facet-inputs-{{ filter.param_name | escape | replace: '.', '-' }}"
         on:change="/updatePriceFilterAndResults"
       >
-        <div class="price-facet__inputs-wrapper facets__inputs-wrapper facets__inputs-wrapper--row">
-          <div class="field price-facet__field">
-            <input
-              class="field__input price-facet__input"
-              name="{{ filter.min_value.param_name }}"
-              id="{{ filter.label | escape }}-GTE"
-              {%- if filter.min_value.value -%}
-                value="{{ filter.min_value.value | money_without_currency }}"
-              {%- endif -%}
-              type="range"
-              inputmode="decimal"
-              placeholder="0"
-              data-min="0"
-              data-max="{{ min_input_max_value | money_without_currency }}"
-              ref="minInput"
-              autocomplete="off"
-              {% if autofocus %}
-                autofocus
-              {% endif %}
-            >
-            <label
-              class="field__label price-facet__label"
-              for="{{ filter.label | escape }}-GTE"
-            >
-              {{ cart.currency.symbol }}
-            </label>
+        <div class="price-facet__slider-wrapper">
+          <div class="price-facet__slider-track" ref="sliderTrack">
+            <div class="price-facet__slider-range" ref="sliderRange"></div>
           </div>
-
-          <div class="price-facet__separator">{{ 'fields.separator' | t }}</div>
-
-          <div class="field price-facet__field">
-            <input
-              class="field__input price-facet__input"
-              name="{{ filter.max_value.param_name }}"
-              id="{{ filter.label | escape }}-LTE"
-              {%- if filter.max_value.value -%}
-                value="{{ filter.max_value.value | money_without_currency }}"
-              {%- endif -%}
-              type="range"
-              inputmode="decimal"
-              placeholder="{{ filter.range_max | money_without_currency }}"
-              data-min="{{ max_input_min_value | money_without_currency }}"
-              data-max="{{ filter.range_max | money_without_currency }}"
-              ref="maxInput"
-              autocomplete="off"
-              {% if autofocus %}
-                autofocus
-              {% endif %}
-            >
-            <label
-              class="field__label price-facet__label"
-              for="{{ filter.label | escape }}-LTE"
-            >
-              {{ cart.currency.symbol }}
-            </label>
-          </div>
+          
+          <input
+            class="price-facet__slider price-facet__slider--min"
+            name="{{ filter.min_value.param_name }}"
+            id="{{ filter.label | escape }}-GTE"
+            {%- if filter.min_value.value -%}
+              value="{{ filter.min_value.value | money_without_currency | remove: ',' | remove: ' ' }}"
+            {%- else -%}
+              value="0"
+            {%- endif -%}
+            type="range"
+            min="0"
+            max="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
+            step="1"
+            ref="minInput"
+            autocomplete="off"
+            {% if autofocus %}
+              autofocus
+            {% endif %}
+          >
+          
+          <input
+            class="price-facet__slider price-facet__slider--max"
+            name="{{ filter.max_value.param_name }}"
+            id="{{ filter.label | escape }}-LTE"
+            {%- if filter.max_value.value -%}
+              value="{{ filter.max_value.value | money_without_currency | remove: ',' | remove: ' ' }}"
+            {%- else -%}
+              value="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
+            {%- endif -%}
+            type="range"
+            min="0"
+            max="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
+            step="1"
+            ref="maxInput"
+            autocomplete="off"
+            {% if autofocus %}
+              autofocus
+            {% endif %}
+          >
         </div>
 
-        <div class="price-facet__highest-price">
-          {%- assign formatted_highest_price = filter.range_max | money -%}
-          {{ 'content.price_filter_html' | t: price: formatted_highest_price }}
+        <div class="price-facet__values">
+          <div class="price-facet__value price-facet__value--min">
+            <span class="price-facet__currency">{{ cart.currency.symbol }}</span>
+            <span ref="minDisplay">
+              {%- if filter.min_value.value -%}
+                {{ filter.min_value.value | money_without_currency }}
+              {%- else -%}
+                0
+              {%- endif -%}
+            </span>
+          </div>
+          
+          <div class="price-facet__value price-facet__value--max">
+            <span class="price-facet__currency">{{ cart.currency.symbol }}</span>
+            <span ref="maxDisplay">
+              {%- if filter.max_value.value -%}
+                {{ filter.max_value.value | money_without_currency }}
+              {%- else -%}
+                {{ filter.range_max | money_without_currency }}
+              {%- endif -%}
+            </span>
+          </div>
         </div>
 
         {% if filter.min_value.value != null or filter.max_value.value != null %}
@@ -167,73 +174,160 @@
     container-type: inline-size;
     display: flex;
     flex-direction: column;
-  }
-
-  .facets__inputs-wrapper.price-facet__inputs-wrapper {
-    flex-wrap: nowrap;
-  }
-
-  .price-facet__field {
-    width: 50%;
-    flex-grow: 0;
-  }
-
-  @container (max-width: 199px) {
-    .facets__inputs-wrapper.price-facet__inputs-wrapper {
-      flex-wrap: wrap;
-      width: 100%;
-    }
-
-    .price-facet__inputs-wrapper .price-facet__field {
-      width: 100%;
-    }
-  }
-
-  .facets .facets__inputs-wrapper.price-facet__inputs-wrapper {
-    padding: var(--style-border-width-inputs);
-    gap: calc(var(--gap-sm) + (var(--style-border-width-inputs) * 2));
+    padding: var(--padding-md) 0;
   }
 
   .facets--horizontal .facets__panel-content:has(.price-facet) {
     min-width: 360px;
   }
 
-  .facets--horizontal .facets__inputs-wrapper.price-facet__inputs-wrapper {
-    @media screen and (min-width: 750px) {
-      padding: calc(var(--padding-md) + var(--style-border-width-inputs));
-    }
+  /* Slider wrapper */
+  .price-facet__slider-wrapper {
+    position: relative;
+    height: 40px;
+    margin: 20px 0;
   }
 
-  .price-facet__input {
-    width: 100%;
-    text-align: right;
-    padding-left: calc(2.5 * var(--input-padding-x));
-  }
-
-  .price-facet__input::placeholder {
-    color: var(--facets-input-label-color);
-  }
-
-  .price-facet__separator {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--font-paragraph--size);
-  }
-
-  .price-facet__highest-price {
-    padding: var(--padding-xs) 0 var(--padding-sm);
-  }
-
-  .facets--horizontal .price-facet__highest-price {
-    padding: 0 var(--padding-md) var(--padding-xs);
-  }
-
-  .field__label.price-facet__label {
-    top: 0;
+  /* Slider track */
+  .price-facet__slider-track {
+    position: absolute;
+    top: 50%;
     left: 0;
-    color: var(--facets-input-label-color);
-    padding: var(--input-padding-y) var(--input-padding-x);
-    transform: none;
+    right: 0;
+    height: 4px;
+    background-color: #e5e5e5;
+    transform: translateY(-50%);
+    border-radius: 2px;
+  }
+
+  /* Active range */
+  .price-facet__slider-range {
+    position: absolute;
+    height: 100%;
+    background-color: #000;
+    border-radius: 2px;
+  }
+
+  /* Range inputs */
+  .price-facet__slider {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    transform: translateY(-50%);
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    pointer-events: none;
+    margin: 0;
+  }
+
+  /* Remove default styling */
+  .price-facet__slider::-webkit-slider-runnable-track {
+    height: 4px;
+    background: transparent;
+  }
+
+  .price-facet__slider::-moz-range-track {
+    height: 4px;
+    background: transparent;
+  }
+
+  /* Thumb styling - WebKit */
+  .price-facet__slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background-color: #000;
+    border: 2px solid #fff;
+    border-radius: 2px;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease;
+    margin-top: -7px;
+  }
+
+  .price-facet__slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+  }
+
+  .price-facet__slider::-webkit-slider-thumb:active {
+    transform: scale(1.05);
+  }
+
+  /* Thumb styling - Firefox */
+  .price-facet__slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background-color: #000;
+    border: 2px solid #fff;
+    border-radius: 2px;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease;
+  }
+
+  .price-facet__slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+  }
+
+  .price-facet__slider::-moz-range-thumb:active {
+    transform: scale(1.05);
+  }
+
+  /* Focus styles */
+  .price-facet__slider:focus {
+    outline: none;
+  }
+
+  .price-facet__slider:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .price-facet__slider:focus::-moz-range-thumb {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1), 0 1px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Ensure max slider is above min slider */
+  .price-facet__slider--max {
+    z-index: 2;
+  }
+
+  /* Values display */
+  .price-facet__values {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--gap-md);
+    margin-top: var(--padding-sm);
+  }
+
+  .price-facet__value {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: var(--font-paragraph--size);
+    font-weight: 500;
+  }
+
+  .price-facet__currency {
+    opacity: 0.6;
+  }
+
+  .price-facet__value--min {
+    text-align: left;
+  }
+
+  .price-facet__value--max {
+    text-align: right;
+  }
+
+  /* Clear button spacing */
+  .price-facet .clear-filter {
+    margin-top: var(--padding-md);
   }
 {% endstylesheet %}
