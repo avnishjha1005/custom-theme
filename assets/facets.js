@@ -218,24 +218,81 @@ if (!customElements.get('facet-inputs-component')) {
 class PriceFacetComponent extends Component {
   connectedCallback() {
     super.connectedCallback();
-    this.addEventListener('keydown', this.#onKeyDown);
+    this.addEventListener('input', this.#onInput);
+    this.#updateSliderUI();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.removeEventListener('keydown', this.#onKeyDown);
+    this.removeEventListener('input', this.#onInput);
   }
 
   /**
-   * Handles keydown events to restrict input to valid characters
-   * @param {KeyboardEvent} event - The keydown event
+   * Handles input events for real-time slider updates
+   * @param {Event} event - The input event
    */
-  #onKeyDown = (event) => {
-    if (event.metaKey) return;
-
-    const pattern = /[0-9]|\.|,|'| |Tab|Backspace|Enter|ArrowUp|ArrowDown|ArrowLeft|ArrowRight|Delete|Escape/;
-    if (!event.key.match(pattern)) event.preventDefault();
+  #onInput = (event) => {
+    if (!(event.target instanceof HTMLInputElement)) return;
+    
+    const { minInput, maxInput } = this.refs;
+    
+    // Prevent sliders from crossing
+    const minVal = parseFloat(minInput.value);
+    const maxVal = parseFloat(maxInput.value);
+    const gap = parseFloat(maxInput.max) * 0.01; // 1% minimum gap
+    
+    if (event.target === minInput) {
+      if (minVal >= maxVal - gap) {
+        minInput.value = String(maxVal - gap);
+      }
+    } else if (event.target === maxInput) {
+      if (maxVal <= minVal + gap) {
+        maxInput.value = String(minVal + gap);
+      }
+    }
+    
+    this.#updateSliderUI();
   };
+
+  /**
+   * Updates the visual slider UI (range fill and value displays)
+   */
+  #updateSliderUI() {
+    const { minInput, maxInput, sliderRange, minDisplay, maxDisplay } = this.refs;
+    
+    if (!minInput || !maxInput || !sliderRange) return;
+    
+    const min = parseFloat(minInput.min);
+    const max = parseFloat(minInput.max);
+    const minVal = parseFloat(minInput.value);
+    const maxVal = parseFloat(maxInput.value);
+    
+    // Calculate percentages
+    const minPercent = ((minVal - min) / (max - min)) * 100;
+    const maxPercent = ((maxVal - min) / (max - min)) * 100;
+    
+    // Update range fill
+    sliderRange.style.left = `${minPercent}%`;
+    sliderRange.style.width = `${maxPercent - minPercent}%`;
+    
+    // Update value displays
+    if (minDisplay) {
+      minDisplay.textContent = this.#formatDisplayValue(minVal);
+    }
+    if (maxDisplay) {
+      maxDisplay.textContent = this.#formatDisplayValue(maxVal);
+    }
+  }
+
+  /**
+   * Formats a value for display
+   * @param {number} value - The value to format
+   * @returns {string} The formatted value
+   */
+  #formatDisplayValue(value) {
+    // Round to 2 decimal places and remove trailing zeros
+    return parseFloat(value.toFixed(2)).toString();
+  }
 
   /**
    * Updates price filter and results
@@ -250,7 +307,6 @@ class PriceFacetComponent extends Component {
     if (!(facetsForm instanceof FacetsFormComponent)) return;
 
     facetsForm.updateFilters();
-    this.#setMinAndMaxValues();
     this.#updateSummary();
   }
 
@@ -259,26 +315,14 @@ class PriceFacetComponent extends Component {
    * @param {HTMLInputElement} input - The input element to adjust
    */
   #adjustToValidValues(input) {
-    if (input.value.trim() === '') return;
+    if (!input.value || input.value.trim() === '') return;
 
-    const value = Number(input.value);
-    const min = Number(formatMoney(input.getAttribute('data-min') ?? ''));
-    const max = Number(formatMoney(input.getAttribute('data-max') ?? ''));
+    const value = parseFloat(input.value);
+    const min = parseFloat(input.min);
+    const max = parseFloat(input.max);
 
     if (value < min) input.value = min.toString();
     if (value > max) input.value = max.toString();
-  }
-
-  /**
-   * Sets min and max values for the inputs
-   */
-  #setMinAndMaxValues() {
-    const { minInput, maxInput } = this.refs;
-
-    if (maxInput.value) minInput.setAttribute('data-max', maxInput.value);
-    if (minInput.value) maxInput.setAttribute('data-min', minInput.value);
-    if (minInput.value === '') maxInput.setAttribute('data-min', '0');
-    if (maxInput.value === '') minInput.setAttribute('data-max', maxInput.getAttribute('data-max') ?? '');
   }
 
   /**
@@ -293,6 +337,10 @@ class PriceFacetComponent extends Component {
 
     statusComponent?.updatePriceSummary(minInput, maxInput);
   }
+}
+
+if (!customElements.get('price-facet-component')) {
+  customElements.define('price-facet-component', PriceFacetComponent);
 }
 
 if (!customElements.get('price-facet-component')) {
