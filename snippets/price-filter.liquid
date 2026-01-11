@@ -123,15 +123,24 @@
 
 {% stylesheet %}
   .price-facet {
-    display: flex; 
+    display: flex;
     flex-direction: column;
     padding: var(--padding-md);
   }
 
-  /* Range Slider Styles */
+  /* Centered range display above the slider */
+  .price-facet__range-display {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-weight: bold;
+    margin-bottom: var(--padding-md);
+    color: var(--colors-text);
+  }
+
   .price-facet__range-wrapper {
     position: relative;
-    height: 30px;
+    height: 24px;
     margin-bottom: var(--padding-sm);
     display: flex;
     align-items: center;
@@ -147,16 +156,17 @@
     z-index: 2;
   }
 
+  /* Interaction handle */
   .price-facet__range::-webkit-slider-thumb {
     pointer-events: auto;
     appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     background: var(--colors-accent-1);
-    border: 2px solid #fff;
+    border: 2px solid white;
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   }
 
   .price-facet__range-track {
@@ -168,26 +178,10 @@
     z-index: 1;
   }
 
-  /* Existing Input Styles */
-  .facets__inputs-wrapper.price-facet__inputs-wrapper {
-    flex-wrap: nowrap; 
-    gap: var(--gap-sm);
-  }
-
-  .price-facet__field {
-    width: 50%; 
-  }
-
-  .price-facet__input {
-    width: 100%;
-    text-align: right;
-    padding-left: calc(2.5 * var(--input-padding-x));
-  }
-
-  .field__label.price-facet__label {
-    top: 0;
-    left: 0; 
-    position: absolute;
-    padding: var(--input-padding-y) var(--input-padding-x);
+  .price-facet__highest-price {
+    padding: var(--padding-xs) 0;
+    text-align: center;
+    font-size: 0.85em;
+    opacity: 0.7;
   }
 {% endstylesheet %}
