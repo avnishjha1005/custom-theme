@@ -339,9 +339,6 @@ class PriceFacetComponent extends Component {
   }
 }
 
-if (!customElements.get('price-facet-component')) {
-  customElements.define('price-facet-component', PriceFacetComponent);
-}
 
 if (!customElements.get('price-facet-component')) {
   customElements.define('price-facet-component', PriceFacetComponent);
