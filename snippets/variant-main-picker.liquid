@@ -314,7 +314,7 @@
     background-color: var(--color-variant-background);
     color: var(--color-variant-text);
 
-    &:hover,
+    &:hover:not(:has(:checked)),
     &:hover:has([aria-disabled='true']):has([data-option-available='false']) {
       background-color: var(--color-variant-hover-background);
       border-color: var(--color-variant-hover-border);
@@ -666,13 +666,14 @@
     justify-content: right;
   }
   .variant-option__button-label:has(:checked) {
-    color: var(--color-selected-variant-text);
-    border-color: var(--color-selected-variant-border);
+  color: var(--color-selected-variant-text);
+  border-color: var(--color-selected-variant-border);
+  text-decoration: underline;
+  background-color: var(--color-variant-background) !important;
   }
 
   .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked) {
-    text-decoration: underline;
-    background-color: transparent;
+    background-color: var(--color-variant-background) !important;
   }
 
   .variant-option__button-label:has(:checked):hover {
