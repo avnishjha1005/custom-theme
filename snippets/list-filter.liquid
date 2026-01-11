@@ -194,6 +194,7 @@
             {% if is_image %}
               style="--image-columns: {{ image_columns }};"
             {% endif %}
+            {% unless is_swatch or is_image or should_use_pills %} facets__inputs-list--checkbox-grid {% endunless %}
             name="{{ filter.label }}"
           >
             {%- for value in filter.values -%}
@@ -786,5 +787,10 @@
 
   .variant-option--images:not(:has(input:disabled)) .facets__image-label:hover {
     font-weight: 500;
+  }
+
+  .facets__inputs-list--checkbox-grid{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
   }
 {% endstylesheet %}
