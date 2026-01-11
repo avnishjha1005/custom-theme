@@ -290,7 +290,7 @@
     }
     .variant-option__select-wrapper,
     .variant-option__button-label {
-      transition-property: background-color, border-color, color;
+      transition-property: text-decoration underline;
     }
   }
 
@@ -304,7 +304,7 @@
     padding-block: var(--padding-sm);
     padding-inline: var(--padding-lg);
     border: none;
-    text-decoration: underline;
+   
     border-radius: var(--options-border-radius);
     overflow: clip;
     justify-content: center;
@@ -319,6 +319,7 @@
       background-color: var(--color-variant-hover-background);
       border-color: var(--color-variant-hover-border);
       color: var(--color-variant-hover-text);
+      text-decoration: underline;
     }
 
     /* we need something like overflow-clip-margin to use the pseudoelement but it doesn't work in Safari */
