@@ -28,6 +28,7 @@
           on:click="/removeFilter?form="
           on:keydown="/removeFilter?form="
         {% endif %}
+        style="text-decoration:underline;"
       >
         {{- 'actions.clear_all' | t -}}
       </button>
@@ -39,6 +40,7 @@
       class="button-unstyled facets__see-results"
       type="button"
       on:click="dialog-component/closeDialog"
+      style="text-decoration:underline;"
     >
       {{- 'actions.see_items' | t: count: products_count -}}
     </button>
