@@ -1,8 +1,8 @@
 {%- doc -%}
   Renders a price filter with dual range sliders and text inputs.
-  @param {object} filter - The filter object to render. [cite: 1]
-  @param {string} filter_style - The filter style, can be 'horizontal' or 'vertical'. [cite: 2]
-  @param {boolean} [autofocus] - Whether to autofocus the filter. [cite: 3]
+  @param {object} filter - The filter object to render. 
+  @param {string} filter_style - The filter style, can be 'horizontal' or 'vertical'. 
+  @param {boolean} [autofocus] - Whether to autofocus the filter. 
   @param {boolean} [should_render_clear] - Whether to render the clear button.
 {%- enddoc -%}
 
@@ -46,7 +46,7 @@
         </span>
       </facet-status-component>
       <span class="svg-wrapper icon-caret icon-animated">
-        {{- 'icon-caret.svg' | inline_asset_content -}} [cite: 12]
+        {{- 'icon-caret.svg' | inline_asset_content -}} 
       </span>
     </summary>
 
@@ -56,8 +56,8 @@
       {% endunless %}
       class="facets__panel-content details-content{% if filter_style == 'horizontal' %} color-{{ settings.popover_color_scheme }}{% endif %}"
     >
-      {% assign min_input_max_value = filter.max_value.value | default: filter.range_max %} [cite: 13]
-      {% assign max_input_min_value = filter.min_value.value | default: 0 %} [cite: 14]
+      {% assign min_input_max_value = filter.max_value.value | default: filter.range_max %} 
+      {% assign max_input_min_value = filter.min_value.value | default: 0 %} 
 
       <price-facet-component
         class="price-facet"
@@ -138,7 +138,7 @@
 
         <div class="price-facet__highest-price">
           {%- assign formatted_highest_price = filter.range_max | money -%}
-          {{ 'content.price_filter_html' | t: price: formatted_highest_price }} [cite: 27]
+          {{ 'content.price_filter_html' | t: price: formatted_highest_price }} 
         </div>
 
         {% if filter.min_value.value != null or filter.max_value.value != null %}
