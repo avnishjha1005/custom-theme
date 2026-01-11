@@ -19,7 +19,7 @@
     >
       <button
         type="button"
-        class="linkfacets__clear-all{% if is_active %} active{% endif %}"
+        class="button-unstyled facets__clear-all{% if is_active %} active{% endif %}"
         ref="clearButton"
         {% if form_component != blank %}
           on:click="/removeFilter?form={{ form_component }}"
@@ -36,7 +36,7 @@
 
   {% if products_count > 0 %}
     <button
-      class="link facets__see-results"
+      class="button-unstyled facets__see-results"
       type="button"
       on:click="dialog-component/closeDialog"
     >
