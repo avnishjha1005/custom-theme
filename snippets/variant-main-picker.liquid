@@ -709,4 +709,56 @@
 .variant-option__button-label {
   transition-property: border-color, color, background-color !important;
 }
+/* Layout Alignments */
+  .variant-picker--center,
+  .variant-picker--center .variant-option {
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .variant-picker--right,
+  .variant-picker--right .variant-option {
+    text-align: right;
+    justify-content: right;
+  }
+
+  /* Corrected Button Variant Styles (Non-Swatches) */
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch) {
+    transition: border-color var(--animation-speed) var(--animation-easing), 
+                color var(--animation-speed) var(--animation-easing), 
+                background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  /* Selected State for Buttons */
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked) {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    color: var(--color-selected-variant-text);
+    border-color: var(--color-selected-variant-border);
+    background-color: var(--color-variant-background);
+  }
+
+  /* Hover State for Buttons while Selected */
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has(:checked):hover {
+    text-decoration: underline;
+    color: var(--color-selected-variant-hover-text);
+    border-color: var(--color-selected-variant-hover-border);
+    background-color: var(--color-variant-background); /* Keep background stable */
+  }
+
+  /* Handle Unavailable + Selected State */
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch):has([data-option-available='false']):has(:checked) {
+    background-color: var(--color-variant-background);
+    opacity: 0.7;
+    text-decoration: underline;
+  }
+
+  /* Reset the Pill for Underlined Style */
+  /* If you want the 'underline' to be the focus, we disable the moving pill background for buttons */
+  .variant-option__button-label:not(.variant-option__button-label--has-swatch) .variant-option__button-label__pill {
+    display: none;
+  }
 {% endstylesheet %}
