@@ -1,7 +1,7 @@
 {%- doc -%}
   Renders the wishlist icon, which displays the number of items in the wishlist via a bubble.
 {%- enddoc -%}
-<div class="wishlist-header-link header-actions__wishlist-icon">
+<wishlist-icon class="wishlist-header-link header-actions__wishlist-icon">
   <a href class="wkh-button">
     {% comment %} <span class="wkh-icon">
       <svg viewBox="0 0 64 64" stroke=currentColor>
@@ -16,7 +16,7 @@
     </span>
     <span class="wkh-counter">0</span>
   </a>
-</div>
+</wishlist-icon>
 <style>
   .wishlist-header-link .wkh-button {
     --counter-size: 15px;
