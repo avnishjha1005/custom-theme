@@ -313,8 +313,8 @@
                         "variant_style": "buttons",
                         "show_swatches": true,
                         "alignment": "left",
-                        "padding-block-start": 12,
-                        "padding-block-end": 24,
+                        "padding-block-start": 0,
+                        "padding-block-end": 14,
                         "padding-inline-start": 0,
                         "padding-inline-end": 0
                       },
