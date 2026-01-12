@@ -128,14 +128,6 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "custom_liquid_iWdmXe": {
-              "type": "custom-liquid",
-              "name": "t:names.custom_liquid",
-              "settings": {
-                "custom_liquid": "{%- assign guides = product.metafields.custom.selected_size_guide.value -%}\n\n{%- if guides != blank -%}\n<div class=\"dynamic-size-guide\">\n  <div class=\"sg-tabs\" style=\"display: flex; border-bottom: 1px solid #ddd;\">\n    {%- for guide in guides -%}\n      <button class=\"tab-link {% if forloop.first %}active{% endif %}\" \n              onclick=\"openTab(event, 'guide-{{ forloop.index }}')\"\n              style=\"padding: 10px 15px; cursor: pointer; border: none; background: none; font-size: 12px; font-weight: 500;\">\n        {{ guide.brand_name | upcase }} SIZE GUIDE\n      </button>\n    {%- endfor -%}\n  </div>\n\n  {%- for guide in guides -%}\n    <div id=\"guide-{{ forloop.index }}\" class=\"tab-content\" \n         style=\"display: {% if forloop.first %}block{% else %}none{% endif %}; padding-top: 20px;\">\n      \n      {%- if guide.guide_image -%}\n        <div class=\"sg-image-wrapper\" style=\"text-align: center; margin-bottom: 20px;\">\n          <img src=\"{{ guide.guide_image | image_url: width: 600 }}\" style=\"max-width: 100%; height: auto;\">\n        </div>\n      {%- endif -%}\n\n      <div class=\"sg-table\">\n        {{ guide.size_table }}\n      </div>\n    </div>\n  {%- endfor -%}\n</div>\n\n<style>\n  .tab-link.active { border-bottom: 2px solid #000 !important; }\n  .tab-content table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }\n  .tab-content th, .tab-content td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }\n</style>\n\n<script>\n  function openTab(evt, tabId) {\n    const parent = evt.currentTarget.closest('.dynamic-size-guide');\n    parent.querySelectorAll('.tab-content').forEach(content => content.style.display = \"none\");\n    parent.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));\n    \n    document.getElementById(tabId).style.display = \"block\";\n    evt.currentTarget.classList.add('active');\n  }\n</script>\n{%- endif -%}"
-              },
-              "blocks": {}
-            },
             "group_tfYD6h": {
               "type": "group",
               "name": "t:names.group",
@@ -509,6 +501,14 @@
                 "button_NHFdjd"
               ]
             },
+            "custom_liquid_iWdmXe": {
+              "type": "custom-liquid",
+              "name": "t:names.custom_liquid",
+              "settings": {
+                "custom_liquid": "{%- assign guides = product.metafields.custom.selected_size_guide.value -%}\n\n{%- if guides != blank -%}\n<div class=\"dynamic-size-guide\">\n  <div class=\"sg-tabs\" style=\"display: flex; border-bottom: 1px solid #ddd;\">\n    {%- for guide in guides -%}\n      <button class=\"tab-link {% if forloop.first %}active{% endif %}\" \n              onclick=\"openTab(event, 'guide-{{ forloop.index }}')\"\n              style=\"padding: 10px 15px; cursor: pointer; border: none; background: none; font-size: 12px; font-weight: 500;\">\n        {{ guide.brand_name | upcase }} SIZE GUIDE\n      </button>\n    {%- endfor -%}\n  </div>\n\n  {%- for guide in guides -%}\n    <div id=\"guide-{{ forloop.index }}\" class=\"tab-content\" \n         style=\"display: {% if forloop.first %}block{% else %}none{% endif %}; padding-top: 20px;\">\n      \n      {%- if guide.guide_image -%}\n        <div class=\"sg-image-wrapper\" style=\"text-align: center; margin-bottom: 20px;\">\n          <img src=\"{{ guide.guide_image | image_url: width: 600 }}\" style=\"max-width: 100%; height: auto;\">\n        </div>\n      {%- endif -%}\n\n      <div class=\"sg-table\">\n        {{ guide.size_table }}\n      </div>\n    </div>\n  {%- endfor -%}\n</div>\n\n<style>\n  .tab-link.active { border-bottom: 2px solid #000 !important; }\n  .tab-content table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }\n  .tab-content th, .tab-content td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }\n</style>\n\n<script>\n  function openTab(evt, tabId) {\n    const parent = evt.currentTarget.closest('.dynamic-size-guide');\n    parent.querySelectorAll('.tab-content').forEach(content => content.style.display = \"none\");\n    parent.querySelectorAll('.tab-link').forEach(link => link.classList.remove('active'));\n    \n    document.getElementById(tabId).style.display = \"block\";\n    evt.currentTarget.classList.add('active');\n  }\n</script>\n{%- endif -%}"
+              },
+              "blocks": {}
+            },
             "accordion_NKWPiW": {
               "type": "accordion",
               "name": "t:names.accordion",
@@ -741,9 +741,9 @@
             }
           },
           "block_order": [
-            "custom_liquid_iWdmXe",
             "group_tfYD6h",
             "group_PQchLN",
+            "custom_liquid_iWdmXe",
             "accordion_NKWPiW",
             "shiprocket_promise_promise_widget_J4MFhC"
           ]
