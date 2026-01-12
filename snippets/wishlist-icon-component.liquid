@@ -2,7 +2,7 @@
   Renders the wishlist icon, which displays the number of items in the wishlist via a bubble.
 {%- enddoc -%}
 <wishlist-icon class="wishlist-header-link header-actions__wishlist-icon" data-has-items="true">
-  <a href="/pages/wishlist" class="wkh-button wkh-selected">
+  <a class="wkh-button wkh-selected">
     <span class="svg-wrapper wkh-icon">
       {{ 'icon-wishlist.svg' | inline_asset_content }}
     </span>
@@ -10,46 +10,79 @@
   </a>
 </wishlist-icon>
 <style>
-  .wishlist-header-link .wkh-button {
-    --counter-size: 15px;
-    display: flex;
-    position: relative;
-    padding:6px;
-  }
-
-  .wishlist-header-link .wkh-icon svg {
-    display: block;
-    overflow: visible;
-    pointer-events: none;
-  }
-  
-  .wishlist-header-link .wkh-icon svg path {
-   
-  }
-  
-  .wishlist-header-link .wkh-counter {
-    opacity: 0;
+  /* 1. Container Alignment */
+  .header-actions__wishlist-icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-width: var(--counter-size);
-    height: var(--counter-size);
-    border-radius: calc(var(--counter-size) / 2);
-    font-size: 11px;
-    line-height: 1;
-    background: black;
-    color: white;
-    position:  absolute;
-    top: 25px;
-    right: 5px;
+    cursor: pointer;
   }
 
-  .wishlist-header-link .wkh-selected .wkh-counter {
+  /* 2. Button and Icon Sizing */
+  .wishlist-header-link .wkh-button {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: var(--button-size);
+    width: var(--button-size);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .wishlist-header-link .wkh-icon svg {
+    width: var(--icon-size-md);
+    height: var(--icon-size-md);
+    display: block;
+  }
+
+  /* 3. The Counter (Bubble) - Adapted from .cart-bubble */
+  .wishlist-header-link .wkh-counter {
+    --wishlist-bubble-size: 20px;
+    --wishlist-bubble-top: 4.5px;
+    --wishlist-bubble-right: 2.5px;
+
+    position: absolute;
+    top: var(--wishlist-bubble-top);
+    right: var(--wishlist-bubble-right);
+    width: var(--wishlist-bubble-size);
+    height: var(--wishlist-bubble-size);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    background-color: var(--color-button-background, black); /* Match theme button color */
+    color: var(--color-button-text, white);
+    border-radius: 100%;
+    
+    font-family: var(--font-paragraph--family);
+    font-size: var(--font-size--2xs, 11px);
+    font-weight: var(--font-paragraph--weight);
+    line-height: 1;
+    
+    opacity: 0;
+    transition: opacity var(--animation-speed) var(--animation-easing);
+  }
+
+  /* Show bubble if there are items (similar to .wkh-selected logic) */
+  .wishlist-header-link .wkh-selected .wkh-counter,
+  .wishlist-header-link[data-count]:not([data-count="0"]) .wkh-counter {
     opacity: 1;
-    transition: .2s opacity;
+  }
+
+  /* 4. The Donut Mask - Adapting the cart's clever SVG mask */
+  /* This prevents the icon lines from overlapping with the number bubble */
+  .header-actions__wishlist-icon:has(.wkh-selected) .wkh-icon svg,
+  .header-actions__wishlist-icon[data-has-items="true"] .wkh-icon svg {
+    mask: radial-gradient(
+      calc(20px + 2px) at calc(100% - 2.5px) 4.5px,
+      transparent 45.45%,
+      #fff 45.45%,
+      #fff 100%
+    );
   }
 </style>
-
 {% stylesheet %}
   wishlist-icon:has(.wkh-button:empty) {
     --wishlist-bubble-size: 10px;
