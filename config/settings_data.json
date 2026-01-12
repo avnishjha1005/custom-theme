@@ -97,13 +97,6 @@
           "counter_border_width": 1
         }
       },
-      "13655089695959051254": {
-        "type": "shopify://apps/swish-formerly-wishlist-king/blocks/code-access/194f5011-a43c-4b22-b12e-eaf20dc4506a",
-        "disabled": true,
-        "settings": {
-          "version": "main"
-        }
-      },
       "14197025361042770389": {
         "type": "shopify://apps/swish-formerly-wishlist-king/blocks/app-settings-main/194f5011-a43c-4b22-b12e-eaf20dc4506a",
         "disabled": false,
@@ -183,6 +176,13 @@
         "type": "shopify://apps/wc-wishlist-club/blocks/wishlist-script/582a225b-bd58-49d0-b0b6-9479192e79c5",
         "disabled": false,
         "settings": {}
+      },
+      "13655089695959051254": {
+        "type": "shopify://apps/swish-formerly-wishlist-king/blocks/code-access/194f5011-a43c-4b22-b12e-eaf20dc4506a",
+        "disabled": false,
+        "settings": {
+          "version": "main"
+        }
       }
     },
     "color_schemes": {
