@@ -37,6 +37,23 @@ export class Slideshow extends Component {
   get isNested() {
     return !!this.parentElement?.closest('slideshow-component');
   }
+  #handleSlideChange() {
+     console.log("event dispatched")
+  if (!this.swiper) return;
+  const index = this.swiper.realIndex ?? this.swiper.activeIndex ?? 0;
+  const activeSlide = this.swiper.slides?.[this.swiper.activeIndex];
+  if (!activeSlide) return;
+
+  this.dispatchEvent(
+    console.log("event dispatched")
+    new CustomEvent('slideshow:select', {
+      detail: {
+        index,
+        slide: activeSlide,
+        id: activeSlide.getAttribute('slide-id'),
+      },
+    })
+  );
 
   initSwiper() {
     const { scroller, previous, next, dots } = this.refs;
@@ -87,24 +104,6 @@ export class Slideshow extends Component {
       threshold: 5, // Prevents accidental slides on slight touch
     });
   }
-
-  #handleSlideChange() {
-     console.log("event dispatched")
-  if (!this.swiper) return;
-  const index = this.swiper.realIndex ?? this.swiper.activeIndex ?? 0;
-  const activeSlide = this.swiper.slides?.[this.swiper.activeIndex];
-  if (!activeSlide) return;
-
-  this.dispatchEvent(
-    console.log("event dispatched")
-    new CustomEvent('slideshow:select', {
-      detail: {
-        index,
-        slide: activeSlide,
-        id: activeSlide.getAttribute('slide-id'),
-      },
-    })
-  );
 
   this.#syncThumbnails(index);
 }
