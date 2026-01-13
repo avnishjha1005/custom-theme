@@ -4497,7 +4497,7 @@ text-component {
 }
 
 /* Your custom wrapper tag should not break layout; if you keep it */
-slideshow-slides { display: contents; } /* Lets inner slide divs be the flex items */
+/* Lets inner slide divs be the flex items */
 
 /* Ensure nothing blocks pointer events */
 .wishlist-button-collection {
