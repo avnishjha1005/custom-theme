@@ -4507,12 +4507,15 @@ text-component {
 }
 
 [ref="resourceListCarousel"] {
-  overflow: scroll;
+  overflow-x: scroll;
+  overflow-y: clip;
+}
 }
 
 [ref="resourceListCarousel"] > [ref="slideshowContainer"]{
   width:100%;
-  overflow: scroll;
+  overflow-x: scroll;
+  overflow-y: clip;
 }
 
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"]{
