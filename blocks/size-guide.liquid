@@ -1,0 +1,240 @@
+{% comment %}
+  Size Guide Drawer Block
+  Uses a Metaobject list to handle multiple vendors.
+  Structure: product.metafields.custom.selected_size_guide.value
+{% endcomment %}
+
+{%- assign guides = product.metafields.custom.selected_size_guide.value -%}
+
+{%- if guides != blank -%}
+  <button type="button" class="sg-trigger-btn" onclick="toggleSizeDrawer(true)">
+    Size Guide
+  </button>
+
+  <div id="SizeDrawerOverlay" class="sg-overlay" onclick="toggleSizeDrawer(false)"></div>
+
+  <div id="SizeDrawer" class="sg-drawer">
+    <div class="sg-header">
+      <h2 class="sg-title">Product Measurements</h2>
+      <button class="sg-close-icon" onclick="toggleSizeDrawer(false)" aria-label="Close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="sg-body">
+      <div class="sg-vendor-tabs">
+        {%- for guide in guides -%}
+          <button class="sg-tab-link {% if forloop.first %}active{% endif %}" 
+                  onclick="openVendorTab(event, 'vendor-{{ forloop.index }}')">
+            {{ guide.vendor_name | upcase }} SIZE GUIDE
+          </button>
+        {%- endfor -%}
+      </div>
+
+      {%- for guide in guides -%}
+        <div id="vendor-{{ forloop.index }}" class="sg-vendor-content {% if forloop.first %}active{% endif %}">
+          
+          <p class="sg-disclaimer">
+            {{ guide.disclaimer | default: "Each item is measured to help you choose the correct fit. Please refer to the garment's measurements below to select the appropriate size." }}
+          </p>
+
+          {%- if guide.image -%}
+            <div class="sg-illustration">
+              <img src="{{ guide.image | image_url: width: 700 }}" loading="lazy" alt="Measurement Guide" height="auto" width="auto">
+            </div>
+          {%- endif -%}
+
+          <div class="sg-unit-toggle">
+            <button class="unit-btn active" onclick="switchSgUnit(this, 'cm', '{{ forloop.index }}')">CM</button>
+            <button class="unit-btn" onclick="switchSgUnit(this, 'in', '{{ forloop.index }}')">IN</button>
+          </div>
+
+          <div class="sg-table-container-{{ forloop.index }}">
+            {% comment %} Centimeters Table {% endcomment %}
+            <div class="sg-unit-table unit-cm" style="display: block;">
+              <table>
+                <thead>
+                  <tr>
+                    {%- for col in guide.size_data.value.centimeters[0] -%}
+                      <th>{{ col[0] }}</th>
+                    {%- endfor -%}
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for row in guide.size_data.value.centimeters -%}
+                    <tr>
+                      {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                    </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+
+            {% comment %} Inches Table {% endcomment %}
+            <div class="sg-unit-table unit-in" style="display: none;">
+              <table>
+                <thead>
+                  <tr>
+                    {%- for col in guide.size_data.value.inches[0] -%}
+                      <th>{{ col[0] }}</th>
+                    {%- endfor -%}
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for row in guide.size_data.value.inches -%}
+                    <tr>
+                      {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                    </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <style>
+    /* Trigger */
+    .sg-trigger-btn {
+      background: none;
+      border: 1px solid #000;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 10px 0;
+    }
+
+    /* Drawer Core */
+    .sg-drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 450px;
+      height: 100%;
+      background: #fff;
+      z-index: 2000;
+      transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      flex-direction: column;
+      box-shadow: -10px 0 20px rgba(0,0,0,0.05);
+    }
+    .sg-drawer.is-open { right: 0; }
+    
+    .sg-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      z-index: 1999;
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.3s;
+    }
+    .sg-overlay.is-open { opacity: 1; visibility: visible; }
+
+    @media (max-width: 768px) {
+      .sg-drawer { width: 100%; }
+    }
+
+    /* Header & Tabs */
+    .sg-header {
+      padding: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #f2f2f2;
+    }
+    .sg-title { font-size: 18px; margin: 0; font-family: serif; }
+    .sg-close-icon { background: none; border: none; cursor: pointer; }
+
+    .sg-body { padding: 25px; overflow-y: auto; }
+    .sg-vendor-tabs { display: flex; gap: 20px; border-bottom: 1px solid #eee; margin-bottom: 20px; }
+    
+    .sg-tab-link {
+      background: none; border: none; padding: 10px 0;
+      font-size: 10px; font-weight: bold; color: #aaa; cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .sg-tab-link.active { color: #000; border-bottom: 2px solid #000; }
+
+    .sg-vendor-content { display: none; }
+    .sg-vendor-content.active { display: block; }
+
+    /* Content & Table */
+    .sg-disclaimer { font-size: 11px; line-height: 1.6; color: #666; margin-bottom: 20px; }
+    .sg-illustration img { width: 100%; height: auto; margin-bottom: 20px; }
+
+    .sg-unit-toggle { display: flex; gap: 15px; margin-bottom: 15px; }
+    .unit-btn { background: none; border: none; font-size: 11px; font-weight: bold; cursor: pointer; color: #ccc; padding: 0; }
+    .unit-btn.active { color: #000; text-decoration: underline; text-underline-offset: 4px; }
+
+    .sg-unit-table table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .sg-unit-table th { text-align: left; padding: 12px 5px; border-bottom: 1px solid #000; text-transform: uppercase; font-size: 10px; }
+    .sg-unit-table td { padding: 12px 5px; border-bottom: 1px solid #eee; color: #444; }
+  </style>
+
+  <script>
+    function toggleSizeDrawer(open) {
+      const drawer = document.getElementById('SizeDrawer');
+      const overlay = document.getElementById('SizeDrawerOverlay');
+      if (open) {
+        drawer.classList.add('is-open');
+        overlay.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      } else {
+        drawer.classList.remove('is-open');
+        overlay.classList.remove('is-open');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function openVendorTab(evt, tabId) {
+      const body = evt.currentTarget.closest('.sg-body');
+      body.querySelectorAll('.sg-vendor-content').forEach(c => c.classList.remove('active'));
+      body.querySelectorAll('.sg-tab-link').forEach(t => t.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    function switchSgUnit(btn, unit, index) {
+      const container = document.querySelector('.sg-table-container-' + index);
+      btn.parentElement.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      container.querySelector('.unit-cm').style.display = (unit === 'cm') ? 'block' : 'none';
+      container.querySelector('.unit-in').style.display = (unit === 'in') ? 'block' : 'none';
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Size Guide Drawer",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This block automatically pulls data from the 'selected_size_guide' product metafield. Ensure your Metaobject entries contain the required JSON structure."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Size Guide"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button Text Color",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size Guide Drawer"
+    }
+  ]
+}
+{% endschema %}
