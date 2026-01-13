@@ -55,13 +55,13 @@
               <table>
                 <thead>
                   <tr>
-                    {%- for col in guide.size_data.value.centimeters[0] -%}
+                    {%- for col in guide.sizes.value.centimeters[0] -%}
                       <th>{{ col[0] }}</th>
                     {%- endfor -%}
                   </tr>
                 </thead>
                 <tbody>
-                  {%- for row in guide.size_data.value.centimeters -%}
+                  {%- for row in guide.sizes.value.centimeters -%}
                     <tr>
                       {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
                     </tr>
@@ -75,13 +75,13 @@
               <table>
                 <thead>
                   <tr>
-                    {%- for col in guide.size_data.value.inches[0] -%}
+                    {%- for col in guide.sizes.value.inches[0] -%}
                       <th>{{ col[0] }}</th>
                     {%- endfor -%}
                   </tr>
                 </thead>
                 <tbody>
-                  {%- for row in guide.size_data.value.inches -%}
+                  {%- for row in guide.sizes.value.inches -%}
                     <tr>
                       {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
                     </tr>
