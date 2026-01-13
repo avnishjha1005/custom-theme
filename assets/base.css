@@ -4544,7 +4544,7 @@ wishlist-product-card .wk-meta {
   flex-direction:row !important;
 
 }
-.wk-button{
+wk-button{
   left:unset !important;
   right: 0 !important;
 }
