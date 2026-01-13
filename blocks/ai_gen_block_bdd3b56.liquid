@@ -20,7 +20,8 @@
 
   .ai-three-image-hero__grid-{{ ai_gen_id }} {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    /* Dynamically controlled by the schema setting */
+    grid-template-columns: repeat({{ block.settings.desktop_columns }}, 1fr);
     gap: {{ block.settings.image_gap }}px;
     position: relative;
   }
@@ -62,6 +63,7 @@
     text-align: center;
     width: 90%;
     z-index: 2;
+    pointer-events: none; /* Allows clicking through text to images if needed */
   }
 
   .ai-three-image-hero__heading-{{ ai_gen_id }} {
@@ -80,31 +82,26 @@
     line-height: 1.4;
   }
 
+  /* Tablet Adjustments */
   @media screen and (max-width: 989px) {
     .ai-three-image-hero__grid-{{ ai_gen_id }} {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(min({{ block.settings.desktop_columns }}, 2), 1fr);
     }
-
-    .ai-three-image-hero__image-wrapper-{{ ai_gen_id }}:last-child {
-      grid-column: 1 / -1;
-    }
-
+    
     .ai-three-image-hero__heading-{{ ai_gen_id }} {
       font-size: calc({{ block.settings.heading_size }}px * 0.7);
     }
-
-    .ai-three-image-hero__subheading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.subheading_size }}px * 0.8);
-    }
   }
 
+  /* Mobile: Show only the first image */
   @media screen and (max-width: 749px) {
     .ai-three-image-hero__grid-{{ ai_gen_id }} {
       grid-template-columns: 1fr;
     }
 
-    .ai-three-image-hero__image-wrapper-{{ ai_gen_id }}:last-child {
-      grid-column: auto;
+    /* Hide all images except the first one on mobile */
+    .ai-three-image-hero__image-wrapper-{{ ai_gen_id }}:nth-child(n+2) {
+      display: none;
     }
 
     .ai-three-image-hero__heading-{{ ai_gen_id }} {
@@ -128,7 +125,7 @@
         <div class="ai-three-image-hero__image-wrapper-{{ ai_gen_id }}">
           {% if image %}
             <img
-              src="{{ image | image_url: width: 800 }}"
+              src="{{ image | image_url: width: 1200 }}"
               alt="{{ image.alt | escape }}"
               loading="lazy"
               width="{{ image.width }}"
@@ -163,24 +160,35 @@
 
 <script>
   (function() {
-    class ThreeImageHero{{ ai_gen_id }} extends HTMLElement {
-      constructor() {
-        super();
+    if (!customElements.get('three-image-hero-{{ ai_gen_id }}')) {
+      class ThreeImageHero{{ ai_gen_id }} extends HTMLElement {
+        constructor() {
+          super();
+        }
       }
-
-      connectedCallback() {
-      }
+      customElements.define('three-image-hero-{{ ai_gen_id }}', ThreeImageHero{{ ai_gen_id }});
     }
-
-    customElements.define('three-image-hero-{{ ai_gen_id }}', ThreeImageHero{{ ai_gen_id }});
   })();
 </script>
 
 {% schema %}
 {
   "name": "Three image hero",
-  "tag": null,
   "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "desktop_columns",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "label": "Desktop columns",
+      "info": "Controls how many images appear side-by-side on large screens.",
+      "default": 3
+    },
     {
       "type": "header",
       "content": "Images"
@@ -188,7 +196,7 @@
     {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Image 1"
+      "label": "Image 1 (Shows on Mobile)"
     },
     {
       "type": "image_picker",
@@ -205,26 +213,11 @@
       "id": "image_aspect_ratio",
       "label": "Image aspect ratio",
       "options": [
-        {
-          "value": "1 / 1",
-          "label": "Square (1:1)"
-        },
-        {
-          "value": "4 / 3",
-          "label": "Landscape (4:3)"
-        },
-        {
-          "value": "16 / 9",
-          "label": "Wide (16:9)"
-        },
-        {
-          "value": "3 / 4",
-          "label": "Portrait (3:4)"
-        },
-        {
-          "value": "2 / 3",
-          "label": "Tall (2:3)"
-        }
+        { "value": "1 / 1", "label": "Square (1:1)" },
+        { "value": "4 / 3", "label": "Landscape (4:3)" },
+        { "value": "16 / 9", "label": "Wide (16:9)" },
+        { "value": "3 / 4", "label": "Portrait (3:4)" },
+        { "value": "2 / 3", "label": "Tall (2:3)" }
       ],
       "default": "4 / 3"
     },
@@ -365,16 +358,6 @@
       "unit": "px",
       "label": "Section padding",
       "default": 40
-    },
-    {
-      "type": "range",
-      "id": "desktop_width_percent",
-      "min": 50,
-      "max": 100,
-      "step": 5,
-      "unit": "%",
-      "label": "Desktop width",
-      "default": 100
     }
   ],
   "presets": [
