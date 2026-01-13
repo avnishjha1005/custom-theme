@@ -87,8 +87,8 @@
       alt="{{ block.settings.image.alt }}" 
       class="hero-overlay__image-{{ ai_gen_id }}"
       loading="lazy"
-      width="100%"
-      height="auto"
+      height={{ block.settings.height_desktop }}
+      width=100%
     >
   {% else %}
     {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-overlay__image-ai' }}
