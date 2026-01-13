@@ -563,7 +563,7 @@
         ".wishlist-button {z-index: 100;}"
       ],
       "settings": {
-        "layout_type": "grid",
+        "layout_type": "organic",
         "product_card_size": "medium",
         "mobile_product_card_size": "small",
         "max_featured_items": 2,
