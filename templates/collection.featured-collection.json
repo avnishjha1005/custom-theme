@@ -129,6 +129,7 @@
         "text_tqQTNE",
         "text_7cReRg"
       ],
+      "disabled": true,
       "custom_css": [
         "@media screen and (max-width: 768px) {p {text-align: center; }}",
         ".section--page-width {max-width: 1440px; margin: auto;}"
@@ -167,6 +168,7 @@
       "blocks": {
         "filters": {
           "type": "filters",
+          "disabled": true,
           "static": true,
           "settings": {
             "enable_filtering": true,
@@ -555,6 +557,98 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "1768274530727e625a": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_1755f5a_rbCzmQ": {
+          "type": "ai_gen_block_1755f5a",
+          "settings": {
+            "image": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b.jpg",
+            "image_height_desktop": 500,
+            "image_height_mobile": 400,
+            "line1": "LOREM IPSUM",
+            "line1_horizontal_position": 50,
+            "line1_vertical_position": 40,
+            "line1_horizontal_position_mobile": 50,
+            "line1_vertical_position_mobile": 40,
+            "line1_alignment": "center",
+            "line1_max_width": 800,
+            "line1_padding": 20,
+            "line1_padding_mobile": 16,
+            "line1_size": 72,
+            "line1_size_mobile": 48,
+            "line1_weight": 400,
+            "line1_letter_spacing": 0,
+            "line1_line_height": 1.2,
+            "line1_text_transform": "none",
+            "line1_color": "#ffffff",
+            "line2": "DOLOR",
+            "line2_horizontal_position": 70,
+            "line2_vertical_position": 65,
+            "line2_horizontal_position_mobile": 50,
+            "line2_vertical_position_mobile": 50,
+            "line2_alignment": "center",
+            "line2_max_width": 700,
+            "line2_padding": 20,
+            "line2_padding_mobile": 16,
+            "line2_size": 48,
+            "line2_size_mobile": 32,
+            "line2_weight": 400,
+            "line2_letter_spacing": 0,
+            "line2_line_height": 1.2,
+            "line2_text_transform": "none",
+            "line2_color": "#ffffff",
+            "subheading": "Exclusive collection 2025/2",
+            "subheading_horizontal_position": 70,
+            "subheading_vertical_position": 80,
+            "subheading_horizontal_position_mobile": 65,
+            "subheading_vertical_position_mobile": 60,
+            "subheading_alignment": "center",
+            "subheading_max_width": 600,
+            "subheading_padding": 20,
+            "subheading_padding_mobile": 16,
+            "subheading_size": 32,
+            "subheading_size_mobile": 14,
+            "subheading_weight": 400,
+            "subheading_letter_spacing": 0,
+            "subheading_line_height": 1.5,
+            "subheading_text_transform": "none",
+            "subheading_color": "#ffffff"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_1755f5a_rbCzmQ"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "full-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
     }
   },
   "order": [
@@ -562,6 +656,7 @@
     "section",
     "main",
     "whatsapp_fab_apNmVc",
-    "1766389154a3d216c8"
+    "1766389154a3d216c8",
+    "1768274530727e625a"
   ]
 }
