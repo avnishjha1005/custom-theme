@@ -1,154 +1,202 @@
 import { Component } from '@theme/component';
+import {
+center,
+closest,
+clamp,
+getVisibleElements,
+mediaQueryLarge,
+prefersReducedMotion,
+preventDefault,
+viewTransition,
+scheduler,
+} from '@theme/utilities';
+import { Scroller, scrollIntoView } from '@theme/scrolling';
+import { SlideshowSelectEvent } from '@theme/events';
+
+// The threshold for determining visibility of slides.
+const SLIDE_VISIBLITY_THRESHOLD = 0.7;
+
 /**
- * Slideshow custom element powered by SwiperJS
- * @extends {Component}
- */
+* Slideshow custom element that allows sliding between content.
+*
+* @typedef {Object} Refs
+* @property {HTMLElement} scroller
+* @property {HTMLElement} slideshowContainer
+* @property {HTMLElement[]} [slides]
+* @property {HTMLElement} [current]
+* @property {HTMLElement[]} [thumbnails]
+* @property {HTMLElement[]} [dots]
+* @property {HTMLButtonElement} [previous]
+* @property {HTMLButtonElement} [next]
+*
+* @extends {Component<Refs>}
+*/
 export class Slideshow extends Component {
-  static get observedAttributes() {
-    return ['initial-slide'];
-  }
+static get observedAttributes() {
+return ['initial-slide'];
+}
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'initial-slide' && oldValue !== newValue && this.swiper) {
-      this.swiper.slideTo(parseInt(newValue, 10));
+/**
+  * @param {string} name
+  * @param {string} oldValue
+  * @param {string} newValue
+  */
+attributeChangedCallback(name, oldValue, newValue) {
+// Collection page filtering will Morph slideshow galleries in place, updating
+// the slideshow[initial-slide] and slideshow-slide[hidden] attributes.
+// We need to re-select() the slide after the morph is complete, but not before
+// slideshow-slide elements have their [hidden] attribute updated.
+if (name === 'initial-slide' && oldValue !== newValue) {
+queueMicrotask(() => {
+// Only select if the component is connected and initialized
+if (!this.isConnected || !this.#scroll || !this.refs.slides) return;
+const index = parseInt(newValue, 10) || 0;
+const slide_id = this.refs.slides[index]?.getAttribute('slide-id');
+if (slide_id) {
+this.select({ id: slide_id }, undefined, { animate: false });
+}
+});
+}
+}
+
+requiredRefs = ['scroller'];
+
+async connectedCallback() {
+super.connectedCallback();
+
+// Wait for any in-progress view transitions to finish
+if (viewTransition.current) {
+await viewTransition.current;
+// It's possible that the slideshow was disconnected before the view transition finished
+if (!this.isConnected) return;
+}
+
+const slideCount = this.slides?.length || 0;
+slideCount <= 1 ? this.#setupSlideshowWithoutControls() : this.#setupSlideshow();
+}
+
+disconnectedCallback() {
+super.disconnectedCallback();
+
+if (this.#scroll) {
+const { scroller } = this.refs;
+scroller.removeEventListener('mousedown', this.#handleMouseDown);
+this.#scroll.destroy();
+}
+
+    // Clean up mouse drag event listeners
+    document.removeEventListener('mousemove', this.#handleMouseMove);
+    document.removeEventListener('mouseup', this.#handleMouseUp);
+
+const slideCount = this.slides?.length || 0;
+if (slideCount > 1) {
+this.removeEventListener('mouseenter', this.suspend);
+@@ -569,6 +573,10 @@
+};
+
+#dragging = false;
+  #mouseStartX = 0;
+  #mouseStartY = 0;
+  #scrollStartX = 0;
+  #scrollStartY = 0;
+
+/**
+  * Handles the 'mousedown' event to start dragging slides.
+@@ -597,11 +605,96 @@
+if (outerCarousel && outerCarousel !== this) {
+// Mark that this event should not propagate to parent slideshow
+event.stopImmediatePropagation();
+        return;
+}
+}
+
+    // Only handle left mouse button
+    if (event.button !== 0) return;
+
+    // Don't start dragging if clicking on interactive elements
+    const target = event.target;
+    if (
+      target instanceof HTMLAnchorElement ||
+      target instanceof HTMLButtonElement ||
+      target instanceof HTMLInputElement ||
+      target.closest('a, button, input, [role="button"]')
+    ) {
+      return;
     }
+
+event.preventDefault();
   }
+    event.stopPropagation();
 
-  requiredRefs = ['scroller'];
-  swiper = null;
+    const { scroller } = this.refs;
+    if (!scroller) return;
 
-  async connectedCallback() {
-     console.log("event dispatched")
-    super.connectedCallback();
-    this.initSwiper();
-  }
+    // Start dragging
+    this.#dragging = true;
+    this.#mouseStartX = event.clientX;
+    this.#mouseStartY = event.clientY;
+    this.#scrollStartX = scroller.scrollLeft;
+    this.#scrollStartY = scroller.scrollTop;
 
-  disconnectedCallback() {
-    super.disconnectedCallback();
-    if (this.swiper) {
-      this.swiper.destroy();
+    this.setAttribute('dragging', '');
+    if (this.#scroll) {
+      this.#scroll.snap = false;
     }
-  }
+
+    // Add event listeners for mouse move and up
+    document.addEventListener('mousemove', this.#handleMouseMove);
+    document.addEventListener('mouseup', this.#handleMouseUp);
+  };
 
   /**
-   * Check if this is a nested slideshow to prevent 
-   * event interference or adjust Swiper settings.
+   * Handles the 'mousemove' event while dragging.
+   * @param {MouseEvent} event - The mousemove event.
    */
-  get isNested() {
-    return !!this.parentElement?.closest('slideshow-component');
-  }
-  #handleSlideChange() {
-     console.log("event dispatched")
-  if (!this.swiper) return;
-  const index = this.swiper.realIndex ?? this.swiper.activeIndex ?? 0;
-  const activeSlide = this.swiper.slides?.[this.swiper.activeIndex];
-  if (!activeSlide) return;
+  #handleMouseMove = (event) => {
+    if (!this.#dragging) return;
 
-  this.dispatchEvent(
-    console.log("event dispatched")
-    new CustomEvent('slideshow:select', {
-      detail: {
-        index,
-        slide: activeSlide,
-        id: activeSlide.getAttribute('slide-id'),
-      },
-    })
-  );
+    const { scroller } = this.refs;
+    if (!scroller) return;
 
-  initSwiper() {
-    const { scroller, previous, next, dots } = this.refs;
-    
-    // Determine autoplay settings
-    const autoplayInterval = parseInt(this.getAttribute('autoplay'), 10);
-    const autoplayOptions = autoplayInterval 
-      ? { delay: autoplayInterval * 1000, disableOnInteraction: true } 
-      : false;
+    const deltaX = this.#mouseStartX - event.clientX;
+    const deltaY = this.#mouseStartY - event.clientY;
 
-    this.swiper = new Swiper(scroller, {
-      
-      // Initial Setup
-      initialSlide: parseInt(this.getAttribute('initial-slide'), 10) || 0,
-      loop: this.hasAttribute('infinite'),
-      speed: 400,
-      
-      // Handle Nested Sliders
-      nested: this.isNested,
-      
-      // Autoplay
-      autoplay: autoplayOptions,
-      //draggable
-      allowTouchMove : true,
+    // Determine scroll axis
+    const axis = this.#scroll?.axis || 'x';
+    const isHorizontal = axis === 'x';
 
-      // Navigation Refs
-      navigation: {
-        nextEl: this.refs.next?.[0] || this.refs.next || null,
-        prevEl: this.refs.previous?.[0] || this.refs.previous || null,
-      },
+    // Calculate new scroll position
+    const newScrollX = this.#scrollStartX + deltaX;
+    const newScrollY = this.#scrollStartY + deltaY;
 
-      // Events
-      on: {
-        slideChange: () => {
-           console.log("event dispatched");
-          if (!this.swiper) return;
-          this.#handleSlideChange();
-        },
-        init: (s) => {
-          // Update initial ARIA and states
-          this.#updateAria(s);
-        }
-      },
-      
-      // Responsiveness / Logic from old component
-      observer: true,
-      observeParents: true,
-      threshold: 5, // Prevents accidental slides on slight touch
-    });
-  }
-
-  this.#syncThumbnails(index);
-}
-
-  #syncThumbnails(index) {
-  // Fallback: If this.refs.thumbnails is empty, query the DOM manually within the component
-  const dots = this.refs.thumbnails || this.querySelectorAll('.slideshow-controls');
-  console.log(this.refs.thumbnails);
-  if (dots) {
-    dots.forEach((thumb, i) => {
-      // Use index0 comparison
-      const isSelected = i === index;
-      thumb.setAttribute('aria-selected', isSelected);
-      
-      // Also toggle a class for styling if aria-selected isn't enough for your CSS
-      thumb.classList.toggle('is-active', isSelected);
-    });
-  }
-}
-
-  #updateAria(s) {
-    // Mimic the "auto-hide-controls" logic
-    if (this.hasAttribute('auto-hide-controls') && this.refs.slideshowControls) {
-      this.refs.slideshowControls.hidden = s.slides.length <= 1;
+    // Update scroll position
+    if (isHorizontal) {
+      scroller.scrollLeft = newScrollX;
+    } else {
+      scroller.scrollTop = newScrollY;
     }
-  }
 
-  // API Methods to keep existing code working
-  next() { this.swiper?.slideNext(); }
-  previous() { this.swiper?.slidePrev(); }
-  pause() { this.swiper?.autoplay.stop(); }
-  play() { this.swiper?.autoplay.start(); }
-  select(index, event = null) {
-  if (event) event.preventDefault();
-  const targetIndex = typeof index === 'string' ? parseInt(index, 10) : index;
-  
-  if (this.swiper) {
-    // If infinite loop is on, use slideToLoop to handle virtual indexes
-    this.hasAttribute('infinite') 
-      ? this.swiper.slideToLoop(targetIndex) 
-      : this.swiper.slideTo(targetIndex);
-  }
-}
-}
+    event.preventDefault();
+  };
 
-if (!customElements.get('slideshow-component')) {
-  customElements.define('slideshow-component', Slideshow);
-}
+  /**
+   * Handles the 'mouseup' event to stop dragging.
+   * @param {MouseEvent} event - The mouseup event.
+   */
+  #handleMouseUp = (event) => {
+    if (!this.#dragging) return;
+
+    this.#dragging = false;
+    this.removeAttribute('dragging');
+    if (this.#scroll) {
+      this.#scroll.snap = true;
+    }
+
+    // Remove event listeners
+    document.removeEventListener('mousemove', this.#handleMouseMove);
+    document.removeEventListener('mouseup', this.#handleMouseUp);
+    document.removeEventListener('mouseleave', this.#handleMouseUp);
+  };
+
+#handlePointerEnter = () => {
+this.setAttribute('actioned', '');
