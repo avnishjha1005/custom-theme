@@ -209,10 +209,34 @@
           "block_order": [
             "text_NJCPhU"
           ]
+        },
+        "video_byFT4A": {
+          "type": "video",
+          "name": "t:names.video",
+          "settings": {
+            "source": "url",
+            "video_url": "https://www.youtube.com/watch?v=MtA1Xm3X1-w",
+            "video_autoplay": false,
+            "video_loop": true,
+            "alt": "",
+            "custom_width": 100,
+            "custom_width_mobile": 100,
+            "aspect_ratio": "1/1",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "group_gjghPM"
+        "group_gjghPM",
+        "video_byFT4A"
       ],
       "name": "t:names.custom_section",
       "settings": {
