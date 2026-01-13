@@ -1,150 +1,112 @@
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
-  .hero-overlay-{{ ai_gen_id }} {
+  /* Full Width Breakout Container */
+  .hero-full-width-{{ ai_gen_id }} {
+    width: 100vw;
     position: relative;
-    width: 100%;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
     overflow: hidden;
-    background-color: #f4f4f4;
     height: {{ block.settings.height_desktop }}px;
+    background-color: #f4f4f4;
   }
 
-  .hero-overlay__image-{{ ai_gen_id }} {
+  .hero-full-width__img-{{ ai_gen_id }} {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
 
-  /* Shared Text Styling */
-  .hero-overlay__text-{{ ai_gen_id }} {
+  /* Text Positioning Logic */
+  .hero-text-item-{{ ai_gen_id }} {
     position: absolute;
     margin: 0;
-    line-height: 1.1;
-    z-index: 2;
+    line-height: 1;
+    z-index: 5;
+    white-space: nowrap;
+    color: {{ block.settings.text_color }};
     text-transform: uppercase;
-    transition: all 0.2s ease-in-out;
   }
 
-  /* Desktop Positions */
+  /* Desktop Settings */
   .line-1-{{ ai_gen_id }} {
-    top: {{ block.settings.line1_v_pos }}%;
-    left: {{ block.settings.line1_h_pos }}%;
+    top: {{ block.settings.line1_v }}%;
+    left: {{ block.settings.line1_h }}%;
     font-size: {{ block.settings.line1_size }}px;
-    font-weight: {{ block.settings.line_weight }};
-    color: {{ block.settings.text_color }};
+    font-weight: {{ block.settings.font_weight }};
   }
 
   .line-2-{{ ai_gen_id }} {
-    top: {{ block.settings.line2_v_pos }}%;
-    left: {{ block.settings.line2_h_pos }}%;
+    top: {{ block.settings.line2_v }}%;
+    left: {{ block.settings.line2_h }}%;
     font-size: {{ block.settings.line2_size }}px;
-    font-weight: {{ block.settings.line_weight }};
-    color: {{ block.settings.text_color }};
+    font-weight: {{ block.settings.font_weight }};
   }
 
-  .subheading-{{ ai_gen_id }} {
-    top: {{ block.settings.sub_v_pos }}%;
-    left: {{ block.settings.sub_h_pos }}%;
+  .sub-{{ ai_gen_id }} {
+    top: {{ block.settings.sub_v }}%;
+    left: {{ block.settings.sub_h }}%;
     font-size: {{ block.settings.sub_size }}px;
-    font-weight: 400;
-    text-transform: none;
-    color: {{ block.settings.text_color }};
-    max-width: 300px;
+    font-weight: 300;
+    text-transform: none; /* Subheading usually sentence case */
   }
 
-  /* Mobile Adjustments */
+  /* Mobile Responsive Adjustments */
   @media screen and (max-width: 768px) {
-    .hero-overlay-{{ ai_gen_id }} {
+    .hero-full-width-{{ ai_gen_id }} {
       height: {{ block.settings.height_mobile }}px;
     }
-    
+
     .line-1-{{ ai_gen_id }} {
-      top: {{ block.settings.line1_v_pos_m }}%;
-      left: {{ block.settings.line1_h_pos_m }}%;
+      top: {{ block.settings.line1_v_m }}%;
+      left: {{ block.settings.line1_h_m }}%;
       font-size: {{ block.settings.line1_size_m }}px;
     }
 
     .line-2-{{ ai_gen_id }} {
-      top: {{ block.settings.line2_v_pos_m }}%;
-      left: {{ block.settings.line2_h_pos_m }}%;
+      top: {{ block.settings.line2_v_m }}%;
+      left: {{ block.settings.line2_h_m }}%;
       font-size: {{ block.settings.line2_size_m }}px;
     }
 
-    .subheading-{{ ai_gen_id }} {
-      top: {{ block.settings.sub_v_pos_m }}%;
-      left: {{ block.settings.sub_h_pos_m }}%;
+    .sub-{{ ai_gen_id }} {
+      top: {{ block.settings.sub_v_m }}%;
+      left: {{ block.settings.sub_h_m }}%;
       font-size: {{ block.settings.sub_size_m }}px;
-      max-width: 200px;
     }
   }
 {% endstyle %}
 
-<section class="hero-overlay-{{ ai_gen_id }}">
+<section class="hero-full-width-{{ ai_gen_id }}">
   {% if block.settings.image != blank %}
     <img 
-      src="{{ block.settings.image | image_url: width: 2500 }}" 
+      src="{{ block.settings.image | image_url: width: 3000 }}" 
       alt="{{ block.settings.image.alt }}" 
-      class="hero-overlay__image-{{ ai_gen_id }}"
-      loading="lazy"
-      width="{{ block.settings.image.width }}"
-height="{{ block.settings.image.height }}"
+      class="hero-full-width__img-{{ ai_gen_id }}"
+      height="auto"
+      width="auto"
     >
   {% else %}
-    {{ 'lifestyle-1' | placeholder_svg_tag: 'hero-overlay__image-ai' }}
+    {{ 'lifestyle-2' | placeholder_svg_tag: 'hero-full-width__img-ai' }}
   {% endif %}
 
-  {% if block.settings.line1 != blank %}
-    <h2 class="hero-overlay__text-{{ ai_gen_id }} line-1-{{ ai_gen_id }}">
-      {{ block.settings.line1 }}
-    </h2>
-  {% endif %}
-
-  {% if block.settings.line2 != blank %}
-    <h2 class="hero-overlay__text-{{ ai_gen_id }} line-2-{{ ai_gen_id }}">
-      {{ block.settings.line2 }}
-    </h2>
-  {% endif %}
-
-  {% if block.settings.subheading != blank %}
-    <p class="hero-overlay__text-{{ ai_gen_id }} subheading-{{ ai_gen_id }}">
-      {{ block.settings.subheading }}
-    </p>
-  {% endif %}
+  <div class="hero-text-item-{{ ai_gen_id }} line-1-{{ ai_gen_id }}">{{ block.settings.line1 }}</div>
+  <div class="hero-text-item-{{ ai_gen_id }} line-2-{{ ai_gen_id }}">{{ block.settings.line2 }}</div>
+  <div class="hero-text-item-{{ ai_gen_id }} sub-{{ ai_gen_id }}">{{ block.settings.subheading }}</div>
 </section>
 
 {% schema %}
 {
-  "name": "Editorial Hero Overlay",
+  "name": "Full-Width Offset Hero",
   "settings": [
-    {
-      "type": "header",
-      "content": "Global Settings"
-    },
     {
       "type": "image_picker",
       "id": "image",
-      "label": "Background Image"
-    },
-    {
-      "type": "range",
-      "id": "height_desktop",
-      "min": 400,
-      "max": 1000,
-      "step": 50,
-      "unit": "px",
-      "label": "Desktop Section Height",
-      "default": 700
-    },
-    {
-      "type": "range",
-      "id": "height_mobile",
-      "min": 300,
-      "max": 800,
-      "step": 50,
-      "unit": "px",
-      "label": "Mobile Section Height",
-      "default": 500
+      "label": "Hero Image"
     },
     {
       "type": "color",
@@ -154,16 +116,40 @@ height="{{ block.settings.image.height }}"
     },
     {
       "type": "range",
-      "id": "line_weight",
+      "id": "font_weight",
       "min": 100,
       "max": 900,
       "step": 100,
-      "label": "Main Lines Weight",
+      "label": "Main Font Weight",
       "default": 400
     },
     {
       "type": "header",
-      "content": "Line 1 (Top)"
+      "content": "Section Dimensions"
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "min": 400,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Desktop Height",
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Mobile Height",
+      "default": 500
+    },
+    {
+      "type": "header",
+      "content": "Line 1 (Top Line)"
     },
     {
       "type": "text",
@@ -175,54 +161,53 @@ height="{{ block.settings.image.height }}"
       "type": "range",
       "id": "line1_size",
       "min": 20,
-      "max": 150,
-      "step": 2,
-      "label": "Desktop Font Size",
+      "max": 110,
+      "label": "Size",
       "default": 80
     },
     {
       "type": "range",
-      "id": "line1_h_pos",
+      "id": "line1_h",
       "min": 0,
       "max": 100,
-      "label": "Desktop Horizontal (%)",
-      "default": 25
+      "label": "Horizontal Pos (%)",
+      "default": 20
     },
     {
       "type": "range",
-      "id": "line1_v_pos",
+      "id": "line1_v",
       "min": 0,
       "max": 100,
-      "label": "Desktop Vertical (%)",
+      "label": "Vertical Pos (%)",
       "default": 35
     },
     {
       "type": "range",
       "id": "line1_size_m",
-      "min": 20,
-      "max": 80,
-      "label": "Mobile Font Size",
-      "default": 40
+      "min": 10,
+      "max": 60,
+      "label": "Mobile Size",
+      "default": 30
     },
     {
       "type": "range",
-      "id": "line1_h_pos_m",
+      "id": "line1_h_m",
       "min": 0,
       "max": 100,
-      "label": "Mobile Horizontal (%)",
+      "label": "Mobile H-Pos",
       "default": 10
     },
     {
       "type": "range",
-      "id": "line1_v_pos_m",
+      "id": "line1_v_m",
       "min": 0,
       "max": 100,
-      "label": "Mobile Vertical (%)",
+      "label": "Mobile V-Pos",
       "default": 30
     },
     {
       "type": "header",
-      "content": "Line 2 (Offset)"
+      "content": "Line 2 (Offset Line)"
     },
     {
       "type": "text",
@@ -233,50 +218,49 @@ height="{{ block.settings.image.height }}"
     {
       "type": "range",
       "id": "line2_size",
-      "min": 20,
-      "max": 150,
-      "step": 2,
-      "label": "Desktop Font Size",
+      "min": 10,
+      "max": 100,
+      "label": "Size",
       "default": 80
     },
     {
       "type": "range",
-      "id": "line2_h_pos",
+      "id": "line2_h",
       "min": 0,
       "max": 100,
-      "label": "Desktop Horizontal (%)",
-      "default": 55
+      "label": "Horizontal Pos (%)",
+      "default": 50
     },
     {
       "type": "range",
-      "id": "line2_v_pos",
+      "id": "line2_v",
       "min": 0,
       "max": 100,
-      "label": "Desktop Vertical (%)",
+      "label": "Vertical Pos (%)",
       "default": 45
     },
     {
       "type": "range",
       "id": "line2_size_m",
-      "min": 20,
-      "max": 80,
-      "label": "Mobile Font Size",
+      "min": 10,
+      "max": 60,
+      "label": "Mobile Size",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "line2_h_m",
+      "min": 0,
+      "max": 100,
+      "label": "Mobile H-Pos",
       "default": 40
     },
     {
       "type": "range",
-      "id": "line2_h_pos_m",
+      "id": "line2_v_m",
       "min": 0,
       "max": 100,
-      "label": "Mobile Horizontal (%)",
-      "default": 45
-    },
-    {
-      "type": "range",
-      "id": "line2_v_pos_m",
-      "min": 0,
-      "max": 100,
-      "label": "Mobile Vertical (%)",
+      "label": "Mobile V-Pos",
       "default": 38
     },
     {
@@ -284,7 +268,7 @@ height="{{ block.settings.image.height }}"
       "content": "Subheading"
     },
     {
-      "type": "textarea",
+      "type": "text",
       "id": "subheading",
       "label": "Text",
       "default": "Exclusive Collection 2025/26"
@@ -294,53 +278,53 @@ height="{{ block.settings.image.height }}"
       "id": "sub_size",
       "min": 10,
       "max": 40,
-      "label": "Desktop Font Size",
+      "label": "Size",
       "default": 14
     },
     {
       "type": "range",
-      "id": "sub_h_pos",
+      "id": "sub_h",
       "min": 0,
       "max": 100,
-      "label": "Desktop Horizontal (%)",
-      "default": 55
+      "label": "Horizontal Pos (%)",
+      "default": 50
     },
     {
       "type": "range",
-      "id": "sub_v_pos",
+      "id": "sub_v",
       "min": 0,
       "max": 100,
-      "label": "Desktop Vertical (%)",
-      "default": 55
+      "label": "Vertical Pos (%)",
+      "default": 52
     },
     {
       "type": "range",
       "id": "sub_size_m",
-      "min": 10,
+      "min": 8,
       "max": 30,
-      "label": "Mobile Font Size",
+      "label": "Mobile Size",
       "default": 12
     },
     {
       "type": "range",
-      "id": "sub_h_pos_m",
+      "id": "sub_h_m",
       "min": 0,
       "max": 100,
-      "label": "Mobile Horizontal (%)",
-      "default": 45
+      "label": "Mobile H-Pos",
+      "default": 40
     },
     {
       "type": "range",
-      "id": "sub_v_pos_m",
+      "id": "sub_v_m",
       "min": 0,
       "max": 100,
-      "label": "Mobile Vertical (%)",
-      "default": 45
+      "label": "Mobile V-Pos",
+      "default": 44
     }
   ],
   "presets": [
     {
-      "name": "Editorial Hero Overlay"
+      "name": "Full-Width Offset Hero"
     }
   ]
 }
