@@ -28,16 +28,16 @@
 >
   {% if header != blank %}{{ header }}{% endif %}
 
-  <slideshow-container ref="slideshowContainer" class="swiper-container-box">
+  <slideshow-container ref="slideshowContainer" >
     {% if show_arrows and disabled != true %}
       {% render 'slideshow-arrows', icon_style: icon_style, arrows_position: arrows_position %}
     {% endif %}
     <div 
       ref="scroller" 
-      class="swiper"
+      
       {% if slide_size %}data-size="{{ slide_size }}"{% endif %}
     >
-      <slideshow-slides class="swiper-wrapper slideshow-slide">
+      <slideshow-slides class="slideshow-slide">
         {{ slides }}
       </slideshow-slides>
     </div>
@@ -47,6 +47,5 @@
     {% endif %}
   </slideshow-container>
 
-  <div class="swiper-pagination"></div>
   {{ controls }}
 </slideshow-component>
