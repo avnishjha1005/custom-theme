@@ -1,0 +1,350 @@
+{% doc %}
+  @prompt
+    Create a section with a image with a text overlay. The text has three components. A line 1, line 2 and a subheading. I should be able to control the text position over the image. The image should span the entire the width of the page .
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-image-text-overlay-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+  }
+
+  .ai-image-text-overlay__image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+    height: {{ block.settings.image_height_desktop }}px;
+  }
+
+  .ai-image-text-overlay__image-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-image-text-overlay__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-image-text-overlay__placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 500px;
+    max-height: 500px;
+  }
+
+  .ai-image-text-overlay__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-image-text-overlay__content-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: {{ block.settings.vertical_position }};
+    justify-content: {{ block.settings.horizontal_position }};
+    padding: 40px;
+    z-index: 1;
+  }
+
+  .ai-image-text-overlay__text-container-{{ ai_gen_id }} {
+    text-align: {{ block.settings.text_alignment }};
+    max-width: {{ block.settings.text_max_width }}px;
+  }
+
+  .ai-image-text-overlay__line1-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.line1_size }}px;
+    margin: 0 0 {{ block.settings.line_spacing }}px 0;
+    line-height: 1.2;
+  }
+
+  .ai-image-text-overlay__line2-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.line2_size }}px;
+    margin: 0 0 {{ block.settings.line_spacing }}px 0;
+    line-height: 1.2;
+  }
+
+  .ai-image-text-overlay__subheading-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    font-size: {{ block.settings.subheading_size }}px;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-image-text-overlay__image-wrapper-{{ ai_gen_id }} {
+      height: {{ block.settings.image_height_mobile }}px;
+    }
+
+    .ai-image-text-overlay__content-{{ ai_gen_id }} {
+      padding: 20px;
+    }
+
+    .ai-image-text-overlay__line1-{{ ai_gen_id }} {
+      font-size: {{ block.settings.line1_size | times: 0.7 }}px;
+    }
+
+    .ai-image-text-overlay__line2-{{ ai_gen_id }} {
+      font-size: {{ block.settings.line2_size | times: 0.7 }}px;
+    }
+
+    .ai-image-text-overlay__subheading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.subheading_size | times: 0.8 }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="ai-image-text-overlay-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-image-text-overlay__image-wrapper-{{ ai_gen_id }}">
+    {% if block.settings.image %}
+      <img
+        src="{{ block.settings.image | image_url: width: 2000 }}"
+        alt="{{ block.settings.image.alt | escape }}"
+        loading="lazy"
+        width="{{ block.settings.image.width }}"
+        height="{{ block.settings.image.height }}"
+        class="ai-image-text-overlay__image-{{ ai_gen_id }}"
+      >
+    {% else %}
+      <div class="ai-image-text-overlay__placeholder-{{ ai_gen_id }}">
+        {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        <div class="ai-image-text-overlay__empty-state-{{ ai_gen_id }}">
+          Add an image to get started
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="ai-image-text-overlay__content-{{ ai_gen_id }}">
+      <div class="ai-image-text-overlay__text-container-{{ ai_gen_id }}">
+        {% if block.settings.line1 != blank %}
+          <h2 class="ai-image-text-overlay__line1-{{ ai_gen_id }}">
+            {{ block.settings.line1 }}
+          </h2>
+        {% endif %}
+
+        {% if block.settings.line2 != blank %}
+          <h3 class="ai-image-text-overlay__line2-{{ ai_gen_id }}">
+            {{ block.settings.line2 }}
+          </h3>
+        {% endif %}
+
+        {% if block.settings.subheading != blank %}
+          <p class="ai-image-text-overlay__subheading-{{ ai_gen_id }}">
+            {{ block.settings.subheading }}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image with text overlay",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "range",
+      "id": "image_height_desktop",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Desktop height",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "min": 200,
+      "max": 600,
+      "step": 50,
+      "unit": "px",
+      "label": "Mobile height",
+      "default": 400
+    },
+    {
+      "type": "header",
+      "content": "Text content"
+    },
+    {
+      "type": "text",
+      "id": "line1",
+      "label": "Line 1",
+      "default": "Welcome to our store"
+    },
+    {
+      "type": "range",
+      "id": "line1_size",
+      "min": 20,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "label": "Line 1 size",
+      "default": 72
+    },
+    {
+      "type": "text",
+      "id": "line2",
+      "label": "Line 2",
+      "default": "Discover amazing products"
+    },
+    {
+      "type": "range",
+      "id": "line2_size",
+      "min": 16,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "label": "Line 2 size",
+      "default": 48
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Shop our latest collection and find your perfect style"
+    },
+    {
+      "type": "range",
+      "id": "subheading_size",
+      "min": 12,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "label": "Subheading size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "line_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Spacing between lines",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Text position"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_position",
+      "label": "Horizontal position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "flex-end",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "vertical_position",
+      "label": "Vertical position",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Middle"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bottom"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "text_max_width",
+      "min": 300,
+      "max": 1000,
+      "step": 50,
+      "unit": "px",
+      "label": "Text max width",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text overlay"
+    }
+  ]
+}
+{% endschema %}
