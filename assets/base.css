@@ -4552,7 +4552,7 @@ wk-button{
 slideshow-slides slideshow-slide slideshow-slides:has(slideshow-slide .product-media) {
   gap: 0px;
 }
-slideshow-slides {
+slideshow-component {
   /* Firefox */
   scrollbar-width: none;
 
@@ -4561,6 +4561,6 @@ slideshow-slides {
 }
 
 /* Chrome, Safari, new Edge, etc. */
-slideshow-slides::-webkit-scrollbar {
+slideshow-component::-webkit-scrollbar {
   display: none;
 }
