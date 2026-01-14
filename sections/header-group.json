@@ -103,7 +103,7 @@
         ".mega-menu__link {font-size: 12px; text-transform: none;}",
         ".menu-list__submenu {border-top: 1px solid #e2ddd4;}",
         ".mega-menu__grid {margin-top: 44px;}",
-        "ma.search-modal__content{}"
+        "ma.search-modal__content {}"
       ],
       "settings": {
         "logo_position": "center",
@@ -121,7 +121,7 @@
         "localization_row": "top",
         "section_width": "page-width",
         "section_height": "standard",
-        "enable_sticky_header": "never",
+        "enable_sticky_header": "scroll-up",
         "divider_width": 0,
         "divider_size": "page-width",
         "border_width": 0,
