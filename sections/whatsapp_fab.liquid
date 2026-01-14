@@ -118,20 +118,25 @@
     (function() {
       const widget = document.getElementById('WA-Widget-{{ section.id }}');
       const btn = widget.querySelector('.wa-button');
+      const icon = widget.querySelector('.wa-icon-fab');
+      const pill = widget.querySelector('.wa-label-pill');
 
       btn.addEventListener('click', function(e) {
-        // Only run this logic on small screens
+        // We only override the click behavior on mobile/touch screens
         if (window.innerWidth <= 767) {
-          // If not expanded, expand it and prevent the link from opening
-          if (!btn.classList.contains('is-expanded')) {
-            e.preventDefault();
-            btn.classList.add('is-expanded');
+          
+          // Check if the actual click was on the icon (the FAB)
+          if (icon.contains(e.target)) {
+            e.preventDefault(); // Stop the link from opening
+            btn.classList.toggle('is-expanded'); // Open or Close
           } 
-          // If already expanded, the link (href) will naturally open
+          
+          // If the click was on the PILL (label), we DON'T preventDefault.
+          // The link will open naturally.
         }
       });
 
-      // Close if user clicks outside
+      // Close pill if user clicks anywhere else on the screen
       document.addEventListener('click', function(e) {
         if (!widget.contains(e.target)) {
           btn.classList.remove('is-expanded');
