@@ -4552,3 +4552,15 @@ wk-button{
 slideshow-slides slideshow-slide slideshow-slides:has(slideshow-slide .product-media) {
   gap: 0px;
 }
+slideshow-slides {
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* IE / Edge (legacy) */
+  -ms-overflow-style: none;
+}
+
+/* Chrome, Safari, new Edge, etc. */
+slideshow-slides::-webkit-scrollbar {
+  display: none;
+}
