@@ -4549,7 +4549,6 @@ wk-button{
   left:unset !important;
   right: 0 !important;
 }
-slideshow-slides:has(slideshow-slide .product-media) {
-  display: flex; /* or grid, depending on your layout */
+slideshow-slides slideshow-slide slideshow-slides:has(slideshow-slide .product-media) {
   gap: 0px;
 }
