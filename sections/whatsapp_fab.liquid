@@ -1,174 +1,216 @@
-
 {% liquid
   assign enabled = section.settings.enabled
   assign phone_raw = section.settings.phone | strip
   assign preset_message = section.settings.message
   assign offset_x = section.settings.offset_x
   assign offset_y = section.settings.offset_y
-  assign button_style = section.settings.button_style
   assign show_on_mobile = section.settings.show_on_mobile
   assign z_index = section.settings.z_index | default: 9999
 
   assign phone = phone_raw | replace: ' ', '' | replace: '+', '' | replace: '-', '' | replace: '(', '' | replace: ')', ''
-
   assign encoded_message = preset_message | url_encode
   assign chat_url = 'https://wa.me/' | append: phone | append: '?text=' | append: encoded_message
-
-  assign css_right = 'max(16px, env(safe-area-inset-right))'
-  assign css_left = 'auto'
-  assign css_bottom = 'max(16px, env(safe-area-inset-bottom))'
-  assign css_top = 'auto'
 %}
 
 {% if enabled and phone != '' %}
-  <a
-    href="{{ chat_url }}"
-    class="whatsapp-fab {% if button_style == 'pill' %}whatsapp-pill{% endif %}"
-    aria-label="Chat with us on WhatsApp"
-    rel="noopener"
-    target="_blank"
-  >
-    {{- 'icon-whatsapp.svg' | inline_asset_content -}}
-    {% if button_style == 'pill' %}
-      <span class="whatsapp-label">{{ section.settings.label_text | default: 'Chat on WhatsApp' }}</span>
-    {% endif %}
-  </a>
+  <div id="WhatsAppRoot-{{ section.id }}" class="whatsapp-container">
+    <a
+      href="{{ chat_url }}"
+      class="whatsapp-link"
+      aria-label="Chat with us on WhatsApp"
+      rel="noopener"
+      target="_blank"
+    >
+      <div class="whatsapp-pill-content">
+        <span class="whatsapp-label">{{ section.settings.label_text | default: 'Chat on WhatsApp' }}</span>
+      </div>
+      <div class="whatsapp-icon-wrapper">
+        {{- 'icon-whatsapp.svg' | inline_asset_content -}}
+      </div>
+    </a>
+  </div>
 
   <style>
-    .whatsapp-fab {
+    :root {
+      --wa-green: #25D366;
+      --wa-dark: #128C7E;
+    }
+    .whatsapp-container {
       position: fixed;
-      right: {{ css_right }};
-      left: {{ css_left }};
-      bottom: {{ css_bottom }};
-      top: {{ css_top }};
+      right: max(20px, env(safe-area-inset-right));
+      bottom: max(20px, env(safe-area-inset-bottom));
       transform: translate({{ offset_x }}px, {{ offset_y }}px);
       z-index: {{ z_index }};
-      width: 36px;
-      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .whatsapp-link {
+      display: flex;
+      align-items: center;
+      flex-direction: row-reverse;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+      overflow: hidden;
+      max-width: 56px; /* Width of just the icon */
+    }
+
+    .whatsapp-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      background: var(--wa-green);
       border-radius: 50%;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      color: #ffffff;
-      background: black; /* WhatsApp green */
-      box-shadow:
-        0 8px 24px rgba(0, 0, 0, 0.2),
-        0 2px 6px rgba(0, 0, 0, 0.12);
-      text-decoration: none;
-      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      flex-shrink: 0;
+      z-index: 2;
     }
-    .whatsapp-fab:hover {
-      transform: translate({{ offset_x }}px, {{ offset_y | plus: -1 }}px);
-      box-shadow:
-        0 10px 28px rgba(0, 0, 0, 0.25),
-        0 3px 8px rgba(0, 0, 0, 0.14);
-      background: #21bf5b;
-    }
-    .whatsapp-fab:active { transform: translate({{ offset_x }}px, {{ offset_y }}px); }
-    .whatsapp-fab:focus { outline: 3px solid rgba(37, 211, 102, 0.5); outline-offset: 2px; }
 
-    .whatsapp-icon { width: 28px; height: 28px; }
-
-    /* Pill variant */
-    .whatsapp-pill {
-      width: auto;
-      height: auto;
-      border-radius: 999px;
-      padding: 12px 16px;
-      gap: 10px;
-      font: 600 14px/1.1 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Inter", sans-serif;
+    .whatsapp-icon-wrapper svg {
+      width: 32px;
+      height: 32px;
+      fill: currentColor;
     }
-    .whatsapp-pill .whatsapp-icon { width: 22px; height: 22px; }
-    .whatsapp-label { white-space: nowrap; }
 
-    @media (prefers-reduced-motion: reduce) {
-      .whatsapp-fab { transition: none; }
+    .whatsapp-pill-content {
+      background: white;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      padding: 0 0 0 20px;
+      margin-right: -24px; /* Pull it under the icon circle */
+      border-radius: 24px 0 0 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      opacity: 0;
+      transform: translateX(20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
     }
-    @media (prefers-color-scheme: dark) {
-      .whatsapp-fab {
-        box-shadow:
-          0 8px 24px rgba(0, 0, 0, 0.6),
-          0 2px 6px rgba(0, 0, 0, 0.4);
+
+    .whatsapp-label {
+      color: #333;
+      font-weight: 600;
+      font-size: 15px;
+      white-space: nowrap;
+      padding-right: 35px;
+    }
+
+    /* Desktop Hover Effects */
+    @media (member-hover: hover) {
+      .whatsapp-link:hover {
+        max-width: 400px;
+      }
+      .whatsapp-link:hover .whatsapp-pill-content {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+      }
+      .whatsapp-icon-wrapper {
+        transition: transform 0.3s ease;
+      }
+      .whatsapp-link:hover .whatsapp-icon-wrapper {
+        background: var(--wa-dark);
       }
     }
+
+    /* Mobile Logic */
     @media (max-width: 480px) {
       {% unless show_on_mobile %}
-        .whatsapp-fab { display: none !important; }
+        .whatsapp-container { display: none !important; }
       {% endunless %}
-      .whatsapp-fab:not(.whatsapp-pill) {
-        right: {{ css_right }};
-        bottom: {{ css_bottom }};
-        width: 52px;
-        height: 52px;
+      
+      .whatsapp-link.is-active {
+        max-width: 400px;
       }
-      .whatsapp-icon { width: 26px; height: 26px; }
+      .whatsapp-link.is-active .whatsapp-pill-content {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+      }
     }
   </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const container = document.getElementById('WhatsAppRoot-{{ section.id }}');
+      const link = container.querySelector('.whatsapp-link');
+      
+      link.addEventListener('click', function(e) {
+        // If mobile and not already expanded, expand it first
+        if (window.innerWidth <= 480 && !link.classList.contains('is-active')) {
+          e.preventDefault();
+          link.classList.add('is-active');
+          
+          // Optional: Close if user clicks anywhere else
+          document.addEventListener('click', function closePill(event) {
+            if (!container.contains(event.target)) {
+              link.classList.remove('is-active');
+              document.removeEventListener('click', closePill);
+            }
+          });
+        }
+      });
+    });
+  </script>
 {% endif %}
 
 {% schema %}
 {
-  "name": "WhatsApp Fab",
-  "tag": "section",
-  "class": "section-whatsapp-fab",
+  "name": "WhatsApp Fab Pro",
   "settings": [
     {
       "type": "checkbox",
       "id": "enabled",
-      "label": "Enable floating button",
+      "label": "Enable button",
       "default": true
     },
     {
       "type": "text",
       "id": "phone",
-      "label": "WhatsApp Business number",
-      "info": "Digits only, no +, spaces, or dashes. Example: 919972320665",
+      "label": "WhatsApp Number",
       "default": "919972320665"
     },
     {
       "type": "text",
       "id": "message",
       "label": "Default message",
-      "default": "Hi there! I would like to chat."
-    },
-    {
-      "type": "range",
-      "id": "offset_x",
-      "label": "Horizontal offset (px)",
-      "min": -200,
-      "max": 200,
-      "step": 5,
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "offset_y",
-      "label": "Vertical offset (px)",
-      "min": -200,
-      "max": 200,
-      "step": 5,
-      "default": 0
-    },
-    {
-      "type": "select",
-      "id": "button_style",
-      "label": "Button style",
-      "default": "fab",
-      "options": [
-        { "value": "fab", "label": "Circular FAB" },
-        { "value": "pill", "label": "Label pill" }
-      ]
+      "default": "Hi! I have a question about your products."
     },
     {
       "type": "text",
       "id": "label_text",
-      "label": "Label text (pill style)",
-      "default": "Chat on WhatsApp"
+      "label": "Hover Label Text",
+      "default": "Chat with us"
+    },
+    {
+      "type": "range",
+      "id": "offset_x",
+      "label": "Horizontal offset",
+      "min": -200,
+      "max": 200,
+      "step":5,
+      "default": 0,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "offset_y",
+      "label": "Vertical offset",
+      "min": -200,
+      "max": 200,
+      "step": 5,
+      "default": 0,
+      "unit": "px"
     },
     {
       "type": "checkbox",
       "id": "show_on_mobile",
-      "label": "Show on mobile (<=480px)",
+      "label": "Show on mobile",
       "default": true
     },
     {
@@ -178,15 +220,10 @@
       "default": 9999
     }
   ],
-  "blocks": [],
   "presets": [
     {
-      "name": "WhatsApp Floating Button (Bottom Right)",
-      "category": "Contact"
+      "name": "WhatsApp Fab Pro"
     }
   ]
 }
 {% endschema %}
-
-{% stylesheet %}{% endstylesheet %}
-{% javascript %}{% endjavascript %}
