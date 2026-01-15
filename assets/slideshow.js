@@ -670,21 +670,21 @@ this.dispatchEvent(
    * Handles the 'mouseup' event to stop dragging.
    * @param {MouseEvent} event - The mouseup event.
    */
-  #handleMouseUp = () => {
+  #handleMouseUp = (event) => {
   if (!this.#dragging) return;
 
   this.#dragging = false;
   this.removeAttribute('dragging');
 
   if (this.#scroll) {
-    this.#scroll.snap = true; // Re-enable CSS/Scroller snap properties
-    
-    // Use the component's sync method to find the closest slide
+    this.#scroll.snap = true; // Re-enable snapping behavior
+
+    // Calculate which slide we are closest to after the drag
     const index = this.#sync(); 
     const slide = this.slides[index];
-    
+
     if (slide) {
-      // Smoothly snap to the determined slide
+      // Force a smooth scroll to that specific slide to ensure it's centered/snapped
       this.#scroll.to(slide, { instant: false });
     }
   }
