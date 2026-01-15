@@ -660,21 +660,21 @@ this.dispatchEvent(
    * Handles the 'mouseup' event to stop dragging.
    * @param {MouseEvent} event - The mouseup event.
    */
-  #handleMouseUp = (event) => {
+  #handleMouseUp = () => {
     if (!this.#dragging) return;
 
     this.#dragging = false;
     this.removeAttribute('dragging');
 
     if (this.#scroll) {
-      this.#scroll.snap = true; // Re-enable snapping
+      this.#scroll.snap = true; // Re-enable CSS/Scroller snapping
       
-      // Trigger a sync to find the closest slide based on the new scroll position
+      // Use the internal sync method to find the closest slide index
       const index = this.#sync(); 
-      
-      // Force the scroller to snap to that index immediately
       const slide = this.slides[index];
+      
       if (slide) {
+        // Smoothly animate to the snapped position
         this.#scroll.to(slide, { instant: false });
       }
     }
