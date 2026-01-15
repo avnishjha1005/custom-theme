@@ -676,14 +676,22 @@ this.dispatchEvent(
 
     this.#dragging = false;
     this.removeAttribute('dragging');
+
     if (this.#scroll) {
-      this.#scroll.snap = true;
+      this.#scroll.snap = true; // Re-enable snapping
+      
+      // Trigger a sync to find the closest slide based on the new scroll position
+      const index = this.#sync(); 
+      
+      // Force the scroller to snap to that index immediately
+      const slide = this.slides[index];
+      if (slide) {
+        this.#scroll.to(slide, { instant: false });
+      }
     }
 
-    // Remove event listeners
     document.removeEventListener('mousemove', this.#handleMouseMove);
     document.removeEventListener('mouseup', this.#handleMouseUp);
-    document.removeEventListener('mouseleave', this.#handleMouseUp);
   };
 
   #handlePointerEnter = () => {
