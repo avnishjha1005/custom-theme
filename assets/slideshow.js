@@ -591,26 +591,20 @@ this.dispatchEvent(
     if (!scroller) return;
 
     // Check if the click originated from within a nested slideshow's scroller
-    // Find the closest slideshow-slides ancestor that belongs to a different slideshow-component
+    // The event listener is attached to scroller, so event.currentTarget === scroller
+    // We need to check if there's a nested slideshow-slides between event.target and scroller
     let element = event.target;
-    while (element && element !== this) {
-      if (element.tagName === 'SLIDESHOW-SLIDES') {
+    while (element && element !== scroller && element !== this) {
+      if (element.tagName === 'SLIDESHOW-SLIDES' && element !== scroller) {
+        // Found a slideshow-slides element that is not this scroller
+        // Check if it belongs to a different slideshow-component
         const parentSlideshow = element.closest('slideshow-component');
         if (parentSlideshow && parentSlideshow !== this) {
           // The click is within a nested slideshow's scroller, let it handle the event
           return;
         }
-        // If we found this slideshow's scroller, break and continue with drag handling
-        if (element === scroller) {
-          break;
-        }
       }
       element = element.parentElement;
-    }
-
-    // Only handle if the click is within this slideshow's scroller
-    if (!scroller.contains(event.target) && scroller !== event.target) {
-      return;
     }
 
     // Only handle left mouse button
