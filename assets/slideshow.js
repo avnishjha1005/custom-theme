@@ -585,36 +585,24 @@ this.dispatchEvent(
   #handleMouseDown = (event) => {
     const { slides } = this;
 
+    // 1. Ensure we have enough slides to drag
     if (!slides || slides.length <= 1) return;
     if (!(event.target instanceof Element)) return;
     if (this.disabled || this.#dragging) return;
 
-    if (event.target.closest('model-viewer')) return;
-
-    // FIX: Handle nested sliders without exiting early
-    const cardGallery = this.closest('.card-gallery');
-    if (cardGallery) {
-      const outerCarousel = cardGallery.closest('slideshow-component');
-      if (outerCarousel && outerCarousel !== this) {
-        // Stop the outer slider from seeing this event
-        event.stopPropagation();
-        // Do NOT return here; we want THIS slider to continue to the drag logic below
-      }
+    // 2. Handle nesting: stop the parent from sliding if the child is being interacted with
+    if (this.isNested) {
+      event.stopPropagation();
     }
 
-    if (event.button !== 0) return;
+    // 3. Ignore 3D models or interactive elements
+    if (event.target.closest('model-viewer')) return;
+    if (event.button !== 0) return; // Left click only
 
     const target = event.target;
-    if (
-      target instanceof HTMLAnchorElement ||
-      target instanceof HTMLButtonElement ||
-      target instanceof HTMLInputElement ||
-      target.closest('a, button, input, [role="button"]')
-    ) {
-      return;
-    }
+    if (target.closest('a, button, input, [role="button"]')) return;
 
-    // Prevent default browser behavior (like image ghosting)
+    // 4. PREVENT DEFAULT is critical here to stop browser image ghosting/text selection
     event.preventDefault();
 
     const { scroller } = this.refs;
@@ -628,8 +616,9 @@ this.dispatchEvent(
 
     this.setAttribute('dragging', '');
     
+    // Disable snapping so the movement is fluid while dragging
     if (this.#scroll) {
-      this.#scroll.snap = false; // Disable CSS snap during manual drag
+      this.#scroll.snap = false;
     }
 
     document.addEventListener('mousemove', this.#handleMouseMove);
