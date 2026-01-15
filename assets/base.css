@@ -4565,7 +4565,9 @@ slideshow-component {
 slideshow-component::-webkit-scrollbar {
   display: none;
 }
-
-header-component > dropdown-localization-component{
+@media screen and (max-width:750px){
+header-component dropdown-localization-component{
   display:none;
 }
+}
+
