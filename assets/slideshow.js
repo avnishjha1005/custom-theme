@@ -589,24 +589,11 @@ this.dispatchEvent(
     if (!(event.target instanceof Element)) return;
     if (this.disabled || this.#dragging) return;
 
-    // Check if the event target is within a 3D model interactive element
-    // This prevents the slideshow from capturing drag events when interacting with 3D models
-    if (event.target.closest('model-viewer')) {
+    // Prevent drag events from interfering with nested sliders
+    const nestedSlideshow = event.target.closest('slideshow-component');
+    if (nestedSlideshow && nestedSlideshow !== this) {
+      event.stopImmediatePropagation();
       return;
-    }
-
-    // NEW: Check if this slideshow is inside a card-gallery within a carousel
-    // If so, prevent the outer carousel from handling these drag events
-    const cardGallery = this.closest('.card-gallery');
-    if (cardGallery) {
-      const outerCarousel = cardGallery.closest('slideshow-component');
-      // Only proceed if this is a product slideshow inside a card gallery
-      // which is inside a carousel (the outer slideshow)
-      if (outerCarousel && outerCarousel !== this) {
-        // Mark that this event should not propagate to parent slideshow
-        event.stopImmediatePropagation();
-        return;
-      }
     }
 
     // Only handle left mouse button
@@ -644,6 +631,7 @@ this.dispatchEvent(
     // Add event listeners for mouse move and up
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
+    document.addEventListener('mouseleave', this.#handleMouseUp);
   };
 
   /**
