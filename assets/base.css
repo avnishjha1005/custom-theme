@@ -4588,3 +4588,11 @@ slideshow-component[dragging] {
   cursor: grabbing;
   user-select: none;
 }
+slideshow-slides {
+  touch-action: pan-y;
+  cursor: grab;
+}
+
+slideshow-component[dragging] slideshow-slides {
+  cursor: grabbing;
+}
