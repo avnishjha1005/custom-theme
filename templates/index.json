@@ -142,7 +142,7 @@
             "type_preset": "custom",
             "font": "var(--font-heading--family)",
             "font_size": "2rem",
-            "line_height": "normal",
+            "line_height": "loose",
             "letter_spacing": "normal",
             "case": "none",
             "wrap": "balance",
@@ -875,8 +875,8 @@
         "section_width": "page-width",
         "gap": 32,
         "color_scheme": "scheme-6",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "padding-block-start": 35,
+        "padding-block-end": 35
       }
     },
     "whatsapp_fab_QmNEQ4": {
@@ -886,10 +886,9 @@
         "enabled": true,
         "phone": "919972320665",
         "message": "Hi there! I would like to chat.",
+        "label_text": "Chat on WhatsApp",
         "offset_x": 0,
         "offset_y": -90,
-        "button_style": "fab",
-        "label_text": "Chat on WhatsApp",
         "show_on_mobile": true,
         "z_index": 9999
       }
