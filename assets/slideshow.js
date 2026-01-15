@@ -589,30 +589,21 @@ this.dispatchEvent(
     if (!(event.target instanceof Element)) return;
     if (this.disabled || this.#dragging) return;
 
-    // Check if the event target is within a 3D model interactive element
-    // This prevents the slideshow from capturing drag events when interacting with 3D models
-    if (event.target.closest('model-viewer')) {
-      return;
-    }
+    if (event.target.closest('model-viewer')) return;
 
-    // NEW: Check if this slideshow is inside a card-gallery within a carousel
-    // If so, prevent the outer carousel from handling these drag events
+    // FIX: Handle nested sliders without exiting early
     const cardGallery = this.closest('.card-gallery');
     if (cardGallery) {
       const outerCarousel = cardGallery.closest('slideshow-component');
-      // Only proceed if this is a product slideshow inside a card gallery
-      // which is inside a carousel (the outer slideshow)
       if (outerCarousel && outerCarousel !== this) {
-        // Mark that this event should not propagate to parent slideshow
-        event.stopImmediatePropagation();
-        return;
+        // Stop the outer slider from seeing this event
+        event.stopPropagation();
+        // Do NOT return here; we want THIS slider to continue to the drag logic below
       }
     }
 
-    // Only handle left mouse button
     if (event.button !== 0) return;
 
-    // Don't start dragging if clicking on interactive elements
     const target = event.target;
     if (
       target instanceof HTMLAnchorElement ||
@@ -623,13 +614,12 @@ this.dispatchEvent(
       return;
     }
 
+    // Prevent default browser behavior (like image ghosting)
     event.preventDefault();
-    event.stopPropagation();
 
     const { scroller } = this.refs;
     if (!scroller) return;
 
-    // Start dragging
     this.#dragging = true;
     this.#mouseStartX = event.clientX;
     this.#mouseStartY = event.clientY;
@@ -637,11 +627,11 @@ this.dispatchEvent(
     this.#scrollStartY = scroller.scrollTop;
 
     this.setAttribute('dragging', '');
+    
     if (this.#scroll) {
-      this.#scroll.snap = false;
+      this.#scroll.snap = false; // Disable CSS snap during manual drag
     }
 
-    // Add event listeners for mouse move and up
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
   };
