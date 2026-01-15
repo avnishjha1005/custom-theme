@@ -4564,7 +4564,3 @@ slideshow-component {
 slideshow-component::-webkit-scrollbar {
   display: none;
 }
-
-.section--page-width{
-  z-index:var(--layer-base);
-}
