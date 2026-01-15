@@ -583,47 +583,45 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
-    const { slides } = this;
+  const { slides } = this;
 
-    // 1. Ensure we have enough slides to drag
-    if (!slides || slides.length <= 1) return;
-    if (!(event.target instanceof Element)) return;
-    if (this.disabled || this.#dragging) return;
+  // Ensure there is something to drag and we aren't already dragging
+  if (!slides || slides.length <= 1 || this.disabled || this.#dragging) return;
+  if (!(event.target instanceof Element)) return;
 
-    // 2. Handle nesting: stop the parent from sliding if the child is being interacted with
-    if (this.isNested) {
-      event.stopPropagation();
-    }
+  // Handle Nested Sliders: Stop the parent from moving when we drag the child
+  if (this.isNested) {
+    event.stopPropagation();
+  }
 
-    // 3. Ignore 3D models or interactive elements
-    if (event.target.closest('model-viewer')) return;
-    if (event.button !== 0) return; // Left click only
+  // Prevent browser from trying to drag images or select text
+  if (event.target.tagName === 'IMG') {
+    event.preventDefault(); 
+  }
 
-    const target = event.target;
-    if (target.closest('a, button, input, [role="button"]')) return;
+  // Ignore interactive elements
+  if (event.target.closest('model-viewer, a, button, input, [role="button"]')) {
+    return;
+  }
 
-    // 4. PREVENT DEFAULT is critical here to stop browser image ghosting/text selection
-    event.preventDefault();
+  const { scroller } = this.refs;
+  if (!scroller) return;
 
-    const { scroller } = this.refs;
-    if (!scroller) return;
+  this.#dragging = true;
+  this.#mouseStartX = event.clientX;
+  this.#mouseStartY = event.clientY;
+  this.#scrollStartX = scroller.scrollLeft;
+  this.#scrollStartY = scroller.scrollTop;
 
-    this.#dragging = true;
-    this.#mouseStartX = event.clientX;
-    this.#mouseStartY = event.clientY;
-    this.#scrollStartX = scroller.scrollLeft;
-    this.#scrollStartY = scroller.scrollTop;
+  this.setAttribute('dragging', '');
+  
+  if (this.#scroll) {
+    this.#scroll.snap = false; // Disable CSS snapping during the manual drag
+  }
 
-    this.setAttribute('dragging', '');
-    
-    // Disable snapping so the movement is fluid while dragging
-    if (this.#scroll) {
-      this.#scroll.snap = false;
-    }
-
-    document.addEventListener('mousemove', this.#handleMouseMove);
-    document.addEventListener('mouseup', this.#handleMouseUp);
-  };
+  document.addEventListener('mousemove', this.#handleMouseMove);
+  document.addEventListener('mouseup', this.#handleMouseUp);
+};
 
   /**
    * Handles the 'mousemove' event while dragging.
