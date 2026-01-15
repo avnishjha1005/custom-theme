@@ -591,21 +591,20 @@ this.dispatchEvent(
 
   if (event.target.closest('model-viewer')) return;
 
-  // FIX: Handle nested sliders without exiting the function
-  const cardGallery = this.closest('.card-gallery');
-  if (cardGallery) {
-    const outerCarousel = cardGallery.closest('slideshow-component');
-    if (outerCarousel && outerCarousel !== this) {
-      // Stop the parent slider from moving, but DO NOT return.
-      event.stopPropagation(); 
-      // REMOVED: return; ← This was preventing drag from working!
-    }
-  }
-
   if (event.button !== 0) return;
 
   const target = event.target;
   if (target.closest('a, button, input, [role="button"]')) return;
+
+  // Check if the click is on a nested slideshow's scroller
+  const clickedScroller = target.closest('slideshow-slides');
+  const thisScroller = this.refs.scroller;
+  
+  // If the clicked scroller is not this slideshow's scroller, ignore the event
+  // This happens when clicking on a nested slideshow
+  if (clickedScroller && clickedScroller !== thisScroller) {
+    return;
+  }
 
   // Prevent default to stop browser "ghost image" dragging
   event.preventDefault();
