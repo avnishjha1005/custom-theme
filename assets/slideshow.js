@@ -78,27 +78,39 @@ super.connectedCallback();
 disconnectedCallback() {
 super.disconnectedCallback();
 
-    if (this.#scroll) {
-      const { scroller } = this.refs;
-      scroller.removeEventListener('mousedown', this.#handleMouseDown);
-      this.#scroll.destroy();
-    }
+    // if (this.#scroll) {
+    //   const { scroller } = this.refs;
+    //   scroller.removeEventListener('mousedown', this.#handleMouseDown);
+    //   this.#scroll.destroy();
+    // }
 
-    // Clean up mouse drag event listeners
-    document.removeEventListener('mousemove', this.#handleMouseMove);
-    document.removeEventListener('mouseup', this.#handleMouseUp);
+    // // Clean up mouse drag event listeners
+    // document.removeEventListener('mousemove', this.#handleMouseMove);
+    // document.removeEventListener('mouseup', this.#handleMouseUp);
 
-    const slideCount = this.slides?.length || 0;
-    if (slideCount > 1) {
-      this.removeEventListener('mouseenter', this.suspend);
-      this.removeEventListener('mouseleave', this.resume);
-      this.removeEventListener('pointerenter', this.#handlePointerEnter);
-      document.removeEventListener('visibilitychange', this.#handleVisibilityChange);
-    }
+    // const slideCount = this.slides?.length || 0;
+    // if (slideCount > 1) {
+    //   this.removeEventListener('mouseenter', this.suspend);
+    //   this.removeEventListener('mouseleave', this.resume);
+    //   this.removeEventListener('pointerenter', this.#handlePointerEnter);
+    //   document.removeEventListener('visibilitychange', this.#handleVisibilityChange);
+    // }
 
-    if (this.#resizeObserver) {
-      this.#resizeObserver.disconnect();
-    }
+    // if (this.#resizeObserver) {
+    //   this.#resizeObserver.disconnect();
+    // }
+    const { scroller } = this.refs;
+
+  if (scroller) {
+    scroller.removeEventListener('pointerdown', this.#handlePointerDown);
+    scroller.removeEventListener('pointermove', this.#handlePointerMove);
+    scroller.removeEventListener('pointerup', this.#handlePointerUp);
+    scroller.removeEventListener('pointercancel', this.#handlePointerUp);
+  }
+
+  if (this.#scroll) {
+    this.#scroll.destroy();
+  }
   }
 
   /** Indicates whether the slideshow is nested inside another slideshow. */
@@ -433,6 +445,87 @@ super.disconnectedCallback();
   /**
    * Setup the slideshow without controls for zero or one slides
    */
+  #dragging = false;
+#activePointerId = null;
+#pointerStartX = 0;
+#pointerStartY = 0;
+#scrollStartX = 0;
+#scrollStartY = 0;
+  #handlePointerDown = (event) => {
+  const { scroller, slides } = this.refs;
+
+  if (!slides || slides.length <= 1) return;
+  if (this.disabled || this.#dragging) return;
+  if (event.button !== 0) return;
+  if (!(event.target instanceof Element)) return;
+
+  // Ignore interactive elements
+  if (event.target.closest('a, button, input, textarea, [role="button"]')) return;
+  if (event.target.closest('model-viewer')) return;
+
+  // Prevent parent sliders from reacting
+  event.preventDefault();
+  event.stopPropagation();
+
+  this.#dragging = true;
+  this.#activePointerId = event.pointerId;
+
+  this.#pointerStartX = event.clientX;
+  this.#pointerStartY = event.clientY;
+  this.#scrollStartX = scroller.scrollLeft;
+  this.#scrollStartY = scroller.scrollTop;
+
+  // 🔒 Lock pointer to THIS slider
+  scroller.setPointerCapture(event.pointerId);
+
+  this.setAttribute('dragging', '');
+
+  if (this.#scroll) {
+    this.#scroll.snap = false;
+  }
+
+  scroller.addEventListener('pointermove', this.#handlePointerMove, {
+    passive: false,
+  });
+  scroller.addEventListener('pointerup', this.#handlePointerUp);
+  scroller.addEventListener('pointercancel', this.#handlePointerUp);
+};
+#handlePointerMove = (event) => {
+  if (!this.#dragging || event.pointerId !== this.#activePointerId) return;
+
+  const { scroller } = this.refs;
+  if (!scroller) return;
+
+  event.preventDefault();
+
+  const deltaX = this.#pointerStartX - event.clientX;
+  const deltaY = this.#pointerStartY - event.clientY;
+
+  scroller.scrollLeft = this.#scrollStartX + deltaX;
+  scroller.scrollTop = this.#scrollStartY + deltaY;
+};
+#handlePointerUp = (event) => {
+  if (event.pointerId !== this.#activePointerId) return;
+
+  const { scroller } = this.refs;
+  if (!scroller) return;
+
+  this.#dragging = false;
+  this.#activePointerId = null;
+
+  scroller.releasePointerCapture(event.pointerId);
+
+  scroller.removeEventListener('pointermove', this.#handlePointerMove);
+  scroller.removeEventListener('pointerup', this.#handlePointerUp);
+  scroller.removeEventListener('pointercancel', this.#handlePointerUp);
+
+  this.removeAttribute('dragging');
+
+  if (this.#scroll) {
+    this.#scroll.snap = true;
+  }
+};
+
   #setupSlideshowWithoutControls() {
     this.current = 0;
     if (this.hasAttribute('auto-hide-controls')) {
