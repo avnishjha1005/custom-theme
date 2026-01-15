@@ -4570,4 +4570,11 @@ header-component dropdown-localization-component{
   display:none;
 }
 }
+slideshow-component[dragging] {
+  cursor: grabbing;
+  user-select: none;
+}
+slideshow-component[dragging] img {
+  pointer-events: none; /* Prevents the browser from trying to "drag" the image file */
+}
 
