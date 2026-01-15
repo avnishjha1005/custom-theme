@@ -596,23 +596,29 @@ this.dispatchEvent(
   const target = event.target;
   if (target.closest('a, button, input, [role="button"]')) return;
 
-  // Check if the click is on a nested slideshow's scroller
-  const clickedScroller = target.closest('slideshow-slides');
-  const thisScroller = this.refs.scroller;
-  
-  // If the clicked scroller is not this slideshow's scroller, ignore the event
-  // This happens when clicking on a nested slideshow
-  if (clickedScroller && clickedScroller !== thisScroller) {
-    return;
-  }
-
-  // Prevent default to stop browser "ghost image" dragging
-  event.preventDefault();
-
+  // Check if there's a nested slideshow between the target and this scroller
   const { scroller } = this.refs;
   if (!scroller) return;
 
-  // Now these lines will actually execute:
+  // Walk up from target to scroller, if we encounter another slideshow-slides, 
+  // then the click is on a nested slideshow
+  let current = target;
+  while (current && current !== scroller) {
+    // If we find another slideshow-slides element, this click is for a nested slideshow
+    if (current.tagName === 'SLIDESHOW-SLIDES' && current !== scroller) {
+      return;
+    }
+    current = current.parentElement;
+  }
+
+  // If we didn't reach our scroller, the target is not inside our scroller
+  if (current !== scroller) return;
+
+  // Prevent default to stop browser "ghost image" dragging
+  event.preventDefault();
+  // Stop propagation to prevent parent slideshows from also handling this
+  event.stopPropagation();
+
   this.#dragging = true;
   this.#mouseStartX = event.clientX;
   this.#mouseStartY = event.clientY;
