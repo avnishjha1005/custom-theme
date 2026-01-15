@@ -78,39 +78,27 @@ super.connectedCallback();
 disconnectedCallback() {
 super.disconnectedCallback();
 
-    // if (this.#scroll) {
-    //   const { scroller } = this.refs;
-    //   scroller.removeEventListener('mousedown', this.#handleMouseDown);
-    //   this.#scroll.destroy();
-    // }
+    if (this.#scroll) {
+      const { scroller } = this.refs;
+      scroller.removeEventListener('mousedown', this.#handleMouseDown);
+      this.#scroll.destroy();
+    }
 
-    // // Clean up mouse drag event listeners
-    // document.removeEventListener('mousemove', this.#handleMouseMove);
-    // document.removeEventListener('mouseup', this.#handleMouseUp);
+    // Clean up mouse drag event listeners
+    document.removeEventListener('mousemove', this.#handleMouseMove);
+    document.removeEventListener('mouseup', this.#handleMouseUp);
 
-    // const slideCount = this.slides?.length || 0;
-    // if (slideCount > 1) {
-    //   this.removeEventListener('mouseenter', this.suspend);
-    //   this.removeEventListener('mouseleave', this.resume);
-    //   this.removeEventListener('pointerenter', this.#handlePointerEnter);
-    //   document.removeEventListener('visibilitychange', this.#handleVisibilityChange);
-    // }
+    const slideCount = this.slides?.length || 0;
+    if (slideCount > 1) {
+      this.removeEventListener('mouseenter', this.suspend);
+      this.removeEventListener('mouseleave', this.resume);
+      this.removeEventListener('pointerenter', this.#handlePointerEnter);
+      document.removeEventListener('visibilitychange', this.#handleVisibilityChange);
+    }
 
-    // if (this.#resizeObserver) {
-    //   this.#resizeObserver.disconnect();
-    // }
-    const { scroller } = this.refs;
-
-  if (scroller) {
-    scroller.removeEventListener('pointerdown', this.#handlePointerDown);
-    scroller.removeEventListener('pointermove', this.#handlePointerMove);
-    scroller.removeEventListener('pointerup', this.#handlePointerUp);
-    scroller.removeEventListener('pointercancel', this.#handlePointerUp);
-  }
-
-  if (this.#scroll) {
-    this.#scroll.destroy();
-  }
+    if (this.#resizeObserver) {
+      this.#resizeObserver.disconnect();
+    }
   }
 
   /** Indicates whether the slideshow is nested inside another slideshow. */
@@ -445,88 +433,6 @@ super.disconnectedCallback();
   /**
    * Setup the slideshow without controls for zero or one slides
    */
-  #dragging = false;
-#activePointerId = null;
-#pointerStartX = 0;
-#pointerStartY = 0;
-#scrollStartX = 0;
-#scrollStartY = 0;
-  #handlePointerDown = (event /* PointerEvent */) => {
-  this.#activePointerId = event.pointerId || null;
-  const { scroller, slides } = this.refs;
-
-  if (!slides || slides.length <= 1) return;
-  if (this.disabled || this.#dragging) return;
-  if (event.button !== 0) return;
-  if (!(event.target instanceof Element)) return;
-
-  // Ignore interactive elements
-  if (event.target.closest('a, button, input, textarea, [role="button"]')) return;
-  if (event.target.closest('model-viewer')) return;
-
-  // Prevent parent sliders from reacting
-  event.preventDefault();
-  event.stopPropagation();
-
-  this.#dragging = true;
-  this.#activePointerId = event.pointerId;
-
-  this.#pointerStartX = event.clientX;
-  this.#pointerStartY = event.clientY;
-  this.#scrollStartX = scroller.scrollLeft;
-  this.#scrollStartY = scroller.scrollTop;
-
-  // 🔒 Lock pointer to THIS slider
-  scroller.setPointerCapture(event.pointerId);
-
-  this.setAttribute('dragging', '');
-
-  if (this.#scroll) {
-    this.#scroll.snap = false;
-  }
-
-  scroller.addEventListener('pointermove', this.#handlePointerMove, {
-    passive: false,
-  });
-  scroller.addEventListener('pointerup', this.#handlePointerUp);
-  scroller.addEventListener('pointercancel', this.#handlePointerUp);
-};
-#handlePointerMove = (event /* PointerEvent */) => {
-  if (!this.#dragging || event.pointerId !== this.#activePointerId) return;
-
-  const { scroller } = this.refs;
-  if (!scroller) return;
-
-  event.preventDefault();
-
-  const deltaX = this.#pointerStartX - event.clientX;
-  const deltaY = this.#pointerStartY - event.clientY;
-
-  scroller.scrollLeft = this.#scrollStartX + deltaX;
-  scroller.scrollTop = this.#scrollStartY + deltaY;
-};
-#handlePointerUp = (event /* PointerEvent */) => {
-  if (event.pointerId !== this.#activePointerId) return;
-
-  const { scroller } = this.refs;
-  if (!scroller) return;
-
-  this.#dragging = false;
-  this.#activePointerId = null;
-
-  scroller.releasePointerCapture(event.pointerId);
-
-  scroller.removeEventListener('pointermove', this.#handlePointerMove);
-  scroller.removeEventListener('pointerup', this.#handlePointerUp);
-  scroller.removeEventListener('pointercancel', this.#handlePointerUp);
-
-  this.removeAttribute('dragging');
-
-  if (this.#scroll) {
-    this.#scroll.snap = true;
-  }
-};
-
   #setupSlideshowWithoutControls() {
     this.current = 0;
     if (this.hasAttribute('auto-hide-controls')) {
@@ -536,7 +442,7 @@ super.disconnectedCallback();
       }
     }
 
-    if this.refs.slides?.[0] {
+    if (this.refs.slides?.[0]) {
       this.refs.slides[0].setAttribute('aria-hidden', 'false');
     }
   }
@@ -554,9 +460,7 @@ super.disconnectedCallback();
     });
 
     scroller.addEventListener('mousedown', this.#handleMouseDown);
-    scroller.addEventListener('pointerdown', this.#handlePointerDown, {
-      passive: false,
-    });
+
     this.addEventListener('mouseenter', this.suspend);
     this.addEventListener('mouseleave', this.resume);
     this.addEventListener('pointerenter', this.#handlePointerEnter);
@@ -564,7 +468,7 @@ super.disconnectedCallback();
 
     this.#updateControlsVisibility();
 
-    this.disabled = this.disabled;
+    this.disabled = this.isNested || this.disabled;
 
     this.resume();
 
@@ -679,56 +583,68 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
-  const { slides } = this;
+    const { slides } = this;
 
-  if (!slides || slides.length <= 1) return;
-  if (!(event.target instanceof Element)) return;
-  if (this.disabled || this.#dragging) return;
+    if (!slides || slides.length <= 1) return;
+    if (!(event.target instanceof Element)) return;
+    if (this.disabled || this.#dragging) return;
 
-  if (event.target.closest('model-viewer')) return;
-
-  if (event.button !== 0) return;
-
-  const target = event.target;
-  if (target.closest('a, button, input, [role="button"]')) return;
-
-  // Check if there's a nested slideshow between the target and this scroller
-  const { scroller } = this.refs;
-  if (!scroller) return;
-
-  // Walk up from target to scroller, if we encounter another slideshow-slides, 
-  // then the click is on a nested slideshow
-  let current = target;
-  while (current && current !== scroller) {
-    // If we find another slideshow-slides element, this click is for a nested slideshow
-    if (current.tagName === 'SLIDESHOW-SLIDES' && current !== scroller) {
+    // Check if the event target is within a 3D model interactive element
+    // This prevents the slideshow from capturing drag events when interacting with 3D models
+    if (event.target.closest('model-viewer')) {
       return;
     }
-    current = current.parentElement;
-  }
 
-  // If we didn't reach our scroller, the target is not inside our scroller
-  if (current !== scroller) return;
+    // NEW: Check if this slideshow is inside a card-gallery within a carousel
+    // If so, prevent the outer carousel from handling these drag events
+    const cardGallery = this.closest('.card-gallery');
+    if (cardGallery) {
+      const outerCarousel = cardGallery.closest('slideshow-component');
+      // Only proceed if this is a product slideshow inside a card gallery
+      // which is inside a carousel (the outer slideshow)
+      if (outerCarousel && outerCarousel !== this) {
+        // Mark that this event should not propagate to parent slideshow
+        event.stopImmediatePropagation();
+        return;
+      }
+    }
 
-  // Prevent default to stop browser "ghost image" dragging
-  event.preventDefault();
-  // Stop propagation to prevent parent slideshows from also handling this
-  event.stopPropagation();
+    // Only handle left mouse button
+    if (event.button !== 0) return;
 
-  this.#dragging = true;
-  this.#mouseStartX = event.clientX;
-  this.#mouseStartY = event.clientY;
-  this.#scrollStartX = scroller.scrollLeft;
-  this.#scrollStartY = scroller.scrollTop;
+    // Don't start dragging if clicking on interactive elements
+    const target = event.target;
+    if (
+      target instanceof HTMLAnchorElement ||
+      target instanceof HTMLButtonElement ||
+      target instanceof HTMLInputElement ||
+      target.closest('a, button, input, [role="button"]')
+    ) {
+      return;
+    }
 
-  this.setAttribute('dragging', '');
-  if (this.#scroll) {
-    this.#scroll.snap = false;
-  }
+    event.preventDefault();
+    event.stopPropagation();
 
-  document.addEventListener('mousemove', this.#handleMouseMove);
-  document.addEventListener('mouseup', this.#handleMouseUp);
-};
+    const { scroller } = this.refs;
+    if (!scroller) return;
+
+    // Start dragging
+    this.#dragging = true;
+    this.#mouseStartX = event.clientX;
+    this.#mouseStartY = event.clientY;
+    this.#scrollStartX = scroller.scrollLeft;
+    this.#scrollStartY = scroller.scrollTop;
+
+    this.setAttribute('dragging', '');
+    if (this.#scroll) {
+      this.#scroll.snap = false;
+    }
+
+    // Add event listeners for mouse move and up
+    document.addEventListener('mousemove', this.#handleMouseMove);
+    document.addEventListener('mouseup', this.#handleMouseUp);
+  };
 
   /**
    * Handles the 'mousemove' event while dragging.
@@ -766,27 +682,19 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mouseup event.
    */
   #handleMouseUp = (event) => {
-  if (!this.#dragging) return;
+    if (!this.#dragging) return;
 
-  this.#dragging = false;
-  this.removeAttribute('dragging');
-
-  if (this.#scroll) {
-    this.#scroll.snap = true;
-
-    // Use the component's internal sync method to find the closest slide index
-    const index = this.#sync();
-    const slide = this.slides[index];
-
-    if (slide) {
-      // Manually trigger the scroll to the slide to ensure it "snaps" correctly
-      this.#scroll.to(slide, { instant: false });
+    this.#dragging = false;
+    this.removeAttribute('dragging');
+    if (this.#scroll) {
+      this.#scroll.snap = true;
     }
-  }
 
-  document.removeEventListener('mousemove', this.#handleMouseMove);
-  document.removeEventListener('mouseup', this.#handleMouseUp);
-};
+    // Remove event listeners
+    document.removeEventListener('mousemove', this.#handleMouseMove);
+    document.removeEventListener('mouseup', this.#handleMouseUp);
+    document.removeEventListener('mouseleave', this.#handleMouseUp);
+  };
 
   #handlePointerEnter = () => {
     this.setAttribute('actioned', '');
