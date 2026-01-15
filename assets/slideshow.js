@@ -451,7 +451,8 @@ super.disconnectedCallback();
 #pointerStartY = 0;
 #scrollStartX = 0;
 #scrollStartY = 0;
-  #handlePointerDown = (event) => {
+  #handlePointerDown = (event /* PointerEvent */) => {
+  this.#activePointerId = event.pointerId || null;
   const { scroller, slides } = this.refs;
 
   if (!slides || slides.length <= 1) return;
@@ -490,7 +491,7 @@ super.disconnectedCallback();
   scroller.addEventListener('pointerup', this.#handlePointerUp);
   scroller.addEventListener('pointercancel', this.#handlePointerUp);
 };
-#handlePointerMove = (event) => {
+#handlePointerMove = (event /* PointerEvent */) => {
   if (!this.#dragging || event.pointerId !== this.#activePointerId) return;
 
   const { scroller } = this.refs;
@@ -504,7 +505,7 @@ super.disconnectedCallback();
   scroller.scrollLeft = this.#scrollStartX + deltaX;
   scroller.scrollTop = this.#scrollStartY + deltaY;
 };
-#handlePointerUp = (event) => {
+#handlePointerUp = (event /* PointerEvent */) => {
   if (event.pointerId !== this.#activePointerId) return;
 
   const { scroller } = this.refs;
@@ -535,7 +536,7 @@ super.disconnectedCallback();
       }
     }
 
-    if (this.refs.slides?.[0]) {
+    if this.refs.slides?.[0] {
       this.refs.slides[0].setAttribute('aria-hidden', 'false');
     }
   }
