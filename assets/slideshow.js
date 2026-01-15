@@ -591,20 +591,28 @@ this.dispatchEvent(
     if (!scroller) return;
 
     // Check if the click originated from within a nested slideshow's scroller
-    // The event listener is attached to scroller, so event.currentTarget === scroller
-    // We need to check if there's a nested slideshow-slides between event.target and scroller
-    let element = event.target;
-    while (element && element !== scroller && element !== this) {
-      if (element.tagName === 'SLIDESHOW-SLIDES' && element !== scroller) {
-        // Found a slideshow-slides element that is not this scroller
-        // Check if it belongs to a different slideshow-component
-        const parentSlideshow = element.closest('slideshow-component');
-        if (parentSlideshow && parentSlideshow !== this) {
-          // The click is within a nested slideshow's scroller, let it handle the event
+    // Use composedPath to check all elements in the event path
+    const path = event.composedPath();
+    const scrollerIndex = path.indexOf(scroller);
+    
+    // If scroller is not in the path, this event isn't for us
+    if (scrollerIndex === -1) {
+      return;
+    }
+    
+    // Check if there's a nested slideshow-slides between the target and this scroller
+    // Look at elements before scroller in the path (closer to the target)
+    for (let i = 0; i < scrollerIndex; i++) {
+      const element = path[i];
+      if (element.tagName === 'SLIDESHOW-SLIDES') {
+        // Found a slideshow-slides element between target and this scroller
+        const slideshowForSlides = element.closest('slideshow-component');
+        if (slideshowForSlides && slideshowForSlides !== this) {
+          // This slideshow-slides belongs to a nested slideshow
+          // Let the nested slideshow handle this event
           return;
         }
       }
-      element = element.parentElement;
     }
 
     // Only handle left mouse button
