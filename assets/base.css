@@ -4566,6 +4566,6 @@ slideshow-component::-webkit-scrollbar {
   display: none;
 }
 
-header-component > dropdown-localization{
+header-component > dropdown-localization-component{
   display:none;
 }
