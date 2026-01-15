@@ -583,16 +583,33 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
-    const { slides } = this;
+    const { slides, scroller } = this.refs;
 
     if (!slides || slides.length <= 1) return;
     if (!(event.target instanceof Element)) return;
     if (this.disabled || this.#dragging) return;
+    if (!scroller) return;
 
-    // Prevent drag events from interfering with nested sliders
-    const nestedSlideshow = event.target.closest('slideshow-component');
-    if (nestedSlideshow && nestedSlideshow !== this) {
-      event.stopImmediatePropagation();
+    // Check if the click originated from within a nested slideshow's scroller
+    // Find the closest slideshow-slides ancestor that belongs to a different slideshow-component
+    let element = event.target;
+    while (element && element !== this) {
+      if (element.tagName === 'SLIDESHOW-SLIDES') {
+        const parentSlideshow = element.closest('slideshow-component');
+        if (parentSlideshow && parentSlideshow !== this) {
+          // The click is within a nested slideshow's scroller, let it handle the event
+          return;
+        }
+        // If we found this slideshow's scroller, break and continue with drag handling
+        if (element === scroller) {
+          break;
+        }
+      }
+      element = element.parentElement;
+    }
+
+    // Only handle if the click is within this slideshow's scroller
+    if (!scroller.contains(event.target) && scroller !== event.target) {
       return;
     }
 
@@ -612,9 +629,6 @@ this.dispatchEvent(
 
     event.preventDefault();
     event.stopPropagation();
-
-    const { scroller } = this.refs;
-    if (!scroller) return;
 
     // Start dragging
     this.#dragging = true;
