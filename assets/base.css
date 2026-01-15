@@ -69,7 +69,8 @@ select {
 .collection-card,
 .resource-card,
 .predictive-search-results__card--product,
-.predictive-search-results__card {
+.predictive-search-results__card
+product-recommendations {
   position: relative;
   transition: transform var(--hover-transition-duration) var(--hover-transition-timing),
     box-shadow var(--hover-transition-duration) var(--hover-transition-timing);
