@@ -659,27 +659,27 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mouseup event.
    */
   #handleMouseUp = () => {
-    if (!this.#dragging) return;
+  if (!this.#dragging) return;
 
-    this.#dragging = false;
-    this.removeAttribute('dragging');
+  this.#dragging = false;
+  this.removeAttribute('dragging');
 
-    if (this.#scroll) {
-      this.#scroll.snap = true; // Re-enable CSS/Scroller snapping
-      
-      // Use the internal sync method to find the closest slide index
-      const index = this.#sync(); 
-      const slide = this.slides[index];
-      
-      if (slide) {
-        // Smoothly animate to the snapped position
-        this.#scroll.to(slide, { instant: false });
-      }
+  if (this.#scroll) {
+    this.#scroll.snap = true; // Re-enable CSS/Scroller snap properties
+    
+    // Use the component's sync method to find the closest slide
+    const index = this.#sync(); 
+    const slide = this.slides[index];
+    
+    if (slide) {
+      // Smoothly snap to the determined slide
+      this.#scroll.to(slide, { instant: false });
     }
+  }
 
-    document.removeEventListener('mousemove', this.#handleMouseMove);
-    document.removeEventListener('mouseup', this.#handleMouseUp);
-  };
+  document.removeEventListener('mousemove', this.#handleMouseMove);
+  document.removeEventListener('mouseup', this.#handleMouseUp);
+};
 
   #handlePointerEnter = () => {
     this.setAttribute('actioned', '');
