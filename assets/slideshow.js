@@ -598,6 +598,7 @@ this.dispatchEvent(
     if (outerCarousel && outerCarousel !== this) {
       // Stop the parent slider from moving, but DO NOT return.
       event.stopPropagation(); 
+      // REMOVED: return; ← This was preventing drag from working!
     }
   }
 
