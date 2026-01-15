@@ -460,7 +460,9 @@ super.disconnectedCallback();
     });
 
     scroller.addEventListener('mousedown', this.#handleMouseDown);
-
+    scroller.addEventListener('pointerdown', this.#handlePointerDown, {
+      passive: false,
+    });
     this.addEventListener('mouseenter', this.suspend);
     this.addEventListener('mouseleave', this.resume);
     this.addEventListener('pointerenter', this.#handlePointerEnter);
