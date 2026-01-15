@@ -670,14 +670,14 @@ this.dispatchEvent(
   this.removeAttribute('dragging');
 
   if (this.#scroll) {
-    this.#scroll.snap = true; // Re-enable snapping behavior
+    this.#scroll.snap = true;
 
-    // Calculate which slide we are closest to after the drag
-    const index = this.#sync(); 
+    // Use the component's internal sync method to find the closest slide index
+    const index = this.#sync();
     const slide = this.slides[index];
 
     if (slide) {
-      // Force a smooth scroll to that specific slide to ensure it's centered/snapped
+      // Manually trigger the scroll to the slide to ensure it "snaps" correctly
       this.#scroll.to(slide, { instant: false });
     }
   }
