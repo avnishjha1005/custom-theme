@@ -583,57 +583,50 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
-    const { slides } = this;
+  const { slides } = this;
 
-    if (!slides || slides.length <= 1) return;
-    if (!(event.target instanceof Element)) return;
-    if (this.disabled || this.#dragging) return;
+  if (!slides || slides.length <= 1) return;
+  if (!(event.target instanceof Element)) return;
+  if (this.disabled || this.#dragging) return;
 
-    // Check if the event target is within a 3D model
-    if (event.target.closest('model-viewer')) return;
+  if (event.target.closest('model-viewer')) return;
 
-    /**
-     * FIX: Handle nested sliders.
-     * We stop propagation so the PARENT slider doesn't move,
-     * but we DO NOT 'return'. We want this current slider to continue.
-     */
-    const isNestedInsideAnother = this.closest('slideshow-component') && 
-                                  this.parentElement?.closest('slideshow-component');
-    
-    if (isNestedInsideAnother || event.target.closest('.card-gallery')) {
-      event.stopPropagation();
-      // Removed the 'return' that was killing the drag here.
+  // FIX: Handle nested sliders without exiting the function
+  const cardGallery = this.closest('.card-gallery');
+  if (cardGallery) {
+    const outerCarousel = cardGallery.closest('slideshow-component');
+    if (outerCarousel && outerCarousel !== this) {
+      // Stop the parent slider from moving, but DO NOT return.
+      event.stopPropagation(); 
     }
+  }
 
-    // Only handle left mouse button
-    if (event.button !== 0) return;
+  if (event.button !== 0) return;
 
-    // Don't start dragging if clicking on interactive elements
-    const target = event.target;
-    if (target.closest('a, button, input, [role="button"]')) return;
+  const target = event.target;
+  if (target.closest('a, button, input, [role="button"]')) return;
 
-    // Essential: Prevent default browser behavior (like text selection/image ghosting)
-    event.preventDefault();
+  // Prevent default to stop browser "ghost image" dragging
+  event.preventDefault();
 
-    const { scroller } = this.refs;
-    if (!scroller) return;
+  const { scroller } = this.refs;
+  if (!scroller) return;
 
-    // Start dragging sequence
-    this.#dragging = true;
-    this.#mouseStartX = event.clientX;
-    this.#mouseStartY = event.clientY;
-    this.#scrollStartX = scroller.scrollLeft;
-    this.#scrollStartY = scroller.scrollTop;
+  // Now these lines will actually execute:
+  this.#dragging = true;
+  this.#mouseStartX = event.clientX;
+  this.#mouseStartY = event.clientY;
+  this.#scrollStartX = scroller.scrollLeft;
+  this.#scrollStartY = scroller.scrollTop;
 
-    this.setAttribute('dragging', '');
-    
-    if (this.#scroll) {
-      this.#scroll.snap = false; // Disable CSS snapping while manually moving
-    }
+  this.setAttribute('dragging', '');
+  if (this.#scroll) {
+    this.#scroll.snap = false;
+  }
 
-    document.addEventListener('mousemove', this.#handleMouseMove);
-    document.addEventListener('mouseup', this.#handleMouseUp);
-  };
+  document.addEventListener('mousemove', this.#handleMouseMove);
+  document.addEventListener('mouseup', this.#handleMouseUp);
+};
 
   /**
    * Handles the 'mousemove' event while dragging.
