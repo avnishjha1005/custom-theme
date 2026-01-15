@@ -191,7 +191,7 @@
           "type": "accordion",
           "name": "t:names.accordion",
           "settings": {
-            "icon": "plus",
+            "icon": "caret",
             "dividers": true,
             "type_preset": "h6",
             "inherit_color_scheme": true,
