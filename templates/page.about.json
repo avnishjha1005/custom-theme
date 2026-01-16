@@ -21,54 +21,47 @@
         "padding-block-end": 80
       }
     },
-    "section_EfGNGi": {
-      "type": "section",
+    "blocks_zYbN9m": {
+      "type": "_blocks",
       "blocks": {
-        "image_text_overlay_4y4wDQ": {
-          "type": "image-text-overlay",
-          "name": "Full-Width Offset Hero",
+        "hero_text_overlay_efA7pH": {
+          "type": "hero-text-overlay",
           "settings": {
-            "image": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b.jpg",
+            "desktop_columns": 3,
+            "image_1": "shopify://shop_images/3c0609b199e9b9a1631fd64ad2501868830a3179.jpg",
+            "image_2": "shopify://shop_images/b0ca501a982100582568f298ae59400ab289d2af.jpg",
+            "image_3": "shopify://shop_images/ea76b81778e4ad3a8f27f624c8a2d7c581c464fe.jpg",
+            "image_aspect_ratio": "3 / 4",
+            "image_gap": 16,
+            "image_border_radius": 0,
+            "show_text_overlay": true,
+            "heading": "Welcome to our store",
+            "subheading": "Discover our latest collection",
+            "heading_size": 48,
+            "subheading_size": 18,
+            "text_spacing": 12,
             "text_color": "#ffffff",
-            "font_weight": 400,
-            "height_desktop": 600,
-            "height_mobile": 500,
-            "line1": "LOREM IPSUM",
-            "line1_size": 80,
-            "line1_h": 10,
-            "line1_v": 35,
-            "line1_size_m": 30,
-            "line1_h_m": 10,
-            "line1_v_m": 30,
-            "line2": "DOLOR",
-            "line2_size": 80,
-            "line2_h": 50,
-            "line2_v": 45,
-            "line2_size_m": 30,
-            "line2_h_m": 40,
-            "line2_v_m": 38,
-            "subheading": "Exclusive Collection 2025/26",
-            "sub_size": 14,
-            "sub_h": 50,
-            "sub_v": 52,
-            "sub_size_m": 12,
-            "sub_h_m": 40,
-            "sub_v_m": 44
+            "text_shadow_x": 0,
+            "text_shadow_y": 2,
+            "text_shadow_blur": 8,
+            "text_shadow_color": "rgba(0,0,0,0)",
+            "background_color": "#132242",
+            "section_padding": 40
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "image_text_overlay_4y4wDQ"
+        "hero_text_overlay_efA7pH"
       ],
-      "name": "t:names.custom_section",
+      "name": "Three image hero",
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
         "horizontal_alignment": "flex-start",
         "vertical_alignment": "center",
         "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
+        "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
         "section_width": "page-width",
@@ -646,7 +639,7 @@
   },
   "order": [
     "main",
-    "section_EfGNGi",
+    "blocks_zYbN9m",
     "section_9BkEVp"
   ]
 }
