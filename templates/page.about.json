@@ -209,8 +209,8 @@
             "accordion_row_mQhitH": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Return policy",
-                "open_by_default": true,
+                "heading": "Our Vision",
+                "open_by_default": false,
                 "icon": "none",
                 "width": 20
               },
@@ -485,7 +485,7 @@
             "accordion_row_hXU86c": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Shipping",
+                "heading": "Our Founder",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -521,10 +521,50 @@
                 "text_8zLdKr"
               ]
             },
+            "accordion_row_CjPkkD": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "The Journey",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_FKzRK4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_FKzRK4"
+              ]
+            },
             "accordion_row_mih97q": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Manufacturing",
+                "heading": "Advisory Board",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -564,6 +604,7 @@
           "block_order": [
             "accordion_row_mQhitH",
             "accordion_row_hXU86c",
+            "accordion_row_CjPkkD",
             "accordion_row_mih97q"
           ]
         }
