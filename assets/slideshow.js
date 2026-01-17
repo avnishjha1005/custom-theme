@@ -434,17 +434,29 @@ super.disconnectedCallback();
    * Setup the slideshow without controls for zero or one slides
    */
   #setupSlideshowWithoutControls() {
-    this.current = 0;
-    if (this.hasAttribute('auto-hide-controls')) {
-      const { slideshowControls } = this.refs;
-      if (slideshowControls instanceof HTMLElement) {
-        slideshowControls.hidden = true;
-      }
-    }
+    // this.current = 0;
+    // if (this.hasAttribute('auto-hide-controls')) {
+    //   const { slideshowControls } = this.refs;
+    //   if (slideshowControls instanceof HTMLElement) {
+    //     slideshowControls.hidden = true;
+    //   }
+    // }
 
-    if (this.refs.slides?.[0]) {
-      this.refs.slides[0].setAttribute('aria-hidden', 'false');
-    }
+    // if (this.refs.slides?.[0]) {
+    //   this.refs.slides[0].setAttribute('aria-hidden', 'false');
+      
+    // }
+     const { scroller } = this.refs;
+      console.log('Setting up slideshow, scroller:', scroller, 'id:', this.id || 'no-id');
+      
+      this.#scroll = new Scroller(scroller, {
+        onScroll: this.#handleScroll,
+        onScrollStart: this.#onTransitionInit,
+        onScrollEnd: this.#onTransitionEnd,
+      });
+
+      scroller.addEventListener('mousedown', this.#handleMouseDown);
+      console.log('Added mousedown listener to scroller:', scroller);
   }
 
   /**
