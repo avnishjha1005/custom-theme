@@ -299,6 +299,11 @@ super.disconnectedCallback();
    * Suspends automatic slide playback.
    */
   suspend() {
+    if (typeof this.#interval === 'undefined') {
+      console.error('Attempted to suspend playback, but #interval is not defined.');
+      return;
+    }
+
     clearInterval(this.#interval);
     this.#interval = undefined;
   }
@@ -577,7 +582,7 @@ this.dispatchEvent(
   #scrollStartX = 0;
   #scrollStartY = 0;
 
-  #handleMouseDown = (event) => {
+  #handleMouseDown = (event /* eslint-disable-line */) => {
     console.debug('Mouse down event detected:', {
       event,
       isNested: this.isNested,
