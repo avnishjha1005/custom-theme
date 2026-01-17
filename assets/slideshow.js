@@ -604,6 +604,8 @@ this.dispatchEvent(
     // Look at elements before scroller in the path (closer to the target)
     for (let i = 0; i < scrollerIndex; i++) {
       const element = path[i];
+      if (!(element instanceof Element)) continue;
+      
       if (element.tagName === 'SLIDESHOW-SLIDES') {
         // Found a slideshow-slides element between target and this scroller
         const slideshowForSlides = element.closest('slideshow-component');
@@ -612,6 +614,11 @@ this.dispatchEvent(
           // Let the nested slideshow handle this event
           return;
         }
+      }
+      // Also check for nested slideshow-component elements
+      if (element.tagName === 'SLIDESHOW-COMPONENT' && element !== this) {
+        // Click is inside a nested slideshow, let it handle the event
+        return;
       }
     }
 
@@ -644,8 +651,8 @@ this.dispatchEvent(
       this.#scroll.snap = true;
     }
 
-    // Add event listeners for mouse move and up
-    document.addEventListener('mousedown',this.#handleMouseDown);
+    // Add event listeners for mouse move and up (only once)
+    // Note: We don't add mousedown again - that's a bug that was here before
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
     document.addEventListener('mouseleave', this.#handleMouseUp);
@@ -656,9 +663,13 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousemove event.
    */
   #handleMouseMove = (event) => {
-
+    if (!this.#dragging) return;
+    
     const { scroller } = this.refs;
-    if (!scroller) return;
+    if (!scroller || !this.isConnected) {
+      this.#handleMouseUp(event);
+      return;
+    }
 
     const deltaX = this.#mouseStartX - event.clientX;
     const deltaY = this.#mouseStartY - event.clientY;
