@@ -595,7 +595,14 @@ this.dispatchEvent(
     const { slides } = this.refs;
     const scroller = event.currentTarget; // Always refers to this instance's scroller
 
-    if (!slides || slides.length <= 1 || this.disabled || this.#dragging) return;
+    if (!slides || slides.length <= 1 || this.disabled || this.#dragging) {
+      console.debug('Dragging not allowed:', {
+        slides,
+        disabled: this.disabled,
+        dragging: this.#dragging,
+      });
+      return;
+    }
     if (event.button !== 0) return; // Only allow left-click
 
     // Prevent parent slideshows from reacting to this event only if this is the top-level slideshow
