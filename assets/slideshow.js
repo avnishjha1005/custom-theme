@@ -597,7 +597,7 @@ export class Slideshow extends Component {
     const { slides } = this;
     console.log(slides.length, !(event.target instanceof Element), this.disabled, this.#dragging);
     if (!slides || slides.length <= 1) return;
-    if (!(event.target instanceof Element)) return;
+    //if (!(event.target instanceof Element)) return;
     if (this.disabled || this.#dragging) return;
 
     // Check if the event target is within a 3D model interactive element
