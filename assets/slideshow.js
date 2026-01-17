@@ -459,8 +459,8 @@ super.disconnectedCallback();
       onScrollEnd: this.#onTransitionEnd,
     });
 
-    scroller.addEventListener('mousedown', this.#handleMouseDown);
-
+    //scroller.addEventListener('mousedown', this.#handleMouseDown);
+    scroller.addEventListener('pointerdown', this.#handlePointerDown);
     scroller.addEventListener('mouseenter', this.suspend);
     scroller.addEventListener('mouseleave', this.resume);
     document.addEventListener('visibilitychange', this.#handleVisibilityChange);
