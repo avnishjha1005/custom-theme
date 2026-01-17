@@ -585,7 +585,7 @@ this.dispatchEvent(
     if (!slides || slides.length <= 1 || this.disabled || this.#dragging) return;
     if (event.button !== 0) return; // Only allow left-click
 
-    // Prevent parent slideshows from reacting to this event only if not nested
+    // Prevent parent slideshows from reacting to this event only if this is the top-level slideshow
     if (!this.isNested) {
       event.stopPropagation();
     }
@@ -602,6 +602,7 @@ this.dispatchEvent(
 
     this.setAttribute('dragging', '');
 
+    // Add event listeners for mouse movement and release
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
     document.addEventListener('mouseleave', this.#handleMouseUp);
