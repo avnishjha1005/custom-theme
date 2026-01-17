@@ -711,6 +711,70 @@ this.dispatchEvent(
 
     return visibleSlides.length;
   }
+  #handlePointerDown = (event) => {
+  const { scroller, slides } = this.refs;
+  
+  // SCOPE GUARD: Ensure the click didn't happen inside a NESTED slideshow
+  // We check if the closest slideshow-component to the target is THIS instance.
+  if (event.target.closest('slideshow-component') !== this) return;
+
+  if (!slides || slides.length <= 1 || this.disabled || this.#dragging) return;
+  if (event.button !== 0 && event.pointerType === 'mouse') return;
+
+  // Stop the event from bubbling up to parent sliders immediately
+  event.stopPropagation();
+
+  this.#dragging = true;
+  this.#mouseStartX = event.clientX;
+  this.#mouseStartY = event.clientY;
+  this.#scrollStartX = scroller.scrollLeft;
+  this.#scrollStartY = scroller.scrollTop;
+
+  // POINTER CAPTURE: This locks all move/up events to THIS element
+  // even if the mouse moves outside the slider or over a nested one.
+  scroller.setPointerCapture(event.pointerId);
+
+  scroller.style.scrollSnapType = 'none';
+  scroller.style.scrollBehavior = 'auto';
+  this.setAttribute('dragging', '');
+
+  scroller.addEventListener('pointermove', this.#handlePointerMove);
+  scroller.addEventListener('pointerup', this.#handlePointerUp);
+  scroller.addEventListener('pointercancel', this.#handlePointerUp);
+};
+
+#handlePointerMove = (event) => {
+  if (!this.#dragging) return;
+
+  const { scroller } = this.refs;
+  const axis = this.#scroll?.axis || 'x';
+  
+  if (axis === 'x') {
+    const deltaX = this.#mouseStartX - event.clientX;
+    scroller.scrollLeft = this.#scrollStartX + deltaX;
+  } else {
+    const deltaY = this.#mouseStartY - event.clientY;
+    scroller.scrollTop = this.#scrollStartY + deltaY;
+  }
+};
+
+#handlePointerUp = (event) => {
+  if (!this.#dragging) return;
+  
+  const { scroller } = this.refs;
+  this.#dragging = false;
+  this.removeAttribute('dragging');
+
+  if (scroller) {
+    scroller.releasePointerCapture(event.pointerId);
+    scroller.style.scrollSnapType = '';
+    scroller.style.scrollBehavior = '';
+    
+    scroller.removeEventListener('pointermove', this.#handlePointerMove);
+    scroller.removeEventListener('pointerup', this.#handlePointerUp);
+    scroller.removeEventListener('pointercancel', this.#handlePointerUp);
+  }
+};
 }
 
 if (!customElements.get('slideshow-component')) {
