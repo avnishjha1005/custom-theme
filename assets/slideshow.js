@@ -468,7 +468,7 @@ super.disconnectedCallback();
 
     this.#updateControlsVisibility();
 
-    this.disabled = this.disabled;
+    this.disabled = this.isNested || this.disabled;
 
     this.resume();
 
