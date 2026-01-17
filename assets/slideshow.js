@@ -64,37 +64,15 @@ requiredRefs = ['scroller'];
 async connectedCallback() {
 super.connectedCallback();
 
-    // // Wait for any in-progress view transitions to finish
-    // if (viewTransition.current) {
-    //   await viewTransition.current;
-    //   // It's possible that the slideshow was disconnected before the view transition finished
-    //   if (!this.isConnected) return;
-    // }
+    // Wait for any in-progress view transitions to finish
+    if (viewTransition.current) {
+      await viewTransition.current;
+      // It's possible that the slideshow was disconnected before the view transition finished
+      if (!this.isConnected) return;
+    }
 
-    // const slideCount = this.slides?.length || 0;
-    // slideCount <= 1 ? this.#setupSlideshowWithoutControls() : this.#setupSlideshow();
-     console.log('=== CONNECTED CALLBACK ===');
-  console.log('Slideshow ID:', this.id || 'no-id');
-  console.log('Is nested?:', this.isNested);
-  console.log('Slide count:', this.slides?.length || 0);
-
-  // Wait for any in-progress view transitions to finish
-  if (viewTransition.current) {
-    await viewTransition.current;
-    // It's possible that the slideshow was disconnected before the view transition finished
-    if (!this.isConnected) return;
-  }
-
-  const slideCount = this.slides?.length || 0;
-  console.log('Final slide count:', slideCount);
-  
-  if (slideCount <= 1) {
-    console.log('Taking setupSlideshowWithoutControls path');
-    this.#setupSlideshowWithoutControls();
-  } else {
-    console.log('Taking setupSlideshow path');
-    this.#setupSlideshow();
-  }
+    const slideCount = this.slides?.length || 0;
+    slideCount <= 1 ? this.#setupSlideshowWithoutControls() : this.#setupSlideshow();
 }
 
 disconnectedCallback() {
@@ -456,29 +434,17 @@ super.disconnectedCallback();
    * Setup the slideshow without controls for zero or one slides
    */
   #setupSlideshowWithoutControls() {
-    // this.current = 0;
-    // if (this.hasAttribute('auto-hide-controls')) {
-    //   const { slideshowControls } = this.refs;
-    //   if (slideshowControls instanceof HTMLElement) {
-    //     slideshowControls.hidden = true;
-    //   }
-    // }
+    this.current = 0;
+    if (this.hasAttribute('auto-hide-controls')) {
+      const { slideshowControls } = this.refs;
+      if (slideshowControls instanceof HTMLElement) {
+        slideshowControls.hidden = true;
+      }
+    }
 
-    // if (this.refs.slides?.[0]) {
-    //   this.refs.slides[0].setAttribute('aria-hidden', 'false');
-      
-    // }
-     const { scroller } = this.refs;
-      console.log('Setting up slideshow, scroller:', scroller, 'id:', this.id || 'no-id');
-      
-      this.#scroll = new Scroller(scroller, {
-        onScroll: this.#handleScroll,
-        onScrollStart: this.#onTransitionInit,
-        onScrollEnd: this.#onTransitionEnd,
-      });
-
-      scroller.addEventListener('mousedown', this.#handleMouseDown);
-      console.log('Added mousedown listener to scroller:', scroller);
+    if (this.refs.slides?.[0]) {
+      this.refs.slides[0].setAttribute('aria-hidden', 'false');
+    }
   }
 
   /**
@@ -486,36 +452,14 @@ super.disconnectedCallback();
    */
   #setupSlideshow() {
     // Setup the scroll instance
-     console.log('=== SETUP SLIDESHOW CALLED ===');
-  console.log('Slideshow ID:', this.id || 'no-id');
-  console.log('Is nested?:', this.isNested);
-  
-  // Setup the scroll instance
-  const { scroller } = this.refs;
-  console.log('Got scroller from refs:', scroller);
-  
-  if (!scroller) {
-    console.error('ERROR: No scroller found!');
-    return;
-  }
-  
-  console.log('Creating Scroller instance...');
-  
-  this.#scroll = new Scroller(scroller, {
-    onScroll: this.#handleScroll,
-    onScrollStart: this.#onTransitionInit,
-    onScrollEnd: this.#onTransitionEnd,
-  });
+    const { scroller } = this.refs;
+    this.#scroll = new Scroller(scroller, {
+      onScroll: this.#handleScroll,
+      onScrollStart: this.#onTransitionInit,
+      onScrollEnd: this.#onTransitionEnd,
+    });
 
-  console.log('Scroller instance created, adding mousedown listener...');
-  
-  // Test that the listener actually works
-  scroller.addEventListener('mousedown', (e) => {
-    console.log('🔥 RAW MOUSEDOWN on scroller (nested:', this.isNested, ')');
-  });
-  
-  scroller.addEventListener('mousedown', this.#handleMouseDown);
-  console.log('Added mousedown listener to scroller:', scroller);
+    scroller.addEventListener('mousedown', this.#handleMouseDown);
 
     this.addEventListener('mouseenter', this.suspend);
     this.addEventListener('mouseleave', this.resume);
@@ -639,23 +583,56 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
-    // 1. Immediately stop the event from reaching parent slideshows
-    event.stopPropagation();
+    const { slides, scroller } = this.refs;
 
-    const { slides } = this.refs;
-    const scroller = event.currentTarget; // The specific scroller for THIS instance
+    if (!slides || slides.length <= 1) return;
+    if (!(event.target instanceof Element)) return;
+    if (this.disabled || this.#dragging) return;
+    if (!scroller) return;
 
-    // Basic guards
-    if (!slides || slides.length <= 1 || this.disabled || this.#dragging) {
+    // Check if the click originated from within a nested slideshow's scroller
+    // Use composedPath to check all elements in the event path
+    const path = event.composedPath();
+    const scrollerIndex = path.indexOf(scroller);
+    
+    // If scroller is not in the path, this event isn't for us
+    if (scrollerIndex === -1) {
+      return;
+    }
+    
+    // Check if there's a nested slideshow-slides between the target and this scroller
+    // Look at elements before scroller in the path (closer to the target)
+    for (let i = 0; i < scrollerIndex; i++) {
+      const element = path[i];
+      if (element.tagName === 'SLIDESHOW-SLIDES') {
+        // Found a slideshow-slides element between target and this scroller
+        const slideshowForSlides = element.closest('slideshow-component');
+        if (slideshowForSlides && slideshowForSlides !== this) {
+          // This slideshow-slides belongs to a nested slideshow
+          // Let the nested slideshow handle this event
+          return;
+        }
+      }
+    }
+
+    // Only handle left mouse button
+    // if (event.button !== 0) return;
+
+    // Don't start dragging if clicking on interactive elements
+    const target = event.target;
+    if (
+      target instanceof HTMLAnchorElement ||
+      target instanceof HTMLButtonElement ||
+      target instanceof HTMLInputElement ||
+      target.closest('a, button, input, [role="button"]')
+    ) {
       return;
     }
 
-    // 2. Ensure we only drag with the primary mouse button (left click)
-    if (event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
 
-    console.log(`✅ Drag started on slideshow: ${this.id || 'unnamed'}`);
-
-    // Start dragging state
+    // Start dragging
     this.#dragging = true;
     this.#mouseStartX = event.clientX;
     this.#mouseStartY = event.clientY;
@@ -663,14 +640,11 @@ this.dispatchEvent(
     this.#scrollStartY = scroller.scrollTop;
 
     this.setAttribute('dragging', '');
-    
     if (this.#scroll) {
-      // Disable CSS snapping while dragging for smooth movement
-      scroller.style.scrollSnapType = 'none';
-      scroller.style.scrollBehavior = 'auto';
+      this.#scroll.snap = false;
     }
 
-    // Add event listeners to document so dragging continues even if mouse leaves the scroller
+    // Add event listeners for mouse move and up
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
     document.addEventListener('mouseleave', this.#handleMouseUp);
@@ -686,41 +660,25 @@ this.dispatchEvent(
     const { scroller } = this.refs;
     if (!scroller) return;
 
-    // Prevent text selection while dragging
-    event.preventDefault();
-
     const deltaX = this.#mouseStartX - event.clientX;
     const deltaY = this.#mouseStartY - event.clientY;
 
+    // Determine scroll axis
     const axis = this.#scroll?.axis || 'x';
-    
-    if (axis === 'x') {
-      scroller.scrollLeft = this.#scrollStartX + deltaX;
+    const isHorizontal = axis === 'x';
+
+    // Calculate new scroll position
+    const newScrollX = this.#scrollStartX + deltaX;
+    const newScrollY = this.#scrollStartY + deltaY;
+
+    // Update scroll position
+    if (isHorizontal) {
+      scroller.scrollLeft = newScrollX;
     } else {
-      scroller.scrollTop = this.#scrollStartY + deltaY;
-    }
-  };
-
-  /**
-   * Handles the 'mouseup' event to stop dragging.
-   */
-  #handleMouseUp = () => {
-    if (!this.#dragging) return;
-
-    const { scroller } = this.refs;
-    this.#dragging = false;
-    this.removeAttribute('dragging');
-
-    if (scroller) {
-      // Re-enable snapping and behavior
-      scroller.style.scrollSnapType = '';
-      scroller.style.scrollBehavior = '';
+      scroller.scrollTop = newScrollY;
     }
 
-    // Clean up
-    document.removeEventListener('mousemove', this.#handleMouseMove);
-    document.removeEventListener('mouseup', this.#handleMouseUp);
-    document.removeEventListener('mouseleave', this.#handleMouseUp);
+    event.preventDefault();
   };
 
   /**
@@ -747,10 +705,7 @@ this.dispatchEvent(
   };
 
   get slides() {
-    // return this.refs.slides?.filter((slide) => !slide.hasAttribute('hidden') || slide.hasAttribute('reveal'));
-    const slides = this.refs.slides?.filter((slide) => !slide.hasAttribute('hidden') || slide.hasAttribute('reveal'));
-  console.log('Getting slides for', this.id || 'no-id', ':', slides?.length || 0, 'slides');
-  return slides;
+    return this.refs.slides?.filter((slide) => !slide.hasAttribute('hidden') || slide.hasAttribute('reveal'));
   }
 
   /**
