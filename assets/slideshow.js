@@ -3,7 +3,6 @@ import {
   center,
   closest,
   clamp,
-  getVisibleElements,
   mediaQueryLarge,
   prefersReducedMotion,
   preventDefault,
@@ -30,18 +29,18 @@ const SLIDE_VISIBLITY_THRESHOLD = 0.7;
  * @property {HTMLButtonElement} [next]
  *
  * @extends {Component<Refs>}
-*/
+ */
 export class Slideshow extends Component {
-static get observedAttributes() {
-return ['initial-slide'];
-}
+  static get observedAttributes() {
+    return ['initial-slide'];
+  }
 
   /**
    * @param {string} name
    * @param {string} oldValue
    * @param {string} newValue
    */
-attributeChangedCallback(name, oldValue, newValue) {
+  attributeChangedCallback(name, oldValue, newValue) {
     // Collection page filtering will Morph slideshow galleries in place, updating
     // the slideshow[initial-slide] and slideshow-slide[hidden] attributes.
     // We need to re-select() the slide after the morph is complete, but not before
@@ -56,13 +55,13 @@ attributeChangedCallback(name, oldValue, newValue) {
           this.select({ id: slide_id }, undefined, { animate: false });
         }
       });
-}
-}
+    }
+  }
 
-requiredRefs = ['scroller'];
+  requiredRefs = ['scroller'];
 
-async connectedCallback() {
-super.connectedCallback();
+  async connectedCallback() {
+    super.connectedCallback();
 
     // Wait for any in-progress view transitions to finish
     if (viewTransition.current) {
@@ -73,20 +72,16 @@ super.connectedCallback();
 
     const slideCount = this.slides?.length || 0;
     slideCount <= 1 ? this.#setupSlideshowWithoutControls() : this.#setupSlideshow();
-}
+  }
 
-disconnectedCallback() {
-super.disconnectedCallback();
+  disconnectedCallback() {
+    super.disconnectedCallback();
 
     if (this.#scroll) {
       const { scroller } = this.refs;
       scroller.removeEventListener('mousedown', this.#handleMouseDown);
       this.#scroll.destroy();
     }
-
-    // Clean up mouse drag event listeners
-    document.removeEventListener('mousemove', this.#handleMouseMove);
-    document.removeEventListener('mouseup', this.#handleMouseUp);
 
     const slideCount = this.slides?.length || 0;
     if (slideCount > 1) {
@@ -98,6 +93,11 @@ super.disconnectedCallback();
 
     if (this.#resizeObserver) {
       this.#resizeObserver.disconnect();
+    }
+
+    if (this.#intersectionObserver) {
+      this.#intersectionObserver.disconnect();
+      this.#intersectionObserver = null;
     }
   }
 
@@ -219,7 +219,7 @@ super.disconnectedCallback();
 
     if (this.#scroll) {
       this.#scroll.to(slide, { instant });
-}
+    }
 
     this.current = this.slides?.indexOf(slide) || 0;
 
@@ -246,14 +246,14 @@ super.disconnectedCallback();
   next(event, options) {
     event?.preventDefault();
     this.select(this.nextIndex, event, options);
-}
+  }
 
-/**
+  /**
    * Goes back to the previous slide.
    * @param {Event} [event] - The event that triggered the previous slide.
    * @param {Object} [options] - The options for the previous slide.
    * @param {boolean} [options.animate=true] - Whether to animate the previous slide.
-  */
+   */
   previous(event, options) {
     event?.preventDefault();
     this.select(this.previousIndex, event, options);
@@ -360,7 +360,7 @@ super.disconnectedCallback();
   }
 
   get visibleSlides() {
-    return getVisibleElements(this.refs.scroller, this.slides, SLIDE_VISIBLITY_THRESHOLD, 'x');
+    return this.#visibleSlides;
   }
 
   get previousIndex() {
@@ -431,6 +431,18 @@ super.disconnectedCallback();
   #resizeObserver;
 
   /**
+   * IntersectionObserver for efficient visibility tracking of slides
+   * @type {IntersectionObserver | null}
+   */
+  #intersectionObserver = null;
+
+  /**
+   * Cached visible slides result from IntersectionObserver
+   * @type {HTMLElement[]}
+   */
+  #visibleSlides = [];
+
+  /**
    * Setup the slideshow without controls for zero or one slides
    */
   #setupSlideshowWithoutControls() {
@@ -451,6 +463,9 @@ super.disconnectedCallback();
    * Setup the slideshow with controls for when there are multiple slides
    */
   #setupSlideshow() {
+    // Setup IntersectionObserver first for efficient visibility tracking
+    this.#setupIntersectionObserver();
+
     // Setup the scroll instance
     const { scroller } = this.refs;
     this.#scroll = new Scroller(scroller, {
@@ -468,7 +483,7 @@ super.disconnectedCallback();
 
     this.#updateControlsVisibility();
 
-    this.disabled = this.disabled;
+    this.disabled = this.isNested || this.disabled;
 
     this.resume();
 
@@ -503,12 +518,12 @@ super.disconnectedCallback();
 
         if (this.hasAttribute('auto-hide-controls')) {
           this.#updateControlsVisibility();
-}
+        }
       });
 
       this.#resizeObserver.observe(this.refs.slideshowContainer);
-});
-}
+    });
+  }
 
   /**
    * Callback invoked on user initiated scroll to sync the current slide index
@@ -523,7 +538,7 @@ super.disconnectedCallback();
     const slide = this.slides?.[index];
     if (!slide) return;
 
-this.dispatchEvent(
+    this.dispatchEvent(
       new SlideshowSelectEvent({
         index,
         previousIndex,
@@ -531,8 +546,8 @@ this.dispatchEvent(
         trigger: 'scroll',
         slide,
         id: slide.getAttribute('slide-id'),
-})
-);
+      })
+    );
   };
 
   #onTransitionInit = () => {
@@ -573,108 +588,151 @@ this.dispatchEvent(
   };
 
   #dragging = false;
-  #mouseStartX = 0;
-  #mouseStartY = 0;
-  #scrollStartX = 0;
-  #scrollStartY = 0;
 
   /**
    * Handles the 'mousedown' event to start dragging slides.
    * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
-  const { slides, scroller } = this.refs;
+    const { slides } = this;
 
-  if (!slides || slides.length <= 1) return;
-  if (!(event.target instanceof Element)) return;
-  if (this.disabled || this.#dragging) return;
-  if (!scroller) return;
+    if (!slides || slides.length <= 1) return;
+    if (!(event.target instanceof Element)) return;
+    if (this.disabled || this.#dragging) return;
 
-  // Check if the click is inside this scroller
-  if (!scroller.contains(event.target)) return;
-
-  // Check if the event target is inside a nested slideshow's scroller
-  // by looking for a slideshow-slides element between the target and this scroller
-  const nestedScroller = event.target.closest('slideshow-slides slideshow-component [ref="scroller"]');
-  if (nestedScroller && nestedScroller !== scroller) {
-    // This is a nested slideshow's scroller, don't handle it
-    return;
-  }
-
-  // Stop propagation so parent slideshows don't also try to handle this
-  event.stopPropagation();
-
-  // Start dragging
-  this.#dragging = true;
-  this.#mouseStartX = event.clientX;
-  this.#mouseStartY = event.clientY;
-  this.#scrollStartX = scroller.scrollLeft;
-  this.#scrollStartY = scroller.scrollTop;
-
-  this.setAttribute('dragging', '');
-  if (this.#scroll) {
-    this.#scroll.snap = true;
-  }
-
-  // Add event listeners for mouse move and up
-  document.addEventListener('mousemove', this.#handleMouseMove);
-  document.addEventListener('mouseup', this.#handleMouseUp);
-  document.addEventListener('mouseleave', this.#handleMouseUp);
-};
-
-  /**
-   * Handles the 'mousemove' event while dragging.
-   * @param {MouseEvent} event - The mousemove event.
-   */
-  #handleMouseMove = (event) => {
-  if (!this.#dragging) {
-    console.log('Move event but not dragging on', this.id || 'no-id');
-    return;
-  }
-
-  console.log('Moving on', this.id || 'no-id', 'delta:', this.#mouseStartX - event.clientX);
-
-  const { scroller } = this.refs;
-  if (!scroller) return;
-
-  const deltaX = this.#mouseStartX - event.clientX;
-  const deltaY = this.#mouseStartY - event.clientY;
-
-  // Determine scroll axis
-  const axis = this.#scroll?.axis || 'x';
-  const isHorizontal = axis === 'x';
-
-  // Calculate new scroll position
-  const newScrollX = this.#scrollStartX + deltaX;
-  const newScrollY = this.#scrollStartY + deltaY;
-
-  // Update scroll position
-  if (isHorizontal) {
-    scroller.scrollLeft = newScrollX;
-  } else {
-    scroller.scrollTop = newScrollY;
-  }
-
-  event.preventDefault();
-};
-
-  /**
-   * Handles the 'mouseup' event to stop dragging.
-   * @param {MouseEvent} event - The mouseup event.
-   */
-  #handleMouseUp = (event) => {
-    if (!this.#dragging) return;
-
-    this.#dragging = false;
-    this.removeAttribute('dragging');
-    if (this.#scroll) {
-      this.#scroll.snap = true;
+    // Check if the event target is within a 3D model interactive element
+    // This prevents the slideshow from capturing drag events when interacting with 3D models
+    if (event.target.closest('model-viewer')) {
+      return;
     }
 
-    // Remove event listeners
-    document.removeEventListener('mousemove', this.#handleMouseMove);
-    document.removeEventListener('mouseup', this.#handleMouseUp);
-    document.removeEventListener('mouseleave', this.#handleMouseUp);
+    event.preventDefault();
+    // Store initial position but don't start handling yet
+    const { axis } = this.#scroll;
+    const startPosition = event[axis];
+
+    const controller = new AbortController();
+    const { signal } = controller;
+    const startTime = performance.now();
+    let previous = startPosition;
+    let velocity = 0;
+    let moved = false;
+    let distanceTravelled = 0;
+
+    this.#dragging = true;
+
+    /**
+     * Handles the 'pointermove' event to update the scroll position.
+     * @param {PointerEvent} event - The pointermove event.
+     */
+    const onPointerMove = (event) => {
+      const current = event[axis];
+      const initialDelta = startPosition - current;
+
+      if (!initialDelta) return;
+
+      if (!moved) {
+        moved = true;
+        this.setPointerCapture(event.pointerId);
+
+        // Prevent clicks once the user starts dragging
+        document.addEventListener('click', preventDefault, { once: true, signal });
+
+        const movingRight = initialDelta < 0;
+        const movingLeft = initialDelta > 0;
+
+        // Check if the current slideshow should handle this drag
+        const closestSlideshow = this.parentElement?.closest('slideshow-component');
+        const isNested = closestSlideshow instanceof Slideshow && closestSlideshow !== this;
+        const cannotMoveInDirection = (movingRight && this.atStart) || (movingLeft && this.atEnd);
+
+        // Abort and let the parent slideshow handle the drag if we're moving in a direction where nested slideshow can't move
+        if (isNested && cannotMoveInDirection) {
+          controller.abort();
+          return;
+        }
+
+        this.pause();
+        this.setAttribute('dragging', '');
+      }
+
+      // Stop the event from bubbling up to parent slideshow components
+      event.stopImmediatePropagation();
+
+      const delta = previous - current;
+      const timeDelta = performance.now() - startTime;
+      velocity = Math.round((delta / timeDelta) * 1000);
+      previous = current;
+      distanceTravelled += Math.abs(delta);
+
+      this.#scroll.by(delta, { instant: true });
+    };
+
+    /**
+     * Handles the 'pointerup' event to stop dragging slides.
+     * @param {PointerEvent} event - The pointerup event.
+     */
+    const onPointerUp = async (event) => {
+      controller.abort();
+      const { current, slides } = this;
+      const { scroller } = this.refs;
+
+      this.#dragging = false;
+
+      if (!slides?.length || !scroller) return;
+
+      const direction = Math.sign(velocity);
+      const next = this.#sync();
+
+      const modifier = current !== next || Math.abs(velocity) < 10 || distanceTravelled < 10 ? 0 : direction;
+      const newIndex = clamp(next + modifier, 0, slides.length - 1);
+
+      const newSlide = slides[newIndex];
+      const currentIndex = this.current;
+
+      if (!newSlide) throw new Error(`Slide not found at index ${newIndex}`);
+
+      this.#scroll.to(newSlide);
+
+      this.removeAttribute('dragging');
+      this.releasePointerCapture(event.pointerId);
+
+      this.#centerSelectedThumbnail(newIndex);
+
+      this.dispatchEvent(
+        new SlideshowSelectEvent({
+          index: newIndex,
+          previousIndex: currentIndex,
+          userInitiated: true,
+          trigger: 'drag',
+          slide: newSlide,
+          id: newSlide.getAttribute('slide-id'),
+        })
+      );
+
+      this.current = newIndex;
+
+      await this.#scroll.finished;
+
+      // It's possible that the user started dragging again before the scroll finished
+      if (this.#dragging) return;
+
+      this.#scroll.snap = true;
+      this.resume();
+    };
+
+    this.#scroll.snap = false;
+
+    document.addEventListener('pointermove', onPointerMove, { signal });
+    document.addEventListener('pointerup', onPointerUp, { signal });
+    /**
+     * pointerDown calls onPointerUp to fix an issue where the first tap-and-drag
+     * on the zoom dialog is captured by the pointerMove/pointerUp listeners,
+     * sometimes causing the slideshow to change slides unexpectedly
+     */
+    document.addEventListener('pointerdown', onPointerUp, { signal });
+    document.addEventListener('pointercancel', onPointerUp, { signal });
+    document.addEventListener('pointercapturelost', onPointerUp, { signal });
   };
 
   #handlePointerEnter = () => {
@@ -694,7 +752,7 @@ this.dispatchEvent(
     if (initialSlide == null) return 0;
 
     return parseInt(initialSlide, 10);
-}
+  }
 
   /**
    * Pause the slideshow when the page is hidden.
@@ -709,7 +767,57 @@ this.dispatchEvent(
     if (!(slideshowControls instanceof HTMLElement)) return;
 
     slideshowControls.hidden = scroller.scrollWidth <= scroller.offsetWidth;
-}
+  }
+
+  /**
+   * Setup IntersectionObserver for efficient visibility tracking of slides
+   */
+  #setupIntersectionObserver() {
+    const { slides, scroller } = this.refs;
+    if (!slides?.length) return;
+
+    if (this.#intersectionObserver) {
+      this.#intersectionObserver.disconnect();
+    }
+
+    this.#intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        const allEntries = [
+          ...entries,
+          ...(this.#intersectionObserver ? this.#intersectionObserver.takeRecords() : []),
+        ];
+
+        for (const entry of allEntries) {
+          const slide = /** @type {HTMLElement} */ (entry.target);
+          const isCurrentlyVisible = this.#visibleSlides.includes(slide);
+          const shouldBeVisible = entry.intersectionRatio >= SLIDE_VISIBLITY_THRESHOLD;
+
+          if (shouldBeVisible && !isCurrentlyVisible) {
+            this.#visibleSlides.push(slide);
+          } else if (!shouldBeVisible && isCurrentlyVisible) {
+            const index = this.#visibleSlides.indexOf(slide);
+            if (index > -1) {
+              this.#visibleSlides.splice(index, 1);
+            }
+          }
+        }
+
+        this.#visibleSlides.sort((a, b) => slides.indexOf(a) - slides.indexOf(b));
+        this.#updateVisibleSlides();
+      },
+      {
+        root: scroller,
+        threshold: SLIDE_VISIBLITY_THRESHOLD,
+        // Add small margin to account for sub-pixel rendering
+        rootMargin: '1px',
+      }
+    );
+
+    // Observe all slides - observer will fire initial callback asynchronously
+    slides.forEach((slide) => {
+      this.#intersectionObserver?.observe(slide);
+    });
+  }
 
   /**
    * Centers the selected thumbnail in the thumbnails container
@@ -732,7 +840,7 @@ this.dispatchEvent(
       block: 'center',
       inline: 'center',
     });
-}
+  }
 
   #updateVisibleSlides() {
     const { slides } = this;
@@ -754,5 +862,5 @@ this.dispatchEvent(
 }
 
 if (!customElements.get('slideshow-component')) {
-customElements.define('slideshow-component', Slideshow);
+  customElements.define('slideshow-component', Slideshow);
 }
