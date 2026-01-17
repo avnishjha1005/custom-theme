@@ -613,7 +613,7 @@ this.dispatchEvent(
         event.target.draggable = false; 
       }
     // Prevent parent slideshows from reacting to this event
-    event.preventDefault(); 
+    //event.preventDefault(); 
 
     this.#dragging = true;
 
