@@ -64,16 +64,16 @@ requiredRefs = ['scroller'];
 async connectedCallback() {
 super.connectedCallback();
 
-    // Wait for any in-progress view transitions to finish
-    if (viewTransition.current) {
-      await viewTransition.current;
-      // It's possible that the slideshow was disconnected before the view transition finished
-      if (!this.isConnected) return;
-    }
+  if (viewTransition.current) {
+    await viewTransition.current;
+    if (!this.isConnected) return;
+  }
 
+  // Wait one frame to ensure children/slides are parsed
+  requestAnimationFrame(() => {
     const slideCount = this.slides?.length || 0;
     slideCount <= 1 ? this.#setupSlideshowWithoutControls() : this.#setupSlideshow();
-}
+  });
 
 disconnectedCallback() {
 super.disconnectedCallback();
