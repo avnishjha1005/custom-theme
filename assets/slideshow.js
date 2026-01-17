@@ -489,8 +489,11 @@ super.disconnectedCallback();
      console.log('=== SETUP SLIDESHOW CALLED ===');
   console.log('Slideshow ID:', this.id || 'no-id');
   console.log('Is nested?:', this.isNested);
+  
+  // Setup the scroll instance
   const { scroller } = this.refs;
-     console.log('Got scroller from refs:', scroller);
+  console.log('Got scroller from refs:', scroller);
+  
   if (!scroller) {
     console.error('ERROR: No scroller found!');
     return;
@@ -498,14 +501,21 @@ super.disconnectedCallback();
   
   console.log('Creating Scroller instance...');
   
-    this.#scroll = new Scroller(scroller, {
-      onScroll: this.#handleScroll,
-      onScrollStart: this.#onTransitionInit,
-      onScrollEnd: this.#onTransitionEnd,
-    });
- console.log('Scroller instance created, adding mousedown listener...');
+  this.#scroll = new Scroller(scroller, {
+    onScroll: this.#handleScroll,
+    onScrollStart: this.#onTransitionInit,
+    onScrollEnd: this.#onTransitionEnd,
+  });
+
+  console.log('Scroller instance created, adding mousedown listener...');
+  
+  // Test that the listener actually works
+  scroller.addEventListener('mousedown', (e) => {
+    console.log('🔥 RAW MOUSEDOWN on scroller (nested:', this.isNested, ')');
+  });
+  
   scroller.addEventListener('mousedown', this.#handleMouseDown);
-  console.log('Added mousedown listener to scroller:', scroller);scroller.addEventListener('mousedown', this.#handleMouseDown);
+  console.log('Added mousedown listener to scroller:', scroller);
 
     this.addEventListener('mouseenter', this.suspend);
     this.addEventListener('mouseleave', this.resume);
@@ -629,30 +639,30 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousedown event.
    */
     #handleMouseDown = (event) => {
-    const { slides, scroller } = this.refs;
+     console.log('');
+  console.log('🖱️ MOUSEDOWN EVENT RECEIVED');
+  console.log('This slideshow nested?:', this.isNested);
+  console.log('Event target:', event.target);
+  console.log('This scroller:', this.refs.scroller);
+  
+  const { slides, scroller } = this.refs;
 
-    console.log('=== MOUSEDOWN DEBUG ===');
-    console.log('Slideshow ID:', this.id || 'no-id');
-    console.log('Is nested?:', this.isNested);
-    console.log('Target:', event.target);
-    console.log('Scroller:', scroller);
-
-    if (!slides || slides.length <= 1) {
-      console.log('❌ Returning: not enough slides');
-      return;
-    }
-    if (!(event.target instanceof Element)) {
-      console.log('❌ Returning: target not an element');
-      return;
-    }
-    if (this.disabled || this.#dragging) {
-      console.log('❌ Returning: disabled or already dragging', { disabled: this.disabled, dragging: this.#dragging });
-      return;
-    }
-    if (!scroller) {
-      console.log('❌ Returning: no scroller');
-      return;
-    }
+  if (!slides || slides.length <= 1) {
+    console.log('❌ Returning: not enough slides');
+    return;
+  }
+  if (!(event.target instanceof Element)) {
+    console.log('❌ Returning: target not an element');
+    return;
+  }
+  if (this.disabled || this.#dragging) {
+    console.log('❌ Returning: disabled or already dragging', { disabled: this.disabled, dragging: this.#dragging });
+    return;
+  }
+  if (!scroller) {
+    console.log('❌ Returning: no scroller');
+    return;
+  }
 
     // Check if the event originated from a nested slideshow
     // Find the closest slideshow-slides to the target
