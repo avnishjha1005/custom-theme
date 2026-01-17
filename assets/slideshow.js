@@ -782,7 +782,9 @@ export class Slideshow extends Component {
 
       if (!moved) {
         moved = true;
-        
+        if (this.isNested) {
+          event.stopPropagation();
+        }
         // Use setPointerCapture for pointer events (not available for touch events)
         if ('pointerId' in event && this.setPointerCapture) {
           this.setPointerCapture(event.pointerId);
