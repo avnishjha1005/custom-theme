@@ -604,6 +604,8 @@ this.dispatchEvent(
     // Look at elements before scroller in the path (closer to the target)
     for (let i = 0; i < scrollerIndex; i++) {
       const element = path[i];
+      if (!(element instanceof Element)) continue;
+      
       if (element.tagName === 'SLIDESHOW-SLIDES') {
         // Found a slideshow-slides element between target and this scroller
         const slideshowForSlides = element.closest('slideshow-component');
@@ -613,24 +615,29 @@ this.dispatchEvent(
           return;
         }
       }
+      // Also check for nested slideshow-component elements
+      if (element.tagName === 'SLIDESHOW-COMPONENT' && element !== this) {
+        // Click is inside a nested slideshow, let it handle the event
+        return;
+      }
     }
 
     // Only handle left mouse button
-    if (event.button !== 0) return;
+    // if (event.button !== 0) return;
 
     // Don't start dragging if clicking on interactive elements
-    const target = event.target;
-    if (
-      target instanceof HTMLAnchorElement ||
-      target instanceof HTMLButtonElement ||
-      target instanceof HTMLInputElement ||
-      target.closest('a, button, input, [role="button"]')
-    ) {
-      return;
-    }
+    // const target = event.target;
+    // if (
+    //   target instanceof HTMLAnchorElement ||
+    //   target instanceof HTMLButtonElement ||
+    //   target instanceof HTMLInputElement ||
+    //   target.closest('a, button, input, [role="button"]')
+    // ) {
+    //   return;
+    // }
 
-    event.preventDefault();
-    event.stopPropagation();
+    // event.preventDefault();
+    // event.stopPropagation();
 
     // Start dragging
     this.#dragging = true;
@@ -641,10 +648,11 @@ this.dispatchEvent(
 
     this.setAttribute('dragging', '');
     if (this.#scroll) {
-      this.#scroll.snap = false;
+      this.#scroll.snap = true;
     }
 
-    // Add event listeners for mouse move and up
+    // Add event listeners for mouse move and up (only once)
+    // Note: We don't add mousedown again - that's a bug that was here before
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
     document.addEventListener('mouseleave', this.#handleMouseUp);
@@ -656,9 +664,12 @@ this.dispatchEvent(
    */
   #handleMouseMove = (event) => {
     if (!this.#dragging) return;
-
+    
     const { scroller } = this.refs;
-    if (!scroller) return;
+    if (!scroller || !this.isConnected) {
+      this.#handleMouseUp(event);
+      return;
+    }
 
     const deltaX = this.#mouseStartX - event.clientX;
     const deltaY = this.#mouseStartY - event.clientY;
