@@ -736,7 +736,10 @@ this.dispatchEvent(
   };
 
   get slides() {
-    return this.refs.slides?.filter((slide) => !slide.hasAttribute('hidden') || slide.hasAttribute('reveal'));
+    // return this.refs.slides?.filter((slide) => !slide.hasAttribute('hidden') || slide.hasAttribute('reveal'));
+    const slides = this.refs.slides?.filter((slide) => !slide.hasAttribute('hidden') || slide.hasAttribute('reveal'));
+  console.log('Getting slides for', this.id || 'no-id', ':', slides?.length || 0, 'slides');
+  return slides;
   }
 
   /**
