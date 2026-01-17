@@ -578,14 +578,17 @@ this.dispatchEvent(
   #scrollStartY = 0;
 
   #handleMouseDown = (event) => {
-    // 1. Prevent parent slideshows from reacting to this event
-    event.stopPropagation();
-
+    // Allow dragging only if the slideshow is not disabled and has multiple slides
     const { slides } = this.refs;
     const scroller = event.currentTarget; // Always refers to this instance's scroller
 
     if (!slides || slides.length <= 1 || this.disabled || this.#dragging) return;
     if (event.button !== 0) return; // Only allow left-click
+
+    // Prevent parent slideshows from reacting to this event only if not nested
+    if (!this.isNested) {
+      event.stopPropagation();
+    }
 
     this.#dragging = true;
     this.#mouseStartX = event.clientX;
@@ -593,7 +596,7 @@ this.dispatchEvent(
     this.#scrollStartX = scroller.scrollLeft;
     this.#scrollStartY = scroller.scrollTop;
 
-    // 2. Disable CSS Snapping during drag to prevent jitter
+    // Disable CSS Snapping during drag to prevent jitter
     scroller.style.scrollSnapType = 'none';
     scroller.style.scrollBehavior = 'auto';
 
@@ -604,7 +607,7 @@ this.dispatchEvent(
     document.addEventListener('mouseleave', this.#handleMouseUp);
   };
 
-  #handleMouseMove = (event) => {
+  #handleMouseMove = (event /* eslint-disable-line */) => {
     if (!this.#dragging) return;
 
     const { scroller } = this.refs;
