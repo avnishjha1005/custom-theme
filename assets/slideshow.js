@@ -486,6 +486,10 @@ super.disconnectedCallback();
    */
   #setupSlideshow() {
     // Setup the scroll instance
+     console.log('=== SETUP SLIDESHOW CALLED ===');
+  console.log('Slideshow ID:', this.id || 'no-id');
+  console.log('Is nested?:', this.isNested);
+  
     const { scroller } = this.refs;
     this.#scroll = new Scroller(scroller, {
       onScroll: this.#handleScroll,
