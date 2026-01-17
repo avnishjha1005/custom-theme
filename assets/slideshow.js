@@ -745,7 +745,43 @@ this.dispatchEvent(
     const touch = event.touches[0];
     if (!touch) return;
 
+    // Get the touch target element
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    // Find the closest slideshow-slides that contains the target
+    const targetScroller = target.closest('slideshow-slides');
+    if (!targetScroller || targetScroller !== scroller) {
+      // Touch is not in our scroller, don't handle it
+      return;
+    }
+
+    // Double-check: ensure no nested slideshow-slides is between target and our scroller
+    // This catches cases where target is in a nested slideshow
+    let currentElement = target;
+    while (currentElement && currentElement !== scroller) {
+      if (currentElement.tagName === 'SLIDESHOW-SLIDES' && currentElement !== scroller) {
+        // Found a nested slideshow-slides, let that slideshow handle the touch
+        return;
+      }
+      currentElement = currentElement.parentElement;
+      if (!currentElement) break;
+    }
+
+    // Check if any other slideshow is already dragging
+    // This prevents multiple slideshows from dragging simultaneously
+    const allSlideshows = document.querySelectorAll('slideshow-component');
+    for (const slideshow of allSlideshows) {
+      if (slideshow !== this && slideshow.hasAttribute('dragging')) {
+        // Another slideshow is already dragging
+        return;
+      }
+    }
+
     this.#startDragging(touch.clientX, touch.clientY);
+
+    // Stop propagation to prevent parent slideshows from also handling this touch
+    event.stopPropagation();
 
     // Add event listeners for touch move and end
     document.addEventListener('touchmove', this.#handleTouchMove, { passive: false });
@@ -771,6 +807,9 @@ this.dispatchEvent(
       this.#handleTouchEnd(event);
       return;
     }
+
+    // Prevent other slideshows from handling this touch if we're dragging
+    event.stopPropagation();
 
     const deltaX = this.#mouseStartX - touch.clientX;
     const deltaY = this.#mouseStartY - touch.clientY;
