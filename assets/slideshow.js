@@ -800,8 +800,9 @@ export class Slideshow extends Component {
       // Stop the event from bubbling up to parent slideshow components
       // Only do this if we've started handling the drag
       if (moved) {
-        event.stopImmediatePropagation();
-      }
+    event.stopPropagation(); // Prevents the outer slideshow from moving
+    event.stopImmediatePropagation();
+  }
 
       const delta = previous - current;
       const now = performance.now();
