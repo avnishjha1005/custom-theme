@@ -4596,3 +4596,8 @@ slideshow-slides {
 slideshow-component[dragging] slideshow-slides {
   cursor: grabbing;
 }
+
+slideshow-component [ref="scroller"] {
+  touch-action: pan-y; /* Allows vertical page scroll, but keeps horizontal for JS */
+  user-select: none;   /* Prevents highlighting text while dragging */
+}

@@ -21,12 +21,13 @@
         "padding-block-end": 80
       }
     },
-    "section_EfGNGi": {
-      "type": "section",
+    "blocks_zYbN9m": {
+      "type": "_blocks",
       "blocks": {
-        "ai_gen_block_bdd3b56_DG8DHr": {
-          "type": "ai_gen_block_bdd3b56",
+        "hero_text_overlay_efA7pH": {
+          "type": "hero-text-overlay",
           "settings": {
+            "desktop_columns": 3,
             "image_1": "shopify://shop_images/3c0609b199e9b9a1631fd64ad2501868830a3179.jpg",
             "image_2": "shopify://shop_images/b0ca501a982100582568f298ae59400ab289d2af.jpg",
             "image_3": "shopify://shop_images/ea76b81778e4ad3a8f27f624c8a2d7c581c464fe.jpg",
@@ -36,78 +37,24 @@
             "show_text_overlay": true,
             "heading": "Our Story",
             "subheading": "",
-            "heading_size": 48,
+            "heading_size": 60,
             "subheading_size": 18,
             "text_spacing": 12,
             "text_color": "#ffffff",
             "text_shadow_x": 0,
-            "text_shadow_y": 0,
-            "text_shadow_blur": 0,
-            "text_shadow_color": "#000000",
+            "text_shadow_y": 2,
+            "text_shadow_blur": 8,
+            "text_shadow_color": "rgba(0,0,0,0)",
             "background_color": "#132242",
-            "section_padding": 40,
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
-        },
-        "text_VBhKCP": {
-          "type": "text",
-          "name": "t:names.text",
-          "disabled": true,
-          "settings": {
-            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>{{ closest.page.content }}",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "custom",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        },
-        "video_AhJ3rc": {
-          "type": "video",
-          "name": "t:names.video",
-          "disabled": true,
-          "settings": {
-            "source": "url",
-            "video_url": "https://www.youtube.com/watch?v=MtA1Xm3X1-w",
-            "video_autoplay": true,
-            "video_loop": true,
-            "alt": "",
-            "custom_width": 33,
-            "custom_width_mobile": 100,
-            "aspect_ratio": "1/1",
-            "border": "solid",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "section_padding": 40
           },
           "blocks": {}
         }
       },
       "block_order": [
-        "ai_gen_block_bdd3b56_DG8DHr",
-        "text_VBhKCP",
-        "video_AhJ3rc"
+        "hero_text_overlay_efA7pH"
       ],
-      "name": "t:names.custom_section",
+      "name": "Three image hero",
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
@@ -117,8 +64,8 @@
         "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
-        "section_width": "full-width",
-        "section_height": "small",
+        "section_width": "page-width",
+        "section_height": "",
         "section_height_custom": 50,
         "color_scheme": "",
         "background_media": "none",
@@ -152,7 +99,7 @@
             "vertical_alignment_flex_direction_column": "flex-start",
             "gap": 12,
             "width": "custom",
-            "custom_width": 84,
+            "custom_width": 100,
             "width_mobile": "fill",
             "custom_width_mobile": 100,
             "height": "fit",
@@ -184,13 +131,13 @@
               "name": "t:names.text",
               "settings": {
                 "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>{{ closest.page.content }}",
-                "width": "fit-content",
+                "width": "100%",
                 "max_width": "none",
                 "alignment": "left",
-                "type_preset": "rte",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
-                "line_height": "normal",
+                "line_height": "loose",
                 "letter_spacing": "normal",
                 "case": "none",
                 "wrap": "pretty",
@@ -198,7 +145,7 @@
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
-                "padding-block-start": 0,
+                "padding-block-start": 49,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
@@ -219,9 +166,9 @@
             "video_autoplay": false,
             "video_loop": true,
             "alt": "",
-            "custom_width": 38,
+            "custom_width": 58,
             "custom_width_mobile": 100,
-            "aspect_ratio": "1/1",
+            "aspect_ratio": "16/9",
             "border": "none",
             "border_width": 1,
             "border_opacity": 100,
@@ -237,9 +184,9 @@
           "type": "accordion",
           "name": "t:names.accordion",
           "settings": {
-            "icon": "plus",
+            "icon": "caret",
             "dividers": true,
-            "type_preset": "h6",
+            "type_preset": "h5",
             "inherit_color_scheme": true,
             "color_scheme": "",
             "border": "solid",
@@ -255,18 +202,19 @@
             "accordion_row_mQhitH": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Return policy",
-                "open_by_default": true,
+                "heading": "Our Vision",
+                "open_by_default": false,
                 "icon": "none",
                 "width": 20
               },
               "blocks": {
-                "text_6ARtJm": {
+                "text_dTqNRX": {
                   "type": "text",
+                  "name": "t:names.text",
                   "settings": {
-                    "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
+                    "text": "<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>",
                     "width": "100%",
-                    "max_width": "normal",
+                    "max_width": "none",
                     "alignment": "left",
                     "type_preset": "rte",
                     "font": "var(--font-body--family)",
@@ -285,16 +233,252 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {}
+                },
+                "group_UCNNWF": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "row",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "flex-start",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 33,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "custom",
+                    "custom_height": 42,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "group_EQxcYk": {
+                      "type": "group",
+                      "name": "t:names.group",
+                      "settings": {
+                        "content_direction": "column",
+                        "vertical_on_mobile": true,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "center",
+                        "gap": 15,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
+                        "inherit_color_scheme": true,
+                        "color_scheme": "",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {
+                        "image_F84wUJ": {
+                          "type": "image",
+                          "name": "t:names.image",
+                          "settings": {
+                            "image": "shopify://shop_images/50fdf5460b65c84a7813f10ed95e75e8_47e2a950-cb2b-4e10-8d0f-a028a7dba5ad.jpg",
+                            "link": "",
+                            "image_ratio": "square",
+                            "width": "custom",
+                            "custom_width": 100,
+                            "width_mobile": "fill",
+                            "custom_width_mobile": 100,
+                            "height": "fit",
+                            "border": "none",
+                            "border_width": 1,
+                            "border_opacity": 100,
+                            "border_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        },
+                        "text_J9VaDr": {
+                          "type": "text",
+                          "name": "t:names.text",
+                          "settings": {
+                            "text": "<h5><strong>Advisor Name</strong></h5>",
+                            "width": "fit-content",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "image_F84wUJ",
+                        "text_J9VaDr"
+                      ]
+                    },
+                    "group_6tKcNw": {
+                      "type": "group",
+                      "name": "t:names.group",
+                      "settings": {
+                        "content_direction": "column",
+                        "vertical_on_mobile": true,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "center",
+                        "gap": 12,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
+                        "inherit_color_scheme": true,
+                        "color_scheme": "",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {
+                        "image_4YaN79": {
+                          "type": "image",
+                          "name": "t:names.image",
+                          "settings": {
+                            "image": "shopify://shop_images/ebd9859cbae03467f7ead8e3f5a8ee2e_3373d55c-651e-4460-acf4-f26396fc1bb5.jpg",
+                            "link": "",
+                            "image_ratio": "square",
+                            "width": "fill",
+                            "custom_width": 100,
+                            "width_mobile": "fill",
+                            "custom_width_mobile": 100,
+                            "height": "fit",
+                            "border": "none",
+                            "border_width": 1,
+                            "border_opacity": 100,
+                            "border_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        },
+                        "text_jhprei": {
+                          "type": "text",
+                          "settings": {
+                            "text": "<p>Advisor Name</p><p></p>",
+                            "width": "100%",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "image_4YaN79",
+                        "text_jhprei"
+                      ]
+                    }
+                  },
+                  "block_order": [
+                    "group_EQxcYk",
+                    "group_6tKcNw"
+                  ]
                 }
               },
               "block_order": [
-                "text_6ARtJm"
+                "text_dTqNRX",
+                "group_UCNNWF"
               ]
             },
             "accordion_row_hXU86c": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Shipping",
+                "heading": "Our Founder",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -330,10 +514,50 @@
                 "text_8zLdKr"
               ]
             },
+            "accordion_row_CjPkkD": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "The Journey",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_FKzRK4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_FKzRK4"
+              ]
+            },
             "accordion_row_mih97q": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Manufacturing",
+                "heading": "Advisory Board",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -373,6 +597,7 @@
           "block_order": [
             "accordion_row_mQhitH",
             "accordion_row_hXU86c",
+            "accordion_row_CjPkkD",
             "accordion_row_mih97q"
           ]
         }
@@ -408,13 +633,13 @@
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-end": 89
       }
     }
   },
   "order": [
     "main",
-    "section_EfGNGi",
+    "blocks_zYbN9m",
     "section_9BkEVp"
   ]
 }
