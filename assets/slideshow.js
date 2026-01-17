@@ -465,7 +465,7 @@ super.disconnectedCallback();
     });
 
     scroller.addEventListener('mousedown', this.#handleMouseDown);
-
+    scroller.addEventListener('dragstart', (e) => e.preventDefault());
     scroller.addEventListener('mouseenter', this.suspend);
     scroller.addEventListener('mouseleave', this.resume);
     document.addEventListener('visibilitychange', this.#handleVisibilityChange);
@@ -609,9 +609,13 @@ this.dispatchEvent(
       return;
     }
     if (event.button !== 0) return; // Only allow left-click
-
+    if (event.target.tagName === 'IMG' || event.target.tagName === 'A') {
+        event.target.draggable = false; 
+      }
     // Prevent parent slideshows from reacting to this event
-    event.stopPropagation();
+    event.preventDefault(); 
+
+    this.#dragging = true;
 
     this.#dragging = true;
     this.#mouseStartX = event.clientX;
@@ -648,11 +652,11 @@ this.dispatchEvent(
     const { scroller } = this.refs;
     if (!scroller) return;
 
-    const deltaX = this.#mouseStartX - event.clientX;
+    const deltaX = event.clientX - this.#mouseStartX;
     const axis = this.#scroll?.axis || 'x';
 
     if (axis === 'x') {
-      scroller.scrollLeft = this.#scrollStartX + deltaX;
+      scroller.scrollLeft = this.#scrollStartX - deltaX;
     } else {
       const deltaY = this.#mouseStartY - event.clientY;
       scroller.scrollTop = this.#scrollStartY + deltaY;
