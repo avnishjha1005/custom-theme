@@ -489,6 +489,8 @@ super.disconnectedCallback();
      console.log('=== SETUP SLIDESHOW CALLED ===');
   console.log('Slideshow ID:', this.id || 'no-id');
   console.log('Is nested?:', this.isNested);
+  const { scroller } = this.refs;
+     console.log('Got scroller from refs:', scroller);
   if (!scroller) {
     console.error('ERROR: No scroller found!');
     return;
@@ -496,8 +498,6 @@ super.disconnectedCallback();
   
   console.log('Creating Scroller instance...');
   
-    const { scroller } = this.refs;
-     console.log('Got scroller from refs:', scroller);
     this.#scroll = new Scroller(scroller, {
       onScroll: this.#handleScroll,
       onScrollStart: this.#onTransitionInit,
