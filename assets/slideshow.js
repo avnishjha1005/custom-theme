@@ -582,85 +582,65 @@ this.dispatchEvent(
    * Handles the 'mousedown' event to start dragging slides.
    * @param {MouseEvent} event - The mousedown event.
    */
-  #handleMouseDown = (event) => {
-  const { slides, scroller } = this.refs;
+    #handleMouseDown = (event) => {
+    const { slides, scroller } = this.refs;
 
-  console.log('=== MOUSEDOWN DEBUG ===');
-  console.log('Slideshow ID:', this.id || 'no-id');
-  console.log('Is nested?:', this.isNested);
-  console.log('Target:', event.target);
-  console.log('Scroller:', scroller);
+    console.log('=== MOUSEDOWN DEBUG ===');
+    console.log('Slideshow ID:', this.id || 'no-id');
+    console.log('Is nested?:', this.isNested);
+    console.log('Target:', event.target);
+    console.log('Scroller:', scroller);
 
-  if (!slides || slides.length <= 1) {
-    console.log('❌ Returning: not enough slides');
-    return;
-  }
-  if (!(event.target instanceof Element)) {
-    console.log('❌ Returning: target not an element');
-    return;
-  }
-  if (this.disabled || this.#dragging) {
-    console.log('❌ Returning: disabled or already dragging', { disabled: this.disabled, dragging: this.#dragging });
-    return;
-  }
-  if (!scroller) {
-    console.log('❌ Returning: no scroller');
-    return;
-  }
-
-  // Check if the click originated from within a nested slideshow's scroller
-  // Use composedPath to check all elements in the event path
-  const path = event.composedPath();
-  console.log('Event path length:', path.length);
-  console.log('Event path (first 10):', path.slice(0, 10).map(el => el.tagName || el.nodeName));
-  
-  const scrollerIndex = path.indexOf(scroller);
-  console.log('Scroller index in path:', scrollerIndex);
-  
-  // If scroller is not in the path, this event isn't for us
-  if (scrollerIndex === -1) {
-    console.log('❌ Returning: scroller not in path');
-    return;
-  }
-  
-  // Check if there's a nested slideshow-slides between the target and this scroller
-  // Look at elements before scroller in the path (closer to the target)
-  for (let i = 0; i < scrollerIndex; i++) {
-    const element = path[i];
-    if (element.tagName === 'SLIDESHOW-SLIDES') {
-      console.log('Found SLIDESHOW-SLIDES at index', i);
-      // Found a slideshow-slides element between target and this scroller
-      const slideshowForSlides = element.closest('slideshow-component');
-      console.log('Slideshow for those slides:', slideshowForSlides?.id || 'no-id', 'vs this:', this.id || 'no-id');
-      if (slideshowForSlides && slideshowForSlides !== this) {
-        // This slideshow-slides belongs to a nested slideshow
-        // Let the nested slideshow handle this event
-        console.log('❌ Returning: belongs to nested slideshow');
-        return;
-      }
+    if (!slides || slides.length <= 1) {
+      console.log('❌ Returning: not enough slides');
+      return;
     }
-  }
+    if (!(event.target instanceof Element)) {
+      console.log('❌ Returning: target not an element');
+      return;
+    }
+    if (this.disabled || this.#dragging) {
+      console.log('❌ Returning: disabled or already dragging', { disabled: this.disabled, dragging: this.#dragging });
+      return;
+    }
+    if (!scroller) {
+      console.log('❌ Returning: no scroller');
+      return;
+    }
 
-  console.log('✅ Starting drag!');
-  event.stopPropagation();
+    // Check if the event originated from a nested slideshow
+    // Find the closest slideshow-slides to the target
+    const targetScroller = event.target.closest('slideshow-slides');
+    console.log('Target scroller:', targetScroller);
+    console.log('This scroller:', scroller);
+    console.log('Are they the same?:', targetScroller === scroller);
+    
+    if (targetScroller && targetScroller !== scroller) {
+      // The click is on a different (nested) slideshow-slides
+      console.log('❌ Returning: click is on nested slideshow');
+      return;
+    }
 
-  // Start dragging
-  this.#dragging = true;
-  this.#mouseStartX = event.clientX;
-  this.#mouseStartY = event.clientY;
-  this.#scrollStartX = scroller.scrollLeft;
-  this.#scrollStartY = scroller.scrollTop;
+    console.log('✅ Starting drag!');
+    event.stopPropagation();
 
-  this.setAttribute('dragging', '');
-  if (this.#scroll) {
-    this.#scroll.snap = true;
-  }
+    // Start dragging
+    this.#dragging = true;
+    this.#mouseStartX = event.clientX;
+    this.#mouseStartY = event.clientY;
+    this.#scrollStartX = scroller.scrollLeft;
+    this.#scrollStartY = scroller.scrollTop;
 
-  // Add event listeners for mouse move and up
-  document.addEventListener('mousemove', this.#handleMouseMove);
-  document.addEventListener('mouseup', this.#handleMouseUp);
-  document.addEventListener('mouseleave', this.#handleMouseUp);
-};
+    this.setAttribute('dragging', '');
+    if (this.#scroll) {
+      this.#scroll.snap = true;
+    }
+
+    // Add event listeners for mouse move and up
+    document.addEventListener('mousemove', this.#handleMouseMove);
+    document.addEventListener('mouseup', this.#handleMouseUp);
+    document.addEventListener('mouseleave', this.#handleMouseUp);
+  };
 
   /**
    * Handles the 'mousemove' event while dragging.
