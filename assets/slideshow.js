@@ -585,6 +585,8 @@ this.dispatchEvent(
   #mouseStartY = 0;
   #scrollStartX = 0;
   #scrollStartY = 0;
+  #dragThreshold = 5; // Minimum pixels to move before considering it a drag
+  #hasStartedDrag = false; // Track if we've crossed the drag threshold
 
   /**
    * Checks if the event originated from a nested slideshow and should be ignored.
@@ -637,6 +639,7 @@ this.dispatchEvent(
 
     // Start dragging
     this.#dragging = true;
+    this.#hasStartedDrag = false; // Reset drag threshold flag
     this.#mouseStartX = clientX;
     this.#mouseStartY = clientY;
     this.#scrollStartX = scroller.scrollLeft;
@@ -715,6 +718,7 @@ this.dispatchEvent(
     if (!this.#dragging) return;
 
     this.#dragging = false;
+    this.#hasStartedDrag = false; // Reset drag threshold flag
     this.removeAttribute('dragging');
     if (this.#scroll) {
       this.#scroll.snap = true;
@@ -740,42 +744,29 @@ this.dispatchEvent(
     const touch = event.touches[0];
     if (!touch) return;
 
-    // Find which slideshow-slides scroller actually contains the touch point
-    // This ensures nested slideshows get priority
     const touchTarget = event.target;
     if (!(touchTarget instanceof Element)) return;
 
-    // Find the direct parent slideshow-slides that contains the target
-    // Start from target and walk up to find the FIRST slideshow-slides
-    let currentElement = touchTarget;
-    let foundScroller = null;
-    
-    while (currentElement && currentElement !== this) {
-      if (currentElement.tagName === 'SLIDESHOW-SLIDES') {
-        foundScroller = currentElement;
-        // Don't break - we want the closest one to the target
-        // But check if there's a nested slideshow-slides inside this one
-        let child = touchTarget;
-        let hasNestedScroller = false;
-        while (child && child !== foundScroller) {
-          if (child.tagName === 'SLIDESHOW-SLIDES' && child !== foundScroller) {
-            hasNestedScroller = true;
-            break;
-          }
-          child = child.parentElement;
-        }
-        // If we found a nested scroller between target and this scroller, keep looking
-        if (hasNestedScroller) {
-          currentElement = currentElement.parentElement;
-          continue;
-        }
-        break;
-      }
-      currentElement = currentElement.parentElement;
+    // Check if touch is directly in our scroller
+    if (!scroller.contains(touchTarget)) {
+      return;
     }
 
-    // Only handle if the touch is directly in OUR scroller
-    if (!foundScroller || foundScroller !== scroller) {
+    // Check if there's a nested slideshow-slides BETWEEN the target and our scroller
+    // If so, let the nested slideshow handle it
+    let currentElement = touchTarget;
+    while (currentElement && currentElement !== scroller) {
+      if (currentElement.tagName === 'SLIDESHOW-SLIDES' && currentElement !== scroller) {
+        // Found a nested slideshow-slides - let that slideshow handle the touch
+        return;
+      }
+      const parent = currentElement.parentElement;
+      if (!parent) break;
+      currentElement = parent;
+    }
+
+    // If touch didn't start in our scroller, don't handle
+    if (currentElement !== scroller) {
       return;
     }
 
@@ -817,28 +808,53 @@ this.dispatchEvent(
       return;
     }
 
-    // Prevent other slideshows from handling this touch if we're dragging
-    event.stopPropagation();
-
     const deltaX = this.#mouseStartX - touch.clientX;
     const deltaY = this.#mouseStartY - touch.clientY;
+    const totalDelta = Math.abs(deltaX) + Math.abs(deltaY);
+
+    // Only start preventing default after crossing the drag threshold
+    // This allows native scrolling to work for small movements
+    if (!this.#hasStartedDrag && totalDelta > this.#dragThreshold) {
+      this.#hasStartedDrag = true;
+    }
 
     // Determine scroll axis
     const axis = this.#scroll?.axis || 'x';
     const isHorizontal = axis === 'x';
 
-    // Calculate new scroll position
-    const newScrollX = this.#scrollStartX + deltaX;
-    const newScrollY = this.#scrollStartY + deltaY;
+    // Only prevent default and stop propagation if we've crossed the threshold
+    if (this.#hasStartedDrag) {
+      event.stopPropagation();
+      
+      // Only prevent default for horizontal movement (our scroll axis)
+      // This allows vertical scrolling to work naturally
+      if (isHorizontal) {
+        // Prevent only if we're dragging horizontally
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          event.preventDefault();
+        }
+      } else {
+        // Prevent only if we're dragging vertically
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+          event.preventDefault();
+        }
+      }
 
-    // Update scroll position
-    if (isHorizontal) {
-      scroller.scrollLeft = newScrollX;
-    } else {
-      scroller.scrollTop = newScrollY;
+      // Calculate new scroll position
+      const newScrollX = this.#scrollStartX + deltaX;
+      const newScrollY = this.#scrollStartY + deltaY;
+
+      // Update scroll position using requestAnimationFrame for smoothness
+      requestAnimationFrame(() => {
+        if (!this.#dragging || !scroller) return;
+        
+        if (isHorizontal) {
+          scroller.scrollLeft = newScrollX;
+        } else {
+          scroller.scrollTop = newScrollY;
+        }
+      });
     }
-
-    event.preventDefault();
   };
 
   /**
@@ -849,6 +865,7 @@ this.dispatchEvent(
     if (!this.#dragging) return;
 
     this.#dragging = false;
+    this.#hasStartedDrag = false; // Reset drag threshold flag
     this.removeAttribute('dragging');
     if (this.#scroll) {
       this.#scroll.snap = true;
