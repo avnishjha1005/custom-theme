@@ -468,7 +468,7 @@ super.disconnectedCallback();
 
     this.#updateControlsVisibility();
 
-    this.disabled = this.isNested || this.disabled;
+    this.disabled = this.disabled;
 
     this.resume();
 
@@ -583,51 +583,54 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
-    const { slides } = this;
+    const { slides, scroller } = this.refs;
 
     if (!slides || slides.length <= 1) return;
     if (!(event.target instanceof Element)) return;
     if (this.disabled || this.#dragging) return;
+    if (!scroller) return;
 
-    // Check if the event target is within a 3D model interactive element
-    // This prevents the slideshow from capturing drag events when interacting with 3D models
-    if (event.target.closest('model-viewer')) {
+    // Check if the click originated from within a nested slideshow's scroller
+    // Use composedPath to check all elements in the event path
+    const path = event.composedPath();
+    const scrollerIndex = path.indexOf(scroller);
+    
+    // If scroller is not in the path, this event isn't for us
+    if (scrollerIndex === -1) {
       return;
     }
-
-    // NEW: Check if this slideshow is inside a card-gallery within a carousel
-    // If so, prevent the outer carousel from handling these drag events
-    const cardGallery = this.closest('.card-gallery');
-    if (cardGallery) {
-      const outerCarousel = cardGallery.closest('slideshow-component');
-      // Only proceed if this is a product slideshow inside a card gallery
-      // which is inside a carousel (the outer slideshow)
-      if (outerCarousel && outerCarousel !== this) {
-        // Mark that this event should not propagate to parent slideshow
-        event.stopImmediatePropagation();
-        return;
+    
+    // Check if there's a nested slideshow-slides between the target and this scroller
+    // Look at elements before scroller in the path (closer to the target)
+    for (let i = 0; i < scrollerIndex; i++) {
+      const element = path[i];
+      if (element.tagName === 'SLIDESHOW-SLIDES') {
+        // Found a slideshow-slides element between target and this scroller
+        const slideshowForSlides = element.closest('slideshow-component');
+        if (slideshowForSlides && slideshowForSlides !== this) {
+          // This slideshow-slides belongs to a nested slideshow
+          // Let the nested slideshow handle this event
+          return;
+        }
       }
     }
 
     // Only handle left mouse button
-    if (event.button !== 0) return;
+    // if (event.button !== 0) return;
 
     // Don't start dragging if clicking on interactive elements
-    const target = event.target;
-    if (
-      target instanceof HTMLAnchorElement ||
-      target instanceof HTMLButtonElement ||
-      target instanceof HTMLInputElement ||
-      target.closest('a, button, input, [role="button"]')
-    ) {
-      return;
-    }
+    // const target = event.target;
+    // if (
+    //   target instanceof HTMLAnchorElement ||
+    //   target instanceof HTMLButtonElement ||
+    //   target instanceof HTMLInputElement ||
+    //   target.closest('a, button, input, [role="button"]')
+    // ) {
+    //   return;
+    // }
 
-    event.preventDefault();
-    event.stopPropagation();
-
-    const { scroller } = this.refs;
-    if (!scroller) return;
+    // event.preventDefault();
+    // event.stopPropagation();
 
     // Start dragging
     this.#dragging = true;
@@ -638,12 +641,14 @@ this.dispatchEvent(
 
     this.setAttribute('dragging', '');
     if (this.#scroll) {
-      this.#scroll.snap = false;
+      this.#scroll.snap = true;
     }
 
     // Add event listeners for mouse move and up
+    document.addEventListener('mousedown',this.#handleMouseDown);
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
+    document.addEventListener('mouseleave', this.#handleMouseUp);
   };
 
   /**
@@ -651,7 +656,6 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousemove event.
    */
   #handleMouseMove = (event) => {
-    if (!this.#dragging) return;
 
     const { scroller } = this.refs;
     if (!scroller) return;
