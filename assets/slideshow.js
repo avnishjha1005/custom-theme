@@ -81,12 +81,19 @@ super.disconnectedCallback();
     if (this.#scroll) {
       const { scroller } = this.refs;
       scroller.removeEventListener('mousedown', this.#handleMouseDown);
+      scroller.removeEventListener('touchstart', this.#handleTouchStart);
       this.#scroll.destroy();
     }
 
     // Clean up mouse drag event listeners
     document.removeEventListener('mousemove', this.#handleMouseMove);
     document.removeEventListener('mouseup', this.#handleMouseUp);
+    document.removeEventListener('mouseleave', this.#handleMouseUp);
+
+    // Clean up touch drag event listeners
+    document.removeEventListener('touchmove', this.#handleTouchMove);
+    document.removeEventListener('touchend', this.#handleTouchEnd);
+    document.removeEventListener('touchcancel', this.#handleTouchEnd);
 
     const slideCount = this.slides?.length || 0;
     if (slideCount > 1) {
@@ -460,6 +467,7 @@ super.disconnectedCallback();
     });
 
     scroller.addEventListener('mousedown', this.#handleMouseDown);
+    scroller.addEventListener('touchstart', this.#handleTouchStart, { passive: false });
 
     this.addEventListener('mouseenter', this.suspend);
     this.addEventListener('mouseleave', this.resume);
@@ -579,25 +587,18 @@ this.dispatchEvent(
   #scrollStartY = 0;
 
   /**
-   * Handles the 'mousedown' event to start dragging slides.
-   * @param {MouseEvent} event - The mousedown event.
+   * Checks if the event originated from a nested slideshow and should be ignored.
+   * @param {Event} event - The event to check.
+   * @param {HTMLElement} scroller - The scroller element.
+   * @returns {boolean} True if the event should be ignored (originated from nested slideshow).
    */
-  #handleMouseDown = (event) => {
-    const { slides, scroller } = this.refs;
-
-    if (!slides || slides.length <= 1) return;
-    if (!(event.target instanceof Element)) return;
-    if (this.disabled || this.#dragging) return;
-    if (!scroller) return;
-
-    // Check if the click originated from within a nested slideshow's scroller
-    // Use composedPath to check all elements in the event path
+  #shouldIgnoreEvent(event, scroller) {
     const path = event.composedPath();
     const scrollerIndex = path.indexOf(scroller);
     
     // If scroller is not in the path, this event isn't for us
     if (scrollerIndex === -1) {
-      return;
+      return true;
     }
     
     // Check if there's a nested slideshow-slides between the target and this scroller
@@ -612,37 +613,32 @@ this.dispatchEvent(
         if (slideshowForSlides && slideshowForSlides !== this) {
           // This slideshow-slides belongs to a nested slideshow
           // Let the nested slideshow handle this event
-          return;
+          return true;
         }
       }
       // Also check for nested slideshow-component elements
       if (element.tagName === 'SLIDESHOW-COMPONENT' && element !== this) {
         // Click is inside a nested slideshow, let it handle the event
-        return;
+        return true;
       }
     }
+    
+    return false;
+  }
 
-    // Only handle left mouse button
-    // if (event.button !== 0) return;
-
-    // Don't start dragging if clicking on interactive elements
-    // const target = event.target;
-    // if (
-    //   target instanceof HTMLAnchorElement ||
-    //   target instanceof HTMLButtonElement ||
-    //   target instanceof HTMLInputElement ||
-    //   target.closest('a, button, input, [role="button"]')
-    // ) {
-    //   return;
-    // }
-
-    // event.preventDefault();
-    // event.stopPropagation();
+  /**
+   * Starts dragging for both mouse and touch events.
+   * @param {number} clientX - The X coordinate of the touch/click.
+   * @param {number} clientY - The Y coordinate of the touch/click.
+   */
+  #startDragging(clientX, clientY) {
+    const { scroller } = this.refs;
+    if (!scroller) return;
 
     // Start dragging
     this.#dragging = true;
-    this.#mouseStartX = event.clientX;
-    this.#mouseStartY = event.clientY;
+    this.#mouseStartX = clientX;
+    this.#mouseStartY = clientY;
     this.#scrollStartX = scroller.scrollLeft;
     this.#scrollStartY = scroller.scrollTop;
 
@@ -650,9 +646,28 @@ this.dispatchEvent(
     if (this.#scroll) {
       this.#scroll.snap = true;
     }
+  }
+
+  /**
+   * Handles the 'mousedown' event to start dragging slides.
+   * @param {MouseEvent} event - The mousedown event.
+   */
+  #handleMouseDown = (event) => {
+    const { slides, scroller } = this.refs;
+
+    if (!slides || slides.length <= 1) return;
+    if (!(event.target instanceof Element)) return;
+    if (this.disabled || this.#dragging) return;
+    if (!scroller) return;
+
+    // Check if this event should be ignored (from nested slideshow)
+    if (this.#shouldIgnoreEvent(event, scroller)) {
+      return;
+    }
+
+    this.#startDragging(event.clientX, event.clientY);
 
     // Add event listeners for mouse move and up (only once)
-    // Note: We don't add mousedown again - that's a bug that was here before
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
     document.addEventListener('mouseleave', this.#handleMouseUp);
@@ -709,6 +724,92 @@ this.dispatchEvent(
     document.removeEventListener('mousemove', this.#handleMouseMove);
     document.removeEventListener('mouseup', this.#handleMouseUp);
     document.removeEventListener('mouseleave', this.#handleMouseUp);
+  };
+
+  /**
+   * Handles the 'touchstart' event to start dragging slides on mobile.
+   * @param {TouchEvent} event - The touchstart event.
+   */
+  #handleTouchStart = (event) => {
+    const { slides, scroller } = this.refs;
+
+    if (!slides || slides.length <= 1) return;
+    if (this.disabled || this.#dragging) return;
+    if (!scroller) return;
+
+    // Check if this event should be ignored (from nested slideshow)
+    if (this.#shouldIgnoreEvent(event, scroller)) {
+      return;
+    }
+
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    this.#startDragging(touch.clientX, touch.clientY);
+
+    // Add event listeners for touch move and end
+    document.addEventListener('touchmove', this.#handleTouchMove, { passive: false });
+    document.addEventListener('touchend', this.#handleTouchEnd);
+    document.addEventListener('touchcancel', this.#handleTouchEnd);
+  };
+
+  /**
+   * Handles the 'touchmove' event while dragging on mobile.
+   * @param {TouchEvent} event - The touchmove event.
+   */
+  #handleTouchMove = (event) => {
+    if (!this.#dragging) return;
+    
+    const { scroller } = this.refs;
+    if (!scroller || !this.isConnected) {
+      this.#handleTouchEnd(event);
+      return;
+    }
+
+    const touch = event.touches[0];
+    if (!touch) {
+      this.#handleTouchEnd(event);
+      return;
+    }
+
+    const deltaX = this.#mouseStartX - touch.clientX;
+    const deltaY = this.#mouseStartY - touch.clientY;
+
+    // Determine scroll axis
+    const axis = this.#scroll?.axis || 'x';
+    const isHorizontal = axis === 'x';
+
+    // Calculate new scroll position
+    const newScrollX = this.#scrollStartX + deltaX;
+    const newScrollY = this.#scrollStartY + deltaY;
+
+    // Update scroll position
+    if (isHorizontal) {
+      scroller.scrollLeft = newScrollX;
+    } else {
+      scroller.scrollTop = newScrollY;
+    }
+
+    event.preventDefault();
+  };
+
+  /**
+   * Handles the 'touchend' event to stop dragging on mobile.
+   * @param {TouchEvent} event - The touchend event.
+   */
+  #handleTouchEnd = (event) => {
+    if (!this.#dragging) return;
+
+    this.#dragging = false;
+    this.removeAttribute('dragging');
+    if (this.#scroll) {
+      this.#scroll.snap = true;
+    }
+
+    // Remove event listeners
+    document.removeEventListener('touchmove', this.#handleTouchMove);
+    document.removeEventListener('touchend', this.#handleTouchEnd);
+    document.removeEventListener('touchcancel', this.#handleTouchEnd);
   };
 
   #handlePointerEnter = () => {
