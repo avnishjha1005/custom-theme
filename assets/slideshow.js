@@ -627,30 +627,36 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousemove event.
    */
   #handleMouseMove = (event) => {
+  if (!this.#dragging) {
+    console.log('Move event but not dragging on', this.id || 'no-id');
+    return;
+  }
 
-    const { scroller } = this.refs;
-    if (!scroller) return;
+  console.log('Moving on', this.id || 'no-id', 'delta:', this.#mouseStartX - event.clientX);
 
-    const deltaX = this.#mouseStartX - event.clientX;
-    const deltaY = this.#mouseStartY - event.clientY;
+  const { scroller } = this.refs;
+  if (!scroller) return;
 
-    // Determine scroll axis
-    const axis = this.#scroll?.axis || 'x';
-    const isHorizontal = axis === 'x';
+  const deltaX = this.#mouseStartX - event.clientX;
+  const deltaY = this.#mouseStartY - event.clientY;
 
-    // Calculate new scroll position
-    const newScrollX = this.#scrollStartX + deltaX;
-    const newScrollY = this.#scrollStartY + deltaY;
+  // Determine scroll axis
+  const axis = this.#scroll?.axis || 'x';
+  const isHorizontal = axis === 'x';
 
-    // Update scroll position
-    if (isHorizontal) {
-      scroller.scrollLeft = newScrollX;
-    } else {
-      scroller.scrollTop = newScrollY;
-    }
+  // Calculate new scroll position
+  const newScrollX = this.#scrollStartX + deltaX;
+  const newScrollY = this.#scrollStartY + deltaY;
 
-    event.preventDefault();
-  };
+  // Update scroll position
+  if (isHorizontal) {
+    scroller.scrollLeft = newScrollX;
+  } else {
+    scroller.scrollTop = newScrollY;
+  }
+
+  event.preventDefault();
+};
 
   /**
    * Handles the 'mouseup' event to stop dragging.
