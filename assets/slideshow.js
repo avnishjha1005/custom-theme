@@ -595,7 +595,7 @@ export class Slideshow extends Component {
    */
   #handleMouseDown = (event) => {
     const { slides } = this;
-
+    console.log(slides.length, !(event.target instanceof Element), this.disabled, this.#dragging);
     if (!slides || slides.length <= 1) return;
     if (!(event.target instanceof Element)) return;
     if (this.disabled || this.#dragging) return;
