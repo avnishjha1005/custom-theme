@@ -461,9 +461,8 @@ super.disconnectedCallback();
 
     scroller.addEventListener('mousedown', this.#handleMouseDown);
 
-    this.addEventListener('mouseenter', this.suspend);
-    this.addEventListener('mouseleave', this.resume);
-    this.addEventListener('pointerenter', this.#handlePointerEnter);
+    scroller.addEventListener('mouseenter', this.suspend);
+    scroller.addEventListener('mouseleave', this.resume);
     document.addEventListener('visibilitychange', this.#handleVisibilityChange);
 
     this.#updateControlsVisibility();
