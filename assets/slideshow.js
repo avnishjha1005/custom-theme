@@ -578,123 +578,61 @@ this.dispatchEvent(
   #scrollStartX = 0;
   #scrollStartY = 0;
 
-  /**
-   * Handles the 'mousedown' event to start dragging slides.
-   * @param {MouseEvent} event - The mousedown event.
-   */
   #handleMouseDown = (event) => {
-    const { slides, scroller } = this.refs;
-
-    if (!slides || slides.length <= 1) return;
-    if (!(event.target instanceof Element)) return;
-    if (this.disabled || this.#dragging) return;
-    if (!scroller) return;
-
-    // Check if the click originated from within a nested slideshow's scroller
-    // Use composedPath to check all elements in the event path
-    const path = event.composedPath();
-    const scrollerIndex = path.indexOf(scroller);
-    
-    // If scroller is not in the path, this event isn't for us
-    if (scrollerIndex === -1) {
-      return;
-    }
-    
-    // Check if there's a nested slideshow-slides between the target and this scroller
-    // Look at elements before scroller in the path (closer to the target)
-    for (let i = 0; i < scrollerIndex; i++) {
-      const element = path[i];
-      if (element.tagName === 'SLIDESHOW-SLIDES') {
-        // Found a slideshow-slides element between target and this scroller
-        const slideshowForSlides = element.closest('slideshow-component');
-        if (slideshowForSlides && slideshowForSlides !== this) {
-          // This slideshow-slides belongs to a nested slideshow
-          // Let the nested slideshow handle this event
-          return;
-        }
-      }
-    }
-
-    // Only handle left mouse button
-    // if (event.button !== 0) return;
-
-    // Don't start dragging if clicking on interactive elements
-    const target = event.target;
-    if (
-      target instanceof HTMLAnchorElement ||
-      target instanceof HTMLButtonElement ||
-      target instanceof HTMLInputElement ||
-      target.closest('a, button, input, [role="button"]')
-    ) {
-      return;
-    }
-
-    event.preventDefault();
+    // 1. Prevent parent slideshows from reacting to this event
     event.stopPropagation();
 
-    // Start dragging
+    const { slides } = this.refs;
+    const scroller = event.currentTarget; // Always refers to this instance's scroller
+
+    if (!slides || slides.length <= 1 || this.disabled || this.#dragging) return;
+    if (event.button !== 0) return; // Only allow left-click
+
     this.#dragging = true;
     this.#mouseStartX = event.clientX;
     this.#mouseStartY = event.clientY;
     this.#scrollStartX = scroller.scrollLeft;
     this.#scrollStartY = scroller.scrollTop;
 
-    this.setAttribute('dragging', '');
-    if (this.#scroll) {
-      this.#scroll.snap = false;
-    }
+    // 2. Disable CSS Snapping during drag to prevent jitter
+    scroller.style.scrollSnapType = 'none';
+    scroller.style.scrollBehavior = 'auto';
 
-    // Add event listeners for mouse move and up
+    this.setAttribute('dragging', '');
+
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
     document.addEventListener('mouseleave', this.#handleMouseUp);
   };
 
-  /**
-   * Handles the 'mousemove' event while dragging.
-   * @param {MouseEvent} event - The mousemove event.
-   */
   #handleMouseMove = (event) => {
     if (!this.#dragging) return;
 
     const { scroller } = this.refs;
-    if (!scroller) return;
-
     const deltaX = this.#mouseStartX - event.clientX;
-    const deltaY = this.#mouseStartY - event.clientY;
-
-    // Determine scroll axis
     const axis = this.#scroll?.axis || 'x';
-    const isHorizontal = axis === 'x';
 
-    // Calculate new scroll position
-    const newScrollX = this.#scrollStartX + deltaX;
-    const newScrollY = this.#scrollStartY + deltaY;
-
-    // Update scroll position
-    if (isHorizontal) {
-      scroller.scrollLeft = newScrollX;
+    if (axis === 'x') {
+      scroller.scrollLeft = this.#scrollStartX + deltaX;
     } else {
-      scroller.scrollTop = newScrollY;
+      const deltaY = this.#mouseStartY - event.clientY;
+      scroller.scrollTop = this.#scrollStartY + deltaY;
     }
-
-    event.preventDefault();
   };
 
-  /**
-   * Handles the 'mouseup' event to stop dragging.
-   * @param {MouseEvent} event - The mouseup event.
-   */
-  #handleMouseUp = (event) => {
+  #handleMouseUp = () => {
     if (!this.#dragging) return;
 
+    const { scroller } = this.refs;
     this.#dragging = false;
     this.removeAttribute('dragging');
-    if (this.#scroll) {
-      this.#scroll.snap = true;
+
+    if (scroller) {
+      // 3. Re-enable CSS Snapping
+      scroller.style.scrollSnapType = '';
+      scroller.style.scrollBehavior = '';
     }
 
-    // Remove event listeners
     document.removeEventListener('mousemove', this.#handleMouseMove);
     document.removeEventListener('mouseup', this.#handleMouseUp);
     document.removeEventListener('mouseleave', this.#handleMouseUp);
