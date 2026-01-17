@@ -64,15 +64,37 @@ requiredRefs = ['scroller'];
 async connectedCallback() {
 super.connectedCallback();
 
-    // Wait for any in-progress view transitions to finish
-    if (viewTransition.current) {
-      await viewTransition.current;
-      // It's possible that the slideshow was disconnected before the view transition finished
-      if (!this.isConnected) return;
-    }
+    // // Wait for any in-progress view transitions to finish
+    // if (viewTransition.current) {
+    //   await viewTransition.current;
+    //   // It's possible that the slideshow was disconnected before the view transition finished
+    //   if (!this.isConnected) return;
+    // }
 
-    const slideCount = this.slides?.length || 0;
-    slideCount <= 1 ? this.#setupSlideshowWithoutControls() : this.#setupSlideshow();
+    // const slideCount = this.slides?.length || 0;
+    // slideCount <= 1 ? this.#setupSlideshowWithoutControls() : this.#setupSlideshow();
+     console.log('=== CONNECTED CALLBACK ===');
+  console.log('Slideshow ID:', this.id || 'no-id');
+  console.log('Is nested?:', this.isNested);
+  console.log('Slide count:', this.slides?.length || 0);
+
+  // Wait for any in-progress view transitions to finish
+  if (viewTransition.current) {
+    await viewTransition.current;
+    // It's possible that the slideshow was disconnected before the view transition finished
+    if (!this.isConnected) return;
+  }
+
+  const slideCount = this.slides?.length || 0;
+  console.log('Final slide count:', slideCount);
+  
+  if (slideCount <= 1) {
+    console.log('Taking setupSlideshowWithoutControls path');
+    this.#setupSlideshowWithoutControls();
+  } else {
+    console.log('Taking setupSlideshow path');
+    this.#setupSlideshow();
+  }
 }
 
 disconnectedCallback() {
