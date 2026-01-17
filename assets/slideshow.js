@@ -655,6 +655,7 @@ export class Slideshow extends Component {
 
   /**
    * Handles the 'mousedown' event to start dragging slides (works for both mouse and touch).
+   * Updated to ensure nested slideshows receive events properly.
    * @param {MouseEvent | PointerEvent} event - The mousedown or pointerdown event.
    */
   #handleMouseDown = (event) => {
@@ -665,48 +666,35 @@ export class Slideshow extends Component {
     if (this.disabled || this.#dragging) return;
 
     // Check if the event target is within a 3D model interactive element
-    // This prevents the slideshow from capturing drag events when interacting with 3D models
     if (event.target.closest('model-viewer')) {
       return;
     }
 
     // Get touch/pointer coordinates
     let clientX, clientY;
-    if ('touches' in event && event instanceof TouchEvent) {
-      // Touch event
-      if (event.touches && event.touches.length > 0) {
-        const touch = event.touches[0];
-        if (touch) {
-          clientX = touch.clientX;
-          clientY = touch.clientY;
-        } else {
-          return; // No touch available
-        }
-      } else {
-        return; // No touches available
-      }
+    if ('touches' in event && event instanceof TouchEvent && event.touches.length > 0) {
+      clientX = event.touches[0]?.clientX || 0;
+      clientY = event.touches[0]?.clientY || 0;
     } else if ('clientX' in event && 'clientY' in event) {
-      // Pointer or mouse event
-      const pointerEvent = event;
-      clientX = pointerEvent.clientX ?? 0;
-      clientY = pointerEvent.clientY ?? 0;
+      clientX = event.clientX;
+      clientY = event.clientY;
     } else {
-      return; // Cannot get coordinates from this event
+      return;
     }
 
     // Check if there's a nested slideshow at the touch point
     const nestedSlideshowAtPoint = this.#getNestedSlideshowAtPoint(clientX, clientY);
-    
+
     // If the touch is inside a nested slideshow, let it handle the event instead
     if (nestedSlideshowAtPoint) {
-      // Don't prevent default - let the nested slideshow handle it
+      const clonedEvent = new PointerEvent(event.type, event);
+      nestedSlideshowAtPoint.dispatchEvent(clonedEvent);
       return;
     }
 
     // Check if the event target itself is within a nested slideshow
     const targetNestedSlideshow = event.target.closest('slideshow-component');
     if (targetNestedSlideshow instanceof Slideshow && targetNestedSlideshow !== this) {
-      // The target is inside a nested slideshow - don't handle this event
       return;
     }
 
@@ -902,7 +890,7 @@ export class Slideshow extends Component {
 
     // Also support touch events for better mobile compatibility
     if ('ontouchstart' in window) {
-      document.addEventListener('touchmove', onPointerMove, { signal, passive: false });
+      document.addEventListener('touchmove', onPointerMove, { signal });
       document.addEventListener('touchend', onPointerUp, { signal });
       document.addEventListener('touchcancel', onPointerUp, { signal });
     }
