@@ -587,32 +587,52 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mouse down event.
    */
   #handleMouseDown = (event) => {
+    console.debug('Mouse down event detected:', {
+      event,
+      isNested: this.isNested,
+      disabled: this.disabled,
+      dragging: this.#dragging,
+      slides: this.refs.slides?.length,
+    });
+
+    // Allow dragging only if the slideshow is not disabled and has multiple slides
     const { slides } = this.refs;
-  const scroller = this.refs.scroller; // Use the ref consistently
+    const scroller = event.currentTarget instanceof HTMLElement ? event.currentTarget : null; // Ensure scroller is an HTMLElement
 
-  if (!slides || slides.length <= 1 || this.disabled || this.#dragging || !scroller) {
-    return;
-  }
-  if (event.button !== 0) return; 
+    if (!slides || slides.length <= 1 || this.disabled || this.#dragging || !scroller) {
+      console.log('Dragging not allowed:', {
+        slides,
+        disabled: this.disabled,
+        dragging: this.#dragging,
+        scroller,
+      });
+      return;
+    }
+    if (event.button !== 0) return; // Only allow left-click
+    if (event.target.tagName === 'IMG' || event.target.tagName === 'A') {
+        event.target.draggable = false; 
+      }
+    // Prevent parent slideshows from reacting to this event
+    //event.preventDefault(); 
 
-  // STOP NATIVE DRAG & TEXT SELECTION
-  event.preventDefault(); 
-  event.stopPropagation();
+    this.#dragging = true;
 
-  this.#dragging = true;
-  this.#mouseStartX = event.clientX;
-  this.#scrollStartX = scroller.scrollLeft;
+    this.#dragging = true;
+    this.#mouseStartX = event.clientX;
+    this.#mouseStartY = event.clientY;
+    this.#scrollStartX = scroller.scrollLeft;
+    this.#scrollStartY = scroller.scrollTop;
 
-  // Capture the pointer to keep tracking move/up events
-  scroller.setPointerCapture(event.pointerId);
+    // Disable CSS Snapping during drag to prevent jitter
+    scroller.style.scrollSnapType = 'none';
+    scroller.style.scrollBehavior = 'auto';
 
-  scroller.style.scrollSnapType = 'none';
-  scroller.style.scrollBehavior = 'auto';
+    this.setAttribute('dragging', '');
 
-  this.setAttribute('dragging', '');
-
-  document.addEventListener('mousemove', this.#handleMouseMove);
-  document.addEventListener('mouseup', this.#handleMouseUp);
+    // Add event listeners for mouse movement and release
+    document.addEventListener('mousemove', this.#handleMouseMove);
+    document.addEventListener('mouseup', this.#handleMouseUp);
+    document.addEventListener('mouseleave', this.#handleMouseUp);
   };
 
   /**
