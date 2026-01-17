@@ -431,7 +431,7 @@
                     "horizontal_alignment_flex_direction_column": "flex-start",
                     "vertical_alignment_flex_direction_column": "flex-start",
                     "gap": 6,
-                    "width": "fill",
+                    "width": "fit-content",
                     "custom_width": 70,
                     "width_mobile": "fill",
                     "custom_width_mobile": 100,
