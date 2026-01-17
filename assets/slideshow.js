@@ -645,6 +645,7 @@ this.dispatchEvent(
     }
 
     // Add event listeners for mouse move and up
+    document.addEventListener('mousedown',this.#handleMouseDown);
     document.addEventListener('mousemove', this.#handleMouseMove);
     document.addEventListener('mouseup', this.#handleMouseUp);
     document.addEventListener('mouseleave', this.#handleMouseUp);
