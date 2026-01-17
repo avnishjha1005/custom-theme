@@ -583,34 +583,67 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
-  const { slides, scroller } = this.refs;
+    const { slides, scroller } = this.refs;
 
-  if (!slides || slides.length <= 1) return;
-  if (!(event.target instanceof Element)) return;
-  if (this.disabled || this.#dragging) return;
-  if (!scroller) return;
+    if (!slides || slides.length <= 1) return;
+    if (!(event.target instanceof Element)) return;
+    if (this.disabled || this.#dragging) return;
+    if (!scroller) return;
 
-  // Check if the event target is inside this slideshow's slides container
-  const thisSlideshowSlides = scroller.querySelector('slideshow-slides');
-  if (!thisSlideshowSlides) return;
+    // Check if the event target is inside this slideshow's slides container
+    const thisSlideshowSlides = scroller.querySelector('slideshow-slides');
+    if (!thisSlideshowSlides) return;
 
-  // Check if there's a nested slideshow between the target and this slideshow's slides
-  const path = event.composedPath();
-  const targetIndex = 0;
-  const thisSlidesIndex = path.indexOf(thisSlideshowSlides);
-  
-  if (thisSlidesIndex === -1) return;
-  
-  // Check if there's another slideshow-slides between target and this one
-  for (let i = targetIndex; i < thisSlidesIndex; i++) {
-    if (path[i].tagName === 'SLIDESHOW-SLIDES' && path[i] !== thisSlideshowSlides) {
-      // There's a nested slideshow-slides between the target and ours
-      // This click is for the nested slideshow, not us
-      return;
+    // Check if there's a nested slideshow between the target and this slideshow's slides
+    const path = event.composedPath();
+    const targetIndex = 0;
+    const thisSlidesIndex = path.indexOf(thisSlideshowSlides);
+    
+    if (thisSlidesIndex === -1) return;
+    
+    // Check if there's another slideshow-slides between target and this one
+    for (let i = targetIndex; i < thisSlidesIndex; i++) {
+      if (path[i].tagName === 'SLIDESHOW-SLIDES' && path[i] !== thisSlideshowSlides) {
+        // There's a nested slideshow-slides between the target and ours
+        // This click is for the nested slideshow, not us
+        return;
+      }
     }
-  }
 
-  // Rest of the drag handling code...
+    // Only handle left mouse button
+    // if (event.button !== 0) return;
+
+    // Don't start dragging if clicking on interactive elements
+    // const target = event.target;
+    // if (
+    //   target instanceof HTMLAnchorElement ||
+    //   target instanceof HTMLButtonElement ||
+    //   target instanceof HTMLInputElement ||
+    //   target.closest('a, button, input, [role="button"]')
+    // ) {
+    //   return;
+    // }
+
+    // event.preventDefault();
+    // event.stopPropagation();
+
+    // Start dragging
+    this.#dragging = true;
+    this.#mouseStartX = event.clientX;
+    this.#mouseStartY = event.clientY;
+    this.#scrollStartX = scroller.scrollLeft;
+    this.#scrollStartY = scroller.scrollTop;
+
+    this.setAttribute('dragging', '');
+    if (this.#scroll) {
+      this.#scroll.snap = true;
+    }
+
+    // Add event listeners for mouse move and up
+    document.addEventListener('mousemove', this.#handleMouseMove);
+    document.addEventListener('mouseup', this.#handleMouseUp);
+    document.addEventListener('mouseleave', this.#handleMouseUp);
+  };
 
   /**
    * Handles the 'mousemove' event while dragging.
