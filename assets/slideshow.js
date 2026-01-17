@@ -656,7 +656,6 @@ this.dispatchEvent(
    * @param {MouseEvent} event - The mousemove event.
    */
   #handleMouseMove = (event) => {
-    if (!this.#dragging) return;
 
     const { scroller } = this.refs;
     if (!scroller) return;
