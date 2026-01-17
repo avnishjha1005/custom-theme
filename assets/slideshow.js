@@ -616,7 +616,7 @@ this.dispatchEvent(
     }
 
     // Only handle left mouse button
-    if (event.button !== 0) return;
+    // if (event.button !== 0) return;
 
     // Don't start dragging if clicking on interactive elements
     const target = event.target;
