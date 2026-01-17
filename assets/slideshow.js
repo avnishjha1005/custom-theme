@@ -737,50 +737,59 @@ this.dispatchEvent(
     if (this.disabled || this.#dragging) return;
     if (!scroller) return;
 
-    // Check if this event should be ignored (from nested slideshow)
-    if (this.#shouldIgnoreEvent(event, scroller)) {
-      return;
-    }
-
     const touch = event.touches[0];
     if (!touch) return;
 
-    // Get the touch target element
-    const target = event.target;
-    if (!(target instanceof Element)) return;
+    // Find which slideshow-slides scroller actually contains the touch point
+    // This ensures nested slideshows get priority
+    const touchTarget = event.target;
+    if (!(touchTarget instanceof Element)) return;
 
-    // Find the closest slideshow-slides that contains the target
-    const targetScroller = target.closest('slideshow-slides');
-    if (!targetScroller || targetScroller !== scroller) {
-      // Touch is not in our scroller, don't handle it
+    // Find the direct parent slideshow-slides that contains the target
+    // Start from target and walk up to find the FIRST slideshow-slides
+    let currentElement = touchTarget;
+    let foundScroller = null;
+    
+    while (currentElement && currentElement !== this) {
+      if (currentElement.tagName === 'SLIDESHOW-SLIDES') {
+        foundScroller = currentElement;
+        // Don't break - we want the closest one to the target
+        // But check if there's a nested slideshow-slides inside this one
+        let child = touchTarget;
+        let hasNestedScroller = false;
+        while (child && child !== foundScroller) {
+          if (child.tagName === 'SLIDESHOW-SLIDES' && child !== foundScroller) {
+            hasNestedScroller = true;
+            break;
+          }
+          child = child.parentElement;
+        }
+        // If we found a nested scroller between target and this scroller, keep looking
+        if (hasNestedScroller) {
+          currentElement = currentElement.parentElement;
+          continue;
+        }
+        break;
+      }
+      currentElement = currentElement.parentElement;
+    }
+
+    // Only handle if the touch is directly in OUR scroller
+    if (!foundScroller || foundScroller !== scroller) {
       return;
     }
 
-    // Double-check: ensure no nested slideshow-slides is between target and our scroller
-    // This catches cases where target is in a nested slideshow
-    let currentElement = target;
-    while (currentElement && currentElement !== scroller) {
-      if (currentElement.tagName === 'SLIDESHOW-SLIDES' && currentElement !== scroller) {
-        // Found a nested slideshow-slides, let that slideshow handle the touch
-        return;
-      }
-      currentElement = currentElement.parentElement;
-      if (!currentElement) break;
-    }
-
     // Check if any other slideshow is already dragging
-    // This prevents multiple slideshows from dragging simultaneously
     const allSlideshows = document.querySelectorAll('slideshow-component');
     for (const slideshow of allSlideshows) {
       if (slideshow !== this && slideshow.hasAttribute('dragging')) {
-        // Another slideshow is already dragging
         return;
       }
     }
 
     this.#startDragging(touch.clientX, touch.clientY);
 
-    // Stop propagation to prevent parent slideshows from also handling this touch
+    // Stop propagation to prevent parent slideshows from handling this
     event.stopPropagation();
 
     // Add event listeners for touch move and end
