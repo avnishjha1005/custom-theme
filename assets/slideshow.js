@@ -578,6 +578,14 @@ this.dispatchEvent(
   #scrollStartY = 0;
 
   #handleMouseDown = (event) => {
+    console.debug('Mouse down event detected:', {
+      event,
+      isNested: this.isNested,
+      disabled: this.disabled,
+      dragging: this.#dragging,
+      slides: this.refs.slides?.length,
+    });
+
     // Allow dragging only if the slideshow is not disabled and has multiple slides
     const { slides } = this.refs;
     const scroller = event.currentTarget; // Always refers to this instance's scroller
@@ -609,6 +617,13 @@ this.dispatchEvent(
   };
 
   #handleMouseMove = (event /* eslint-disable-line */) => {
+    console.debug('Mouse move event detected:', {
+      event,
+      dragging: this.#dragging,
+      scrollStartX: this.#scrollStartX,
+      scrollStartY: this.#scrollStartY,
+    });
+
     if (!this.#dragging) return;
 
     const { scroller } = this.refs;
@@ -624,6 +639,10 @@ this.dispatchEvent(
   };
 
   #handleMouseUp = () => {
+    console.debug('Mouse up event detected:', {
+      dragging: this.#dragging,
+    });
+
     if (!this.#dragging) return;
 
     const { scroller } = this.refs;
@@ -631,7 +650,7 @@ this.dispatchEvent(
     this.removeAttribute('dragging');
 
     if (scroller) {
-      // 3. Re-enable CSS Snapping
+      // Re-enable CSS Snapping
       scroller.style.scrollSnapType = '';
       scroller.style.scrollBehavior = '';
     }
