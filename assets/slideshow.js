@@ -299,13 +299,13 @@ super.disconnectedCallback();
    * Suspends automatic slide playback.
    */
   suspend() {
-    if (typeof this.#interval === 'undefined') {
-      console.error('Attempted to suspend playback, but #interval is not defined.');
-      return;
-    }
+    // if (typeof this.#interval === 'undefined') {
+    //   console.error('Attempted to suspend playback, but #interval is not defined.');
+    //   return;
+    // }
 
-    clearInterval(this.#interval);
-    this.#interval = undefined;
+    // clearInterval(this.#interval);
+    // this.#interval = undefined;
   }
 
   /**
