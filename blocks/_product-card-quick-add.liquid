@@ -108,7 +108,7 @@
           {%- if product.variants.size == 1 or product.options.size == 1 -%}
             {% render 'add-to-cart-button',
               add_to_cart_text: add_to_cart_text,
-              class: 'button quick-add__button quick-add__button--choose',
+              class: 'button quick-add__button quick-add__button--add',
               can_add_to_cart: can_add_to_cart,
               icon_only_on_mobile: true,
               product: product
@@ -116,7 +116,7 @@
           {%- endif -%}
           {%- if product.variants.size > 1 -%}
             <button
-              class="button quick-add__button quick-add__button--add"
+              class="button quick-add__button quick-add__button--choose"
               {% comment %} type="submit" is the default, so we explicitly set it to "button" to prevent the ProductFormComponent.handleSubmit from being triggered {% endcomment %}
               type="button"
               name="add"
