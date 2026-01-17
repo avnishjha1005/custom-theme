@@ -582,7 +582,11 @@ this.dispatchEvent(
   #scrollStartX = 0;
   #scrollStartY = 0;
 
-  #handleMouseDown = (event /* eslint-disable-line */) => {
+  /**
+   * Handles the mouse down event to initiate dragging.
+   * @param {MouseEvent} event - The mouse down event.
+   */
+  #handleMouseDown = (event) => {
     console.debug('Mouse down event detected:', {
       event,
       isNested: this.isNested,
@@ -593,22 +597,21 @@ this.dispatchEvent(
 
     // Allow dragging only if the slideshow is not disabled and has multiple slides
     const { slides } = this.refs;
-    const scroller = event.currentTarget; // Always refers to this instance's scroller
+    const scroller = event.currentTarget instanceof HTMLElement ? event.currentTarget : null; // Ensure scroller is an HTMLElement
 
-    if (!slides || slides.length <= 1 || this.disabled || this.#dragging) {
-      console.debug('Dragging not allowed:', {
+    if (!slides || slides.length <= 1 || this.disabled || this.#dragging || !scroller) {
+      console.log('Dragging not allowed:', {
         slides,
         disabled: this.disabled,
         dragging: this.#dragging,
+        scroller,
       });
       return;
     }
     if (event.button !== 0) return; // Only allow left-click
 
-    // Prevent parent slideshows from reacting to this event only if this is the top-level slideshow
-    if (!this.isNested) {
-      event.stopPropagation();
-    }
+    // Prevent parent slideshows from reacting to this event
+    event.stopPropagation();
 
     this.#dragging = true;
     this.#mouseStartX = event.clientX;
@@ -628,7 +631,11 @@ this.dispatchEvent(
     document.addEventListener('mouseleave', this.#handleMouseUp);
   };
 
-  #handleMouseMove = (event /* eslint-disable-line */) => {
+  /**
+   * Handles the mouse move event to update the scroller position.
+   * @param {MouseEvent} event - The mouse move event.
+   */
+  #handleMouseMove = (event) => {
     console.debug('Mouse move event detected:', {
       event,
       dragging: this.#dragging,
@@ -639,6 +646,8 @@ this.dispatchEvent(
     if (!this.#dragging) return;
 
     const { scroller } = this.refs;
+    if (!scroller) return;
+
     const deltaX = this.#mouseStartX - event.clientX;
     const axis = this.#scroll?.axis || 'x';
 
@@ -648,8 +657,14 @@ this.dispatchEvent(
       const deltaY = this.#mouseStartY - event.clientY;
       scroller.scrollTop = this.#scrollStartY + deltaY;
     }
+
+    // Prevent default behavior to avoid text selection during drag
+    event.preventDefault();
   };
 
+  /**
+   * Handles the mouse up event to end dragging.
+   */
   #handleMouseUp = () => {
     console.debug('Mouse up event detected:', {
       dragging: this.#dragging,
