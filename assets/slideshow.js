@@ -641,7 +641,7 @@ this.dispatchEvent(
 
     this.setAttribute('dragging', '');
     if (this.#scroll) {
-      this.#scroll.snap = false;
+      this.#scroll.snap = true;
     }
 
     // Add event listeners for mouse move and up
