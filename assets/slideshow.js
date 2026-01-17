@@ -619,18 +619,18 @@ this.dispatchEvent(
     // if (event.button !== 0) return;
 
     // Don't start dragging if clicking on interactive elements
-    const target = event.target;
-    if (
-      target instanceof HTMLAnchorElement ||
-      target instanceof HTMLButtonElement ||
-      target instanceof HTMLInputElement ||
-      target.closest('a, button, input, [role="button"]')
-    ) {
-      return;
-    }
+    // const target = event.target;
+    // if (
+    //   target instanceof HTMLAnchorElement ||
+    //   target instanceof HTMLButtonElement ||
+    //   target instanceof HTMLInputElement ||
+    //   target.closest('a, button, input, [role="button"]')
+    // ) {
+    //   return;
+    // }
 
-    event.preventDefault();
-    event.stopPropagation();
+    // event.preventDefault();
+    // event.stopPropagation();
 
     // Start dragging
     this.#dragging = true;
