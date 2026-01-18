@@ -235,6 +235,23 @@
             "card-gallery": {
               "type": "_product-media-gallery",
               "settings": {
+                "media_presentation": "carousel",
+                "media_columns": "one",
+                "image_gap": 0,
+                "large_first_image": false,
+                "icons_style": "arrow",
+                "slideshow_controls_style": "dots",
+                "slideshow_mobile_controls_style": "dots",
+                "thumbnail_position": "bottom",
+                "thumbnail_width": 64,
+                "aspect_ratio": "adapt",
+                "constrain_to_viewport": false,
+                "media_fit": "cover",
+                "media_radius": 4,
+                "extend_media": true,
+                "zoom": true,
+                "video_loop": false,
+                "hide_variants": false,
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
@@ -486,7 +503,8 @@
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
         ".product-grid-container {max-width: 1440px; margin: auto;}",
         "#ResultsList > .grid {display: unset;}",
-        ".wishlist-button {z-index: 100;}"
+        ".wishlist-button {z-index: 100;}",
+        ".custom-section-content {padding: 0px;}"
       ],
       "settings": {
         "layout_type": "organic",
