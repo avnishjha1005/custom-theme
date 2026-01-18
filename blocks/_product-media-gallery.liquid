@@ -138,6 +138,7 @@
 {% style %}
   {% unless block_settings.aspect_ratio == 'adapt' %}
     .product-media-container {
+      height:100%;
       --media-preview-ratio: {{ block_settings.aspect_ratio }};
     }
 
