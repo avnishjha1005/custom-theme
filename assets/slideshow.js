@@ -401,10 +401,9 @@ export class Slideshow extends Component {
    * @type {boolean}
    */
   get disabled() {
-    // return (
-    //   this.getAttribute('disabled') === 'true' || (this.hasAttribute('mobile-disabled') && !mediaQueryLarge.matches)
-    // );
-    return false;
+    return (
+      this.getAttribute('disabled') === 'true' || (this.hasAttribute('mobile-disabled') && !mediaQueryLarge.matches)
+    );
   }
 
   /**
