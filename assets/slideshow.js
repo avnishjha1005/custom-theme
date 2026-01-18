@@ -597,7 +597,7 @@ export class Slideshow extends Component {
     const { slides } = this;
 
     if (!slides || slides.length <= 1) return;
-    if (!(event.target instanceof Element)) return;
+    //if (!(event.target instanceof Element)) return;
     // if (this.disabled || this.#dragging) return;
 
     // Check if the event target is within a 3D model interactive element
@@ -606,7 +606,7 @@ export class Slideshow extends Component {
       return;
     }
 
-    event.preventDefault();
+    //event.preventDefault();
     // Store initial position but don't start handling yet
     const { axis } = this.#scroll;
     const startPosition = event[axis];
