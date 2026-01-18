@@ -736,11 +736,11 @@ export class Slideshow extends Component {
     const onPointerMove = (event) => {
       // Get current touch/pointer coordinates
       this.#log('POINTER MOVE', {
-  pointerId: event.pointerId,
-  target: event.target,
-  defaultPrevented: event.defaultPrevented,
-  buttons: event.buttons,
-});
+        pointerId: event.pointerId,
+        target: event.target,
+        defaultPrevented: event.defaultPrevented,
+        buttons: event.buttons,
+      });
       let currentX, currentY;
       if ('touches' in event && event instanceof TouchEvent) {
         // Touch event
@@ -852,6 +852,7 @@ export class Slideshow extends Component {
      * @param {PointerEvent | TouchEvent} event - The pointerup or touchend event.
      */
     const onPointerUp = async (event) => {
+      this.#log('POINTER END', event.type);
       controller.abort();
       const { current, slides } = this;
       const { scroller } = this.refs;
