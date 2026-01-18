@@ -915,12 +915,12 @@ export class Slideshow extends Component {
     document.addEventListener('pointercancel', onPointerUp, { signal });
     document.addEventListener('pointercapturelost', onPointerUp, { signal });
 
-    // Also support touch events for better mobile compatibility
-    if ('ontouchstart' in window) {
-      document.addEventListener('touchmove', onPointerMove, { signal });
-      document.addEventListener('touchend', onPointerUp, { signal });
-      document.addEventListener('touchcancel', onPointerUp, { signal });
-    }
+    // // Also support touch events for better mobile compatibility
+    // if ('ontouchstart' in window) {
+    //   document.addEventListener('touchmove', onPointerMove, { signal });
+    //   document.addEventListener('touchend', onPointerUp, { signal });
+    //   document.addEventListener('touchcancel', onPointerUp, { signal });
+    // }
   };
 
   #handlePointerEnter = () => {
