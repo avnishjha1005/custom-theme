@@ -4598,6 +4598,6 @@ slideshow-component[dragging] slideshow-slides {
 }
 
 slideshow-component [ref="scroller"] {
-  touch-action: pan-y; /* Allows vertical page scroll, but keeps horizontal for JS */
-  user-select: none;   /* Prevents highlighting text while dragging */
-} */
+  touch-action: pan-y;
+}
+
