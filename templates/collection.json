@@ -445,11 +445,9 @@
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
         ".product-grid-container {max-width: 1440px; margin: auto;}",
         "#ResultsList > .grid {display: unset;}",
-        ".wishlist-button {z-index: 100;}",
-        ".custom-section-content {padding: 0px;}",
         ".product-grid__item {height: 100%;}",
         ".product-card__content {height: 100%;}",
-        "media-gallery{}"
+        "media-gallery {height: 100% !important;}"
       ],
       "settings": {
         "layout_type": "organic",
