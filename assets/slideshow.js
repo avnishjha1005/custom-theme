@@ -485,7 +485,7 @@ export class Slideshow extends Component {
 
     // Listen for both mouse and pointer events for better touch support
     scroller.addEventListener('mousedown', this.#handleMouseDown);
-    scroller.addEventListener('pointerdown', this.#handleMouseDown,{ capture: true });
+    scroller.addEventListener('pointerdown', this.#handleMouseDown);
     if ('ontouchstart' in window) {
       scroller.addEventListener('touchstart', this.#handleMouseDown, { passive: false });
     }
@@ -664,21 +664,18 @@ export class Slideshow extends Component {
    * @param {MouseEvent | PointerEvent} event - The mousedown or pointerdown event.
    */
   #handleMouseDown = (event) => {
-      this.#log('POINTER DOWN', {
-      type: event.type,
-      pointerId: event.pointerId,
-      target: event.target,
-      currentTarget: event.currentTarget,
-      defaultPrevented: event.defaultPrevented,
-    });
+    this.#log('POINTER DOWN', {
+    type: event.type,
+    pointerId: event.pointerId,
+    target: event.target,
+    currentTarget: event.currentTarget,
+    defaultPrevented: event.defaultPrevented,
+  });
 
     const { slides } = this;
 
     if (!(event.target instanceof Element)) return;
-      const owner = event.target.closest('slideshow-component');
-      if (owner && owner !== this) {
-      return;
-    }
+    const owner = event.target.closest('slideshow-component');
     this.#log('pointerdown owner slideshow:', owner?.#debugId);
 
     // Check if the event target is within a 3D model interactive element
@@ -713,9 +710,6 @@ export class Slideshow extends Component {
     if (targetNestedSlideshow instanceof Slideshow && targetNestedSlideshow !== this) {
       return;
     }
-    if ('pointerId' in event && this.refs.scroller.setPointerCapture) {
-      this.refs.scroller.setPointerCapture(event.pointerId);
-    }
 
     event.preventDefault();
     // Store initial position but don't start handling yet
@@ -725,9 +719,6 @@ export class Slideshow extends Component {
 
     const controller = new AbortController();
     const { signal } = controller;
-    signal.addEventListener('abort', () => {
-      this.#log('ABORT CONTROLLER TRIGGERED');
-    });
     const startTime = performance.now();
     let previous = startPosition;
     let previousOpposite = startPositionOpposite;
@@ -744,12 +735,7 @@ export class Slideshow extends Component {
      */
     const onPointerMove = (event) => {
       // Get current touch/pointer coordinates
-      this.#log('POINTER MOVE', {
-        pointerId: event.pointerId,
-        target: event.target,
-        defaultPrevented: event.defaultPrevented,
-        buttons: event.buttons,
-      });
+      
       let currentX, currentY;
       if ('touches' in event && event instanceof TouchEvent) {
         // Touch event
@@ -796,8 +782,8 @@ export class Slideshow extends Component {
       // If perpendicular movement is greater than parallel movement, don't handle
       // This prevents capturing vertical page scrolls as horizontal slideshow swipes
       if (!moved && oppositeDelta > Math.abs(initialDelta)) {
-        // controller.abort();
-        // this.#dragging = false;
+        controller.abort();
+        this.#dragging = false;
         return;
       }
 
@@ -823,9 +809,9 @@ export class Slideshow extends Component {
           event.stopPropagation();
         }
         // Use setPointerCapture for pointer events (not available for touch events)
-        // if ('pointerId' in event && this.setPointerCapture) {
-        //   this.setPointerCapture(event.pointerId);
-        // }
+        if ('pointerId' in event && this.setPointerCapture) {
+          this.setPointerCapture(event.pointerId);
+        }
 
         // Prevent clicks once the user starts dragging
         document.addEventListener('click', preventDefault, { once: true, signal });
@@ -836,10 +822,10 @@ export class Slideshow extends Component {
 
       // Stop the event from bubbling up to parent slideshow components
       // Only do this if we've started handling the drag
-          if (moved) {
-        event.stopPropagation(); // Prevents the outer slideshow from moving
-        event.stopImmediatePropagation();
-      }
+      if (moved) {
+    event.stopPropagation(); // Prevents the outer slideshow from moving
+    event.stopImmediatePropagation();
+  }
 
       const delta = previous - current;
       const now = performance.now();
@@ -861,7 +847,6 @@ export class Slideshow extends Component {
      * @param {PointerEvent | TouchEvent} event - The pointerup or touchend event.
      */
     const onPointerUp = async (event) => {
-      this.#log('POINTER END', event.type);
       controller.abort();
       const { current, slides } = this;
       const { scroller } = this.refs;
@@ -929,10 +914,6 @@ export class Slideshow extends Component {
     document.addEventListener('pointerup', onPointerUp, { signal });
     document.addEventListener('pointercancel', onPointerUp, { signal });
     document.addEventListener('pointercapturelost', onPointerUp, { signal });
-
-    this.refs.scroller.addEventListener('pointermove', onPointerMove, { signal });
-    this.refs.scroller.addEventListener('pointerup', onPointerUp, { signal });
-    this.refs.scroller.addEventListener('pointercancel', onPointerUp, { signal });
 
     // Also support touch events for better mobile compatibility
     if ('ontouchstart' in window) {
