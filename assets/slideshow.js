@@ -695,15 +695,15 @@ export class Slideshow extends Component {
       return;
     }
 
-    // Check if there's a nested slideshow at the touch point
-    const nestedSlideshowAtPoint = this.#getNestedSlideshowAtPoint(clientX, clientY);
+    // // Check if there's a nested slideshow at the touch point
+    // const nestedSlideshowAtPoint = this.#getNestedSlideshowAtPoint(clientX, clientY);
 
-    // If the touch is inside a nested slideshow, let it handle the event instead
-    if (nestedSlideshowAtPoint) {
-      const clonedEvent = new PointerEvent(event.type, event);
-      nestedSlideshowAtPoint.dispatchEvent(clonedEvent);
-      return;
-    }
+    // // If the touch is inside a nested slideshow, let it handle the event instead
+    // if (nestedSlideshowAtPoint) {
+    //   const clonedEvent = new PointerEvent(event.type, event);
+    //   nestedSlideshowAtPoint.dispatchEvent(clonedEvent);
+    //   return;
+    // }
 
     // Check if the event target itself is within a nested slideshow
     const targetNestedSlideshow = event.target.closest('slideshow-component');
