@@ -401,9 +401,10 @@ export class Slideshow extends Component {
    * @type {boolean}
    */
   get disabled() {
-    return (
-      this.getAttribute('disabled') === 'true' || (this.hasAttribute('mobile-disabled') && !mediaQueryLarge.matches)
-    );
+    // return (
+    //   this.getAttribute('disabled') === 'true' || (this.hasAttribute('mobile-disabled') && !mediaQueryLarge.matches)
+    // );
+    return false;
   }
 
   /**
@@ -484,7 +485,7 @@ export class Slideshow extends Component {
     this.#updateControlsVisibility();
 
     this.disabled = this.disabled;
-    console.log(disabled)
+    console.log(this.disabled)
     this.resume();
 
     this.current = this.initialSlideIndex;
