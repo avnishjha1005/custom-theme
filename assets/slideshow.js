@@ -697,98 +697,121 @@ export class Slideshow extends Component {
 
     // Check if the event target itself is within a nested slideshow
     const targetNestedSlideshow = event.target.closest('slideshow-component');
-    if (owner !== this) {
+    if (owner !== this && targetNestedSlideshow) {
       return; // nested slideshow owns this gesture
     }
 
-    // Store initial position but don't start handling yet
-    const { axis } = this.#scroll;
-    const startPosition = axis === 'x' ? clientX : clientY;
-    const startPositionOpposite = axis === 'x' ? clientY : clientX;
+    // Ensure dragging works for non-nested sliders
+    if (!targetNestedSlideshow || owner === this) {
+      // Store initial position but don't start handling yet
+      const { axis } = this.#scroll;
+      const startPosition = axis === 'x' ? clientX : clientY;
+      const startPositionOpposite = axis === 'x' ? clientY : clientX;
 
-    const controller = new AbortController();
-    const { signal } = controller;
-    const startTime = performance.now();
-    let previous = startPosition;
-    let previousOpposite = startPositionOpposite;
-    let velocity = 0;
-    let moved = false;
-    let distanceTravelled = 0;
-    let lastMoveTime = startTime;
+      const controller = new AbortController();
+      const { signal } = controller;
+      const startTime = performance.now();
+      let previous = startPosition;
+      let previousOpposite = startPositionOpposite;
+      let velocity = 0;
+      let moved = false;
+      let distanceTravelled = 0;
+      let lastMoveTime = startTime;
 
-    this.#dragging = true;
+      this.#dragging = true;
 
-    /**
-     * Handles the 'pointermove' or 'touchmove' event to update the scroll position.
-     * @param {PointerEvent | TouchEvent} event - The pointermove or touchmove event.
-     */
-    const onPointerMove = (event) => {
-      // Get current touch/pointer coordinates
-      let currentX, currentY;
-      if ('touches' in event && event instanceof TouchEvent) {
-        currentX = event.touches[0]?.clientX || 0;
-        currentY = event.touches[0]?.clientY || 0;
-      } else if ('clientX' in event && 'clientY' in event) {
-        currentX = event.clientX;
-        currentY = event.clientY;
-      } else {
-        return;
-      }
+      /**
+       * Handles the 'pointermove' or 'touchmove' event to update the scroll position.
+       * @param {PointerEvent | TouchEvent} event - The pointermove or touchmove event.
+       */
+      const onPointerMove = (event) => {
+        // Get current touch/pointer coordinates
+        let currentX, currentY;
+        if ('touches' in event && event instanceof TouchEvent) {
+          currentX = event.touches[0]?.clientX || 0;
+          currentY = event.touches[0]?.clientY || 0;
+        } else if ('clientX' in event && 'clientY' in event) {
+          currentX = event.clientX;
+          currentY = event.clientY;
+        } else {
+          return;
+        }
 
-      const current = axis === 'x' ? currentX : currentY;
-      const currentOpposite = axis === 'x' ? currentY : currentX;
-      const initialDelta = startPosition - current;
-      const oppositeDelta = Math.abs(startPositionOpposite - currentOpposite);
+        const current = axis === 'x' ? currentX : currentY;
+        const currentOpposite = axis === 'x' ? currentY : currentX;
+        const initialDelta = startPosition - current;
+        const oppositeDelta = Math.abs(startPositionOpposite - currentOpposite);
 
-      if ('pointerId' in event && event instanceof PointerEvent && this.setPointerCapture) {
-        this.setPointerCapture(event.pointerId);
-      }
+        if (event instanceof PointerEvent && 'pointerId' in event && this.setPointerCapture) {
+          this.setPointerCapture(event.pointerId);
+        }
 
-      // Replace or implement scrollBy functionality
-      if (moved) {
-        const { scroller } = this.refs; // Correctly reference scroller from refs
-        const scrollDelta = axis === 'x' ? { left: initialDelta } : { top: initialDelta };
-        scroller.scrollBy({ ...scrollDelta, behavior: 'auto' });
-      }
-    };
+        // Update velocity and distance travelled
+        const now = performance.now();
+        const deltaTime = now - lastMoveTime;
+        velocity = (previous - current) / deltaTime;
+        distanceTravelled += Math.abs(previous - current);
+        previous = current;
+        previousOpposite = currentOpposite;
+        lastMoveTime = now;
 
-    /**
-     * Handles the 'pointerup' or 'touchend' event to stop dragging slides.
-     * @param {PointerEvent | TouchEvent} event - The pointerup or touchend event.
-     */
-    const onPointerUp = async (event) => {
-      controller.abort();
-      this.#dragging = false;
+        // Prevent scrolling if the gesture is primarily along the opposite axis
+        if (oppositeDelta > this.#SWIPE_THRESHOLD) {
+          controller.abort();
+          return;
+        }
 
-      if (!moved) return;
+        // Start handling the drag if the threshold is exceeded
+        if (!moved && Math.abs(initialDelta) > this.#SWIPE_THRESHOLD) {
+          moved = true;
+          this.#scroll.snap = false;
+        }
 
-      const now = performance.now();
-      const deltaTime = now - startTime;
-      const finalVelocity = velocity;
-      const finalDistance = distanceTravelled;
+        if (moved) {
+          const { scroller } = this.refs;
+          const scrollDelta = axis === 'x' ? { left: initialDelta } : { top: initialDelta };
+          scroller.scrollBy({ ...scrollDelta, behavior: 'auto' });
+        }
+      };
 
-      // Determine if the swipe should trigger a slide change
-      if (
-        Math.abs(finalVelocity) > this.#VELOCITY_THRESHOLD ||
-        Math.abs(finalDistance) > this.#DISTANCE_THRESHOLD
-      ) {
-        const direction = finalVelocity > 0 ? -1 : 1;
-        const targetIndex = this.current + direction;
-        this.select(targetIndex, event, { animate: true });
-      } else {
-        this.#scroll.snap = true;
-        this.#sync();
-      }
-    };
+      /**
+       * Handles the 'pointerup' or 'touchend' event to stop dragging slides.
+       * @param {PointerEvent | TouchEvent} event - The pointerup or touchend event.
+       */
+      const onPointerUp = async (event) => {
+        controller.abort();
+        this.#dragging = false;
 
-    this.#scroll.snap = false;
-    this.#log('ADDING DOCUMENT LISTENERS');
+        if (!moved) return;
 
-    // Use pointer events (works for both mouse and touch)
-    document.addEventListener('pointermove', onPointerMove, { signal });
-    document.addEventListener('pointerup', onPointerUp, { signal });
-    document.addEventListener('pointercancel', onPointerUp, { signal });
-    document.addEventListener('pointercapturelost', onPointerUp, { signal });
+        const now = performance.now();
+        const deltaTime = now - startTime;
+        const finalVelocity = velocity;
+        const finalDistance = distanceTravelled;
+
+        // Determine if the swipe should trigger a slide change
+        if (
+          Math.abs(finalVelocity) > this.#VELOCITY_THRESHOLD ||
+          Math.abs(finalDistance) > this.#DISTANCE_THRESHOLD
+        ) {
+          const direction = finalVelocity > 0 ? -1 : 1;
+          const targetIndex = this.current + direction;
+          this.select(targetIndex, event, { animate: true });
+        } else {
+          this.#scroll.snap = true;
+          this.#sync();
+        }
+      };
+
+      this.#scroll.snap = false;
+      this.#log('ADDING DOCUMENT LISTENERS');
+
+      // Use pointer events (works for both mouse and touch)
+      document.addEventListener('pointermove', onPointerMove, { signal });
+      document.addEventListener('pointerup', onPointerUp, { signal });
+      document.addEventListener('pointercancel', onPointerUp, { signal });
+      document.addEventListener('pointercapturelost', onPointerUp, { signal });
+    }
   };
 
   #handlePointerEnter = () => {
