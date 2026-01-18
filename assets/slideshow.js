@@ -36,6 +36,9 @@ export class Slideshow extends Component {
   static get observedAttributes() {
     return ['initial-slide'];
   }
+  #log(...args) {
+  console.log(`[Slideshow ${this.#debugId}]`, ...args);
+  }
 
   /**
    * @param {string} name
@@ -661,6 +664,18 @@ export class Slideshow extends Component {
    * @param {MouseEvent | PointerEvent} event - The mousedown or pointerdown event.
    */
   #handleMouseDown = (event) => {
+    this.#log('POINTER DOWN', {
+    type: event.type,
+    pointerId: event.pointerId,
+    target: event.target,
+    currentTarget: event.currentTarget,
+    defaultPrevented: event.defaultPrevented,
+  });
+
+  if (!(event.target instanceof Element)) return;
+
+  const owner = event.target.closest('slideshow-component');
+  this.#log('pointerdown owner slideshow:', owner?.#debugId);
     const { slides } = this;
 
     if (!(event.target instanceof Element)) return;
@@ -682,15 +697,15 @@ export class Slideshow extends Component {
       return;
     }
 
-    // // Check if there's a nested slideshow at the touch point
-    // const nestedSlideshowAtPoint = this.#getNestedSlideshowAtPoint(clientX, clientY);
+    // Check if there's a nested slideshow at the touch point
+    const nestedSlideshowAtPoint = this.#getNestedSlideshowAtPoint(clientX, clientY);
 
-    // // If the touch is inside a nested slideshow, let it handle the event instead
-    // if (nestedSlideshowAtPoint) {
-    //   const clonedEvent = new PointerEvent(event.type, event);
-    //   nestedSlideshowAtPoint.dispatchEvent(clonedEvent);
-    //   return;
-    // }
+    // If the touch is inside a nested slideshow, let it handle the event instead
+    if (nestedSlideshowAtPoint) {
+      const clonedEvent = new PointerEvent(event.type, event);
+      nestedSlideshowAtPoint.dispatchEvent(clonedEvent);
+      return;
+    }
 
     // Check if the event target itself is within a nested slideshow
     const targetNestedSlideshow = event.target.closest('slideshow-component');
