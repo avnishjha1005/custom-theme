@@ -660,7 +660,7 @@
             "text_alignment": "center",
             "content_max_width": 500,
             "text_spacing": 20,
-            "desktop_text_padding": 35,
+            "desktop_text_padding": 50,
             "quote_font_size": 32,
             "quote_font_family": "Marcellus",
             "quote_font_style": "normal",
