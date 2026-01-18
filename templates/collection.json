@@ -249,7 +249,7 @@
                 "media_fit": "cover",
                 "media_radius": 0,
                 "extend_media": true,
-                "zoom": true,
+                "zoom": false,
                 "video_loop": false,
                 "hide_variants": false,
                 "padding-block-start": 0,
