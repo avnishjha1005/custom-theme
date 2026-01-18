@@ -672,13 +672,11 @@ export class Slideshow extends Component {
     defaultPrevented: event.defaultPrevented,
   });
 
-  if (!(event.target instanceof Element)) return;
-
-  const owner = event.target.closest('slideshow-component');
-  this.#log('pointerdown owner slideshow:', owner?.#debugId);
     const { slides } = this;
 
     if (!(event.target instanceof Element)) return;
+    const owner = event.target.closest('slideshow-component');
+    this.#log('pointerdown owner slideshow:', owner?.#debugId);
 
     // Check if the event target is within a 3D model interactive element
     if (event.target.closest('model-viewer')) {
