@@ -661,9 +661,7 @@ export class Slideshow extends Component {
   #handleMouseDown = (event) => {
     const { slides } = this;
 
-    if (!slides || slides.length <= 1) return;
     if (!(event.target instanceof Element)) return;
-    if (this.disabled || this.#dragging) return;
 
     // Check if the event target is within a 3D model interactive element
     if (event.target.closest('model-viewer')) {
@@ -682,15 +680,15 @@ export class Slideshow extends Component {
       return;
     }
 
-    // Check if there's a nested slideshow at the touch point
-    const nestedSlideshowAtPoint = this.#getNestedSlideshowAtPoint(clientX, clientY);
+    // // Check if there's a nested slideshow at the touch point
+    // const nestedSlideshowAtPoint = this.#getNestedSlideshowAtPoint(clientX, clientY);
 
-    // If the touch is inside a nested slideshow, let it handle the event instead
-    if (nestedSlideshowAtPoint) {
-      const clonedEvent = new PointerEvent(event.type, event);
-      nestedSlideshowAtPoint.dispatchEvent(clonedEvent);
-      return;
-    }
+    // // If the touch is inside a nested slideshow, let it handle the event instead
+    // if (nestedSlideshowAtPoint) {
+    //   const clonedEvent = new PointerEvent(event.type, event);
+    //   nestedSlideshowAtPoint.dispatchEvent(clonedEvent);
+    //   return;
+    // }
 
     // Check if the event target itself is within a nested slideshow
     const targetNestedSlideshow = event.target.closest('slideshow-component');
@@ -749,6 +747,9 @@ export class Slideshow extends Component {
       const initialDelta = startPosition - current;
       const oppositeDelta = Math.abs(startPositionOpposite - currentOpposite);
 
+      if ('pointerId' in event && this.setPointerCapture) {
+        this.setPointerCapture(event.pointerId);
+      }
       // Check if we're moving primarily in the scroll direction (not perpendicular)
       // This helps distinguish between scrolling the slideshow vs scrolling the page
       if (!moved && Math.abs(initialDelta) < this.#SWIPE_THRESHOLD) {
@@ -765,20 +766,20 @@ export class Slideshow extends Component {
       }
 
       // Check if pointer has moved into a nested slideshow during the drag
-      const nestedAtCurrent = this.#getNestedSlideshowAtPoint(currentX, currentY);
-      if (nestedAtCurrent && moved) {
-        // Allow the nested slideshow to take over if we're moving in a direction it can handle
-        const movingRight = initialDelta < 0;
-        const movingLeft = initialDelta > 0;
-        const cannotMoveInDirection = (movingRight && this.atStart) || (movingLeft && this.atEnd);
+      // const nestedAtCurrent = this.#getNestedSlideshowAtPoint(currentX, currentY);
+      // if (nestedAtCurrent && moved) {
+      //   // Allow the nested slideshow to take over if we're moving in a direction it can handle
+      //   const movingRight = initialDelta < 0;
+      //   const movingLeft = initialDelta > 0;
+      //   const cannotMoveInDirection = (movingRight && this.atStart) || (movingLeft && this.atEnd);
         
-        // If this slideshow can't move in the drag direction, let the nested one handle it
-        if (cannotMoveInDirection) {
-          controller.abort();
-          this.#dragging = false;
-          return;
-        }
-      }
+      //   // If this slideshow can't move in the drag direction, let the nested one handle it
+      //   if (cannotMoveInDirection) {
+      //     controller.abort();
+      //     this.#dragging = false;
+      //     return;
+      //   }
+      // }
 
       if (!moved) {
         moved = true;
