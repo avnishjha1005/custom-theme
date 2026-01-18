@@ -400,7 +400,11 @@ export class Slideshow extends Component {
    * Whether the slideshow is disabled.
    * @type {boolean}
    */
-  get disabled() {return false;
+  get disabled() {
+    // return (
+    //   this.getAttribute('disabled') === 'true' || (this.hasAttribute('mobile-disabled') && !mediaQueryLarge.matches)
+    // );
+    return false;
   }
 
   /**
