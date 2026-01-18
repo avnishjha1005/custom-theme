@@ -23,6 +23,7 @@
     "type_font_h1": "heading",
     "type_size_h1": "120",
     "type_line_height_h1": "display-tight",
+    "type_letter_spacing_h1": "heading-normal",
     "type_font_h2": "heading",
     "type_size_h2": "72",
     "type_font_h3": "heading",
