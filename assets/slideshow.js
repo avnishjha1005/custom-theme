@@ -796,8 +796,8 @@ export class Slideshow extends Component {
       // If perpendicular movement is greater than parallel movement, don't handle
       // This prevents capturing vertical page scrolls as horizontal slideshow swipes
       if (!moved && oppositeDelta > Math.abs(initialDelta)) {
-        controller.abort();
-        this.#dragging = false;
+        // controller.abort();
+        // this.#dragging = false;
         return;
       }
 
