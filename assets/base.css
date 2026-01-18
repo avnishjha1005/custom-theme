@@ -1538,6 +1538,7 @@ details[open] > summary .icon-plus .vertical,
 
 /* Product Media */
 media-gallery {
+  Height:100%;
   display: block;
   width: 100%;
 }
