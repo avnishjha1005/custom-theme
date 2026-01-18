@@ -809,6 +809,10 @@ export class Slideshow extends Component {
         event.preventDefault(); // ONLY NOW
         event.stopPropagation();
 
+        if (event.pointerId != null && this.refs.scroller.setPointerCapture) {
+          this.refs.scroller.setPointerCapture(event.pointerId);
+        }
+
         this.pause();
         this.setAttribute('dragging', '');
         // Use setPointerCapture for pointer events (not available for touch events)
