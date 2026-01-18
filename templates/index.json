@@ -908,7 +908,8 @@
         "a {font-weight: bold; text-decoration: underline;}",
         ".image-block__image {object-position: center center;}",
         ".section--page-width {max-width: 1440px; margin: auto;}",
-        ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}"
+        ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}",
+        ".section-resource-list__content{}"
       ],
       "name": "t:names.collections_grid",
       "settings": {
