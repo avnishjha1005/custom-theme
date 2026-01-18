@@ -338,6 +338,34 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "product_media_gallery_zRXCVY": {
+              "type": "_product-media-gallery",
+              "name": "t:names.product_media",
+              "settings": {
+                "media_presentation": "carousel",
+                "media_columns": "one",
+                "image_gap": 0,
+                "large_first_image": false,
+                "icons_style": "arrow",
+                "slideshow_controls_style": "dots",
+                "slideshow_mobile_controls_style": "dots",
+                "thumbnail_position": "bottom",
+                "thumbnail_width": 64,
+                "aspect_ratio": "1/1.25",
+                "constrain_to_viewport": false,
+                "media_fit": "cover",
+                "media_radius": 4,
+                "extend_media": true,
+                "zoom": true,
+                "video_loop": false,
+                "hide_variants": false,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
             "product_wishlist_button_63VrDN": {
               "type": "product-wishlist-button",
               "name": "Wishlist Button",
@@ -362,22 +390,6 @@
                 "aria_label_remove": "Remove from wishlist",
                 "require_login": false,
                 "show_notification": false
-              },
-              "blocks": {}
-            },
-            "product_card_gallery_4y78ah": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "portrait",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
               },
               "blocks": {}
             },
@@ -601,8 +613,8 @@
             }
           },
           "block_order": [
+            "product_media_gallery_zRXCVY",
             "product_wishlist_button_63VrDN",
-            "product_card_gallery_4y78ah",
             "group_JHtHYm"
           ]
         }
