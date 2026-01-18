@@ -485,7 +485,7 @@ export class Slideshow extends Component {
 
     // Listen for both mouse and pointer events for better touch support
     scroller.addEventListener('mousedown', this.#handleMouseDown);
-    scroller.addEventListener('pointerdown', this.#handleMouseDown);
+    scroller.addEventListener('pointerdown', this.#handleMouseDown,{ capture: true });
     if ('ontouchstart' in window) {
       scroller.addEventListener('touchstart', this.#handleMouseDown, { passive: false });
     }
