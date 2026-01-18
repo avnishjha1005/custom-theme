@@ -4584,7 +4584,7 @@ slideshow-component img {
 }
 
 /* Ensure the scroller doesn't try to select text while dragging */
-slideshow-component[dragging] {
+/* slideshow-component[dragging] {
   cursor: grabbing;
   user-select: none;
 }
@@ -4600,4 +4600,4 @@ slideshow-component[dragging] slideshow-slides {
 slideshow-component [ref="scroller"] {
   touch-action: pan-y; /* Allows vertical page scroll, but keeps horizontal for JS */
   user-select: none;   /* Prevents highlighting text while dragging */
-}
+} */
