@@ -1254,6 +1254,9 @@
       "block_order": [
         "text_GbxcYC"
       ],
+      "custom_css": [
+        ".product-grid__item{height:100%;}"
+      ],
       "name": "t:names.product_recommendations",
       "settings": {
         "product": "{{ closest.product }}",
