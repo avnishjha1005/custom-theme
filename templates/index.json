@@ -346,7 +346,7 @@
                 "media_columns": "one",
                 "image_gap": 0,
                 "large_first_image": false,
-                "icons_style": "arrow",
+                "icons_style": "none",
                 "slideshow_controls_style": "dots",
                 "slideshow_mobile_controls_style": "hint",
                 "thumbnail_position": "bottom",
