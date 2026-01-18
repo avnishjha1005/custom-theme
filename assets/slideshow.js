@@ -483,7 +483,7 @@ export class Slideshow extends Component {
 
     this.#updateControlsVisibility();
 
-    this.disabled = this.isNested || this.disabled;
+    this.disabled = this.disabled;
 
     this.resume();
 
