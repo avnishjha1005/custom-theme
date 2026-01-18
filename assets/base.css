@@ -2297,7 +2297,7 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
 
 .custom-typography {
   h1 {
-    line-height: var(--line-height--display, var(--line-height));
+    line-height: 1;
   }
 
   h2,
