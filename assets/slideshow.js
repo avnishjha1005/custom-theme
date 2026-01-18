@@ -707,9 +707,9 @@ export class Slideshow extends Component {
 
     // Check if the event target itself is within a nested slideshow
     const targetNestedSlideshow = event.target.closest('slideshow-component');
-    if (targetNestedSlideshow instanceof Slideshow && targetNestedSlideshow !== this) {
-      return;
-    }
+    if (owner !== this) {
+  return; // nested slideshow owns this gesture
+}
 
     event.preventDefault();
     // Store initial position but don't start handling yet
