@@ -80,10 +80,6 @@ export class Slideshow extends Component {
     if (this.#scroll) {
       const { scroller } = this.refs;
       scroller.removeEventListener('mousedown', this.#handleMouseDown);
-      scroller.removeEventListener('pointerdown', this.#handleMouseDown);
-      if ('ontouchstart' in window) {
-        scroller.removeEventListener('touchstart', this.#handleMouseDown);
-      }
       this.#scroll.destroy();
     }
 
@@ -478,12 +474,7 @@ export class Slideshow extends Component {
       onScrollEnd: this.#onTransitionEnd,
     });
 
-    // Listen for both mouse and pointer events for better touch support
     scroller.addEventListener('mousedown', this.#handleMouseDown);
-    scroller.addEventListener('pointerdown', this.#handleMouseDown);
-    if ('ontouchstart' in window) {
-      scroller.addEventListener('touchstart', this.#handleMouseDown, { passive: false });
-    }
 
     this.addEventListener('mouseenter', this.suspend);
     this.addEventListener('mouseleave', this.resume);
@@ -599,64 +590,8 @@ export class Slideshow extends Component {
   #dragging = false;
 
   /**
-   * Touch/swipe detection thresholds (inspired by Swiper.js)
-   * @constant {number}
-   */
-  #SWIPE_THRESHOLD = 5; // Minimum distance in pixels to start a swipe
-  #VELOCITY_THRESHOLD = 300; // Minimum velocity (px/s) to trigger slide change
-  #DISTANCE_THRESHOLD = 50; // Minimum distance (px) to trigger slide change
-
-  /**
-   * Finds nested slideshow components within this slideshow.
-   * @returns {Slideshow[]} Array of nested slideshow components
-   */
-  #getNestedSlideshows() {
-    const nested = [];
-    const allSlideshows = this.querySelectorAll('slideshow-component');
-    
-    for (const slideshow of allSlideshows) {
-      if (slideshow instanceof Slideshow && slideshow !== this) {
-        nested.push(slideshow);
-      }
-    }
-    
-    return nested;
-  }
-
-  /**
-   * Checks if a point (x, y) is within the bounds of a nested slideshow.
-   * @param {number} x - The x coordinate
-   * @param {number} y - The y coordinate
-   * @param {Slideshow} nestedSlideshow - The nested slideshow to check
-   * @returns {boolean} True if the point is within the nested slideshow bounds
-   */
-  #isPointInNestedSlideshow(x, y, nestedSlideshow) {
-    const rect = nestedSlideshow.getBoundingClientRect();
-    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-  }
-
-  /**
-   * Finds the nested slideshow that contains the given point, if any.
-   * @param {number} x - The x coordinate
-   * @param {number} y - The y coordinate
-   * @returns {Slideshow | null} The nested slideshow containing the point, or null
-   */
-  #getNestedSlideshowAtPoint(x, y) {
-    const nested = this.#getNestedSlideshows();
-    
-    for (const slideshow of nested) {
-      if (this.#isPointInNestedSlideshow(x, y, slideshow)) {
-        return slideshow;
-      }
-    }
-    
-    return null;
-  }
-
-  /**
-   * Handles the 'mousedown' event to start dragging slides (works for both mouse and touch).
-   * Updated to ensure nested slideshows receive events properly.
-   * @param {MouseEvent | PointerEvent} event - The mousedown or pointerdown event.
+   * Handles the 'mousedown' event to start dragging slides.
+   * @param {MouseEvent} event - The mousedown event.
    */
   #handleMouseDown = (event) => {
     const { slides } = this;
@@ -666,159 +601,76 @@ export class Slideshow extends Component {
     if (this.disabled || this.#dragging) return;
 
     // Check if the event target is within a 3D model interactive element
+    // This prevents the slideshow from capturing drag events when interacting with 3D models
     if (event.target.closest('model-viewer')) {
-      return;
-    }
-
-    // Get touch/pointer coordinates
-    let clientX, clientY;
-    if ('touches' in event && event instanceof TouchEvent && event.touches.length > 0) {
-      clientX = event.touches[0]?.clientX || 0;
-      clientY = event.touches[0]?.clientY || 0;
-    } else if ('clientX' in event && 'clientY' in event) {
-      clientX = event.clientX;
-      clientY = event.clientY;
-    } else {
-      return;
-    }
-
-    // Check if there's a nested slideshow at the touch point
-    const nestedSlideshowAtPoint = this.#getNestedSlideshowAtPoint(clientX, clientY);
-
-    // If the touch is inside a nested slideshow, let it handle the event instead
-    if (nestedSlideshowAtPoint) {
-      const clonedEvent = new PointerEvent(event.type, event);
-      nestedSlideshowAtPoint.dispatchEvent(clonedEvent);
-      return;
-    }
-
-    // Check if the event target itself is within a nested slideshow
-    const targetNestedSlideshow = event.target.closest('slideshow-component');
-    if (targetNestedSlideshow instanceof Slideshow && targetNestedSlideshow !== this) {
       return;
     }
 
     event.preventDefault();
     // Store initial position but don't start handling yet
     const { axis } = this.#scroll;
-    const startPosition = axis === 'x' ? clientX : clientY;
-    const startPositionOpposite = axis === 'x' ? clientY : clientX;
+    const startPosition = event[axis];
 
     const controller = new AbortController();
     const { signal } = controller;
     const startTime = performance.now();
     let previous = startPosition;
-    let previousOpposite = startPositionOpposite;
     let velocity = 0;
     let moved = false;
     let distanceTravelled = 0;
-    let lastMoveTime = startTime;
 
     this.#dragging = true;
 
     /**
-     * Handles the 'pointermove' or 'touchmove' event to update the scroll position.
-     * @param {PointerEvent | TouchEvent} event - The pointermove or touchmove event.
+     * Handles the 'pointermove' event to update the scroll position.
+     * @param {PointerEvent} event - The pointermove event.
      */
     const onPointerMove = (event) => {
-      // Get current touch/pointer coordinates
-      let currentX, currentY;
-      if ('touches' in event && event instanceof TouchEvent) {
-        // Touch event
-        if (event.touches && event.touches.length > 0) {
-          const touch = event.touches[0];
-          if (touch) {
-            currentX = touch.clientX;
-            currentY = touch.clientY;
-          } else {
-            return; // No touch available
-          }
-        } else {
-          return; // No touches available
-        }
-      } else if ('clientX' in event && 'clientY' in event) {
-        // Pointer or mouse event
-        const pointerEvent = event;
-        currentX = pointerEvent.clientX ?? 0;
-        currentY = pointerEvent.clientY ?? 0;
-      } else {
-        return; // Cannot get coordinates from this event
-      }
-      const current = axis === 'x' ? currentX : currentY;
-      const currentOpposite = axis === 'x' ? currentY : currentX;
+      const current = event[axis];
       const initialDelta = startPosition - current;
-      const oppositeDelta = Math.abs(startPositionOpposite - currentOpposite);
 
-      // Check if we're moving primarily in the scroll direction (not perpendicular)
-      // This helps distinguish between scrolling the slideshow vs scrolling the page
-      if (!moved && Math.abs(initialDelta) < this.#SWIPE_THRESHOLD) {
-        // Haven't moved enough yet - wait for more movement
-        return;
-      }
-
-      // If perpendicular movement is greater than parallel movement, don't handle
-      // This prevents capturing vertical page scrolls as horizontal slideshow swipes
-      if (!moved && oppositeDelta > Math.abs(initialDelta)) {
-        controller.abort();
-        this.#dragging = false;
-        return;
-      }
-
-      // Check if pointer has moved into a nested slideshow during the drag
-      const nestedAtCurrent = this.#getNestedSlideshowAtPoint(currentX, currentY);
-      if (nestedAtCurrent && moved) {
-        // Allow the nested slideshow to take over if we're moving in a direction it can handle
-        const movingRight = initialDelta < 0;
-        const movingLeft = initialDelta > 0;
-        const cannotMoveInDirection = (movingRight && this.atStart) || (movingLeft && this.atEnd);
-        
-        // If this slideshow can't move in the drag direction, let the nested one handle it
-        if (cannotMoveInDirection) {
-          controller.abort();
-          this.#dragging = false;
-          return;
-        }
-      }
+      if (!initialDelta) return;
 
       if (!moved) {
         moved = true;
-        
-        // Use setPointerCapture for pointer events (not available for touch events)
-        if ('pointerId' in event && this.setPointerCapture) {
-          this.setPointerCapture(event.pointerId);
-        }
+        this.setPointerCapture(event.pointerId);
 
         // Prevent clicks once the user starts dragging
         document.addEventListener('click', preventDefault, { once: true, signal });
+
+        const movingRight = initialDelta < 0;
+        const movingLeft = initialDelta > 0;
+
+        // Check if the current slideshow should handle this drag
+        const closestSlideshow = this.parentElement?.closest('slideshow-component');
+        const isNested = closestSlideshow instanceof Slideshow && closestSlideshow !== this;
+        const cannotMoveInDirection = (movingRight && this.atStart) || (movingLeft && this.atEnd);
+
+        // Abort and let the parent slideshow handle the drag if we're moving in a direction where nested slideshow can't move
+        if (isNested && cannotMoveInDirection) {
+          controller.abort();
+          return;
+        }
 
         this.pause();
         this.setAttribute('dragging', '');
       }
 
       // Stop the event from bubbling up to parent slideshow components
-      // Only do this if we've started handling the drag
-      if (moved) {
-        event.stopImmediatePropagation();
-      }
+      event.stopImmediatePropagation();
 
       const delta = previous - current;
-      const now = performance.now();
-      const timeDelta = now - lastMoveTime;
-      
-      if (timeDelta > 0) {
-        velocity = Math.round((delta / timeDelta) * 1000);
-      }
-      
+      const timeDelta = performance.now() - startTime;
+      velocity = Math.round((delta / timeDelta) * 1000);
       previous = current;
-      lastMoveTime = now;
       distanceTravelled += Math.abs(delta);
 
       this.#scroll.by(delta, { instant: true });
     };
 
     /**
-     * Handles the 'pointerup' or 'touchend' event to stop dragging slides.
-     * @param {PointerEvent | TouchEvent} event - The pointerup or touchend event.
+     * Handles the 'pointerup' event to stop dragging slides.
+     * @param {PointerEvent} event - The pointerup event.
      */
     const onPointerUp = async (event) => {
       controller.abort();
@@ -829,22 +681,10 @@ export class Slideshow extends Component {
 
       if (!slides?.length || !scroller) return;
 
-      // Release pointer capture if we had it
-      if ('pointerId' in event && this.releasePointerCapture) {
-        this.releasePointerCapture(event.pointerId);
-      }
-
       const direction = Math.sign(velocity);
       const next = this.#sync();
 
-      // Determine if we should change slides based on velocity and distance
-      // (inspired by Swiper.js threshold logic)
-      const shouldChangeSlide = 
-        moved && 
-        (Math.abs(velocity) > this.#VELOCITY_THRESHOLD || 
-         distanceTravelled > this.#DISTANCE_THRESHOLD);
-
-      const modifier = shouldChangeSlide ? direction : 0;
+      const modifier = current !== next || Math.abs(velocity) < 10 || distanceTravelled < 10 ? 0 : direction;
       const newIndex = clamp(next + modifier, 0, slides.length - 1);
 
       const newSlide = slides[newIndex];
@@ -855,6 +695,7 @@ export class Slideshow extends Component {
       this.#scroll.to(newSlide);
 
       this.removeAttribute('dragging');
+      this.releasePointerCapture(event.pointerId);
 
       this.#centerSelectedThumbnail(newIndex);
 
@@ -882,18 +723,16 @@ export class Slideshow extends Component {
 
     this.#scroll.snap = false;
 
-    // Use pointer events (works for both mouse and touch)
     document.addEventListener('pointermove', onPointerMove, { signal });
     document.addEventListener('pointerup', onPointerUp, { signal });
+    /**
+     * pointerDown calls onPointerUp to fix an issue where the first tap-and-drag
+     * on the zoom dialog is captured by the pointerMove/pointerUp listeners,
+     * sometimes causing the slideshow to change slides unexpectedly
+     */
+    document.addEventListener('pointerdown', onPointerUp, { signal });
     document.addEventListener('pointercancel', onPointerUp, { signal });
     document.addEventListener('pointercapturelost', onPointerUp, { signal });
-
-    // Also support touch events for better mobile compatibility
-    if ('ontouchstart' in window) {
-      document.addEventListener('touchmove', onPointerMove, { signal });
-      document.addEventListener('touchend', onPointerUp, { signal });
-      document.addEventListener('touchcancel', onPointerUp, { signal });
-    }
   };
 
   #handlePointerEnter = () => {
