@@ -1538,7 +1538,6 @@ details[open] > summary .icon-plus .vertical,
 
 /* Product Media */
 media-gallery {
-  Height:100%;
   display: block;
   width: 100%;
 }
@@ -1641,6 +1640,7 @@ media-gallery.media-gallery--grid .media-gallery__grid .product-media-container 
 .product-media-container img {
   aspect-ratio: inherit;
   object-fit: contain;
+  height:100%;
 }
 
 .product-media-container.media-fit-contain img {
