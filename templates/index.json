@@ -629,7 +629,7 @@
         "collection": "all",
         "layout_type": "carousel",
         "carousel_on_mobile": false,
-        "max_products": 7,
+        "max_products": 9,
         "columns": 4,
         "mobile_columns": "2",
         "mobile_card_size": "44cqw",
