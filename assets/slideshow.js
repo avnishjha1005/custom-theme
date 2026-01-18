@@ -31,6 +31,8 @@ const SLIDE_VISIBLITY_THRESHOLD = 0.7;
  * @extends {Component<Refs>}
  */
 export class Slideshow extends Component {
+  static #id = 0;
+  #debugId = ++Slideshow.#id;
   static get observedAttributes() {
     return ['initial-slide'];
   }
