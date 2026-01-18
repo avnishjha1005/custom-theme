@@ -711,7 +711,7 @@ export class Slideshow extends Component {
   return; // nested slideshow owns this gesture
 }
 
-    event.preventDefault();
+    
     // Store initial position but don't start handling yet
     const { axis } = this.#scroll;
     const startPosition = axis === 'x' ? clientX : clientY;
@@ -805,9 +805,12 @@ export class Slideshow extends Component {
 
       if (!moved) {
         moved = true;
-        if (this.isNested) {
-          event.stopPropagation();
-        }
+
+        event.preventDefault(); // ONLY NOW
+        event.stopPropagation();
+
+        this.pause();
+        this.setAttribute('dragging', '');
         // Use setPointerCapture for pointer events (not available for touch events)
         if ('pointerId' in event && this.setPointerCapture) {
           this.setPointerCapture(event.pointerId);
