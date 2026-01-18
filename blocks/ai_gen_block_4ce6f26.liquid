@@ -137,6 +137,7 @@
     .ai-quote-section__container-{{ ai_gen_id }} {
       background_color:#692c23;
       flex-direction: column;
+      justify-content:center;
       min-height: auto;
       position: relative; /* Anchor for the absolute image */
       width: 100%; /* Ensure container is as wide as screen */
@@ -147,9 +148,6 @@
 
     .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
       order:999;
-      bottom: -150px;
-      left: 50%;
-      transform: translate(-50%, -50%);
       width: auto; /* Let image define width or use mobile_image_width */
       height: auto;
        /* Sit on top of content if they overlap */
