@@ -713,6 +713,9 @@ export class Slideshow extends Component {
     if (targetNestedSlideshow instanceof Slideshow && targetNestedSlideshow !== this) {
       return;
     }
+    if ('pointerId' in event && this.refs.scroller.setPointerCapture) {
+  this.refs.scroller.setPointerCapture(event.pointerId);
+}
 
     event.preventDefault();
     // Store initial position but don't start handling yet
@@ -820,9 +823,9 @@ export class Slideshow extends Component {
           event.stopPropagation();
         }
         // Use setPointerCapture for pointer events (not available for touch events)
-        if ('pointerId' in event && this.setPointerCapture) {
-          this.setPointerCapture(event.pointerId);
-        }
+        // if ('pointerId' in event && this.setPointerCapture) {
+        //   this.setPointerCapture(event.pointerId);
+        // }
 
         // Prevent clicks once the user starts dragging
         document.addEventListener('click', preventDefault, { once: true, signal });
