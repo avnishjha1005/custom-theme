@@ -719,6 +719,9 @@ export class Slideshow extends Component {
 
     const controller = new AbortController();
     const { signal } = controller;
+    signal.addEventListener('abort', () => {
+      this.#log('ABORT CONTROLLER TRIGGERED');
+    });
     const startTime = performance.now();
     let previous = startPosition;
     let previousOpposite = startPositionOpposite;
