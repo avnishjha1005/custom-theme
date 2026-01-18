@@ -348,7 +348,7 @@
                 "large_first_image": false,
                 "icons_style": "none",
                 "slideshow_controls_style": "dots",
-                "slideshow_mobile_controls_style": "hint",
+                "slideshow_mobile_controls_style": "dots",
                 "thumbnail_position": "bottom",
                 "thumbnail_width": 64,
                 "aspect_ratio": "1/1.25",
