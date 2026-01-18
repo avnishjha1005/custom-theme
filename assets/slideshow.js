@@ -485,7 +485,7 @@ export class Slideshow extends Component {
     this.#updateControlsVisibility();
 
     this.disabled = this.disabled;
-
+    console.log(disabled)
     this.resume();
 
     this.current = this.initialSlideIndex;
