@@ -233,14 +233,13 @@
         {% endif %}
 
         {% if block.settings.author != blank %}
-          
-          <p class="ai-quote-section__author-{{ ai_gen_id }}">
-            <p>—</p>
-            <br/>
-            <p style="font-size:inherit;color:inherit;">
-            {{ block.settings.author }}</p>
-          </p>
-        {% endif %}
+  <p class="ai-quote-section__author-{{ ai_gen_id }}" style="font-size: 14px; color: #333;">
+    <span class="ai-quote-section__dash">—</span>
+    <span class="ai-quote-section__author-text">
+      {{ block.settings.author }}
+    </span>
+  </p>
+{% endif %}
         
       </div>
     </div>
