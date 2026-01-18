@@ -763,13 +763,13 @@ export class Slideshow extends Component {
       const oppositeDelta = Math.abs(startPositionOpposite - currentOpposite);
 
       if ('pointerId' in event && this.setPointerCapture) {
-  this.#log('SETTING POINTER CAPTURE', event.pointerId);
-  this.setPointerCapture(event.pointerId);
-  this.#log(
-    'HAS POINTER CAPTURE?',
-    this.hasPointerCapture?.(event.pointerId)
-  );
-}
+        this.#log('SETTING POINTER CAPTURE', event.pointerId);
+        this.setPointerCapture(event.pointerId);
+        this.#log(
+          'HAS POINTER CAPTURE?',
+          this.hasPointerCapture?.(event.pointerId)
+        );
+      }
 
       // Check if we're moving primarily in the scroll direction (not perpendicular)
       // This helps distinguish between scrolling the slideshow vs scrolling the page
@@ -906,6 +906,7 @@ export class Slideshow extends Component {
     };
 
     this.#scroll.snap = false;
+    this.#log('ADDING DOCUMENT LISTENERS');
 
     // Use pointer events (works for both mouse and touch)
     document.addEventListener('pointermove', onPointerMove, { signal });
