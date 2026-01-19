@@ -131,7 +131,8 @@
       ],
       "custom_css": [
         "@media screen and (max-width: 768px) {p {text-align: center; }}",
-        ".section--page-width {max-width: 1440px; margin: auto;}"
+        ".section--page-width {max-width: 1440px; margin: auto;}",
+        ".custom-section-content {padding:0px !important;}"
       ],
       "name": "Collection heading",
       "settings": {
