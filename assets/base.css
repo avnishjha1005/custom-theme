@@ -4576,6 +4576,23 @@ header-component dropdown-localization-component{
 }
 }
 
+.facets-block-wrapper {
+  position: relative;
+  border-bottom: none; /* we'll replace the inline border-bottom */
+}
+
+/* Full-width border that extends to page edges */
+.facets-block-wrapper::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0;
+  width: 100vw;                  /* span entire viewport width */
+  border-bottom: 0.5px solid #d8d1c6;
+  pointer-events: none;
+}
+
 /* Ensure the scroller doesn't try to select text while dragging */
 /* slideshow-component[dragging] {
   cursor: grabbing;
