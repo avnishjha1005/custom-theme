@@ -169,116 +169,157 @@
 </accordion-custom>
 
 {% stylesheet %}
+  /* Price filter */
+  .price-facet {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    padding: var(--padding-md) 0;
+  }
+
+  .facets--horizontal .facets__panel-content:has(.price-facet) {
+    min-width: 360px;
+  }
+
   /* Slider wrapper */
-.price-facet__slider-wrapper {
-  position: relative;
-  height: 40px;
-  margin: 20px 0;
-}
+  .price-facet__slider-wrapper {
+    position: relative;
+    height: 40px;
+    margin: 20px 0;
+  }
 
-/* Grey base track */
-.price-facet__slider-track {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background-color: #e5e5e5; /* grey outside range */
-  transform: translateY(-50%);
-  border-radius: 2px;
-  z-index: 1;
-}
+  /* Slider track */
+  .price-facet__slider-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #e5e5e5;
+    transform: translateY(-50%);
+    border-radius: 2px;
+  }
 
-/* Black active range */
-.price-facet__slider-range {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%; /* default; JS will override */
-  background-color: #000; /* black in-range */
-  border-radius: 2px;
-  z-index: 2;
-}
+  /* Active range */
+  .price-facet__slider-range {
+    position: absolute;
+    height: 100%;
+    background-color: #000;
+    border-radius: 2px;
+  }
 
-/* Range inputs – sit above but transparent */
-.price-facet__slider {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  transform: translateY(-50%);
-  -webkit-appearance: none;
-  appearance: none;
-  background: transparent;          /* key: don't paint over the track */
-  pointer-events: none;             /* thumbs still receive events */
-  margin: 0;
-  z-index: 3;
-}
+  /* Range inputs */
+  .price-facet__slider {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    transform: translateY(-50%);
+    -webkit-appearance: none;
+    appearance: none;
+    background: black;
+    pointer-events: none;
+    margin: 0;
+  }
 
-/* Remove default track styling so only our custom track is visible */
-.price-facet__slider::-webkit-slider-runnable-track {
-  height: 4px;
-  background: transparent;
-}
+  /* Remove default styling */
+  .price-facet__slider::-webkit-slider-runnable-track {
+    height: 4px;
+    background: black;
+  }
 
-.price-facet__slider::-moz-range-track {
-  height: 4px;
-  background: transparent;
-}
+  .price-facet__slider::-moz-range-track {
+    height: 4px;
+    background: black;
+  }
 
-/* Thumbs – these are what the user grabs */
-.price-facet__slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 8px;
-  height: 16px;
-  background-color: black;
-  border: 2px solid black;
-  cursor: pointer;
-  pointer-events: auto;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-  transition: transform 0.1s ease;
-  margin-top: -7px;
-}
+  /* Thumb styling - WebKit */
+  .price-facet__slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 8px;
+    height: 16px;
+    background-color: black;
+    border: 2px solid black;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease;
+    margin-top: -7px;
+  }
 
-.price-facet__slider::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
-}
+  .price-facet__slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+  }
 
-.price-facet__slider::-webkit-slider-thumb:active {
-  transform: scale(1.05);
-}
+  .price-facet__slider::-webkit-slider-thumb:active {
+    transform: scale(1.05);
+  }
 
-/* Firefox thumb */
-.price-facet__slider::-moz-range-thumb {
-  width: 8px;
-  height: 16px;
-  background-color: black;
-  border: 2px solid black;
-  border-radius: 2px;
-  cursor: pointer;
-  pointer-events: auto;
-  transition: transform 0.1s ease;
-}
+  /* Thumb styling - Firefox */
+  .price-facet__slider::-moz-range-thumb {
+    width: 8px;
+    height: 16px;
+    background-color: black;
+    border: 2px solid black;
+    border-radius: 2px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: transform 0.1s ease;
+  }
 
-.price-facet__slider::-moz-range-thumb:hover {
-  transform: scale(1.1);
-}
+  .price-facet__slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+  }
 
-.price-facet__slider::-moz-range-thumb:active {
-  transform: scale(1.05);
-}
+  .price-facet__slider::-moz-range-thumb:active {
+    transform: scale(1.05);
+  }
 
-/* Focus */
-.price-facet__slider:focus {
-  outline: none;
-}
+  /* Focus styles */
+  .price-facet__slider:focus {
+    outline: none;
+  }
 
-/* Ensure max slider on top of min slider when overlapping */
-.price-facet__slider--max {
-  z-index: 4;
-}
 
+  /* Ensure max slider is above min slider */
+  .price-facet__slider--max {
+    z-index: 2;
+  }
+
+  /* Values display */
+  .price-facet__values {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--gap-md);
+    margin-top: var(--padding-sm);
+  }
+
+  .price-facet__value {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    font-size: var(--font-paragraph--size);
+    font-weight: 500;
+  }
+
+  .price-facet__currency {
+    opacity: 0.6;
+  }
+
+  .price-facet__value--min {
+    text-align: left;
+  }
+
+  .price-facet__value--max {
+    text-align: right;
+  }
+
+  /* Clear button spacing */
+  .price-facet .clear-filter {
+    margin-top: var(--padding-md);
+  }
+  
 {% endstylesheet %}
