@@ -308,6 +308,8 @@ class PriceFacetComponent extends Component {
 
     facetsForm.updateFilters();
     this.#updateSummary();
+    this.#updateSliderUI();
+
   }
 
   /**
