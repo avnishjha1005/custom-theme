@@ -4583,6 +4583,7 @@ header-component dropdown-localization-component{
 
 /* Full-width border that extends to page edges */
 .facets-block-wrapper::after {
+  padding-top:13px;
   content: "";
   position: absolute;
   left: 50%;
