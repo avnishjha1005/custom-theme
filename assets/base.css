@@ -4613,7 +4613,7 @@ slideshow-component [ref="scroller"] {
 }*/
 
 @media screen and (max-width:768px){
-  [class*="product-vendor"]{
+  [class*="product_vendor"]{
   font-size:10px !important;
 }
 [class*="__product-title_"]{
