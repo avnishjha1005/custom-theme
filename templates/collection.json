@@ -133,7 +133,7 @@
       "custom_css": [
         "@media screen and (max-width: 768px) {p {text-align: center; }}",
         ".section--page-width {max-width: 1440px; margin: auto;}",
-        ". section--page-width::before {padding-top:13px; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 100vw; border-bottom: 0.5px solid #d8d1c6; pointer-events: none;}",
+        ".section--page-width::before {padding-top: 13px; position: absolute; left: 50%; transform: translateX(-50%); bottom: 0; width: 100vw; border-bottom: 0.5px solid #d8d1c6; pointer-events: none;}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "Collection heading",
