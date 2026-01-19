@@ -401,10 +401,9 @@ export class Slideshow extends Component {
    * @type {boolean}
    */
   get disabled() {
-    // return (
-    //   this.getAttribute('disabled') === 'true' || (this.hasAttribute('mobile-disabled') && !mediaQueryLarge.matches)
-    // );
-    return false;
+    return (
+      this.getAttribute('disabled') === 'true' || (this.hasAttribute('mobile-disabled') && !mediaQueryLarge.matches)
+    );
   }
 
   /**
@@ -485,7 +484,7 @@ export class Slideshow extends Component {
     this.#updateControlsVisibility();
 
     this.disabled = this.disabled;
-    console.log(this.disabled)
+
     this.resume();
 
     this.current = this.initialSlideIndex;
@@ -598,8 +597,8 @@ export class Slideshow extends Component {
     const { slides } = this;
 
     if (!slides || slides.length <= 1) return;
-    //if (!(event.target instanceof Element)) return;
-    // if (this.disabled || this.#dragging) return;
+    if (!(event.target instanceof Element)) return;
+    if (this.disabled || this.#dragging) return;
 
     // Check if the event target is within a 3D model interactive element
     // This prevents the slideshow from capturing drag events when interacting with 3D models
