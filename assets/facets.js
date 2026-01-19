@@ -215,31 +215,45 @@ if (!customElements.get('facet-inputs-component')) {
  * Handles price facet functionality
  * @extends {Component<PriceFacetRefs>}
  */
+// price-facet-component.js
+
+/**
+ * @typedef {Object} PriceFacetRefs
+ * @property {HTMLInputElement} minInput
+ * @property {HTMLInputElement} maxInput
+ * @property {HTMLDivElement} sliderRange
+ * @property {HTMLElement} minDisplay
+ * @property {HTMLElement} maxDisplay
+ */
+
 class PriceFacetComponent extends Component {
   connectedCallback() {
     super.connectedCallback();
+
+    // Rebind listeners every time we’re connected (including after re-render)
     this.addEventListener('input', this.#onInput);
+    this.addEventListener('change', this.#onChange);
+
+    // Recalculate UI from current DOM values (Liquid-rendered)
+    this.#updateSliderUI();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('input', this.#onInput);
+    this.removeEventListener('change', this.#onChange);
   }
 
-  /**
-   * Handles input events for real-time slider updates
-   * @param {Event} event - The input event
-   */
   #onInput = (event) => {
     if (!(event.target instanceof HTMLInputElement)) return;
-    
+
     const { minInput, maxInput } = this.refs;
-    
-    // Prevent sliders from crossing
+    if (!minInput || !maxInput) return;
+
     const minVal = parseFloat(minInput.value);
     const maxVal = parseFloat(maxInput.value);
     const gap = parseFloat(maxInput.max) * 0.01; // 1% minimum gap
-    
+
     if (event.target === minInput) {
       if (minVal >= maxVal - gap) {
         minInput.value = String(maxVal - gap);
@@ -249,32 +263,42 @@ class PriceFacetComponent extends Component {
         maxInput.value = String(minVal + gap);
       }
     }
-    
+
     this.#updateSliderUI();
   };
 
-  /**
-   * Updates the visual slider UI (range fill and value displays)
-   */
+  #onChange = (event) => {
+    if (!(event.target instanceof HTMLInputElement)) return;
+    // After “final” value changes, sync UI once more in case anything was clamped
+    this.#updateSliderUI();
+  };
+
   #updateSliderUI() {
     const { minInput, maxInput, sliderRange, minDisplay, maxDisplay } = this.refs;
-    
+
     if (!minInput || !maxInput || !sliderRange) return;
-    
+
     const min = parseFloat(minInput.min);
     const max = parseFloat(minInput.max);
-    const minVal = parseFloat(minInput.value);
-    const maxVal = parseFloat(maxInput.value);
-    
-    // Calculate percentages
+    let minVal = parseFloat(minInput.value);
+    let maxVal = parseFloat(maxInput.value);
+
+    if (Number.isNaN(minVal) || Number.isNaN(maxVal) || max <= min) return;
+
+    // Clamp to safe range
+    if (minVal < min) minVal = min;
+    if (maxVal > max) maxVal = max;
+    if (maxVal < minVal) maxVal = minVal;
+
     const minPercent = ((minVal - min) / (max - min)) * 100;
     const maxPercent = ((maxVal - min) / (max - min)) * 100;
-    
-    // Update range fill
-    sliderRange.style.left = `${minPercent}%`;
-    sliderRange.style.width = `${maxPercent - minPercent}%`;
-    
-    // Update value displays
+
+    const clampedMinPercent = Math.max(0, Math.min(100, minPercent));
+    const clampedMaxPercent = Math.max(0, Math.min(100, maxPercent));
+
+    sliderRange.style.left = `${clampedMinPercent}%`;
+    sliderRange.style.width = `${clampedMaxPercent - clampedMinPercent}%`;
+
     if (minDisplay) {
       minDisplay.textContent = this.#formatDisplayValue(minVal);
     }
@@ -283,21 +307,13 @@ class PriceFacetComponent extends Component {
     }
   }
 
-  /**
-   * Formats a value for display
-   * @param {number} value - The value to format
-   * @returns {string} The formatted value
-   */
   #formatDisplayValue(value) {
-    // Round to 2 decimal places and remove trailing zeros
     return parseFloat(value.toFixed(2)).toString();
   }
 
-  /**
-   * Updates price filter and results
-   */
   updatePriceFilterAndResults() {
     const { minInput, maxInput } = this.refs;
+    if (!minInput || !maxInput) return;
 
     this.#adjustToValidValues(minInput);
     this.#adjustToValidValues(maxInput);
@@ -305,30 +321,27 @@ class PriceFacetComponent extends Component {
     const facetsForm = this.closest('facets-form-component');
     if (!(facetsForm instanceof FacetsFormComponent)) return;
 
+    // This will trigger the re-render (AJAX)
     facetsForm.updateFilters();
     this.#updateSummary();
-    this.#updateSliderUI();
 
+    // While this instance still lives, sync UI to whatever values were clamped
+    this.#updateSliderUI();
   }
 
-  /**
-   * Adjusts input values to be within valid range
-   * @param {HTMLInputElement} input - The input element to adjust
-   */
   #adjustToValidValues(input) {
-    if (!input.value || input.value.trim() === '') return;
+    if (!input || !input.value || input.value.trim() === '') return;
 
     const value = parseFloat(input.value);
     const min = parseFloat(input.min);
     const max = parseFloat(input.max);
 
+    if (Number.isNaN(value) || Number.isNaN(min) || Number.isNaN(max)) return;
+
     if (value < min) input.value = min.toString();
     if (value > max) input.value = max.toString();
   }
 
-  /**
-   * Updates the price summary
-   */
   #updateSummary() {
     const { minInput, maxInput } = this.refs;
     const details = this.closest('details');
@@ -336,14 +349,14 @@ class PriceFacetComponent extends Component {
 
     if (!(statusComponent instanceof FacetStatusComponent)) return;
 
-    statusComponent?.updatePriceSummary(minInput, maxInput);
+    statusComponent.updatePriceSummary(minInput, maxInput);
   }
 }
-
 
 if (!customElements.get('price-facet-component')) {
   customElements.define('price-facet-component', PriceFacetComponent);
 }
+
 
 /**
  * Handles clearing of facet filters
