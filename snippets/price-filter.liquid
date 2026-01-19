@@ -188,51 +188,50 @@
     margin: 20px 0;
   }
 
-  /* Slider track */
   .price-facet__slider-track {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background-color: #e5e5e5;
-    transform: translateY(-50%);
-    border-radius: 2px;
-  }
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: #e5e5e5; /* grey for "out of range" */
+  transform: translateY(-50%);
+  border-radius: 2px;
+}
 
-  /* Active range */
-  .price-facet__slider-range {
-    position: absolute;
-    height: 100%;
-    background-color: #000;
-    border-radius: 2px;
-  }
+/* Active range */
+.price-facet__slider-range {
+  position: absolute;
+  height: 100%;
+  background-color: #000; /* black for selected range */
+  border-radius: 2px;
+}
 
-  /* Range inputs */
-  .price-facet__slider {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    transform: translateY(-50%);
-    -webkit-appearance: none;
-    appearance: none;
-    background: black;
-    pointer-events: none;
-    margin: 0;
-  }
+/* Range inputs */
+.price-facet__slider {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  transform: translateY(-50%);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent; /* make underlying track visible */
+  pointer-events: none;
+  margin: 0;
+}
 
-  /* Remove default styling */
-  .price-facet__slider::-webkit-slider-runnable-track {
-    height: 4px;
-    background: black;
-  }
+/* Remove default styling */
+.price-facet__slider::-webkit-slider-runnable-track {
+  height: 4px;
+  background: transparent; /* don't override our custom track */
+}
 
-  .price-facet__slider::-moz-range-track {
-    height: 4px;
-    background: black;
-  }
+.price-facet__slider::-moz-range-track {
+  height: 4px;
+  background: transparent; /* don't override our custom track */
+}
 
   /* Thumb styling - WebKit */
   .price-facet__slider::-webkit-slider-thumb {
@@ -321,4 +320,5 @@
   .price-facet .clear-filter {
     margin-top: var(--padding-md);
   }
+
 {% endstylesheet %}
