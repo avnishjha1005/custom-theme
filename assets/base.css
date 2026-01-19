@@ -4610,5 +4610,14 @@ slideshow-component[dragging] slideshow-slides {
 
 slideshow-component [ref="scroller"] {
   touch-action: pan-y;
+}*/
+
+@media screen and (max-width:768px){
+  .text-block--AYlJETC9yMDVURjlTc__product_vendor_Lww9M{
+  font-size:10px !important;
+}
+.text-block--ATDROV3FYVlZhMVdQV__product_title_GDE6KA{
+  font-size:12px !important;
+}
 }
 
