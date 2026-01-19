@@ -4613,10 +4613,10 @@ slideshow-component [ref="scroller"] {
 }*/
 
 @media screen and (max-width:768px){
-  .text-block--AYlJETC9yMDVURjlTc__product_vendor_Lww9M{
+  [class*="product-vendor"]{
   font-size:10px !important;
 }
-.text-block--ATDROV3FYVlZhMVdQV__product_title_GDE6KA{
+[class*="__product-title_"]{
   font-size:12px !important;
 }
 }
