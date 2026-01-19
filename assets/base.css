@@ -4575,18 +4575,6 @@ header-component dropdown-localization-component{
   display:none;
 }
 }
-slideshow-component[dragging] {
-  cursor: grabbing;
-  user-select: none;
-}
-slideshow-component[dragging] img {
-  pointer-events: none; /* Prevents the browser from trying to "drag" the image file */
-}
-slideshow-component img {
-  -webkit-user-drag: none;
-  user-drag: none;
-  user-select: none;
-}
 
 /* Ensure the scroller doesn't try to select text while dragging */
 /* slideshow-component[dragging] {
