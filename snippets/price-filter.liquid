@@ -169,45 +169,39 @@
 </accordion-custom>
 
 {% stylesheet %}
-  /* Price filter */
-  .price-facet {
-    container-type: inline-size;
-    display: flex;
-    flex-direction: column;
-    padding: var(--padding-md) 0;
-  }
-
-  .facets--horizontal .facets__panel-content:has(.price-facet) {
-    min-width: 360px;
-  }
-
   /* Slider wrapper */
-  .price-facet__slider-wrapper {
-    position: relative;
-    height: 40px;
-    margin: 20px 0;
-  }
+.price-facet__slider-wrapper {
+  position: relative;
+  height: 40px;
+  margin: 20px 0;
+}
 
-  .price-facet__slider-track {
+/* Grey base track */
+.price-facet__slider-track {
   position: absolute;
   top: 50%;
   left: 0;
   right: 0;
   height: 4px;
-  background-color: #e5e5e5; /* grey for "out of range" */
+  background-color: #e5e5e5; /* grey outside range */
   transform: translateY(-50%);
   border-radius: 2px;
+  z-index: 1;
 }
 
-/* Active range */
+/* Black active range */
 .price-facet__slider-range {
   position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
-  background-color: #000; /* black for selected range */
+  width: 100%; /* default; JS will override */
+  background-color: #000; /* black in-range */
   border-radius: 2px;
+  z-index: 2;
 }
 
-/* Range inputs */
+/* Range inputs – sit above but transparent */
 .price-facet__slider {
   position: absolute;
   top: 50%;
@@ -217,108 +211,74 @@
   transform: translateY(-50%);
   -webkit-appearance: none;
   appearance: none;
-  background: black; /* make underlying track visible */
-  pointer-events: none;
+  background: transparent;          /* key: don't paint over the track */
+  pointer-events: none;             /* thumbs still receive events */
   margin: 0;
+  z-index: 3;
 }
 
-/* Remove default styling */
+/* Remove default track styling so only our custom track is visible */
 .price-facet__slider::-webkit-slider-runnable-track {
   height: 4px;
-  background: transparent; /* don't override our custom track */
+  background: transparent;
 }
 
 .price-facet__slider::-moz-range-track {
   height: 4px;
-  background: transparent; /* don't override our custom track */
+  background: transparent;
 }
 
-  /* Thumb styling - WebKit */
-  .price-facet__slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 8px;
-    height: 16px;
-    background-color: black;
-    border: 2px solid black;
-    cursor: pointer;
-    pointer-events: auto;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-    transition: transform 0.1s ease;
-    margin-top: -7px;
-  }
+/* Thumbs – these are what the user grabs */
+.price-facet__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 8px;
+  height: 16px;
+  background-color: black;
+  border: 2px solid black;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.1s ease;
+  margin-top: -7px;
+}
 
-  .price-facet__slider::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
-  }
+.price-facet__slider::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+}
 
-  .price-facet__slider::-webkit-slider-thumb:active {
-    transform: scale(1.05);
-  }
+.price-facet__slider::-webkit-slider-thumb:active {
+  transform: scale(1.05);
+}
 
-  /* Thumb styling - Firefox */
-  .price-facet__slider::-moz-range-thumb {
-    width: 8px;
-    height: 16px;
-    background-color: black;
-    border: 2px solid black;
-    border-radius: 2px;
-    cursor: pointer;
-    pointer-events: auto;
-    transition: transform 0.1s ease;
-  }
+/* Firefox thumb */
+.price-facet__slider::-moz-range-thumb {
+  width: 8px;
+  height: 16px;
+  background-color: black;
+  border: 2px solid black;
+  border-radius: 2px;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.1s ease;
+}
 
-  .price-facet__slider::-moz-range-thumb:hover {
-    transform: scale(1.1);
-  }
+.price-facet__slider::-moz-range-thumb:hover {
+  transform: scale(1.1);
+}
 
-  .price-facet__slider::-moz-range-thumb:active {
-    transform: scale(1.05);
-  }
+.price-facet__slider::-moz-range-thumb:active {
+  transform: scale(1.05);
+}
 
-  /* Focus styles */
-  .price-facet__slider:focus {
-    outline: none;
-  }
+/* Focus */
+.price-facet__slider:focus {
+  outline: none;
+}
 
-
-  /* Ensure max slider is above min slider */
-  .price-facet__slider--max {
-    z-index: 2;
-  }
-
-  /* Values display */
-  .price-facet__values {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--gap-md);
-    margin-top: var(--padding-sm);
-  }
-
-  .price-facet__value {
-    display: flex;
-    align-items: baseline;
-    gap: 4px;
-    font-size: var(--font-paragraph--size);
-    font-weight: 500;
-  }
-
-  .price-facet__currency {
-    opacity: 0.6;
-  }
-
-  .price-facet__value--min {
-    text-align: left;
-  }
-
-  .price-facet__value--max {
-    text-align: right;
-  }
-
-  /* Clear button spacing */
-  .price-facet .clear-filter {
-    margin-top: var(--padding-md);
-  }
+/* Ensure max slider on top of min slider when overlapping */
+.price-facet__slider--max {
+  z-index: 4;
+}
 
 {% endstylesheet %}
