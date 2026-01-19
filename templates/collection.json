@@ -38,7 +38,8 @@
         "logo_7k4hiH"
       ],
       "custom_css": [
-        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; }}"
+        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; }}",
+        ".custom-section-content{padding:0px !important; }"
       ],
       "name": "t:names.large_logo",
       "settings": {
@@ -132,7 +133,7 @@
       "custom_css": [
         "@media screen and (max-width: 768px) {p {text-align: center; }}",
         ".section--page-width {max-width: 1440px; margin: auto;}",
-        ".custom-section-content {padding:0px !important;}"
+        ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "Collection heading",
       "settings": {
