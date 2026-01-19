@@ -452,7 +452,8 @@
         "media-gallery {height: 100% !important;}",
         ".facets-product-type__list a {padding-left: 0px;}",
         ".facets-type-bar__meta .svg-wrapper {height: unset;}",
-        "@media screen and (max-width: 768px) {.facets-type-bar {padding: 8px; }}"
+        "@media screen and (max-width: 768px) {.facets-type-bar {padding: 8px; }}",
+        ".facets-toggle {display: none;}"
       ],
       "settings": {
         "layout_type": "organic",
