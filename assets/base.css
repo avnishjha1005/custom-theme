@@ -4620,5 +4620,8 @@ slideshow-component [ref="scroller"] {
   --font-size:12px !important;
   font-size:12px !important;
 }
+product-price{
+  --font-size:12px !important;
+}
 }
 
