@@ -219,7 +219,6 @@ class PriceFacetComponent extends Component {
   connectedCallback() {
     super.connectedCallback();
     this.addEventListener('input', this.#onInput);
-    this.#updateSliderUI();
   }
 
   disconnectedCallback() {
