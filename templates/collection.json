@@ -182,7 +182,7 @@
             "inherit_color_scheme": true,
             "color_scheme": "",
             "padding-block-start": 16,
-            "padding-block-end": 8,
+            "padding-block-end": 13,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
             "facets_margin_bottom": 16,
@@ -451,7 +451,7 @@
         ".product-card__content {height: 100%;}",
         "media-gallery {height: 100% !important;}",
         ".facets-product-type__list a {padding-left: 0px;}",
-        ".facets-type-bar__meta .svg-wrapper{height: unset;}"
+        ".facets-type-bar__meta .svg-wrapper {height: unset;}"
       ],
       "settings": {
         "layout_type": "organic",
