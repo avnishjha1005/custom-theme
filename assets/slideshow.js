@@ -657,7 +657,7 @@ export class Slideshow extends Component {
       }
 
       // Stop the event from bubbling up to parent slideshow components
-      event.stopImmediatePropagation();
+      //event.stopImmediatePropagation();
 
       const delta = previous - current;
       const timeDelta = performance.now() - startTime;
@@ -846,7 +846,7 @@ export class Slideshow extends Component {
     const { slides } = this;
     if (!slides || !slides.length) return 0;
 
-    const visibleSlides = this.visibleSlides;
+    const visibleSlides = this.visiblesSlides;
 
     // Batch writes to the DOM
     scheduler.schedule(() => {
