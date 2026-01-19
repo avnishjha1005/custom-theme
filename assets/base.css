@@ -4616,7 +4616,7 @@ slideshow-component [ref="scroller"] {
   [class*="product_vendor"]{
   font-size:10px !important;
 }
-[class*="product_title"]{
+[class*="__product_title_"]{
   font-size:12px !important;
 }
 }
