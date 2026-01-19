@@ -444,7 +444,7 @@
         }
       },
       "custom_css": [
-        "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
+        "quick-add-component {display: flex;align-items: flex-end;margin-right: 0;}",
         ".product-grid-container {max-width: 1440px; margin: auto;}",
         "#ResultsList > .grid {display: unset;}",
         ".product-grid__item {height: 100%;}",
