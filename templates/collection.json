@@ -132,7 +132,7 @@
       ],
       "custom_css": [
         "@media screen and (max-width: 768px) {p {text-align: center; }}",
-        ".section--page-width {max-width: 1440px; margin: auto; border-top: 0.5px solid #D8D1C6; }",
+        ".section--page-width {max-width: 1440px; margin: auto; border-top: 0.5px solid #d8d1c6;}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "Collection heading",
@@ -185,7 +185,7 @@
             "padding-block-end": 8,
             "padding-inline-start": 0,
             "padding-inline-end": 0,
-            "facets_margin_bottom": 8,
+            "facets_margin_bottom": 16,
             "facets_margin_right": 20
           },
           "blocks": {}
@@ -450,7 +450,8 @@
         ".product-grid__item {height: 100%;}",
         ".product-card__content {height: 100%;}",
         "media-gallery {height: 100% !important;}",
-        ".facets-product-type__list a {padding-left: 0px;}"
+        ".facets-product-type__list a {padding-left: 0px;}",
+        ".facets-type-bar__meta .svg-wrapper{height: unset;}"
       ],
       "settings": {
         "layout_type": "organic",
