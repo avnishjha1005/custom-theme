@@ -38,7 +38,7 @@
         "logo_7k4hiH"
       ],
       "custom_css": [
-        ".logo-block__image {height: 24px; padding-bottom: 16px; @media screen and (min-width: 768px) {display: none; height:0; padding:0; margin:0; }}",
+        ".logo-block__image {height: 24px; padding-bottom: 16px; @media screen and (min-width: 768px) {display: none; height: 0; padding: 0; margin: 0; }}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
@@ -451,7 +451,8 @@
         ".product-card__content {height: 100%;}",
         "media-gallery {height: 100% !important;}",
         ".facets-product-type__list a {padding-left: 0px;}",
-        ".facets-type-bar__meta .svg-wrapper {height: unset;}"
+        ".facets-type-bar__meta .svg-wrapper {height: unset;}",
+        "@media screen and (max-width: 768px) {.facets-type-bar{padding:8px; }}"
       ],
       "settings": {
         "layout_type": "organic",
