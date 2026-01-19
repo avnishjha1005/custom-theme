@@ -447,7 +447,8 @@
         "#ResultsList > .grid {display: unset;}",
         ".product-grid__item {height: 100%;}",
         ".product-card__content {height: 100%;}",
-        "media-gallery {height: 100% !important;}"
+        "media-gallery {height: 100% !important;}",
+        ".facets-product-type__list a{padding-left:0px;}"
       ],
       "settings": {
         "layout_type": "organic",
