@@ -13,8 +13,8 @@
       </h1>
     {%- else -%}
       <div style="display:flex;flex-direction:column;">
-    <h1>
-      {{ block_settings.title }}</h1>
+    <div>
+      {{ block_settings.title }}</div>
       {%- if block_settings.show_count -%}
         <div>{{ cart.item_count }}</div>
       {%- endif -%}
