@@ -69,101 +69,155 @@
       {% assign min_input_max_value = filter.max_value.value | default: filter.range_max %}
       {% assign max_input_min_value = filter.min_value.value | default: 0 %}
 
-      <price-facet-component
-        class="price-facet"
-        id="facet-inputs-{{ filter.param_name | escape | replace: '.', '-' }}"
-        on:change="/updatePriceFilterAndResults"
+      # Price Slider Fix - Updated Liquid Template
+
+Replace the slider section in your `price-filter.liquid` file:
+
+```liquid
+<price-facet-component
+  class="price-facet"
+  id="facet-inputs-{{ filter.param_name | escape | replace: '.', '-' }}"
+  on:change="/updatePriceFilterAndResults"
+>
+  <div class="price-facet__slider-wrapper">
+    <div class="price-facet__slider-track" ref="sliderTrack">
+      {%- liquid
+        assign current_min = filter.min_value.value | default: 0
+        assign current_max = filter.max_value.value | default: filter.range_max
+        assign range_size = filter.range_max | minus: 0
+        
+        if range_size > 0
+          assign min_percent = current_min | times: 100.0 | divided_by: range_size
+          assign max_percent = current_max | times: 100.0 | divided_by: range_size
+          assign width_percent = max_percent | minus: min_percent
+        else
+          assign min_percent = 0
+          assign width_percent = 100
+        endif
+      -%}
+      <div 
+        class="price-facet__slider-range" 
+        ref="sliderRange"
+        style="left: {{ min_percent }}%; width: {{ width_percent }}%;"
+      ></div>
+    </div>
+    
+    <input
+      class="price-facet__slider price-facet__slider--min"
+      name="{{ filter.min_value.param_name }}"
+      id="{{ filter.label | escape }}-GTE"
+      {%- if filter.min_value.value -%}
+        value="{{ filter.min_value.value | money_without_currency | remove: ',' | remove: ' ' }}"
+      {%- else -%}
+        value="0"
+      {%- endif -%}
+      type="range"
+      min="0"
+      max="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
+      step="1"
+      ref="minInput"
+      autocomplete="off"
+      {% if autofocus %}
+        autofocus
+      {% endif %}
+    >
+    
+    <input
+      class="price-facet__slider price-facet__slider--max"
+      name="{{ filter.max_value.param_name }}"
+      id="{{ filter.label | escape }}-LTE"
+      {%- if filter.max_value.value -%}
+        value="{{ filter.max_value.value | money_without_currency | remove: ',' | remove: ' ' }}"
+      {%- else -%}
+        value="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
+      {%- endif -%}
+      type="range"
+      min="0"
+      max="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
+      step="1"
+      ref="maxInput"
+      autocomplete="off"
+      {% if autofocus %}
+        autofocus
+      {% endif %}
+    >
+  </div>
+
+  <div class="price-facet__values">
+    <div class="price-facet__value price-facet__value--min">
+      <span class="price-facet__currency">{{ cart.currency.symbol }}</span>
+      <span ref="minDisplay">
+        {%- if filter.min_value.value -%}
+          {{ filter.min_value.value | money_without_currency }}
+        {%- else -%}
+          0
+        {%- endif -%}
+      </span>
+    </div>
+    
+    <div class="price-facet__value price-facet__value--max">
+      <span class="price-facet__currency">{{ cart.currency.symbol }}</span>
+      <span ref="maxDisplay">
+        {%- if filter.max_value.value -%}
+          {{ filter.max_value.value | money_without_currency }}
+        {%- else -%}
+          {{ filter.range_max | money_without_currency }}
+        {%- endif -%}
+      </span>
+    </div>
+  </div>
+
+  {% if filter.min_value.value != null or filter.max_value.value != null %}
+    {% assign has_active_values = true %}
+  {% endif %}
+
+  {% if should_render_clear %}
+    <facet-clear-component
+      class="clear-filter"
+      tabindex="{% if has_active_values %}0{% else %}-1{% endif %}"
+      on:click="/clearFilter"
+      on:keydown="/clearFilter"
+    >
+      <div
+        class="facets__clear {% if has_active_values %}facets__clear--active{% endif %}"
+        ref="clearButton"
       >
-        <div class="price-facet__slider-wrapper">
-          <div class="price-facet__slider-track" ref="sliderTrack">
-            <div class="price-facet__slider-range" ref="sliderRange"></div>
-          </div>
-          
-          <input
-            class="price-facet__slider price-facet__slider--min"
-            name="{{ filter.min_value.param_name }}"
-            id="{{ filter.label | escape }}-GTE"
-            {%- if filter.min_value.value -%}
-              value="{{ filter.min_value.value | money_without_currency | remove: ',' | remove: ' ' }}"
-            {%- else -%}
-              value="0"
-            {%- endif -%}
-            type="range"
-            min="0"
-            max="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
-            step="1"
-            ref="minInput"
-            autocomplete="off"
-            {% if autofocus %}
-              autofocus
-            {% endif %}
-          >
-          
-          <input
-            class="price-facet__slider price-facet__slider--max"
-            name="{{ filter.max_value.param_name }}"
-            id="{{ filter.label | escape }}-LTE"
-            {%- if filter.max_value.value -%}
-              value="{{ filter.max_value.value | money_without_currency | remove: ',' | remove: ' ' }}"
-            {%- else -%}
-              value="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
-            {%- endif -%}
-            type="range"
-            min="0"
-            max="{{ filter.range_max | money_without_currency | remove: ',' | remove: ' ' }}"
-            step="1"
-            ref="maxInput"
-            autocomplete="off"
-            {% if autofocus %}
-              autofocus
-            {% endif %}
-          >
-        </div>
+        {{- 'actions.clear' | t -}}
+      </div>
+    </facet-clear-component>
+  {% endif %}
+</price-facet-component>
+```
 
-        <div class="price-facet__values">
-          <div class="price-facet__value price-facet__value--min">
-            <span class="price-facet__currency">{{ cart.currency.symbol }}</span>
-            <span ref="minDisplay">
-              {%- if filter.min_value.value -%}
-                {{ filter.min_value.value | money_without_currency }}
-              {%- else -%}
-                0
-              {%- endif -%}
-            </span>
-          </div>
-          
-          <div class="price-facet__value price-facet__value--max">
-            <span class="price-facet__currency">{{ cart.currency.symbol }}</span>
-            <span ref="maxDisplay">
-              {%- if filter.max_value.value -%}
-                {{ filter.max_value.value | money_without_currency }}
-              {%- else -%}
-                {{ filter.range_max | money_without_currency }}
-              {%- endif -%}
-            </span>
-          </div>
-        </div>
+## What Changed:
 
-        {% if filter.min_value.value != null or filter.max_value.value != null %}
-          {% assign has_active_values = true %}
-        {% endif %}
+The key addition is the **Liquid calculation** that sets the inline styles on the `sliderRange` element when the HTML is rendered by the server:
 
-        {% if should_render_clear %}
-          <facet-clear-component
-            class="clear-filter"
-            tabindex="{% if has_active_values %}0{% else %}-1{% endif %}"
-            on:click="/clearFilter"
-            on:keydown="/clearFilter"
-          >
-            <div
-              class="facets__clear {% if has_active_values %}facets__clear--active{% endif %}"
-              ref="clearButton"
-            >
-              {{- 'actions.clear' | t -}}
-            </div>
-          </facet-clear-component>
-        {% endif %}
-      </price-facet-component>
+```liquid
+{%- liquid
+  assign current_min = filter.min_value.value | default: 0
+  assign current_max = filter.max_value.value | default: filter.range_max
+  assign range_size = filter.range_max | minus: 0
+  
+  if range_size > 0
+    assign min_percent = current_min | times: 100.0 | divided_by: range_size
+    assign max_percent = current_max | times: 100.0 | divided_by: range_size
+    assign width_percent = max_percent | minus: min_percent
+  else
+    assign min_percent = 0
+    assign width_percent = 100
+  endif
+-%}
+<div 
+  class="price-facet__slider-range" 
+  ref="sliderRange"
+  style="left: {{ min_percent }}%; width: {{ width_percent }}%;"
+></div>
+```
+
+Now when the AJAX response comes back with fresh HTML, the `sliderRange` element will already have the correct inline styles calculated server-side based on the current filter values. The JavaScript will still update them during interaction, but they won't disappear on reload.
+
+Keep the updated JavaScript from before - the combination of server-rendered styles + JavaScript updates should solve the issue!
     </floating-panel-component>
   </details>
 </accordion-custom>
