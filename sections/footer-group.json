@@ -13,9 +13,10 @@
   "sections": {
     "export_collage_AK4FpE": {
       "type": "export-collage",
+      "disabled": true,
       "custom_css": [
         ".collage-container {max-width: 1440px; margin: auto;}",
-        ".collage-heading{font-size:30px;}"
+        ".collage-heading {font-size: 30px;}"
       ],
       "name": "Expert Collage",
       "settings": {
@@ -292,6 +293,7 @@
       "block_order": [
         "group_acXtYY"
       ],
+      "disabled": true,
       "custom_css": [
         ".section--page-width {max-width: 1440px; margin: auto;}"
       ],
@@ -305,6 +307,7 @@
     },
     "logo_RVGHD7": {
       "type": "logo",
+      "disabled": true,
       "custom_css": [
         "@media screen and (min-width: 768px) {.logo-section__content {display: flex; flex-direction: row-reverse; justify-content: space-between; align-items: flex-end; } .logo-section__image-wrapper {width: 50%; } .logo-section__footer-info {display: flex; flex-direction: row; align-items: flex-end; } .dropdown-localization__button {padding: 0px; }}",
         ".section--page-width {max-width: 1440px; margin: auto;}"
