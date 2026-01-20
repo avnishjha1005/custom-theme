@@ -3362,7 +3362,7 @@ slideshow-slides[gutters*='end'] {
   padding-inline-end: var(--gutter-slide-width, 0);
 }
 
-slideshow-component[dragging] {
+/* slideshow-component[dragging] {
   --cursor: grabbing;
   user-select: none;
 
@@ -3370,7 +3370,7 @@ slideshow-component[dragging] {
     pointer-events: none;
     user-select: none;
   }
-}
+} */
 
 slideshow-component[dragging] slideshow-arrows {
   display: none;
