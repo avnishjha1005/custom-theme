@@ -7,9 +7,11 @@
 {%- assign guides = product.metafields.custom.selected_size_guide.value -%}
 
 {%- if guides != blank -%}
+  <div class="btn-wrapper">
   <button type="button" class="sg-trigger-btn" onclick="toggleSizeDrawer(true)">
     Size Guide
   </button>
+</div>
 
   <div id="SizeDrawerOverlay" class="sg-overlay" onclick="toggleSizeDrawer(false)"></div>
 
@@ -96,6 +98,14 @@
   </div>
 
   <style>
+    @media screen and (max-width:768px){
+      .btn-wrapper{
+      width:100%;
+      display:flex;
+      justify-content:flex-end;
+    }
+    }
+    
     /* Trigger */
     .sg-trigger-btn {
       background: none;
