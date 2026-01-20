@@ -71,6 +71,7 @@
             </legend>
             
             {%- if variant_style == 'swatch' -%}
+                <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
               <div class="swatch-mobile-trigger">
                 {%- for product_option_value in product_option.values limit: 1 -%}
                   {% liquid
