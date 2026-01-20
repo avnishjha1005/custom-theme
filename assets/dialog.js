@@ -1,14 +1,3 @@
-import { Component } from '@theme/component';
-import { debounce, isClickedOutside, onAnimationEnd } from '@theme/utilities';
-
-/**
- * A custom element that manages a dialog.
- *
- * @typedef {object} Refs
- * @property {HTMLDialogElement} dialog – The dialog element.
- *
- * @extends Component<Refs>
- */
 export class DialogComponent extends Component {
   requiredRefs = ['dialog'];
 
@@ -40,23 +29,24 @@ export class DialogComponent extends Component {
 
   #previousScrollY = 0;
 
-  /**
-   * Shows the dialog.
-   */
   showDialog() {
     const { dialog } = this.refs;
 
     if (dialog.open) return;
-    const menuDrawer = document.querySelector('details');
-    console.log('closing menu drawer')
+
+    console.log('Search dialog opening');
+
+    // Close menu drawer when search opens
+    const menuDrawer = document.querySelector('header-drawer');
+    console.log('Found menu drawer:', menuDrawer);
     if (menuDrawer?.isOpen) {
+      console.log('Menu is open, closing it...');
       menuDrawer.close();
     }
 
     const scrollY = window.scrollY;
     this.#previousScrollY = scrollY;
 
-    // Prevent layout thrashing by separating DOM reads from DOM writes
     requestAnimationFrame(() => {
       document.body.style.width = '100%';
       document.body.style.position = 'fixed';
@@ -70,18 +60,20 @@ export class DialogComponent extends Component {
     });
   }
 
-  /**
-   * Closes the dialog.
-   */
   closeDialog = async () => {
     const { dialog } = this.refs;
 
     if (!dialog.open) return;
 
+    console.log('Search dialog closing');
+
     this.removeEventListener('click', this.#handleClick);
     this.removeEventListener('keydown', this.#handleKeyDown);
 
+    dialog.style.animation = 'none';
+    void dialog.offsetWidth;
     dialog.classList.add('dialog-closing');
+    dialog.style.animation = '';
 
     await onAnimationEnd(dialog, undefined, {
       subtree: false,
@@ -98,9 +90,6 @@ export class DialogComponent extends Component {
     this.dispatchEvent(new DialogCloseEvent());
   };
 
-  /**
-   * Toggles the dialog.
-   */
   toggleDialog = () => {
     if (this.refs.dialog.open) {
       this.closeDialog();
@@ -109,11 +98,6 @@ export class DialogComponent extends Component {
     }
   };
 
-  /**
-   * Closes the dialog when the user clicks outside of it.
-   *
-   * @param {MouseEvent} event - The mouse event.
-   */
   #handleClick(event) {
     const { dialog } = this.refs;
 
@@ -122,11 +106,6 @@ export class DialogComponent extends Component {
     }
   }
 
-  /**
-   * Closes the dialog when the user presses the escape key.
-   *
-   * @param {KeyboardEvent} event - The keyboard event.
-   */
   #handleKeyDown(event) {
     if (event.key !== 'Escape') return;
 
@@ -134,57 +113,25 @@ export class DialogComponent extends Component {
     this.closeDialog();
   }
 
-  /**
-   * Gets the minimum width of the dialog.
-   *
-   * @returns {number} The minimum width of the dialog.
-   */
   get minWidth() {
     return Number(this.getAttribute('dialog-active-min-width'));
   }
 
-  /**
-   * Gets the maximum width of the dialog.
-   *
-   * @returns {number} The maximum width of the dialog.
-   */
   get maxWidth() {
     return Number(this.getAttribute('dialog-active-max-width'));
   }
 }
 
-if (!customElements.get('dialog-component')) customElements.define('dialog-component', DialogComponent);
-
-export class DialogOpenEvent extends CustomEvent {
-  constructor() {
-    super(DialogOpenEvent.eventName);
+// DEBUGGING: Add this to check if elements exist
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('=== Checking for elements ===');
+  console.log('header-drawer:', document.querySelector('header-drawer'));
+  console.log('dialog-component:', document.querySelector('dialog-component'));
+  
+  // Test if you can find the details element
+  const drawer = document.querySelector('header-drawer');
+  if (drawer) {
+    console.log('Drawer details:', drawer.querySelector('details'));
+    console.log('Drawer is open?', drawer.isOpen);
   }
-
-  static eventName = 'dialog:open';
-}
-
-export class DialogCloseEvent extends CustomEvent {
-  constructor() {
-    super(DialogCloseEvent.eventName);
-  }
-
-  static eventName = 'dialog:close';
-}
-
-document.addEventListener(
-  'toggle',
-  (event) => {
-    if (event.target instanceof HTMLDetailsElement) {
-      if (event.target.hasAttribute('scroll-lock')) {
-        const { open } = event.target;
-
-        if (open) {
-          document.documentElement.setAttribute('scroll-lock', '');
-        } else {
-          document.documentElement.removeAttribute('scroll-lock');
-        }
-      }
-    }
-  },
-  { capture: true }
-);
+});
