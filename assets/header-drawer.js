@@ -69,6 +69,10 @@ class HeaderDrawer extends Component {
     const summary = details.querySelector('summary');
 
     if (!summary) return;
+    const searchDialog = document.querySelector('dialog-component');
+  if (searchDialog?.refs.dialog.open) {
+    searchDialog.closeDialog();
+  }
 
     summary.setAttribute('aria-expanded', 'true');
 
