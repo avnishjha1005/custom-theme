@@ -9,25 +9,23 @@
     display: block;
     width: 100%;
     background-color: {{ block.settings.background_color }};
-    padding: {{ block.settings.section_padding }}px 20px;
+    padding: {{ block.settings.section_padding }}px 0; /* Removed horizontal padding to allow full-width scroll */
     position: relative;
+    overflow: hidden;
   }
 
   .ai-three-image-hero__container-{{ ai_gen_id }} {
     max-width: 1440px;
     margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
   }
 
   .ai-three-image-hero__grid-{{ ai_gen_id }} {
     display: grid;
-    /* Dynamically controlled by the schema setting */
     grid-template-columns: repeat({{ block.settings.desktop_columns }}, 1fr);
     gap: {{ block.settings.image_gap }}px;
     position: relative;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
   }
 
   .ai-three-image-hero__image-wrapper-{{ ai_gen_id }} {
@@ -54,12 +52,6 @@
     justify-content: center;
   }
 
-  .ai-three-image-hero__placeholder-{{ ai_gen_id }} svg {
-    width: 60%;
-    height: 60%;
-    opacity: 0.3;
-  }
-
   .ai-three-image-hero__text-overlay-{{ ai_gen_id }} {
     position: absolute;
     top: 50%;
@@ -68,7 +60,7 @@
     text-align: center;
     width: 90%;
     z-index: 2;
-    pointer-events: none; /* Allows clicking through text to images if needed */
+    pointer-events: none;
   }
 
   .ai-three-image-hero__heading-{{ ai_gen_id }} {
@@ -92,35 +84,48 @@
     .ai-three-image-hero__grid-{{ ai_gen_id }} {
       grid-template-columns: repeat(min({{ block.settings.desktop_columns }}, 2), 1fr);
     }
-    
-    .ai-three-image-hero__heading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.heading_size }}px * 0.7);
-    }
   }
 
-  /* Mobile: Show only the first image */
+  /* Mobile: Scrollable Layout */
   @media screen and (max-width: 749px) {
-    .ai-three-image-hero__grid-{{ ai_gen_id }} {
-      grid-template-columns: 1fr;
+    .ai-three-image-hero__container-{{ ai_gen_id }} {
+       padding: 0; /* Full width for the scrollable area */
     }
 
-    /* Hide all images except the first one on mobile */
-    .ai-three-image-hero__image-wrapper-{{ ai_gen_id }}:nth-child(n+2) {
-      display: none;
+    .ai-three-image-hero__grid-{{ ai_gen_id }} {
+      display: grid;
+      grid-template-columns: none;
+      grid-auto-flow: column;
+      grid-auto-columns: 85%; /* Shows a peek of the next image */
+      gap: 12px;
+      overflow-x: auto;
+      padding: 0 20px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none; /* Hide scrollbar Firefox */
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .ai-three-image-hero__grid-{{ ai_gen_id }}::-webkit-scrollbar {
+      display: none; /* Hide scrollbar Chrome/Safari */
+    }
+
+    .ai-three-image-hero__image-wrapper-{{ ai_gen_id }} {
+      scroll-snap-align: center;
     }
 
     .ai-three-image-hero__heading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.heading_size }}px * 0.5);
+      font-size: calc({{ block.settings.heading_size }}px * 0.6);
     }
 
     .ai-three-image-hero__subheading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.subheading_size }}px * 0.7);
+      font-size: calc({{ block.settings.subheading_size }}px * 0.8);
     }
   }
 {% endstyle %}
 
 <three-image-hero-{{ ai_gen_id }} class="ai-three-image-hero-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
   <div class="ai-three-image-hero__container-{{ ai_gen_id }}">
+    
     <div class="ai-three-image-hero__grid-{{ ai_gen_id }}">
       {% for i in (1..3) %}
         {% liquid
@@ -144,8 +149,9 @@
           {% endif %}
         </div>
       {% endfor %}
+    </div>
 
-      {% if block.settings.show_text_overlay %}
+    {% if block.settings.show_text_overlay %}
         <div class="ai-three-image-hero__text-overlay-{{ ai_gen_id }}">
           {% if block.settings.heading != blank %}
             <h2 class="ai-three-image-hero__heading-{{ ai_gen_id }}">
@@ -159,7 +165,7 @@
           {% endif %}
         </div>
       {% endif %}
-    </div>
+
   </div>
 </three-image-hero-{{ ai_gen_id }}>
 
@@ -167,9 +173,7 @@
   (function() {
     if (!customElements.get('three-image-hero-{{ ai_gen_id }}')) {
       class ThreeImageHero{{ ai_gen_id }} extends HTMLElement {
-        constructor() {
-          super();
-        }
+        constructor() { super(); }
       }
       customElements.define('three-image-hero-{{ ai_gen_id }}', ThreeImageHero{{ ai_gen_id }});
     }
@@ -191,7 +195,6 @@
       "max": 3,
       "step": 1,
       "label": "Desktop columns",
-      "info": "Controls how many images appear side-by-side on large screens.",
       "default": 3
     },
     {
@@ -201,7 +204,7 @@
     {
       "type": "image_picker",
       "id": "image_1",
-      "label": "Image 1 (Shows on Mobile)"
+      "label": "Image 1"
     },
     {
       "type": "image_picker",
