@@ -47,6 +47,10 @@ export class DialogComponent extends Component {
     const { dialog } = this.refs;
 
     if (dialog.open) return;
+    const menuDrawer = document.querySelector('header-drawer');
+  if (menuDrawer?.isOpen) {
+    menuDrawer.close();
+  }
 
     const scrollY = window.scrollY;
     this.#previousScrollY = scrollY;
