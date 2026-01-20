@@ -54,48 +54,83 @@
         -%}
 
         {%- if variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
-  {%- assign fieldset_index = forloop.index0 -%}
-  
-  {%- comment -%} MOBILE TRIGGER: Only shows on mobile when more than 1 variant {%- endcomment -%}
-  {%- if variant_style == 'swatch' and product_option.values.size > 1 -%}
-    <button type="button" class="variant-picker__mobile-trigger" aria-expanded="false" aria-controls="Drawer-{{ fieldset_id }}">
-      {% render 'swatch',
-        swatch: product_option.values[0].swatch,
-        variant_image: product_option.values[0].variant.featured_media,
-        mode: 'unscaled'
-      %}
-      <span class="variant-picker__mobile-label">
-        {{ product_option.selected_value }} 
-        <span class="variant-picker__mobile-count">+{{ product_option.values.size | minus: 1 }}</span>
-      </span>
-    </button>
-  {%- endif -%}
+          {%- assign fieldset_index = forloop.index0 -%}
+          <fieldset
+            class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"
+            data-fieldset-index="{{ fieldset_index }}"
+            ref="fieldsets[]"
+            {{ option_id_attribute }}
+          >
+            <legend>
+              {%- if variant_style == 'swatch' -%}
+                <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
+              {%- endif %}
+            </legend>
+            {%- for product_option_value in product_option.values -%}
+              {% if product_option_value.size > longest_value and option_id_attribute %}
+                {% assign longest_value = product_option_value.size %}
+              {% endif %}
+              <label
+                class="variant-option__button-label{% if variant_style == 'swatch' %} variant-option__button-label--has-swatch{% endif %}"
+              >
+                <input
+                  type="radio"
+                  name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                  value="{{ product_option_value | escape }}"
+                  aria-label="{{ product_option_value.name }}"
+                  {% if product_option_value.available == false %}
+                    aria-disabled="true"
+                  {% endif %}
+                  data-previous-checked="false"
+                  data-fieldset-index="{{ fieldset_index }}"
+                  data-input-index="{{ forloop.index0 }}"
+                  data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                  data-option-value-id="{{ product_option_value.id }}"
+                  data-option-available="{{ product_option_value.available }}"
+                  data-connected-product-url="{{ product_option_value.product_url }}"
+                  {% if product_option_value.variant.id %}
+                    data-variant-id="{{ product_option_value.variant.id }}"
+                  {% endif %}
+                  {% if product_option_value.selected %}
+                    data-current-checked="true"
+                    checked
+                  {% else %}
+                    data-current-checked="false"
+                  {% endif %}
+                >
+                {% if variant_style == 'swatch' %}
+                  {% liquid
+                    assign featured_media = product_option_value.variant.featured_media
 
-  <fieldset
-    id="Drawer-{{ fieldset_id }}"
-    class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %} mobile-drawer"
-    data-fieldset-index="{{ fieldset_index }}"
-    ref="fieldsets[]"
-    {{ option_id_attribute }}
-  >
-    {%- comment -%} Drawer Header (Mobile Only) {%- endcomment -%}
-    <div class="mobile-drawer__header">
-      <span class="mobile-drawer__title">Select {{ product_option.name }}</span>
-      <button type="button" class="mobile-drawer__close" aria-label="Close">&times;</button>
-    </div>
+                    # If the variant has no featured media, and we have a combined listing product, then fall back to
+                    # using the featured media of the child product that is linked to this option value.
+                    if featured_media == blank and product_option_value.product_url
+                      assign featured_media = product_option_value.variant.product.featured_media
+                    endif
+                  %}
 
-    <legend class="desktop-only">
-      {%- if variant_style == 'swatch' -%}
-        <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
-      {%- endif %}
-    </legend>
-    
-    <div class="variant-option__values-container">
-       {%- for product_option_value in product_option.values -%}
-          {%- comment -%} Your existing <label> and <input> code goes here... {%- endcomment -%}
-       {%- endfor -%}
-    </div>
-  </fieldset>
+                  {% render 'swatch',
+                    swatch: product_option_value.swatch,
+                    variant_image: featured_media,
+                    mode: 'unscaled'
+                  %}
+                {% else %}
+                  {% if product_option_value.available == true %}
+                    <span class="variant-option__button-label__pill"></span>
+                  {% endif %}
+                  <span class="variant-option__button-label__text">{{ product_option_value | escape }}</span>
+                {% endif %}
+                {% render 'strikethrough-variant', product_option: product_option_value %}
+              </label>
+            {%- endfor -%}
+            {% if option_id_attribute %}
+              {% style %}
+                [data-option-id="{{ fieldset_id }}"] {
+                  --variant-ch: {{ longest_value }}ch;
+                }
+              {% endstyle %}
+            {% endif %}
+          </fieldset>
         {%- elsif block_settings.variant_style == 'dropdowns' -%}
           {%
             # There is an opportunity to build a custom select component that will allow us to style the select element further (animation for dropdown, swatches shown in the dropdown options, etc)
@@ -838,83 +873,4 @@
   .variant-option__button-label:has(input[aria-disabled="true"]) {
     opacity: 0.5;
   }
-
-
-
-  /* drawer */
-  /* Hide desktop elements on mobile and vice versa */
-.variant-picker__mobile-trigger { display: none; }
-.mobile-drawer__header { display: none; }
-
-@media (max-width: 749px) {
-  /* 1. Show Trigger, Hide the actual fieldset */
-  .variant-picker__mobile-trigger {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--color-border);
-    background: transparent;
-    cursor: pointer;
-    border-radius: var(--variant-picker-button-radius);
-  }
-
-  .variant-picker__mobile-count {
-    font-weight: bold;
-    color: var(--color-foreground);
-    margin-left: 4px;
-  }
-
-  /* 2. Transform fieldset into a Bottom Drawer */
-  .variant-option.mobile-drawer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: white; /* Match your theme bg */
-    z-index: 100;
-    padding: 20px;
-    border-radius: 20px 20px 0 0;
-    box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
-    transform: translateY(100%);
-    transition: transform 0.3s ease-out;
-    display: block; /* Override flex */
-    visibility: hidden;
-  }
-
-  .variant-option.mobile-drawer.is-open {
-    transform: translateY(0);
-    visibility: visible;
-  }
-
-  .mobile-drawer__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-  }
-
-  .mobile-drawer__title { font-weight: bold; font-size: 1.2rem; }
-  .mobile-drawer__close { font-size: 2rem; background: none; border: none; cursor: pointer; }
-
-  /* Overlay */
-  .drawer-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 99;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .drawer-overlay.is-active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .desktop-only { display: none; }
-}
 {% endstylesheet %}
