@@ -7,16 +7,19 @@
   style="{% render 'spacing-style', settings: block_settings %} display:flex; flex-direction:column;"
   {{ block.shopify_attributes }}
 >
-  <h1 class="{{ block_settings.type_preset | default: 'h2' }}">
-    {%- if cart.empty? -%}
+  {%- if cart.empty? -%}
+    <h1 class="{{ block_settings.type_preset | default: 'h2' }}">
       {{ 'content.your_cart_is_empty' | t }}
+      </h1>
     {%- else -%}
-      {{ block_settings.title }}
+    <h1>
+      {{ block_settings.title }}</h1>
       {%- if block_settings.show_count -%}
         <div>{{ cart.item_count }}</div>
       {%- endif -%}
     {%- endif -%}
-  </h1>
+
+  
 </div>
 
 {% stylesheet %}
