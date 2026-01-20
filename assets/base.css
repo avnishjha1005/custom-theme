@@ -4535,10 +4535,7 @@ text-component {
   overflow: visible;
 }
 
-.resource-list__carousel:has([ref="resourceListCarousel"]) {
-  margin-inline: auto;
-  overflow: scroll;
-}
+
 [data-testid="product-list"]{
   overflow-x:hidden;
 }
