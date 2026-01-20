@@ -606,7 +606,7 @@ export class Slideshow extends Component {
       return;
     }
 
-    //event.preventDefault();
+    event.preventDefault();
     //event.stopImmediatePropagation();
     // Store initial position but don't start handling yet
     const { axis } = this.#scroll;
