@@ -20,9 +20,9 @@
             "font": "heading",
             "vertical_align": "top",
             "unit": "percent",
-            "percent_width": 100,
-            "pixel_height": 48,
-            "custom_mobile_size": false,
+            "percent_width": 10,
+            "pixel_height": 16,
+            "custom_mobile_size": true,
             "unit_mobile": "percent",
             "percent_width_mobile": 100,
             "pixel_height_mobile": 120,
@@ -38,7 +38,7 @@
         "logo_7k4hiH"
       ],
       "custom_css": [
-        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; }}"
+        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; height: 0; padding: 0; }}"
       ],
       "name": "t:names.large_logo",
       "settings": {
