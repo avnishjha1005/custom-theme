@@ -48,6 +48,7 @@ export class DialogComponent extends Component {
 
     if (dialog.open) return;
     const menuDrawer = document.querySelector('header-drawer');
+    console.log('closing menu drawer')
   if (menuDrawer?.isOpen) {
     menuDrawer.close();
   }
