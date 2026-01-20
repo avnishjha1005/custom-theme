@@ -16,24 +16,23 @@
   .ai-three-image-hero__container-{{ ai_gen_id }} {
     max-width: 1440px;
     margin: 0 auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   .ai-three-image-hero__grid-{{ ai_gen_id }} {
     display: grid;
-    /* Dynamically controlled by the schema setting */
-    grid-template-columns: repeat({{ block.settings.desktop_columns }}, 1fr);
+    grid-template-columns: repeat({{ block.settings.desktop_columns }}, minmax(300px, 1fr));
     gap: {{ block.settings.image_gap }}px;
     position: relative;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
+    width: max-content;
+    min-width: 100%;
   }
 
   .ai-three-image-hero__image-wrapper-{{ ai_gen_id }} {
     position: relative;
     width: 100%;
-    min-width: 0;
     aspect-ratio: {{ block.settings.image_aspect_ratio }};
     overflow: hidden;
     border-radius: {{ block.settings.image_border_radius }}px;
@@ -68,7 +67,7 @@
     text-align: center;
     width: 90%;
     z-index: 2;
-    pointer-events: none; /* Allows clicking through text to images if needed */
+    pointer-events: none;
   }
 
   .ai-three-image-hero__heading-{{ ai_gen_id }} {
@@ -90,7 +89,7 @@
   /* Tablet Adjustments */
   @media screen and (max-width: 989px) {
     .ai-three-image-hero__grid-{{ ai_gen_id }} {
-      grid-template-columns: repeat(min({{ block.settings.desktop_columns }}, 2), 1fr);
+      grid-template-columns: repeat(min({{ block.settings.desktop_columns }}, 2), minmax(250px, 1fr));
     }
     
     .ai-three-image-hero__heading-{{ ai_gen_id }} {
@@ -100,8 +99,13 @@
 
   /* Mobile: Show only the first image */
   @media screen and (max-width: 749px) {
+    .ai-three-image-hero__container-{{ ai_gen_id }} {
+      overflow-x: visible;
+    }
+
     .ai-three-image-hero__grid-{{ ai_gen_id }} {
       grid-template-columns: 1fr;
+      width: 100%;
     }
 
     /* Hide all images except the first one on mobile */
@@ -214,7 +218,7 @@
       "label": "Image 3"
     },
     {
-      "type": "select",
+      "type":"select",
       "id": "image_aspect_ratio",
       "label": "Image aspect ratio",
       "options": [
