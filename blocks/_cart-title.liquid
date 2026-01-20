@@ -4,7 +4,7 @@
 
 <div
   class="cart-title spacing-style text-{{ block_settings.alignment }}"
-  style="{% render 'spacing-style', settings: block_settings %} display:flex;"
+  style="{% render 'spacing-style', settings: block_settings %} display:flex; flex-direction:column;"
   {{ block.shopify_attributes }}
 >
   <h1 class="{{ block_settings.type_preset | default: 'h2' }}">
