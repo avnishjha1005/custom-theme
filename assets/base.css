@@ -4624,4 +4624,10 @@ slideshow-component [ref="scroller"] {
 .facets-toggle {
   display: none;
 }
+view-product-title + .group-block > .group-block-content {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center; /* Keeps items aligned in the middle vertically */
+}
 
