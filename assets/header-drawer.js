@@ -71,6 +71,7 @@ class HeaderDrawer extends Component {
     if (!summary) return;
     const searchDialog = document.querySelector('dialog-component');
   if (searchDialog?.refs.dialog.open) {
+    console.log('closing dialog');
     searchDialog.closeDialog();
   }
 
