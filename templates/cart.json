@@ -17,7 +17,7 @@
           "static": true,
           "settings": {
             "title": "MY SHOPPING CART",
-            "show_count": false,
+            "show_count": true,
             "type_preset": "h5",
             "alignment": "left",
             "padding-block-start": 0,
