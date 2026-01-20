@@ -4513,8 +4513,10 @@ text-component {
 }
 
 [ref="resourceListCarousel"] {
-  overflow-x: scroll;
-  overflow-y: clip;
+    overflow-x: visible;
+    overflow-y: clip;
+    max-width: 1440px;
+    margin-inline: auto;
 }
 }
 
