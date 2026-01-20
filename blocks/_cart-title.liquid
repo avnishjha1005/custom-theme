@@ -12,7 +12,9 @@
       {{ 'content.your_cart_is_empty' | t }}
     {%- else -%}
       {{ block_settings.title }}
-      {%- if block_settings.show_count -%}{% render 'cart-bubble' %}{%- endif -%}
+      {%- if block_settings.show_count -%}
+        <div>{{ cart.item_count }}</div>
+      {%- endif -%}
     {%- endif -%}
   </h1>
 </div>
