@@ -69,12 +69,7 @@
       {% assign min_input_max_value = filter.max_value.value | default: filter.range_max %}
       {% assign max_input_min_value = filter.min_value.value | default: 0 %}
 
-      # Price Slider Fix - Updated Liquid Template
-
-Replace the slider section in your `price-filter.liquid` file:
-
-```liquid
-<price-facet-component
+      <price-facet-component
   class="price-facet"
   id="facet-inputs-{{ filter.param_name | escape | replace: '.', '-' }}"
   on:change="/updatePriceFilterAndResults"
@@ -187,37 +182,6 @@ Replace the slider section in your `price-filter.liquid` file:
     </facet-clear-component>
   {% endif %}
 </price-facet-component>
-```
-
-## What Changed:
-
-The key addition is the **Liquid calculation** that sets the inline styles on the `sliderRange` element when the HTML is rendered by the server:
-
-```liquid
-{%- liquid
-  assign current_min = filter.min_value.value | default: 0
-  assign current_max = filter.max_value.value | default: filter.range_max
-  assign range_size = filter.range_max | minus: 0
-  
-  if range_size > 0
-    assign min_percent = current_min | times: 100.0 | divided_by: range_size
-    assign max_percent = current_max | times: 100.0 | divided_by: range_size
-    assign width_percent = max_percent | minus: min_percent
-  else
-    assign min_percent = 0
-    assign width_percent = 100
-  endif
--%}
-<div 
-  class="price-facet__slider-range" 
-  ref="sliderRange"
-  style="left: {{ min_percent }}%; width: {{ width_percent }}%;"
-></div>
-```
-
-Now when the AJAX response comes back with fresh HTML, the `sliderRange` element will already have the correct inline styles calculated server-side based on the current filter values. The JavaScript will still update them during interaction, but they won't disappear on reload.
-
-Keep the updated JavaScript from before - the combination of server-rendered styles + JavaScript updates should solve the issue!
     </floating-panel-component>
   </details>
 </accordion-custom>
