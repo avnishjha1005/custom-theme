@@ -4,7 +4,7 @@
 
 <div
   class="cart-title spacing-style text-{{ block_settings.alignment }}"
-  style="{% render 'spacing-style', settings: block_settings %} display:flex; flex-direction:column;"
+  style="{% render 'spacing-style', settings: block_settings %} display:flex;"
   {{ block.shopify_attributes }}
 >
   {%- if cart.empty? -%}
@@ -12,14 +12,13 @@
       {{ 'content.your_cart_is_empty' | t }}
       </h1>
     {%- else -%}
+      <div style="display:flex;flex-direction:column;">
     <h1>
       {{ block_settings.title }}</h1>
       {%- if block_settings.show_count -%}
         <div>{{ cart.item_count }}</div>
       {%- endif -%}
     {%- endif -%}
-
-  
 </div>
 
 {% stylesheet %}
