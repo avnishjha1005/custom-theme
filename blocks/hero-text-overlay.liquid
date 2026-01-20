@@ -9,7 +9,7 @@
     display: block;
     width: 100%;
     background-color: {{ block.settings.background_color }};
-    padding: {{ block.settings.section_padding }}px 0; /* Removed horizontal padding to allow full-width scroll */
+    padding: {{ block.settings.section_padding }}px 0;
     position: relative;
     overflow: hidden;
   }
@@ -21,11 +21,13 @@
     position: relative;
   }
 
+  /* Desktop: Standard Grid */
   .ai-three-image-hero__grid-{{ ai_gen_id }} {
     display: grid;
     grid-template-columns: repeat({{ block.settings.desktop_columns }}, 1fr);
     gap: {{ block.settings.image_gap }}px;
     position: relative;
+    transition: all 0.3s ease;
   }
 
   .ai-three-image-hero__image-wrapper-{{ ai_gen_id }} {
@@ -79,34 +81,29 @@
     line-height: 1.4;
   }
 
-  /* Tablet Adjustments */
-  @media screen and (max-width: 989px) {
-    .ai-three-image-hero__grid-{{ ai_gen_id }} {
-      grid-template-columns: repeat(min({{ block.settings.desktop_columns }}, 2), 1fr);
-    }
-  }
-
-  /* Mobile: Scrollable Layout */
-  @media screen and (max-width: 749px) {
+  /* Responsive Fix: 
+     Switch to scrollable row immediately when the screen is too narrow 
+     to prevent wrapping to a second line.
+  */
+  @media screen and (max-width: 1024px) {
     .ai-three-image-hero__container-{{ ai_gen_id }} {
-       padding: 0; /* Full width for the scrollable area */
+       padding: 0; 
     }
 
     .ai-three-image-hero__grid-{{ ai_gen_id }} {
-      display: grid;
       grid-template-columns: none;
       grid-auto-flow: column;
-      grid-auto-columns: 85%; /* Shows a peek of the next image */
-      gap: 12px;
+      grid-auto-columns: 80%; /* Images take up 80% width so you see the next one */
+      gap: 15px;
       overflow-x: auto;
       padding: 0 20px;
       scroll-snap-type: x mandatory;
-      scrollbar-width: none; /* Hide scrollbar Firefox */
+      scrollbar-width: none; 
       -webkit-overflow-scrolling: touch;
     }
 
     .ai-three-image-hero__grid-{{ ai_gen_id }}::-webkit-scrollbar {
-      display: none; /* Hide scrollbar Chrome/Safari */
+      display: none;
     }
 
     .ai-three-image-hero__image-wrapper-{{ ai_gen_id }} {
@@ -114,11 +111,7 @@
     }
 
     .ai-three-image-hero__heading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.heading_size }}px * 0.6);
-    }
-
-    .ai-three-image-hero__subheading-{{ ai_gen_id }} {
-      font-size: calc({{ block.settings.subheading_size }}px * 0.8);
+      font-size: clamp(24px, 5vw, {{ block.settings.heading_size }}px);
     }
   }
 {% endstyle %}
