@@ -64,13 +64,14 @@
             ref="fieldsets[]"
             {{ option_id_attribute }}
           >
-            <legend>
+            {% comment %} <legend>
               {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
               {%- endif %}
-            </legend>
+            </legend> {% endcomment %}
             
             {%- if variant_style == 'swatch' -%}
+                <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
               <div class="swatch-mobile-trigger">
                 {%- for product_option_value in product_option.values limit: 1 -%}
                   {% liquid
@@ -309,6 +310,11 @@
     .variant-option--swatches .swatch-container {
       display: none !important;
     }
+
+    .variant-option--buttons{
+         flex-direction: column;
+      align-items: flex-end;
+    }
   }
 
   /* Swatch Drawer Styles */
@@ -389,27 +395,38 @@
   /* Original styles preserved below */
   .variant-picker {
     width: 100%;
+    @media screen and (max-width:768px){
+      padding-top:10px;
+    }
   }
 
   .variant-picker__form {
     display: flex;
     flex-direction: column;
-    gap: var(--padding-lg);
+    /* gap: var(--padding-lg); */
     width: 100%;
+    padding-top:0px;
   }
 
   .variant-option--buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--gap-sm);
+    flex-direction: column;
     margin: 0;
     padding: 0;
     border: none;
   }
 
+  @media screen and (max-width:768px){
+    .variant-option--buttons{
+    align-items: end;
+    justify-content: flex-end;
+    }
+  }
+
   .variant-option--buttons legend {
     padding: 0;
-    margin-block-end: var(--margin-xs);
+    /* margin-block-end: var(--margin-xs); */
   }
 
   .variant-option__button-label {
@@ -422,7 +439,9 @@
     border: var(--options-border-width) solid var(--color-variant-border);
     border-radius: var(--options-border-radius);
     background-color: var(--color-variant-background);
-    min-height: 30px;
+    padding-top: 0px !important;
+    padding-left:0px;
+    min-height: 44px;
     transition: all 0.2s ease;
   }
 
