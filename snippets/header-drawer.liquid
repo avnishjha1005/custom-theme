@@ -168,60 +168,84 @@
 
 <script>
   if (!customElements.get('header-drawer')) {
-    customElements.define('header-drawer', class extends HTMLElement {
-      constructor() {
-        super();
-        this.details = this.querySelector('details');
-        this.backBtn = this.querySelector('#Drawer-Back-Btn');
-        this.closeBtn = this.querySelector('#Drawer-Close-Btn');
-        this.pillBtns = this.querySelectorAll('.pill-item');
-        this.drillBtns = this.querySelectorAll('[data-drill-down]');
-        this.panels = this.querySelectorAll('.drawer-panel');
-        this.nestedPanels = this.querySelectorAll('.drawer-panel-nested');
-        this.init();
-      }
+  customElements.define('header-drawer', class extends HTMLElement {
+    constructor() {
+      super();
+      this.details = this.querySelector('details');
+      this.backBtn = this.querySelector('#Drawer-Back-Btn');
+      this.closeBtn = this.querySelector('#Drawer-Close-Btn');
+      this.pillBtns = this.querySelectorAll('.pill-item');
+      this.drillBtns = this.querySelectorAll('[data-drill-down]');
+      this.panels = this.querySelectorAll('.drawer-panel');
+      this.nestedPanels = this.querySelectorAll('.drawer-panel-nested');
+      this.init();
+    }
 
-      init() {
-        // Pill Navigation logic
-        this.pillBtns.forEach(btn => {
-          btn.addEventListener('click', () => {
-            this.resetMenuState();
-            this.pillBtns.forEach(b => b.classList.remove('is-active'));
-            btn.classList.add('is-active');
-            this.panels.forEach(p => p.classList.remove('is-active'));
-            const target = this.querySelector(`[data-panel-l1="${btn.dataset.l1Index}"]`);
-            if (target) target.classList.add('is-active');
-          });
-        });
+    init() {
+      // Listen for when drawer opens
+      this.details.addEventListener('toggle', (e) => {
+        if (this.details.open) {
+          console.log('Menu drawer opened');
+          // Close search when menu opens
+          const searchDialog = document.querySelector('dialog-component');
+          if (searchDialog?.refs?.dialog?.open) {
+            console.log('Closing search dialog from menu');
+            searchDialog.closeDialog();
+          }
+        }
+      });
 
-        // Drill down to L3 logic
-        this.drillBtns.forEach(btn => {
-          btn.addEventListener('click', () => {
-            const targetId = btn.dataset.target;
-            const nested = this.querySelector(`#${targetId}`);
-            const activePill = this.querySelector('.pill-item.is-active');
-            if (nested && activePill) {
-              nested.classList.add('is-open');
-              activePill.innerText = btn.dataset.path; // Update Breadcrumb path
-              this.backBtn.classList.remove('is-hidden');
-            }
-          });
-        });
-
-        this.backBtn.addEventListener('click', () => this.resetMenuState());
-        this.closeBtn.addEventListener('click', () => {
-          this.details.removeAttribute('open');
+      // Pill Navigation logic
+      this.pillBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
           this.resetMenuState();
+          this.pillBtns.forEach(b => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          this.panels.forEach(p => p.classList.remove('is-active'));
+          const target = this.querySelector(`[data-panel-l1="${btn.dataset.l1Index}"]`);
+          if (target) target.classList.add('is-active');
         });
-      }
+      });
 
-      resetMenuState() {
-        this.nestedPanels.forEach(p => p.classList.remove('is-open'));
-        this.backBtn.classList.add('is-hidden');
-        this.pillBtns.forEach(btn => {
-          btn.innerText = btn.dataset.originalTitle;
+      // Drill down to L3 logic
+      this.drillBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.dataset.target;
+          const nested = this.querySelector(`#${targetId}`);
+          const activePill = this.querySelector('.pill-item.is-active');
+          if (nested && activePill) {
+            nested.classList.add('is-open');
+            activePill.innerText = btn.dataset.path;
+            this.backBtn.classList.remove('is-hidden');
+          }
         });
-      }
-    });
-  }
+      });
+
+      this.backBtn.addEventListener('click', () => this.resetMenuState());
+      this.closeBtn.addEventListener('click', () => {
+        this.close();
+      });
+    }
+
+    // Add a close method for external access
+    close() {
+      console.log('Closing menu drawer');
+      this.details.removeAttribute('open');
+      this.resetMenuState();
+    }
+
+    // Add isOpen getter for external access
+    get isOpen() {
+      return this.details.hasAttribute('open');
+    }
+
+    resetMenuState() {
+      this.nestedPanels.forEach(p => p.classList.remove('is-open'));
+      this.backBtn.classList.add('is-hidden');
+      this.pillBtns.forEach(btn => {
+        btn.innerText = btn.dataset.originalTitle;
+      });
+    }
+  });
+}
 </script>
