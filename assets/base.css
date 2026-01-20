@@ -4546,8 +4546,8 @@ text-component {
     overflow: scroll;
 }
 [data-testid="product-list"]> .resource-list__carousel > .resource-list__carousel{
-    max-width: 1440px;
-    margin: auto;
+    overflow:visible;
+    width:100vw;
 }
 
 wishlist-button-collection .wk-floating {
