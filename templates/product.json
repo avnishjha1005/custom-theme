@@ -133,7 +133,7 @@
               "type": "group",
               "name": "t:names.group",
               "settings": {
-                "content_direction": "row",
+                "content_direction": "column",
                 "vertical_on_mobile": false,
                 "horizontal_alignment": "flex-start",
                 "vertical_alignment": "center",
@@ -307,33 +307,18 @@
                         "padding-inline-end": 0
                       },
                       "blocks": {}
-                    },
-                    "variant_picker_66r8Lh": {
-                      "type": "variant-picker",
-                      "settings": {
-                        "variant_style": "buttons",
-                        "show_swatches": true,
-                        "alignment": "left",
-                        "padding-block-start": 0,
-                        "padding-block-end": 10,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
                     }
                   },
                   "block_order": [
                     "product_vendor_BLzrzQ",
                     "product_title_JmVbRp",
                     "price_xEzCKN",
-                    "text_t88HXC",
-                    "variant_picker_66r8Lh"
+                    "text_t88HXC"
                   ]
                 },
                 "group_VdNWtX": {
                   "type": "group",
                   "name": "t:names.group",
-                  "disabled": true,
                   "settings": {
                     "content_direction": "column",
                     "vertical_on_mobile": true,
@@ -370,7 +355,24 @@
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
-                  "blocks": {}
+                  "blocks": {
+                    "variant_picker_t78Jfa": {
+                      "type": "variant-picker",
+                      "settings": {
+                        "variant_style": "buttons",
+                        "show_swatches": true,
+                        "alignment": "left",
+                        "padding-block-start": 0,
+                        "padding-block-end": 10,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "variant_picker_t78Jfa"
+                  ]
                 }
               },
               "block_order": [
@@ -1342,6 +1344,7 @@
       "block_order": [
         "ai_gen_block_5430b1f_K3jXWB"
       ],
+      "disabled": true,
       "name": "Shop the look",
       "settings": {
         "content_direction": "column",
