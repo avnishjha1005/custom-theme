@@ -847,7 +847,7 @@ export class Slideshow extends Component {
     if (!slides || !slides.length) return 0;
 
     const visibleSlides = this.visiblesSlides;
-
+    if(!visibleSlides)return;
     // Batch writes to the DOM
     scheduler.schedule(() => {
       // Update aria-hidden based on visibility
