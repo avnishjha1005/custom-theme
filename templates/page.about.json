@@ -358,7 +358,7 @@
             "accordion_row_hXU86c": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Shipping",
+                "heading": "Our Founder",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -397,7 +397,7 @@
             "accordion_row_mih97q": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Manufacturing",
+                "heading": "Advisory Board",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
