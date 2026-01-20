@@ -4542,6 +4542,14 @@ text-component {
 [data-testid="product-list"]{
   overflow-x:hidden;
 }
+[data-testid="product-list"]> .resource-list__carousel{
+      margin-inline: auto;
+    overflow: scroll;
+}
+[data-testid="product-list"]> .resource-list__carousel > .resource-list__carousel{
+    max-width: 1440px;
+    margin: auto;
+}
 
 wishlist-button-collection .wk-floating {
   transform:none !important;
