@@ -4542,8 +4542,9 @@ text-component {
   overflow-x:hidden;
 }
 [data-testid="product-list"]> .resource-list__carousel{
-      margin-inline: auto;
+    margin-inline: auto;
     overflow: scroll;
+    scrollbar-width:none;
 }
 [data-testid="product-list"]> .resource-list__carousel > .resource-list__carousel{
     overflow:visible;
