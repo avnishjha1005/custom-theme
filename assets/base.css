@@ -4625,7 +4625,7 @@ slideshow-component [ref="scroller"] {
   display: none;
 }
 @media screen and (max-width:768px){
-view-product-title + .group-block > .group-block-content {
+.view-product-title + .group-block > .group-block-content {
     display: flex !important;
     flex-direction: row !important;
     justify-content: space-between !important;
