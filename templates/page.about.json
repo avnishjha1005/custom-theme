@@ -27,6 +27,7 @@
         "ai_gen_block_bdd3b56_DG8DHr": {
           "type": "hero-text-overlay",
           "settings": {
+            "desktop_columns": 3,
             "image_1": "shopify://shop_images/3c0609b199e9b9a1631fd64ad2501868830a3179.jpg",
             "image_2": "shopify://shop_images/b0ca501a982100582568f298ae59400ab289d2af.jpg",
             "image_3": "shopify://shop_images/ea76b81778e4ad3a8f27f624c8a2d7c581c464fe.jpg",
@@ -105,6 +106,9 @@
         "ai_gen_block_bdd3b56_DG8DHr",
         "text_VBhKCP",
         "video_AhJ3rc"
+      ],
+      "custom_css": [
+        ".custom-section-content{padding: 0px !important;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
