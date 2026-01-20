@@ -1,10 +1,3 @@
-{%- comment -%}
-  Figma-Style Mobile Menu Drawer - V2 (Icon Fix)
-  - L1: Horizontal Pills (No duplicates)
-  - L2: List View with Drill-down
-  - Breadcrumb: Active pill updates to "L1 / L2" path
-{%- endcomment -%}
-
 <header-drawer>
   <details id="Details-menu-drawer-container" class="menu-drawer-container">
     <summary class="header__icon header__icon--menu header__icon--summary focus-inset" aria-label="{{ 'sections.shop_the_look.view_product' | t }}">
@@ -90,7 +83,6 @@
         </div>
 
         <div class="drawer-footer">
-          {% render 'localization-form' %}
           <a href="/pages/contact">CONTACT US</a>
         </div>
       </div>
