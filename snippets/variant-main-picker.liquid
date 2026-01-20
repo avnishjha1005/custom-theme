@@ -64,11 +64,11 @@
             ref="fieldsets[]"
             {{ option_id_attribute }}
           >
-            {% comment %} <legend>
+             <legend style="visibility:hidden;">
               {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
               {%- endif %}
-            </legend> {% endcomment %}
+            </legend> 
             
             {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
@@ -248,7 +248,7 @@
         if (!trigger) return;
         console.log("triggered");
         const fieldset = trigger.closest('fieldset');
-        //const legend = fieldset.querySelector('legend').textContent.trim();
+        const legend = fieldset.querySelector('legend').textContent.trim();
         const swatchContainer = fieldset.querySelector('.swatch-container');
 
         // Clone the swatch options into the drawer
