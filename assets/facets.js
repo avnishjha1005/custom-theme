@@ -234,10 +234,17 @@ class PriceFacetComponent extends Component {
     this.addEventListener('input', this.#onInput);
     this.addEventListener('change', this.#onChange);
 
-    // Use requestAnimationFrame to ensure DOM is fully ready and refs are available
+    // Multiple attempts to ensure UI updates after AJAX reload
+    this.#updateSliderUI(); // Immediate attempt
+    
     requestAnimationFrame(() => {
-      this.#updateSliderUI();
+      this.#updateSliderUI(); // Next frame
     });
+    
+    // Final backup after a short delay
+    setTimeout(() => {
+      this.#updateSliderUI();
+    }, 50);
   }
 
   disconnectedCallback() {
@@ -279,11 +286,6 @@ class PriceFacetComponent extends Component {
     const { minInput, maxInput, sliderRange, minDisplay, maxDisplay } = this.refs;
 
     if (!minInput || !maxInput || !sliderRange) {
-      console.warn('PriceFacet: Missing refs', { 
-        hasMinInput: !!minInput, 
-        hasMaxInput: !!maxInput, 
-        hasSliderRange: !!sliderRange 
-      });
       return;
     }
 
@@ -293,7 +295,6 @@ class PriceFacetComponent extends Component {
     let maxVal = parseFloat(maxInput.value);
 
     if (Number.isNaN(minVal) || Number.isNaN(maxVal) || max <= min) {
-      console.warn('PriceFacet: Invalid values', { minVal, maxVal, min, max });
       return;
     }
 
@@ -308,8 +309,9 @@ class PriceFacetComponent extends Component {
     const clampedMinPercent = Math.max(0, Math.min(100, minPercent));
     const clampedMaxPercent = Math.max(0, Math.min(100, maxPercent));
 
-    // Force the styles to be applied
-    sliderRange.style.cssText = `left: ${clampedMinPercent}%; width: ${clampedMaxPercent - clampedMinPercent}%;`;
+    // Apply styles with !important to prevent them from being overridden
+    sliderRange.style.setProperty('left', `${clampedMinPercent}%`, 'important');
+    sliderRange.style.setProperty('width', `${clampedMaxPercent - clampedMinPercent}%`, 'important');
 
     if (minDisplay) {
       minDisplay.textContent = this.#formatDisplayValue(minVal);
@@ -367,7 +369,6 @@ class PriceFacetComponent extends Component {
 if (!customElements.get('price-facet-component')) {
   customElements.define('price-facet-component', PriceFacetComponent);
 }
-
 /**
  * Handles clearing of facet filters
  * @extends {Component}
