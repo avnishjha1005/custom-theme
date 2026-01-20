@@ -188,7 +188,7 @@
     margin: 20px 0;
   }
 
-  /* Slider track */
+  /* Slider track - GREY background */
   .price-facet__slider-track {
     position: absolute;
     top: 50%;
@@ -200,7 +200,7 @@
     border-radius: 2px;
   }
 
-  /* Active range */
+  /* Active range - BLACK overlay showing selected range */
   .price-facet__slider-range {
     position: absolute;
     height: 100%;
@@ -208,7 +208,7 @@
     border-radius: 2px;
   }
 
-  /* Range inputs */
+  /* Range inputs - TRANSPARENT background so track shows through */
   .price-facet__slider {
     position: absolute;
     top: 50%;
@@ -218,63 +218,64 @@
     transform: translateY(-50%);
     -webkit-appearance: none;
     appearance: none;
-    background: black;
+    background: transparent; /* CHANGED: was black, now transparent */
     pointer-events: none;
     margin: 0;
   }
 
-  /* Remove default styling */
+  /* Remove default styling - TRANSPARENT backgrounds */
   .price-facet__slider::-webkit-slider-runnable-track {
     height: 4px;
-    background: black;
+    background: transparent; /* CHANGED: was black, now transparent */
   }
 
   .price-facet__slider::-moz-range-track {
     height: 4px;
-    background: black;
+    background: transparent; /* CHANGED: was black, now transparent */
   }
 
   /* Thumb styling - WebKit */
   .price-facet__slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 8px;
-    height: 16px;
-    background-color: black;
-    border: 2px solid black;
+    width: 16px;  /* CHANGED: increased from 8px for better grabbability */
+    height: 16px; /* CHANGED: made square instead of 16px tall */
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 50%; /* CHANGED: circular thumb */
     cursor: pointer;
     pointer-events: auto;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     transition: transform 0.1s ease;
-    margin-top: -7px;
+    margin-top: -6px; /* CHANGED: adjusted for new size */
   }
 
   .price-facet__slider::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
   }
 
   .price-facet__slider::-webkit-slider-thumb:active {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 
   /* Thumb styling - Firefox */
   .price-facet__slider::-moz-range-thumb {
-    width: 8px;
-    height: 16px;
-    background-color: black;
-    border: 2px solid black;
-    border-radius: 2px;
+    width: 16px;  /* CHANGED: increased from 8px */
+    height: 16px; /* CHANGED: made square */
+    background-color: #fff;
+    border: 2px solid #000;
+    border-radius: 50%; /* CHANGED: circular thumb */
     cursor: pointer;
     pointer-events: auto;
     transition: transform 0.1s ease;
   }
 
   .price-facet__slider::-moz-range-thumb:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
   }
 
   .price-facet__slider::-moz-range-thumb:active {
-    transform: scale(1.05);
+    transform: scale(1.1);
   }
 
   /* Focus styles */
@@ -282,6 +283,16 @@
     outline: none;
   }
 
+  /* Focus visible for accessibility */
+  .price-facet__slider:focus-visible::-webkit-slider-thumb {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
+
+  .price-facet__slider:focus-visible::-moz-range-thumb {
+    outline: 2px solid #000;
+    outline-offset: 2px;
+  }
 
   /* Ensure max slider is above min slider */
   .price-facet__slider--max {
@@ -321,5 +332,4 @@
   .price-facet .clear-filter {
     margin-top: var(--padding-md);
   }
-  
 {% endstylesheet %}
