@@ -606,7 +606,7 @@ export class Slideshow extends Component {
       return;
     }
 
-    //event.preventDefault();
+    event.preventDefault();
     // Store initial position but don't start handling yet
     const { axis } = this.#scroll;
     const startPosition = event[axis];
