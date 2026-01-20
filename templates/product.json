@@ -113,7 +113,7 @@
             "height": "fit",
             "details_position": "flex-start",
             "gap": 0,
-            "sticky_details_desktop": true,
+            "sticky_details_desktop": false,
             "inherit_color_scheme": true,
             "color_scheme": "",
             "background_media": "none",
@@ -179,13 +179,13 @@
                     "vertical_alignment": "center",
                     "align_baseline": false,
                     "horizontal_alignment_flex_direction_column": "flex-start",
-                    "vertical_alignment_flex_direction_column": "center",
+                    "vertical_alignment_flex_direction_column": "flex-start",
                     "gap": 0,
                     "width": "fill",
                     "custom_width": 100,
                     "width_mobile": "fill",
                     "custom_width_mobile": 100,
-                    "height": "fit",
+                    "height": "custom",
                     "custom_height": 100,
                     "inherit_color_scheme": true,
                     "color_scheme": "",
@@ -362,7 +362,7 @@
                         "variant_style": "buttons",
                         "show_swatches": true,
                         "alignment": "left",
-                        "padding-block-start": 0,
+                        "padding-block-start": 26,
                         "padding-block-end": 10,
                         "padding-inline-start": 0,
                         "padding-inline-end": 0
@@ -945,7 +945,7 @@
       },
       "custom_css": [
         "@media screen and (min-width: 750px) {.product-information__media {grid-column: 2/3; }}",
-        "@media screen and (max-width:750px).group-block>.group-block-content>.group-block.group-block-content{}"
+        "@media screen and (max-width: 750px) .group-block>.group-block-content>.group-block.group-block-content {}"
       ],
       "settings": {
         "content_width": "content-center-aligned",
