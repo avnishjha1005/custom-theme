@@ -4536,7 +4536,8 @@ text-component {
 }
 
 .resource-list__carousel:has([ref="resourceListCarousel"]) {
-  width:100vw;
+  margin-inline: auto;
+  overflow: scroll;
 }
 [data-testid="product-list"]{
   overflow-x:hidden;
