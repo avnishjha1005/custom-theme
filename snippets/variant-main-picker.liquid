@@ -64,11 +64,11 @@
             ref="fieldsets[]"
             {{ option_id_attribute }}
           >
-            <legend>
+            {% comment %} <legend>
               {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
               {%- endif %}
-            </legend>
+            </legend> {% endcomment %}
             
             {%- if variant_style == 'swatch' -%}
                 <span class="variant-option__swatch-value" style="font-style:italic;">{{ product_option.selected_value }}</span>
