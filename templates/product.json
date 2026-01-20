@@ -368,10 +368,20 @@
                         "padding-inline-end": 0
                       },
                       "blocks": {}
+                    },
+                    "size_guide_NqXiTV": {
+                      "type": "size-guide",
+                      "name": "Size Guide Drawer",
+                      "settings": {
+                        "button_label": "Size Guide",
+                        "button_color": "#000000"
+                      },
+                      "blocks": {}
                     }
                   },
                   "block_order": [
-                    "variant_picker_t78Jfa"
+                    "variant_picker_t78Jfa",
+                    "size_guide_NqXiTV"
                   ]
                 }
               },
@@ -733,23 +743,13 @@
             "shiprocket_promise_promise_widget_J4MFhC": {
               "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
               "settings": {}
-            },
-            "size_guide_zPiNQf": {
-              "type": "size-guide",
-              "name": "Size Guide Drawer",
-              "settings": {
-                "button_label": "Size Guide",
-                "button_color": "#000000"
-              },
-              "blocks": {}
             }
           },
           "block_order": [
             "group_tfYD6h",
             "group_PQchLN",
             "accordion_NKWPiW",
-            "shiprocket_promise_promise_widget_J4MFhC",
-            "size_guide_zPiNQf"
+            "shiprocket_promise_promise_widget_J4MFhC"
           ]
         },
         "bundle": {
