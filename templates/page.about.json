@@ -21,6 +21,67 @@
         "padding-block-end": 80
       }
     },
+    "section_A6aPKY": {
+      "type": "section",
+      "blocks": {
+        "logo_DPxXBt": {
+          "type": "logo",
+          "settings": {
+            "logo_type": "default",
+            "inverse": false,
+            "font": "heading",
+            "vertical_align": "center",
+            "unit": "percent",
+            "percent_width": 100,
+            "pixel_height": 48,
+            "custom_mobile_size": false,
+            "unit_mobile": "percent",
+            "percent_width_mobile": 100,
+            "pixel_height_mobile": 120,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "logo_DPxXBt"
+      ],
+      "custom_css": [
+        ".logo-block {height: 24px; @media screen and (min-width:768px){display: none; padding:0; height:0 }}",
+        ".custom-section-content {padding: 0px !important;}"
+      ],
+      "name": "t:names.large_logo",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "space-between",
+        "gap": 0,
+        "section_width": "full-width",
+        "section_height": "custom",
+        "section_height_custom": 0,
+        "color_scheme": "scheme-1",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
     "section_EfGNGi": {
       "type": "section",
       "blocks": {
@@ -108,7 +169,7 @@
         "video_AhJ3rc"
       ],
       "custom_css": [
-        ".custom-section-content{padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
@@ -417,6 +478,7 @@
   },
   "order": [
     "main",
+    "section_A6aPKY",
     "section_EfGNGi",
     "section_9BkEVp"
   ]
