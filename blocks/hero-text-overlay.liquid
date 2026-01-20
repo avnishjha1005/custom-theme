@@ -24,11 +24,16 @@
     grid-template-columns: repeat({{ block.settings.desktop_columns }}, 1fr);
     gap: {{ block.settings.image_gap }}px;
     position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
   }
 
   .ai-three-image-hero__image-wrapper-{{ ai_gen_id }} {
     position: relative;
     width: 100%;
+    min-width: 0;
     aspect-ratio: {{ block.settings.image_aspect_ratio }};
     overflow: hidden;
     border-radius: {{ block.settings.image_border_radius }}px;
