@@ -962,6 +962,10 @@ details[open] > summary .icon-animated > svg {
   transform: rotate(180deg);
 }
 
+details[open] > summary .icon-animated-90 > svg {
+  transform: rotate(90deg);
+}
+
 /* iOS fix: hide the default arrow on the summary */
 summary::-webkit-details-marker {
   display: none;
