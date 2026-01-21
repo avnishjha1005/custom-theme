@@ -139,14 +139,14 @@
   {% if shop.enabled_currencies.size > 1 %}
     <div class="drawer-locale-selector">
       <button type="button" class="drawer-locale-btn" id="Drawer-Currency-Btn">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        {% comment %} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="12" y1="1" x2="12" y2="23"></line>
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-        </svg>
+        </svg> {% endcomment %}
         <span>{{ localization.country.currency.iso_code }}</span>
-        <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        {% comment %} <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
+        </svg> {% endcomment %}
       </button>
       
       <div class="drawer-locale-panel" id="Drawer-Currency-Panel">
