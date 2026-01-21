@@ -86,7 +86,7 @@
             "slideshow_controls_style": "thumbnails",
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "bottom",
-            "thumbnail_width": 72,
+            "thumbnail_width": 100,
             "aspect_ratio": "1/1.25",
             "constrain_to_viewport": false,
             "media_fit": "cover",
