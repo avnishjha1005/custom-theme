@@ -195,6 +195,7 @@
   .drawer-footer-localization {
     display: flex;
     gap: 12px;
+    width: 100%;
   }
 
   .drawer-locale-selector {
@@ -207,8 +208,10 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background:none;
-    border: none;
+    padding: 10px 12px;
+    background: #f8f8f8;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
     font-size: 13px;
     font-weight: 500;
     color: #000;
@@ -285,6 +288,13 @@
     text-transform: uppercase;
   }
 
+  .drawer-locale-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
   .drawer-locale-list {
     list-style: none;
     padding: 10px 16px;
@@ -292,7 +302,14 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     flex: 1;
-    max-height: 100%;
+  }
+
+  .drawer-locale-list li {
+    border-bottom: 1px solid #f8f8f8;
+  }
+
+  .drawer-locale-list li:last-child {
+    border-bottom: none;
   }
 
   .drawer-locale-option {
@@ -347,24 +364,6 @@
         this.currencyBtn.addEventListener('click', () => this.togglePanel(this.currencyPanel, this.currencyBtn));
         this.currencyBackBtn.addEventListener('click', () => this.closePanel(this.currencyPanel, this.currencyBtn));
       }
-
-      // Handle option selection
-      document.querySelectorAll('.drawer-locale-option').forEach(option => {
-        option.addEventListener('click', (e) => {
-          const formAction = e.currentTarget.dataset.formAction;
-          const form = e.currentTarget.closest('form');
-          
-          if (formAction === 'language') {
-            const locale = e.currentTarget.dataset.locale;
-            form.querySelector('input[name="locale_code"]').value = locale;
-          } else if (formAction === 'country') {
-            const country = e.currentTarget.dataset.country;
-            form.querySelector('input[name="country_code"]').value = country;
-          }
-          
-          form.submit();
-        });
-      });
     }
 
     togglePanel(panel, button) {
