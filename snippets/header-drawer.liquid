@@ -84,12 +84,329 @@
 
         <div class="drawer-footer">
           {% comment %} insert localisation button {% endcomment %}
+           <div class="drawer-footer-localization">
+  {% if shop.published_locales.size > 1 %}
+    <div class="drawer-locale-selector">
+      <button type="button" class="drawer-locale-btn" id="Drawer-Language-Btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span>{{ localization.language.iso_code | upcase }}</span>
+        <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      
+      <div class="drawer-locale-panel" id="Drawer-Language-Panel">
+        <div class="drawer-locale-header">
+          <button type="button" class="drawer-locale-back" id="Language-Back-Btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <span class="drawer-locale-title">Language</span>
+        </div>
+        
+        <form method="post" action="{{ routes.root_url }}localization">
+          <input type="hidden" name="locale_code" value="">
+          <ul class="drawer-locale-list">
+            {% for language in shop.published_locales %}
+              <li>
+                <button 
+                  type="button" 
+                  class="drawer-locale-option {% if language.iso_code == localization.language.iso_code %}is-active{% endif %}"
+                  data-locale="{{ language.iso_code }}"
+                  data-form-action="language"
+                >
+                  {{ language.endonym_name }}
+                  {% if language.iso_code == localization.language.iso_code %}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  {% endif %}
+                </button>
+              </li>
+            {% endfor %}
+          </ul>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if shop.enabled_currencies.size > 1 %}
+    <div class="drawer-locale-selector">
+      <button type="button" class="drawer-locale-btn" id="Drawer-Currency-Btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+        <span>{{ localization.country.currency.iso_code }}</span>
+        <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      
+      <div class="drawer-locale-panel" id="Drawer-Currency-Panel">
+        <div class="drawer-locale-header">
+          <button type="button" class="drawer-locale-back" id="Currency-Back-Btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <span class="drawer-locale-title">Currency</span>
+        </div>
+        
+        <form method="post" action="{{ routes.root_url }}localization">
+          <input type="hidden" name="country_code" value="">
+          <ul class="drawer-locale-list">
+            {% for country in localization.available_countries %}
+              <li>
+                <button 
+                  type="button" 
+                  class="drawer-locale-option {% if country.iso_code == localization.country.iso_code %}is-active{% endif %}"
+                  data-country="{{ country.iso_code }}"
+                  data-form-action="country"
+                >
+                  {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                  {% if country.iso_code == localization.country.iso_code %}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  {% endif %}
+                </button>
+              </li>
+            {% endfor %}
+          </ul>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+</div>
           <a href="/pages/contact">CONTACT US</a>
         </div>
       </div>
     </div>
   </details>
 </header-drawer>
+<style>
+  .drawer-footer-localization {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .drawer-locale-selector {
+    flex: 1;
+    position: relative;
+  }
+
+  .drawer-locale-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #f8f8f8;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .drawer-locale-btn:hover {
+    background: #f0f0f0;
+  }
+
+  .drawer-locale-btn svg:first-child {
+    flex-shrink: 0;
+  }
+
+  .drawer-locale-btn span {
+    flex: 1;
+    text-align: left;
+  }
+
+  .drawer-chevron {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .drawer-locale-btn.is-open .drawer-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Slide-in Panel */
+  .drawer-locale-panel {
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 56px);
+    background: #fff;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    visibility: hidden;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .drawer-locale-panel.is-open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .drawer-locale-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f2f2f2;
+    background: #fff;
+    min-height: 50px;
+  }
+
+  .drawer-locale-back {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .drawer-locale-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .drawer-locale-list {
+    list-style: none;
+    padding: 10px 16px;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .drawer-locale-option {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    background: none;
+    border: none;
+    font-size: 16px;
+    text-align: left;
+    color: #000;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .drawer-locale-option:hover {
+    opacity: 0.7;
+  }
+
+  .drawer-locale-option.is-active {
+    font-weight: 600;
+  }
+
+  .drawer-locale-option svg {
+    flex-shrink: 0;
+    color: #000;
+  }
+</style>
+
+<script>
+  class DrawerLocalization {
+    constructor() {
+      this.languageBtn = document.getElementById('Drawer-Language-Btn');
+      this.currencyBtn = document.getElementById('Drawer-Currency-Btn');
+      this.languagePanel = document.getElementById('Drawer-Language-Panel');
+      this.currencyPanel = document.getElementById('Drawer-Currency-Panel');
+      this.languageBackBtn = document.getElementById('Language-Back-Btn');
+      this.currencyBackBtn = document.getElementById('Currency-Back-Btn');
+      
+      this.init();
+    }
+
+    init() {
+      if (this.languageBtn) {
+        this.languageBtn.addEventListener('click', () => this.togglePanel(this.languagePanel, this.languageBtn));
+        this.languageBackBtn.addEventListener('click', () => this.closePanel(this.languagePanel, this.languageBtn));
+      }
+
+      if (this.currencyBtn) {
+        this.currencyBtn.addEventListener('click', () => this.togglePanel(this.currencyPanel, this.currencyBtn));
+        this.currencyBackBtn.addEventListener('click', () => this.closePanel(this.currencyPanel, this.currencyBtn));
+      }
+
+      // Handle option selection
+      document.querySelectorAll('.drawer-locale-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+          const formAction = e.currentTarget.dataset.formAction;
+          const form = e.currentTarget.closest('form');
+          
+          if (formAction === 'language') {
+            const locale = e.currentTarget.dataset.locale;
+            form.querySelector('input[name="locale_code"]').value = locale;
+          } else if (formAction === 'country') {
+            const country = e.currentTarget.dataset.country;
+            form.querySelector('input[name="country_code"]').value = country;
+          }
+          
+          form.submit();
+        });
+      });
+    }
+
+    togglePanel(panel, button) {
+      if (panel.classList.contains('is-open')) {
+        this.closePanel(panel, button);
+      } else {
+        this.openPanel(panel, button);
+      }
+    }
+
+    openPanel(panel, button) {
+      // Close other panel if open
+      document.querySelectorAll('.drawer-locale-panel').forEach(p => {
+        if (p !== panel) {
+          p.classList.remove('is-open');
+        }
+      });
+      document.querySelectorAll('.drawer-locale-btn').forEach(b => {
+        if (b !== button) {
+          b.classList.remove('is-open');
+        }
+      });
+
+      panel.classList.add('is-open');
+      button.classList.add('is-open');
+    }
+
+    closePanel(panel, button) {
+      panel.classList.remove('is-open');
+      button.classList.remove('is-open');
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => new DrawerLocalization());
+  } else {
+    new DrawerLocalization();
+  }
+</script>
 
 <style>
   /* Header Icon Fix */
