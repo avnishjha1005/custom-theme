@@ -162,6 +162,7 @@
         
         <form method="post" action="{{ routes.root_url }}localization">
           <input type="hidden" name="country_code" value="">
+          <input type="hidden" name="return_to" value="{{ request.path }}">
           <ul class="drawer-locale-list">
             {% for country in localization.available_countries %}
               <li>
