@@ -451,6 +451,7 @@
                     },
                     "add-to-cart": {
                       "type": "add-to-cart",
+                      "disabled": true,
                       "static": true,
                       "settings": {
                         "style_class": "button"
@@ -527,7 +528,7 @@
                 "border_width": 1,
                 "border_opacity": 100,
                 "border_radius": 0,
-                "padding-block-start": 0,
+                "padding-block-start": 10,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
                 "padding-inline-end": 0
