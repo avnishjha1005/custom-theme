@@ -88,15 +88,15 @@
   {% if shop.published_locales.size > 1 %}
     <div class="drawer-locale-selector">
       <button type="button" class="drawer-locale-btn" id="Drawer-Language-Btn">
-        {% comment %} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="2" y1="12" x2="22" y2="12"></line>
           <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-        </svg> {% endcomment %}
+        </svg>
         <span>{{ localization.language.iso_code | upcase }}</span>
-        {% comment %} <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 12 15 18 9"></polyline>
-        </svg> {% endcomment %}
+        </svg>
       </button>
       
       <div class="drawer-locale-panel" id="Drawer-Language-Panel">
@@ -110,16 +110,15 @@
           <span class="drawer-locale-title">Language</span>
         </div>
         
-        <form method="post" action="{{ routes.root_url }}localization">
-          <input type="hidden" name="locale_code" value="">
+        {%- form 'localization', id: 'DrawerLanguageForm', class: 'drawer-locale-form' -%}
           <ul class="drawer-locale-list">
             {% for language in shop.published_locales %}
               <li>
                 <button 
-                  type="button" 
+                  type="submit" 
                   class="drawer-locale-option {% if language.iso_code == localization.language.iso_code %}is-active{% endif %}"
-                  data-locale="{{ language.iso_code }}"
-                  data-form-action="language"
+                  name="locale_code"
+                  value="{{ language.iso_code }}"
                 >
                   {{ language.endonym_name }}
                   {% if language.iso_code == localization.language.iso_code %}
@@ -131,7 +130,7 @@
               </li>
             {% endfor %}
           </ul>
-        </form>
+        {%- endform -%}
       </div>
     </div>
   {% endif %}
@@ -139,14 +138,14 @@
   {% if shop.enabled_currencies.size > 1 %}
     <div class="drawer-locale-selector">
       <button type="button" class="drawer-locale-btn" id="Drawer-Currency-Btn">
-        {% comment %} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="12" y1="1" x2="12" y2="23"></line>
           <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-        </svg> {% endcomment %}
+        </svg>
         <span>{{ localization.country.currency.iso_code }}</span>
-        {% comment %} <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 12 15 18 9"></polyline>
-        </svg> {% endcomment %}
+        </svg>
       </button>
       
       <div class="drawer-locale-panel" id="Drawer-Currency-Panel">
@@ -160,33 +159,32 @@
           <span class="drawer-locale-title">Currency</span>
         </div>
         
-        <form method="post" action="{{ routes.root_url }}localization">
-          <input type="hidden" name="country_code" value="">
-          <input type="hidden" name="return_to" value="{{ request.path }}">
+        {%- form 'localization', id: 'DrawerCurrencyForm', class: 'drawer-locale-form' -%}
           <ul class="drawer-locale-list">
             {% for country in localization.available_countries %}
               <li>
                 <button 
-                  type="button" 
+                  type="submit" 
                   class="drawer-locale-option {% if country.iso_code == localization.country.iso_code %}is-active{% endif %}"
-                  data-country="{{ country.iso_code }}"
-                  data-form-action="country"
+                  name="country_code"
+                  value="{{ country.iso_code }}"
                 >
                   {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
                   {% if country.iso_code == localization.country.iso_code %}
-                    {% comment %} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                       <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg> {% endcomment %}
+                    </svg>
                   {% endif %}
                 </button>
               </li>
             {% endfor %}
           </ul>
-        </form>
+        {%- endform -%}
       </div>
     </div>
   {% endif %}
 </div>
+
           <a href="/pages/contact">CONTACT US</a>
         </div>
       </div>
