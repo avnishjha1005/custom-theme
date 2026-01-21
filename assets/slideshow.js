@@ -647,9 +647,9 @@ export class Slideshow extends Component {
         const isNested = closestSlideshow instanceof Slideshow && closestSlideshow !== this;
         const cannotMoveInDirection = (movingRight && this.atStart) || (movingLeft && this.atEnd);
 
-        // Abort and let the parent slideshow handle the drag if we're moving in a direction where nested slideshow can't move
+        // Handoff drag to parent if child can't scroll further
         if (isNested && cannotMoveInDirection) {
-          controller.abort();
+          this.releasePointerCapture(event.pointerId); // Allow parent to take over
           return;
         }
 
