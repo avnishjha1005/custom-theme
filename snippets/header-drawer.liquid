@@ -173,9 +173,9 @@
                 >
                   {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
                   {% if country.iso_code == localization.country.iso_code %}
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    {% comment %} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                       <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
+                    </svg> {% endcomment %}
                   {% endif %}
                 </button>
               </li>
@@ -196,7 +196,6 @@
   .drawer-footer-localization {
     display: flex;
     gap: 12px;
-    width: 100%;
   }
 
   .drawer-locale-selector {
@@ -210,9 +209,8 @@
     align-items: center;
     gap: 8px;
     padding: 10px 12px;
-    background: #f8f8f8;
-    border: 1px solid #e5e5e5;
-    border-radius: 6px;
+    background:none;
+    border: none;
     font-size: 13px;
     font-weight: 500;
     color: #000;
