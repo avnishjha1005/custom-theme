@@ -111,6 +111,7 @@
         </div>
         
         {%- form 'localization', id: 'DrawerLanguageForm', class: 'drawer-locale-form' -%}
+          <input type="hidden" name="return_to" value="{{ request.path }}#drawer-open">
           <ul class="drawer-locale-list">
             {% for language in shop.published_locales %}
               <li>
@@ -160,6 +161,7 @@
         </div>
         
         {%- form 'localization', id: 'DrawerCurrencyForm', class: 'drawer-locale-form' -%}
+          <input type="hidden" name="return_to" value="{{ request.path }}#drawer-open">
           <ul class="drawer-locale-list">
             {% for country in localization.available_countries %}
               <li>
