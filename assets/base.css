@@ -3713,7 +3713,7 @@ slideshow-component[autoplay] slideshow-controls {
 
   .slideshow-control {
     border-radius: var(--media-radius);
-    width: clamp(44px, 7vw, var(--thumbnail-width));
+    width: 100% ;
     height: auto;
     aspect-ratio: var(--aspect-ratio);
 
