@@ -354,6 +354,7 @@
       this.currencyBackBtn = document.getElementById('Currency-Back-Btn');
       
       this.init();
+      this.checkHashAndOpen();
     }
 
     init() {
@@ -365,6 +366,22 @@
       if (this.currencyBtn) {
         this.currencyBtn.addEventListener('click', () => this.togglePanel(this.currencyPanel, this.currencyBtn));
         this.currencyBackBtn.addEventListener('click', () => this.closePanel(this.currencyPanel, this.currencyBtn));
+      }
+    }
+
+    checkHashAndOpen() {
+      // Check if we returned from localization form submission
+      if (window.location.hash === '#drawer-open') {
+        const menuDrawer = document.querySelector('header-drawer');
+        if (menuDrawer && !menuDrawer.isOpen) {
+          // Open the drawer
+          const details = menuDrawer.querySelector('details');
+          if (details) {
+            details.setAttribute('open', '');
+          }
+        }
+        // Remove the hash without scrolling
+        history.replaceState(null, null, ' ');
       }
     }
 
