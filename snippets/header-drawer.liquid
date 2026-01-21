@@ -1,252 +1,342 @@
-<header-drawer>
-  <details id="Details-menu-drawer-container" class="menu-drawer-container">
-    <summary class="header__icon header__icon--menu header__icon--summary focus-inset" aria-label="{{ 'sections.shop_the_look.view_product' | t }}">
-      <span class="menu-drawer-icon-wrapper">
-        <span class="header-drawer-icon header-drawer-icon--open icon-hamburger-container">
-          {{- 'icon-menu.svg' | inline_asset_content -}}
-        </span>
-        <span class="icon-close-container">
-          {{- 'icon-menu.svg' | inline_asset_content -}}
-        </span>
-      </span>
-    </summary>
+{% comment %}
+  Mobile Drawer Localization Component
+  Place this in your drawer footer section
+{% endcomment %}
 
-    <div id="menu-drawer" class="menu-drawer gradient motion-reduce" tabindex="-1">
-      <div class="menu-drawer__inner-container">
+<div class="drawer-footer-localization">
+  {% if shop.published_locales.size > 1 %}
+    <div class="drawer-locale-selector">
+      <button type="button" class="drawer-locale-btn" id="Drawer-Language-Btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span>{{ localization.language.iso_code | upcase }}</span>
+        <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      
+      <div class="drawer-locale-panel" id="Drawer-Language-Panel">
+        <div class="drawer-locale-header">
+          <button type="button" class="drawer-locale-back" id="Language-Back-Btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <span class="drawer-locale-title">Language</span>
+        </div>
         
-        {% comment %} Header Actions (Internal Back/Close) {% endcomment %}
-        <div class="drawer-header-actions">
-          <button type="button" class="drawer-back-btn is-hidden" id="Drawer-Back-Btn" aria-label="Back">
-            <span class="arrow-icon">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-            </span>
-          </button>
-          <button type="button" class="drawer-close-btn" id="Drawer-Close-Btn" aria-label="Close">
-             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          </button>
-        </div>
-
-        {% comment %} Level 1: Horizontal Pill Navigation {% endcomment %}
-        <nav class="drawer-l1-nav">
-          <div class="l1-nav-inner" id="L1-Pill-Container">
-            {%- for link in linklist.links -%}
-              <button type="button" 
-                class="pill-item {% if forloop.first %}is-active{% endif %}" 
-                data-l1-index="{{ forloop.index }}"
-                data-original-title="{{ link.title | escape }}">
-                {{ link.title | escape }}
-              </button>
-            {%- endfor -%}
-          </div>
-        </nav>
-
-        {% comment %} Main Content Panels {% endcomment %}
-        <div class="drawer-panels-container">
-          {%- for l1_link in linklist.links -%}
-            <div class="drawer-panel {% if forloop.first %}is-active{% endif %}" data-panel-l1="{{ forloop.index }}">
-              <ul class="drawer-links-list" role="list">
-                {%- for l2_link in l1_link.links -%}
-                  <li class="drawer-item-container">
-                    {%- if l2_link.links != blank -%}
-                      <button type="button" class="drawer-link-btn"
-                        data-drill-down 
-                        data-target="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}"
-                        data-path="{{ l1_link.title | escape }} / {{ l2_link.title | escape }}">
-                        <span class="link-text">{{ l2_link.title | escape }}</span>
-                        <span class="arrow-icon">
-                          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </span>
-                      </button>
-
-                      {% comment %} Level 3: Nested Slide-in Panel {% endcomment %}
-                      <div class="drawer-panel-nested" id="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}">
-                        <ul class="drawer-links-list" role="list">
-                          {%- for l3_link in l2_link.links -%}
-                            <li>
-                              <a href="{{ l3_link.url }}" class="drawer-link-btn">
-                                {{ l3_link.title | escape }}
-                              </a>
-                            </li>
-                          {%- endfor -%}
-                        </ul>
-                      </div>
-                    {%- else -%}
-                      <a href="{{ l2_link.url }}" class="drawer-link-btn">
-                        {{ l2_link.title | escape }}
-                      </a>
-                    {%- endif -%}
-                  </li>
-                {%- endfor -%}
-              </ul>
-            </div>
-          {%- endfor -%}
-        </div>
-
-        <div class="drawer-footer">
-          {% comment %} insert localisation button {% endcomment %}
-          <a href="/pages/contact">CONTACT US</a>
-        </div>
+        <form method="post" action="{{ routes.root_url }}localization">
+          <input type="hidden" name="locale_code" value="">
+          <ul class="drawer-locale-list">
+            {% for language in shop.published_locales %}
+              <li>
+                <button 
+                  type="button" 
+                  class="drawer-locale-option {% if language.iso_code == localization.language.iso_code %}is-active{% endif %}"
+                  data-locale="{{ language.iso_code }}"
+                  data-form-action="language"
+                >
+                  {{ language.endonym_name }}
+                  {% if language.iso_code == localization.language.iso_code %}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  {% endif %}
+                </button>
+              </li>
+            {% endfor %}
+          </ul>
+        </form>
       </div>
     </div>
-  </details>
-</header-drawer>
+  {% endif %}
+
+  {% if shop.enabled_currencies.size > 1 %}
+    <div class="drawer-locale-selector">
+      <button type="button" class="drawer-locale-btn" id="Drawer-Currency-Btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+        <span>{{ localization.country.currency.iso_code }}</span>
+        <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </button>
+      
+      <div class="drawer-locale-panel" id="Drawer-Currency-Panel">
+        <div class="drawer-locale-header">
+          <button type="button" class="drawer-locale-back" id="Currency-Back-Btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+          </button>
+          <span class="drawer-locale-title">Currency</span>
+        </div>
+        
+        <form method="post" action="{{ routes.root_url }}localization">
+          <input type="hidden" name="country_code" value="">
+          <ul class="drawer-locale-list">
+            {% for country in localization.available_countries %}
+              <li>
+                <button 
+                  type="button" 
+                  class="drawer-locale-option {% if country.iso_code == localization.country.iso_code %}is-active{% endif %}"
+                  data-country="{{ country.iso_code }}"
+                  data-form-action="country"
+                >
+                  {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                  {% if country.iso_code == localization.country.iso_code %}
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  {% endif %}
+                </button>
+              </li>
+            {% endfor %}
+          </ul>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+</div>
 
 <style>
-  /* Header Icon Fix */
-  .icon-close-container { display: none; }
-  details[open] .icon-hamburger-container { display: none; }
-  details[open] .icon-close-container { display: block; }
-  
-  .menu-drawer-icon-wrapper svg {
-    display: block;
+  .drawer-footer-localization {
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    border-top: 1px solid #f2f2f2;
   }
 
-  /* Drawer Styling */
-  .menu-drawer {z-index:-1;
-    position: fixed;
+  .drawer-locale-selector {
+    flex: 1;
+    position: relative;
+  }
+
+  .drawer-locale-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: #f8f8f8;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .drawer-locale-btn:hover {
+    background: #f0f0f0;
+  }
+
+  .drawer-locale-btn svg:first-child {
+    flex-shrink: 0;
+  }
+
+  .drawer-locale-btn span {
+    flex: 1;
+    text-align: left;
+  }
+
+  .drawer-chevron {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .drawer-locale-btn.is-open .drawer-chevron {
+    transform: rotate(180deg);
+  }
+
+  /* Slide-in Panel */
+  .drawer-locale-panel {
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     background: #fff;
-    z-index: 1000;
     transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
+    transition: transform 0.3s ease;
+    visibility: hidden;
+    z-index: 100;
     display: flex;
     flex-direction: column;
   }
-  
-  details[open] > .menu-drawer { transform: translateX(0); }
 
-  .drawer-header-actions {
+  .drawer-locale-panel.is-open {
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  .drawer-locale-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f2f2f2;
+    background: #fff;
+  }
+
+  .drawer-locale-back {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .drawer-locale-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .drawer-locale-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .drawer-locale-option {
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    padding: 10px;
-    min-height: 50px;
+    align-items: center;
+    padding: 14px 16px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #f8f8f8;
+    font-size: 14px;
+    text-align: left;
+    color: #000;
+    cursor: pointer;
+    transition: background 0.2s ease;
   }
 
-  .drawer-back-btn, .drawer-close-btn {
-    background: none; border: none; cursor: pointer; padding: 12px;
+  .drawer-locale-option:hover {
+    background: #f8f8f8;
   }
 
-  /* L1 Pills */
-  .drawer-l1-nav { overflow-x: auto; scrollbar-width: none; }
-  .drawer-l1-nav::-webkit-scrollbar { display: none; }
-  .l1-nav-inner { display: flex; padding: 19px 0px 0px 16px; gap: 10px; }
-
-  .pill-item {
-    white-space: nowrap; background: #fff; border: none; border-radius: 20px;
-    padding:0px; font-size: 10px; font-weight: medium; cursor: pointer; color: #000;
-    text-transform:uppercase;
-  }
-  .pill-item.is-active { text-decoration:underline; font-weight:bold;}
-
-  /* Content */
-  .drawer-panels-container { flex: 1; position: relative; overflow: hidden; height:80%}
-  .drawer-panel { display: none; padding: 10px 16px; height: 100%; overflow-y: auto; margin-top:41px;}
-  .drawer-panel.is-active { display: block; }
-
-  .drawer-links-list { list-style: none; padding: 0; margin: 0; }
-  .drawer-link-btn {
-    width: 100%; display: flex; justify-content: space-between; align-items: center;
-    padding: 0 0 12px 0; background: none; 
-    font-size: 16px; text-align: left; color: #000; text-decoration: none;
+  .drawer-locale-option.is-active {
+    font-weight: 600;
   }
 
-  /* L3 Drill-down */
-  .drawer-panel-nested {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; margin-top:41px;
-    background: #fff; padding: 10px 16px; transform: translateX(100%);
-    transition: transform 0.3s ease; visibility: hidden; z-index: 10;
+  .drawer-locale-option svg {
+    flex-shrink: 0;
+    color: #000;
   }
-  .drawer-panel-nested.is-open { transform: translateX(0); visibility: visible; }
 
-  .drawer-footer { padding: 20px 16px; border-top: 1px solid #f2f2f2; display: flex; justify-content: space-between; font-size: 12px; color: #888; }
-  .is-hidden { visibility: hidden; pointer-events: none; }
-  .menu-drawer__inner-container{height: calc(100svh - 56px);}
-  .menu-drawer{height: 100vh; z-index:-100;}
+  /* Full height panels within drawer */
+  .drawer-footer {
+    position: relative;
+  }
+
+  /* Adjust panel to overlay entire drawer content area */
+  .drawer-panels-container:has(.drawer-locale-panel.is-open) {
+    pointer-events: none;
+  }
+
+  .drawer-locale-panel.is-open {
+    position: fixed;
+    top: 56px; /* Height of your header */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 56px);
+  }
 </style>
 
 <script>
-  if (!customElements.get('header-drawer')) {
-  customElements.define('header-drawer', class extends HTMLElement {
+  class DrawerLocalization {
     constructor() {
-      super();
-      this.details = this.querySelector('details');
-      this.backBtn = this.querySelector('#Drawer-Back-Btn');
-      this.closeBtn = this.querySelector('#Drawer-Close-Btn');
-      this.pillBtns = this.querySelectorAll('.pill-item');
-      this.drillBtns = this.querySelectorAll('[data-drill-down]');
-      this.panels = this.querySelectorAll('.drawer-panel');
-      this.nestedPanels = this.querySelectorAll('.drawer-panel-nested');
+      this.languageBtn = document.getElementById('Drawer-Language-Btn');
+      this.currencyBtn = document.getElementById('Drawer-Currency-Btn');
+      this.languagePanel = document.getElementById('Drawer-Language-Panel');
+      this.currencyPanel = document.getElementById('Drawer-Currency-Panel');
+      this.languageBackBtn = document.getElementById('Language-Back-Btn');
+      this.currencyBackBtn = document.getElementById('Currency-Back-Btn');
+      
       this.init();
     }
 
     init() {
-      // Listen for when drawer opens
-      this.details.addEventListener('toggle', (e) => {
-        if (this.details.open) {
-          console.log('Menu drawer opened');
-          // Close search when menu opens
-          const searchDialog = document.querySelector('dialog-component');
-          if (searchDialog?.refs?.dialog?.open) {
-            console.log('Closing search dialog from menu');
-            searchDialog.closeDialog();
+      if (this.languageBtn) {
+        this.languageBtn.addEventListener('click', () => this.togglePanel(this.languagePanel, this.languageBtn));
+        this.languageBackBtn.addEventListener('click', () => this.closePanel(this.languagePanel, this.languageBtn));
+      }
+
+      if (this.currencyBtn) {
+        this.currencyBtn.addEventListener('click', () => this.togglePanel(this.currencyPanel, this.currencyBtn));
+        this.currencyBackBtn.addEventListener('click', () => this.closePanel(this.currencyPanel, this.currencyBtn));
+      }
+
+      // Handle option selection
+      document.querySelectorAll('.drawer-locale-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+          const formAction = e.currentTarget.dataset.formAction;
+          const form = e.currentTarget.closest('form');
+          
+          if (formAction === 'language') {
+            const locale = e.currentTarget.dataset.locale;
+            form.querySelector('input[name="locale_code"]').value = locale;
+          } else if (formAction === 'country') {
+            const country = e.currentTarget.dataset.country;
+            form.querySelector('input[name="country_code"]').value = country;
           }
+          
+          form.submit();
+        });
+      });
+    }
+
+    togglePanel(panel, button) {
+      if (panel.classList.contains('is-open')) {
+        this.closePanel(panel, button);
+      } else {
+        this.openPanel(panel, button);
+      }
+    }
+
+    openPanel(panel, button) {
+      // Close other panel if open
+      document.querySelectorAll('.drawer-locale-panel').forEach(p => {
+        if (p !== panel) {
+          p.classList.remove('is-open');
+        }
+      });
+      document.querySelectorAll('.drawer-locale-btn').forEach(b => {
+        if (b !== button) {
+          b.classList.remove('is-open');
         }
       });
 
-      // Pill Navigation logic
-      this.pillBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          this.resetMenuState();
-          this.pillBtns.forEach(b => b.classList.remove('is-active'));
-          btn.classList.add('is-active');
-          this.panels.forEach(p => p.classList.remove('is-active'));
-          const target = this.querySelector(`[data-panel-l1="${btn.dataset.l1Index}"]`);
-          if (target) target.classList.add('is-active');
-        });
-      });
-
-      // Drill down to L3 logic
-      this.drillBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const targetId = btn.dataset.target;
-          const nested = this.querySelector(`#${targetId}`);
-          const activePill = this.querySelector('.pill-item.is-active');
-          if (nested && activePill) {
-            nested.classList.add('is-open');
-            activePill.innerText = btn.dataset.path;
-            this.backBtn.classList.remove('is-hidden');
-          }
-        });
-      });
-
-      this.backBtn.addEventListener('click', () => this.resetMenuState());
-      this.closeBtn.addEventListener('click', () => {
-        this.close();
-      });
+      panel.classList.add('is-open');
+      button.classList.add('is-open');
     }
 
-    // Add a close method for external access
-    close() {
-      console.log('Closing menu drawer');
-      this.details.removeAttribute('open');
-      this.resetMenuState();
+    closePanel(panel, button) {
+      panel.classList.remove('is-open');
+      button.classList.remove('is-open');
     }
+  }
 
-    // Add isOpen getter for external access
-    get isOpen() {
-      return this.details.hasAttribute('open');
-    }
-
-    resetMenuState() {
-      this.nestedPanels.forEach(p => p.classList.remove('is-open'));
-      this.backBtn.classList.add('is-hidden');
-      this.pillBtns.forEach(btn => {
-        btn.innerText = btn.dataset.originalTitle;
-      });
-    }
-  });
-}
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => new DrawerLocalization());
+  } else {
+    new DrawerLocalization();
+  }
 </script>
