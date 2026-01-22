@@ -658,7 +658,7 @@ export class Slideshow extends Component {
       }
 
       // Stop the event from bubbling up to parent slideshow components
-      //event.stopImmediatePropagation();
+      event.stopImmediatePropagation();
 
       const delta = previous - current;
       const timeDelta = performance.now() - startTime;
