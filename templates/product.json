@@ -761,7 +761,7 @@
             "carousel_on_mobile": false,
             "max_products": 4,
             "columns": 4,
-            "mobile_columns": "2",
+            "mobile_columns": "1",
             "columns_gap": 19,
             "rows_gap": 16,
             "section_width": "page-width",
