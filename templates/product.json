@@ -757,8 +757,8 @@
           "type": "_bundle-products",
           "static": true,
           "settings": {
-            "layout_type": "carousel",
-            "carousel_on_mobile": true,
+            "layout_type": "grid",
+            "carousel_on_mobile": false,
             "max_products": 4,
             "columns": 4,
             "mobile_columns": "2",
