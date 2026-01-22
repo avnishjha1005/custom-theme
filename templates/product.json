@@ -1200,11 +1200,11 @@
                     "vertical_alignment": "center",
                     "align_baseline": false,
                     "horizontal_alignment_flex_direction_column": "flex-start",
-                    "vertical_alignment_flex_direction_column": "flex-start",
+                    "vertical_alignment_flex_direction_column": "flex-end",
                     "gap": 0,
-                    "width": "fill",
-                    "custom_width": 40,
-                    "width_mobile": "fill",
+                    "width": "fit-content",
+                    "custom_width": 31,
+                    "width_mobile": "fit-content",
                     "custom_width_mobile": 100,
                     "height": "fit",
                     "custom_height": 100,
@@ -1228,24 +1228,27 @@
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
-                  "blocks": {}
-                },
-                "product_card_quick_add_pHXztE": {
-                  "type": "_product-card-quick-add",
-                  "name": "t:names.quick_add",
-                  "settings": {
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
+                  "blocks": {
+                    "product_card_quick_add_XhxQMg": {
+                      "type": "_product-card-quick-add",
+                      "name": "t:names.quick_add",
+                      "settings": {
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
                   },
-                  "blocks": {}
+                  "block_order": [
+                    "product_card_quick_add_XhxQMg"
+                  ]
                 }
               },
               "block_order": [
                 "group_tEHPmM",
-                "group_PihxwT",
-                "product_card_quick_add_pHXztE"
+                "group_PihxwT"
               ]
             }
           },
