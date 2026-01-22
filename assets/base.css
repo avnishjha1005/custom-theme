@@ -4522,7 +4522,7 @@ text-component {
     max-width: 1440px;
     margin-inline: auto;
 }
-}
+
 
 [ref="resourceListCarousel"] > [ref="slideshowContainer"]{
   width:100%;
@@ -4532,7 +4532,7 @@ text-component {
 
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"]{
   width:100%;
-  overflow-x: visible;
+  /* overflow-x: visible; */
   padding-left:0px;
 }
 
