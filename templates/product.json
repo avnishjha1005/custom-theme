@@ -962,11 +962,23 @@
     "product_recommendations_qnzPkn": {
       "type": "product-recommendations",
       "blocks": {
+        "divider_Y6qcWk": {
+          "type": "_divider",
+          "name": "t:names.divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
         "text_GbxcYC": {
           "type": "text",
           "name": "t:names.header",
           "settings": {
-            "text": "<h3>Discover Similar Styles</h3>",
+            "text": "<p>Discover Similar Styles</p>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "left",
@@ -1259,6 +1271,7 @@
         }
       },
       "block_order": [
+        "divider_Y6qcWk",
         "text_GbxcYC"
       ],
       "custom_css": [],
@@ -1276,7 +1289,7 @@
         "icons_style": "none",
         "icons_shape": "none",
         "section_width": "page-width",
-        "gap": 67,
+        "gap": 15,
         "color_scheme": "scheme-1",
         "padding-block-start": 48,
         "padding-block-end": 48
