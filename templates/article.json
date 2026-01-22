@@ -83,30 +83,26 @@
         },
         "product_banner_ixRMG4": {
           "type": "product-banner",
+          "name": "Two Product Banner",
+          "settings": {
+            "heading": "Featured products",
+            "badge_text": "text"
+          },
           "blocks": {
             "product_card_QEV47G": {
               "type": "_product-card",
-              "settings": {
-                "product": "olive-green-jacket"
-              }
+              "settings": {}
             },
             "product_card_fBNTHe": {
               "type": "_product-card",
-              "settings": {
-                "product": "blue-silk-tuxedo"
-              }
+              "settings": {}
             }
           },
-      "block_order": [
-        "product_card_QEV47G",
-        "product_card_fBNTHe"
-      ],
-      "name": "Two Product Banner",
-      "settings": {
-        "heading": "Featured products",
-        "badge_text": "text"
-      }
-    }
+          "block_order": [
+            "product_card_QEV47G",
+            "product_card_fBNTHe"
+          ]
+        }
       },
       "settings": {
         "content_direction": "column",
