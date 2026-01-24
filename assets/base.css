@@ -4532,17 +4532,15 @@ text-component {
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"]{
   width:100%;
   /* overflow-x: visible; */
-  padding-left:0px;
+  padding-left:calc(-720px + 50vw);
+  padding-right: calc(-720px + 50vw);
 }
 
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"] > .swiper-wrapper{
   width:100%;
   overflow: visible;
 }
-.slideshow-slides{
-  padding-left:calc(-720px+50vw);
-  padding-right:calc(-720px+50vw);
-}
+
 
 [data-testid="product-list"]{
   overflow-x:hidden;
