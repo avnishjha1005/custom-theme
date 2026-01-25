@@ -55,83 +55,62 @@
 
 {% stylesheet %}
   .blog-posts-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px 20px;
-    max-width: var(--page-width);
-    margin: 0 auto;
-  }
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns for the top row */
+  gap: 40px;
+}
 
-  /* --- Featured Top Row (First 3 items) --- */
-  .card-featured {
-    display: flex;
-    flex-direction: column;
-    grid-column: span 1;
-  }
+/* Featured (Top 3) */
+.card-featured {
+  display: flex;
+  flex-direction: column;
+}
 
-  .card-featured .card-image-wrapper {
-    margin-bottom: 1.5rem;
-    aspect-ratio: 4 / 5; /* Matches the tall Figma portraits */
-    overflow: hidden;
-  }
+/* List Items (Article 4, 5+) - They span all 3 columns to act like a row */
+.card-list-item {
+  grid-column: span 3; 
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Image left, Content right */
+  gap: 30px;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding-top: 40px;
+}
 
-  /* --- List Rows (Everything after item 3) --- */
-  .card-list {
-    grid-column: span 3; /* Take full width of the grid */
-    display: grid;
-    grid-template-columns: 1fr 2fr; /* Image left, content right */
-    gap: 30px;
-    align-items: start;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 30px;
-  }
+.card-image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
 
-  /* Typography & Elements */
-  .card-tag {
-    display: block;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.5rem;
-    color: #666;
-  }
+.card-tag {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #888;
+}
 
-  .card-title {
-    font-size: 1.5rem;
-    margin: 0.5rem 0;
-    line-height: 1.2;
-  }
+.card-title {
+  font-family: serif; /* Matches AltarRasa's aesthetic */
+  font-size: 24px;
+  margin: 10px 0;
+}
 
-  .card-excerpt {
-    font-size: 1rem;
-    color: #444;
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
+.read-more {
+  display: inline-block;
+  margin-top: 15px;
+  text-decoration: underline;
+  font-weight: bold;
+}
 
-  .read-more-btn {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    font-weight: bold;
-    font-size: 0.9rem;
+/* Mobile: Stack everything */
+@media (max-width: 767px) {
+  .blog-posts-grid { grid-template-columns: 1fr; }
+  .card-list-item { 
+    grid-column: span 1; 
+    grid-template-columns: 1fr; 
   }
-
-  .card-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Mobile Responsive */
-  @media screen and (max-width: 768px) {
-    .blog-posts-grid {
-      grid-template-columns: 1fr;
-    }
-    .card-featured, .card-list {
-      grid-column: span 1;
-      grid-template-columns: 1fr; /* Stack on mobile */
-    }
-  }
+}
 {% endstylesheet %}
 {% schema %}
 {
