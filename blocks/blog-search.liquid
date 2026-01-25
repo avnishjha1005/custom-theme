@@ -1,567 +1,192 @@
 {% doc %}
   @prompt
-    Create a search component, The layout should be a search icon on the left, and a list of tags to the right of the search icon. Allow scroll if overflowing horizontally. On desktop clicking search should open a modal that lets me search for blog posts by keyword. It has a left pointing icon and a text input. On mobile it should open up a drawer that opens up upwards.Search results should populate under the search bar in the modal / drawer, I should be able to search by content in the blog post too? Like entering the title or some other keyword should populate, Also support partial matches of keywords. , Allow searching by the tag too, If i enter the tag name in the search bar my post isnt showing up, Remove the inputs for Blog Name, Tags etc, These should be auto populated by going through the constituent blog posts. Now Blog to search can be obtained by detecting the closest blog. Tags are part of the blogs themselves just loop through the objects and obtain the tags. Limit the display to 6 tags. 
+    Create a search component... [Refined for partial matches, tag search, and blog-specific filtering]
 {% enddoc %}
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
+{% comment %} Detect the current blog or fallback {% endcomment %}
 {% if blog %}
   {% assign current_blog = blog %}
+{% elsif article %}
+  {% assign current_blog = blogs[article.blog_handle] %}
 {% else %}
   {% assign current_blog = blogs[block.settings.fallback_blog] %}
 {% endif %}
 
+{% comment %} Extract unique tags from the last 50 articles, limit to 6 {% endcomment %}
 {% assign all_tags = '' %}
 {% if current_blog %}
   {% for article in current_blog.articles limit: 50 %}
     {% for tag in article.tags %}
       {% unless all_tags contains tag %}
-        {% if all_tags == '' %}
-          {% assign all_tags = tag %}
-        {% else %}
-          {% assign all_tags = all_tags | append: ',' | append: tag %}
-        {% endif %}
+        {% capture all_tags %}{{ all_tags }}{% if all_tags != '' %},{% endif %}{{ tag }}{% endcapture %}
       {% endunless %}
     {% endfor %}
   {% endfor %}
 {% endif %}
-
 {% assign tag_array = all_tags | split: ',' %}
 
 {% style %}
-  .ai-blog-search-{{ ai_gen_id }} {
-    display: block;
-    width: 100%;
-  }
-
+  .ai-blog-search-{{ ai_gen_id }} { display: block; width: 100%; font-family: inherit; }
   .ai-blog-search-bar-{{ ai_gen_id }} {
-    display: flex;
-    align-items: center;
-    gap: {{ block.settings.gap }}px;
+    display: flex; align-items: center; gap: {{ block.settings.gap }}px;
     padding: {{ block.settings.padding }}px;
     background-color: {{ block.settings.background_color }};
     border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
     border-radius: {{ block.settings.border_radius }}px;
   }
-
   .ai-blog-search-icon-{{ ai_gen_id }} {
-    flex-shrink: 0;
-    width: {{ block.settings.icon_size }}px;
-    height: {{ block.settings.icon_size }}px;
-    cursor: pointer;
-    color: {{ block.settings.icon_color }};
-    transition: color 0.2s ease;
+    background: none; border: none; flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px; height: {{ block.settings.icon_size }}px;
+    cursor: pointer; color: {{ block.settings.icon_color }}; transition: color 0.2s;
   }
-
-  .ai-blog-search-icon-{{ ai_gen_id }}:hover {
-    color: {{ block.settings.icon_hover_color }};
-  }
-
-  .ai-blog-search-icon-{{ ai_gen_id }} svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .ai-blog-search-tags-{{ ai_gen_id }} {
-    flex: 1;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-
-  .ai-blog-search-tags-{{ ai_gen_id }}::-webkit-scrollbar {
-    display: none;
-  }
-
-  .ai-blog-search-tags-list-{{ ai_gen_id }} {
-    display: flex;
-    gap: {{ block.settings.tag_gap }}px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    white-space: nowrap;
-  }
-
-  .ai-blog-search-tag-{{ ai_gen_id }} {
-    flex-shrink: 0;
-  }
-
+  .ai-blog-search-tags-{{ ai_gen_id }} { flex: 1; overflow-x: auto; scrollbar-width: none; }
+  .ai-blog-search-tags-{{ ai_gen_id }}::-webkit-scrollbar { display: none; }
+  .ai-blog-search-tags-list-{{ ai_gen_id }} { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; white-space: nowrap; }
   .ai-blog-search-tag-link-{{ ai_gen_id }} {
-    display: inline-block;
-    padding: {{ block.settings.tag_padding_vertical }}px {{ block.settings.tag_padding_horizontal }}px;
+    display: inline-block; padding: 6px 12px;
     background-color: {{ block.settings.tag_background }};
     color: {{ block.settings.tag_text_color }};
-    text-decoration: none;
-    border-radius: {{ block.settings.tag_border_radius }}px;
-    font-size: {{ block.settings.tag_font_size }}px;
-    transition: all 0.2s ease;
+    text-decoration: none; border-radius: 20px; font-size: 13px;
     border: 1px solid {{ block.settings.tag_border_color }};
   }
 
-  .ai-blog-search-tag-link-{{ ai_gen_id }}:hover {
-    background-color: {{ block.settings.tag_hover_background }};
-    color: {{ block.settings.tag_hover_text_color }};
-    border-color: {{ block.settings.tag_hover_border_color }};
-  }
-
+  /* Overlay and Modals */
   .ai-blog-search-overlay-{{ ai_gen_id }} {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 9998;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 9998; opacity: 0; visibility: hidden; transition: 0.3s;
+  }
+  .ai-blog-search-overlay-{{ ai_gen_id }}.active { opacity: 1; visibility: visible; }
+
+  .ai-blog-search-modal-{{ ai_gen_id }}, .ai-blog-search-drawer-{{ ai_gen_id }} {
+    position: fixed; background: {{ block.settings.modal_background }};
+    z-index: 9999; visibility: hidden; transition: 0.3s; display: flex; flex-direction: column;
   }
 
-  .ai-blog-search-overlay-{{ ai_gen_id }}.active {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .ai-blog-search-modal-{{ ai_gen_id }} {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
-    background-color: {{ block.settings.modal_background }};
-    border-radius: {{ block.settings.modal_border_radius }}px;
-    z-index: 9999;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  }
-
-  .ai-blog-search-modal-{{ ai_gen_id }}.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  .ai-blog-search-drawer-{{ ai_gen_id }} {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 80vh;
-    background-color: {{ block.settings.modal_background }};
-    border-radius: {{ block.settings.modal_border_radius }}px {{ block.settings.modal_border_radius }}px 0 0;
-    z-index: 9999;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
-  }
-
-  .ai-blog-search-drawer-{{ ai_gen_id }}.active {
-    transform: translateY(0);
-  }
-
-  .ai-blog-search-header-{{ ai_gen_id }} {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 20px;
-    border-bottom: 1px solid {{ block.settings.border_color }};
-  }
-
-  .ai-blog-search-back-{{ ai_gen_id }} {
-    flex-shrink: 0;
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    color: {{ block.settings.icon_color }};
-    background: none;
-    border: none;
-    padding: 0;
-    transition: color 0.2s ease;
-  }
-
-  .ai-blog-search-back-{{ ai_gen_id }}:hover {
-    color: {{ block.settings.icon_hover_color }};
-  }
-
-  .ai-blog-search-back-{{ ai_gen_id }} svg {
-    width: 100%;
-    height: 100%;
-  }
-
-  .ai-blog-search-input-{{ ai_gen_id }} {
-    flex: 1;
-    padding: 12px 16px;
-    border: 1px solid {{ block.settings.input_border_color }};
-    border-radius: {{ block.settings.input_border_radius }}px;
-    font-size: 16px;
-    background-color: {{ block.settings.input_background }};
-    color: {{ block.settings.input_text_color }};
-  }
-
-  .ai-blog-search-input-{{ ai_gen_id }}:focus {
-    outline: none;
-    border-color: {{ block.settings.input_focus_border_color }};
-  }
-
-  .ai-blog-search-results-{{ ai_gen_id }} {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-  }
-
-  .ai-blog-search-result-{{ ai_gen_id }} {
-    padding: 16px;
-    border-bottom: 1px solid {{ block.settings.border_color }};
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    text-decoration: none;
-    display: block;
-    color: inherit;
-  }
-
-  .ai-blog-search-result-{{ ai_gen_id }}:hover {
-    background-color: {{ block.settings.result_hover_background }};
-  }
-
-  .ai-blog-search-result-{{ ai_gen_id }}:last-child {
-    border-bottom: none;
-  }
-
-  .ai-blog-search-result-title-{{ ai_gen_id }} {
-    font-size: {{ block.settings.result_title_size }}px;
-    font-weight: 600;
-    margin: 0 0 8px 0;
-    color: {{ block.settings.result_title_color }};
-  }
-
-  .ai-blog-search-result-excerpt-{{ ai_gen_id }} {
-    font-size: {{ block.settings.result_excerpt_size }}px;
-    color: {{ block.settings.result_excerpt_color }};
-    margin: 0 0 8px 0;
-    line-height: 1.5;
-  }
-
-  .ai-blog-search-result-tags-{{ ai_gen_id }} {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 8px;
-  }
-
-  .ai-blog-search-result-tag-{{ ai_gen_id }} {
-    display: inline-block;
-    padding: 4px 10px;
-    background-color: {{ block.settings.result_tag_background }};
-    color: {{ block.settings.result_tag_color }};
-    border-radius: {{ block.settings.result_tag_border_radius }}px;
-    font-size: {{ block.settings.result_tag_font_size }}px;
-  }
-
-  .ai-blog-search-highlight-{{ ai_gen_id }} {
-    background-color: {{ block.settings.highlight_color }};
-    font-weight: 600;
-    padding: 0 2px;
-  }
-
-  .ai-blog-search-empty-{{ ai_gen_id }} {
-    text-align: center;
-    padding: 40px 20px;
-    color: {{ block.settings.result_excerpt_color }};
-  }
-
-  .ai-blog-search-loading-{{ ai_gen_id }} {
-    text-align: center;
-    padding: 40px 20px;
-    color: {{ block.settings.result_excerpt_color }};
-  }
-
+  /* Desktop Modal */
   @media screen and (min-width: 750px) {
-    .ai-blog-search-drawer-{{ ai_gen_id }} {
-      display: none;
+    .ai-blog-search-modal-{{ ai_gen_id }} {
+      top: 20%; left: 50%; transform: translateX(-50%) translateY(-20px);
+      width: 600px; max-height: 400px; border-radius: 12px; opacity: 0;
     }
+    .ai-blog-search-modal-{{ ai_gen_id }}.active { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+    .ai-blog-search-drawer-{{ ai_gen_id }} { display: none; }
   }
 
+  /* Mobile Drawer */
   @media screen and (max-width: 749px) {
-    .ai-blog-search-modal-{{ ai_gen_id }} {
-      display: none;
+    .ai-blog-search-drawer-{{ ai_gen_id }} {
+      bottom: 0; left: 0; width: 100%; height: 80vh;
+      transform: translateY(100%); border-radius: 20px 20px 0 0;
     }
+    .ai-blog-search-drawer-{{ ai_gen_id }}.active { visibility: visible; transform: translateY(0); }
+    .ai-blog-search-modal-{{ ai_gen_id }} { display: none; }
   }
+
+  .ai-blog-search-header-{{ ai_gen_id }} { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
+  .ai-blog-search-input-{{ ai_gen_id }} { flex: 1; border: none; padding: 10px; font-size: 16px; outline: none; background: transparent; }
+  .ai-blog-search-results-{{ ai_gen_id }} { flex: 1; overflow-y: auto; padding: 10px; }
+  .ai-blog-search-result-item { padding: 12px; border-bottom: 1px solid #f0f0f0; display: block; text-decoration: none; color: #333; }
+  .ai-blog-search-highlight-{{ ai_gen_id }} { background: {{ block.settings.highlight_color }}; font-weight: bold; }
 {% endstyle %}
 
-<blog-search-{{ ai_gen_id }} class="ai-blog-search-{{ ai_gen_id }}" data-blog-handle="{% if current_blog %}{{ current_blog.handle }}{% endif %}" {{ block.shopify_attributes }}>
+<blog-search-{{ ai_gen_id }} data-blog-handle="{{ current_blog.handle }}">
   <div class="ai-blog-search-bar-{{ ai_gen_id }}">
-    <button class="ai-blog-search-icon-{{ ai_gen_id }}" aria-label="Search blog posts">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="11" cy="11" r="8"></circle>
-        <path d="m21 21-4.35-4.35"></path>
-      </svg>
+    <button class="ai-blog-search-icon-{{ ai_gen_id }}" aria-label="Open Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     </button>
-
     <div class="ai-blog-search-tags-{{ ai_gen_id }}">
       <ul class="ai-blog-search-tags-list-{{ ai_gen_id }}">
-        {% if current_blog %}
-          {% for tag in tag_array limit: 6 %}
-            <li class="ai-blog-search-tag-{{ ai_gen_id }}">
-              <a href="{{ current_blog.url }}/tagged/{{ tag | handle }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">
-                {{ tag }}
-              </a>
-            </li>
-          {% endfor %}
-        {% endif %}
+        {% for tag in tag_array limit: 6 %}
+          <li><a href="{{ current_blog.url }}/tagged/{{ tag | handle }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">{{ tag }}</a></li>
+        {% endfor %}
       </ul>
     </div>
   </div>
 
   <div class="ai-blog-search-overlay-{{ ai_gen_id }}"></div>
 
-  <div class="ai-blog-search-modal-{{ ai_gen_id }}">
+  {% capture search_ui %}
     <div class="ai-blog-search-header-{{ ai_gen_id }}">
-      <button class="ai-blog-search-back-{{ ai_gen_id }}" aria-label="Close search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m15 18-6-6 6-6"></path>
-        </svg>
+      <button class="ai-blog-search-icon-{{ ai_gen_id }} back-btn" style="transform: rotate(180deg)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
       </button>
-      <input 
-        type="text" 
-        class="ai-blog-search-input-{{ ai_gen_id }}" 
-        placeholder="{{ block.settings.search_placeholder }}"
-        aria-label="Search blog posts"
-      >
+      <input type="text" class="ai-blog-search-input-{{ ai_gen_id }}" placeholder="Search posts or tags...">
     </div>
-    <div class="ai-blog-search-results-{{ ai_gen_id }}">
-      <div class="ai-blog-search-empty-{{ ai_gen_id }}">
-        {{ block.settings.empty_message }}
-      </div>
-    </div>
-  </div>
+    <div class="ai-blog-search-results-{{ ai_gen_id }}"></div>
+  {% endcapture %}
 
-  <div class="ai-blog-search-drawer-{{ ai_gen_id }}">
-    <div class="ai-blog-search-header-{{ ai_gen_id }}">
-      <button class="ai-blog-search-back-{{ ai_gen_id }}" aria-label="Close search">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m15 18-6-6 6-6"></path>
-        </svg>
-      </button>
-      <input 
-        type="text" 
-        class="ai-blog-search-input-{{ ai_gen_id }}" 
-        placeholder="{{ block.settings.search_placeholder }}"
-        aria-label="Search blog posts"
-      >
-    </div>
-    <div class="ai-blog-search-results-{{ ai_gen_id }}">
-      <div class="ai-blog-search-empty-{{ ai_gen_id }}">
-        {{ block.settings.empty_message }}
-      </div>
-    </div>
-  </div>
+  <div class="ai-blog-search-modal-{{ ai_gen_id }}">{{ search_ui }}</div>
+  <div class="ai-blog-search-drawer-{{ ai_gen_id }}">{{ search_ui }}</div>
 </blog-search-{{ ai_gen_id }}>
 
 <script>
-  (function() {
-    class BlogSearch{{ ai_gen_id }} extends HTMLElement {
+  if (!customElements.get('blog-search-{{ ai_gen_id }}')) {
+    customElements.define('blog-search-{{ ai_gen_id }}', class extends HTMLElement {
       constructor() {
         super();
-        this.searchIcon = this.querySelector('.ai-blog-search-icon-{{ ai_gen_id }}');
+        this.blogHandle = this.dataset.blogHandle;
         this.overlay = this.querySelector('.ai-blog-search-overlay-{{ ai_gen_id }}');
-        this.modal = this.querySelector('.ai-blog-search-modal-{{ ai_gen_id }}');
-        this.drawer = this.querySelector('.ai-blog-search-drawer-{{ ai_gen_id }}');
-        this.backButtons = this.querySelectorAll('.ai-blog-search-back-{{ ai_gen_id }}');
-        this.inputs = this.querySelectorAll('.ai-blog-search-input-{{ ai_gen_id }}');
-        this.resultsContainers = this.querySelectorAll('.ai-blog-search-results-{{ ai_gen_id }}');
-        this.blogHandle = this.getAttribute('data-blog-handle');
-        this.searchTimeout = null;
+        this.container = window.innerWidth > 749 
+          ? this.querySelector('.ai-blog-search-modal-{{ ai_gen_id }}') 
+          : this.querySelector('.ai-blog-search-drawer-{{ ai_gen_id }}');
+        
+        this.input = this.container.querySelector('input');
+        this.resultsDiv = this.container.querySelector('.ai-blog-search-results-{{ ai_gen_id }}');
+        
+        this.querySelector('.ai-blog-search-icon-{{ ai_gen_id }}').onclick = () => this.toggle(true);
+        this.overlay.onclick = () => this.toggle(false);
+        this.container.querySelector('.back-btn').onclick = () => this.toggle(false);
+        
+        this.input.oninput = (e) => this.debounceSearch(e.target.value);
       }
 
-      connectedCallback() {
-        this.setupEventListeners();
+      toggle(open) {
+        this.overlay.classList.toggle('active', open);
+        this.container.classList.toggle('active', open);
+        if (open) setTimeout(() => this.input.focus(), 100);
       }
 
-      setupEventListeners() {
-        this.searchIcon.addEventListener('click', () => this.openSearch());
-        this.overlay.addEventListener('click', () => this.closeSearch());
-        
-        this.backButtons.forEach(button => {
-          button.addEventListener('click', () => this.closeSearch());
-        });
-
-        this.inputs.forEach(input => {
-          input.addEventListener('input', (e) => {
-            const otherInput = Array.from(this.inputs).find(i => i !== e.target);
-            if (otherInput) {
-              otherInput.value = e.target.value;
-            }
-            this.handleSearch(e.target.value);
-          });
-        });
-
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            this.closeSearch();
-          }
-        });
-      }
-
-      openSearch() {
-        this.overlay.classList.add('active');
-        this.modal.classList.add('active');
-        this.drawer.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        setTimeout(() => {
-          this.inputs[0].focus();
-        }, 100);
-      }
-
-      closeSearch() {
-        this.overlay.classList.remove('active');
-        this.modal.classList.remove('active');
-        this.drawer.classList.remove('active');
-        document.body.style.overflow = '';
-        
-        this.inputs.forEach(input => {
-          input.value = '';
-        });
-        
-        this.resultsContainers.forEach(container => {
-          container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.empty_message }}</div>';
-        });
-      }
-
-      handleSearch(query) {
-        clearTimeout(this.searchTimeout);
-        
-        if (query.length < 1) {
-          this.resultsContainers.forEach(container => {
-            container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.empty_message }}</div>';
-          });
-          return;
-        }
-
-        this.resultsContainers.forEach(container => {
-          container.innerHTML = '<div class="ai-blog-search-loading-{{ ai_gen_id }}">Searching...</div>';
-        });
-
-        this.searchTimeout = setTimeout(() => {
-          this.performSearch(query);
-        }, 300);
+      debounceSearch(query) {
+        clearTimeout(this.timer);
+        if (query.length < 2) { this.resultsDiv.innerHTML = ''; return; }
+        this.timer = setTimeout(() => this.performSearch(query), 300);
       }
 
       async performSearch(query) {
+        // Fix 1: Use wildcard * for partial matches and explicitly request tag fields
+        const searchUrl = `/search/suggest.json?q=${encodeURIComponent(query)}*&resources[type]=article&resources[options][fields]=title,body,tag,author`;
+        
         try {
-          const searchParams = new URLSearchParams({
-            q: query,
-            type: 'article',
-            options: JSON.stringify({
-              unavailable_products: 'last',
-              fields: 'title,body,tag,variants.title'
-            })
-          });
-
-          const response = await fetch(`/search/suggest.json?${searchParams.toString()}`);
-          
-          if (!response.ok) {
-            throw new Error('Search failed');
-          }
-
+          const response = await fetch(searchUrl);
           const data = await response.json();
-          let articles = data.resources.results.articles || [];
+          const articles = data.resources.results.articles || [];
 
-          if (this.blogHandle) {
-            articles = articles.filter(article => {
-              const articleBlogHandle = article.url.split('/blogs/')[1]?.split('/')[0];
-              return articleBlogHandle === this.blogHandle;
-            });
-          }
+          // Fix 2: Better blog filtering
+          const filtered = articles.filter(a => a.url.includes(`/blogs/${this.blogHandle}`));
 
-          const searchTermsLower = query.toLowerCase().split(' ').filter(term => term.length > 0);
-
-          if (articles.length === 0) {
-            this.resultsContainers.forEach(container => {
-              container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.no_results_message }}</div>';
-            });
+          if (filtered.length === 0) {
+            this.resultsDiv.innerHTML = '<p style="padding:20px; text-align:center;">No results found.</p>';
             return;
           }
 
-          let resultsHTML = '';
-
-          articles.forEach(article => {
-            const title = this.escapeHtml(article.title);
-            const excerpt = article.body_safe ? this.stripHtml(article.body_safe).substring(0, 150) + '...' : '';
-            const tags = article.tags || [];
-            
-            const highlightedTitle = this.highlightText(title, searchTermsLower);
-            const highlightedExcerpt = this.highlightText(excerpt, searchTermsLower);
-
-            let tagsHTML = '';
-            if (tags.length > 0 && {{ block.settings.show_tags }}) {
-              tagsHTML = '<div class="ai-blog-search-result-tags-{{ ai_gen_id }}">';
-              tags.forEach(tag => {
-                const highlightedTag = this.highlightText(this.escapeHtml(tag), searchTermsLower);
-                tagsHTML += `<span class="ai-blog-search-result-tag-{{ ai_gen_id }}">${highlightedTag}</span>`;
-              });
-              tagsHTML += '</div>';
-            }
-
-            resultsHTML += `
-              <a href="${article.url}" class="ai-blog-search-result-{{ ai_gen_id }}">
-                <h3 class="ai-blog-search-result-title-{{ ai_gen_id }}">${highlightedTitle}</h3>
-                ${highlightedExcerpt ? `<p class="ai-blog-search-result-excerpt-{{ ai_gen_id }}">${highlightedExcerpt}</p>` : ''}
-                ${tagsHTML}
-              </a>
-            `;
-          });
-
-          this.resultsContainers.forEach(container => {
-            container.innerHTML = resultsHTML;
-          });
-        } catch (error) {
-          this.resultsContainers.forEach(container => {
-            container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.error_message }}</div>';
-          });
+          this.resultsDiv.innerHTML = filtered.map(a => `
+            <a href="${a.url}" class="ai-blog-search-result-item">
+              <div style="font-weight:600">${this.highlight(a.title, query)}</div>
+              <div style="font-size:12px; color: #666">${a.summary ? this.highlight(a.summary, query) : ''}</div>
+            </a>
+          `).join('');
+        } catch (e) {
+          console.error("Search error", e);
         }
       }
 
-      highlightText(text, searchTerms) {
-        let highlightedText = text;
-        
-        searchTerms.forEach(term => {
-          if (term.length < 2) return;
-          
-          const regex = new RegExp(`(${this.escapeRegex(term)})`, 'gi');
-          highlightedText = highlightedText.replace(regex, '<span class="ai-blog-search-highlight-{{ ai_gen_id }}">$1</span>');
-        });
-        
-        return highlightedText;
+      highlight(text, query) {
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, `<span class="ai-blog-search-highlight-{{ ai_gen_id }}">$1</span>`);
       }
-
-      escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-      }
-
-      stripHtml(html) {
-        const div = document.createElement('div');
-        div.innerHTML = html;
-        return div.textContent || div.innerText || '';
-      }
-
-      escapeRegex(string) {
-        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      }
-    }
-
-    customElements.define('blog-search-{{ ai_gen_id }}', BlogSearch{{ ai_gen_id }});
-  })();
+    });
+  }
 </script>
 
 {% schema %}
