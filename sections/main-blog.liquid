@@ -8,32 +8,40 @@
 
 <blog-posts-list section-id="{{ section.id }}">
   <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-  <div
-    class="
-      section
-      color-{{ section.settings.color_scheme }}
-      blog-posts
-      spacing-style
-      size-style
-    "
-    style="{% render 'spacing-style', settings: section.settings %}"
-  >
-    {% content_for 'blocks' %}
-
+  <div class="section color-{{ section.settings.color_scheme }} blog-posts spacing-style" style="{% render 'spacing-style', settings: section.settings %}">
+    
     {%- paginate blog.articles by 12 -%}
-      <span ref="viewMorePrevious"></span>
-      <div
-        ref="grid"
-        class="blog-posts-container"
-        data-last-page="{{ paginate.pages }}"
-      >
+      <div ref="grid" class="blog-posts-grid" data-last-page="{{ paginate.pages }}">
         {% for article in blog.articles %}
-          <div
-            class="blog-post-item"
-            ref="cards[]"
-            data-page="{{ paginate.current_page }}"
-          >
-            {% content_for 'block', id: 'static-blog-post-card', type: '_blog-post-card', article: article %}
+          {%- assign is_featured = false -%}
+          {%- if forloop.index <= 3 -%}
+            {%- assign is_featured = true -%}
+          {%- endif -%}
+
+          <div class="blog-post-card {% if is_featured %}card-featured{% else %}card-list{% endif %}" ref="cards[]">
+            
+            <div class="card-image-wrapper">
+               <a href="{{ article.url }}">
+                 <img src="{{ article.image | image_url: width: 800 }}" alt="{{ article.title }}" loading="lazy">
+               </a>
+            </div>
+
+            <div class="card-content">
+              {%- if article.tags.size > 0 -%}
+                <span class="card-tag">{{ article.tags.first }}</span>
+              {%- endif -%}
+              
+              <h2 class="card-title">
+                <a href="{{ article.url }}">{{ article.title }}</a>
+              </h2>
+              
+              <div class="card-excerpt">
+                {{ article.excerpt_or_content | strip_html | truncatewords: 30 }}
+              </div>
+              
+              <a href="{{ article.url }}" class="read-more-btn">Read More</a>
+            </div>
+
           </div>
         {% endfor %}
       </div>
