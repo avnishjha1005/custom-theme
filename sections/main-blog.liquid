@@ -22,7 +22,7 @@
             
             <div class="card-image-wrapper">
                <a href="{{ article.url }}">
-                 <img src="{{ article.image | image_url: width: 800 }}" alt="{{ article.title }}" loading="lazy">
+                 <img src="{{ article.image | image_url: width: 800 }}" width="auto" height="auto" alt="{{ article.title }}" loading="lazy">
                </a>
             </div>
 
@@ -51,95 +51,85 @@
 </blog-posts-list>
 
 {% stylesheet %}
-  /**
-   * Blog posts page layout
-   */
-  .blog-posts {
-    --page-content-width: var(--narrow-page-width);
-    --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
-    --columns-gap: 36px;
-    --rows-gap: 36px;
-  }
-
-  .blog-posts-container {
+  .blog-posts-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px 20px;
+    max-width: var(--page-width);
+    margin: 0 auto;
+  }
+
+  /* --- Featured Top Row (First 3 items) --- */
+  .card-featured {
+    display: flex;
+    flex-direction: column;
+    grid-column: span 1;
+  }
+
+  .card-featured .card-image-wrapper {
+    margin-bottom: 1.5rem;
+    aspect-ratio: 4 / 5; /* Matches the tall Figma portraits */
+    overflow: hidden;
+  }
+
+  /* --- List Rows (Everything after item 3) --- */
+  .card-list {
+    grid-column: span 3; /* Take full width of the grid */
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Image left, content right */
+    gap: 30px;
+    align-items: start;
+    border-top: 1px solid #e0e0e0;
+    padding-top: 30px;
+  }
+
+  /* Typography & Elements */
+  .card-tag {
+    display: block;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    color: #666;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+    line-height: 1.2;
+  }
+
+  .card-excerpt {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .read-more-btn {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+  }
+
+  .card-image-wrapper img {
     width: 100%;
-    column-gap: var(--columns-gap);
-    row-gap: var(--rows-gap);
+    height: 100%;
+    object-fit: cover;
   }
 
-  /**
-   * Apart from the first and second rows in the grid, all remaining blog posts
-   * are arranged in a three-column layout:
-   * +------------+------------+-------------+
-   * |            |            |             |
-   * |  (span 2)  |  (span 2)  |  (span 2)   |
-   * |            |            |             |
-   * +------------+------------+-------------+
-   */
-  .blog-post-item {
-    --blog-post-card-scale: 0.6;
-
-    grid-column: span 2;
-
-    @media screen and (max-width: 749px) {
-      --blog-post-card-scale: 0.5;
-
-      grid-column: span 6;
+  /* Mobile Responsive */
+  @media screen and (max-width: 768px) {
+    .blog-posts-grid {
+      grid-template-columns: 1fr;
     }
-  }
-
-  /**
-   * The second row of blog posts has two columns:
-   * +-------------------+-------------------+
-   * |                   |                   |
-   * |  (column span 3)  |  (column span 3)  |
-   * |                   |                   |
-   * +-------------------+-------------------+
-   */
-  .blog-post-item:nth-child(2),
-  .blog-post-item:nth-child(3) {
-    --blog-post-card-scale: 0.8;
-
-    grid-column: span 3;
-
-    @media screen and (max-width: 749px) {
-      --blog-post-card-scale: 0.5;
-
-      grid-column: span 6;
+    .card-featured, .card-list {
+      grid-column: span 1;
+      grid-template-columns: 1fr; /* Stack on mobile */
     }
-  }
-
-  /**
-   * The first row of blog posts has only one column:
-   * +---------------------------------------+
-   * |                                       |
-   * |           (1 column span 6)           |
-   * |                                       |
-   * +---------------------------------------+
-   */
-  .blog-post-item:first-child {
-    --blog-post-card-scale: 1;
-
-    grid-column: span 6;
-  }
-
-  /**
-   * When there's no image, the blog post item has a border.
-   */
-  .blog-post-item {
-    border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-20));
-    padding: 0 1rem 1rem;
-  }
-
-  .blog-post-item:has(.blog-post-card__image-container) {
-    border: none;
-    padding: 0;
   }
 {% endstylesheet %}
-
 {% schema %}
 {
   "name": "t:names.blog_posts",
