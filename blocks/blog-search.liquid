@@ -484,45 +484,100 @@
 
       async performSearch(query) {
         try {
-          const searchParams = new URLSearchParams({
-            q: query,
-            type: 'article',
-            options: JSON.stringify({
-              unavailable_products: 'last',
-              fields: 'title,body,tag,variants.title'
-            })
+          // Fetch articles directly from the blog
+          let articles = [];
+          const queryLower = query.toLowerCase();
+          
+          if (this.blogHandle) {
+            // Try to fetch from the blog's articles
+            const blogUrl = `/blogs/${this.blogHandle}`;
+            
+            // First, try to get articles via the Shopify API
+            try {
+              const response = await fetch(`${blogUrl}/articles.json`);
+              if (response.ok) {
+                const data = await response.json();
+                articles = data.articles || [];
+              }
+            } catch (e) {
+              console.log('Articles API not available, trying search suggest');
+            }
+            
+            // Fallback to search suggest API
+            if (articles.length === 0) {
+              const searchParams = new URLSearchParams({
+                q: query,
+                type: 'article',
+                resources: JSON.stringify({
+                  type: 'article',
+                  limit: 20
+                })
+              });
+
+              const response = await fetch(`/search/suggest.json?${searchParams.toString()}`);
+              
+              if (response.ok) {
+                const data = await response.json();
+                articles = data.resources?.results?.articles || [];
+                
+                // Filter to current blog
+                articles = articles.filter(article => {
+                  const articleBlogHandle = article.url.split('/blogs/')[1]?.split('/')[0];
+                  return articleBlogHandle === this.blogHandle;
+                });
+              }
+            }
+          } else {
+            // Search all blogs
+            const searchParams = new URLSearchParams({
+              q: query,
+              type: 'article',
+              resources: JSON.stringify({
+                type: 'article',
+                limit: 20
+              })
+            });
+
+            const response = await fetch(`/search/suggest.json?${searchParams.toString()}`);
+            
+            if (response.ok) {
+              const data = await response.json();
+              articles = data.resources?.results?.articles || [];
+            }
+          }
+
+          // Perform client-side filtering for partial matches
+          const filteredArticles = articles.filter(article => {
+            const title = (article.title || '').toLowerCase();
+            const body = (article.body_safe || article.content || '').toLowerCase();
+            const tags = (article.tags || []).map(tag => tag.toLowerCase());
+            
+            // Check if query matches title (partial)
+            const titleMatch = title.includes(queryLower);
+            
+            // Check if query matches any tag (partial)
+            const tagMatch = tags.some(tag => tag.includes(queryLower));
+            
+            // Check if query matches body content (partial)
+            const bodyMatch = body.includes(queryLower);
+            
+            return titleMatch || tagMatch || bodyMatch;
           });
 
-          const response = await fetch(`/search/suggest.json?${searchParams.toString()}`);
-          
-          if (!response.ok) {
-            throw new Error('Search failed');
-          }
-
-          const data = await response.json();
-          let articles = data.resources.results.articles || [];
-
-          if (this.blogHandle) {
-            articles = articles.filter(article => {
-              const articleBlogHandle = article.url.split('/blogs/')[1]?.split('/')[0];
-              return articleBlogHandle === this.blogHandle;
-            });
-          }
-
-          const searchTermsLower = query.toLowerCase().split(' ').filter(term => term.length > 0);
-
-          if (articles.length === 0) {
+          if (filteredArticles.length === 0) {
             this.resultsContainers.forEach(container => {
               container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.no_results_message }}</div>';
             });
             return;
           }
 
+          const searchTermsLower = query.toLowerCase().split(' ').filter(term => term.length > 0);
           let resultsHTML = '';
 
-          articles.forEach(article => {
+          filteredArticles.forEach(article => {
             const title = this.escapeHtml(article.title);
-            const excerpt = article.body_safe ? this.stripHtml(article.body_safe).substring(0, 150) + '...' : '';
+            const bodyContent = article.body_safe || article.content || article.body_html || '';
+            const excerpt = bodyContent ? this.stripHtml(bodyContent).substring(0, 150) + '...' : '';
             const tags = article.tags || [];
             
             const highlightedTitle = this.highlightText(title, searchTermsLower);
@@ -551,6 +606,7 @@
             container.innerHTML = resultsHTML;
           });
         } catch (error) {
+          console.error('Search error:', error);
           this.resultsContainers.forEach(container => {
             container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.error_message }}</div>';
           });
@@ -590,6 +646,7 @@
     customElements.define('blog-search-{{ ai_gen_id }}', BlogSearch{{ ai_gen_id }});
   })();
 </script>
+
 
 {% schema %}
 {
