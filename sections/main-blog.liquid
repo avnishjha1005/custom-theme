@@ -6,7 +6,12 @@
   fetchpriority="low"
 ></script>
 
-<div ref="grid" class="blog-posts-grid">
+<blog-posts-list section-id="{{ section.id }}">
+  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
+  <div class="section color-{{ section.settings.color_scheme }} blog-posts spacing-style" style="{% render 'spacing-style', settings: section.settings %}">
+    
+    {%- paginate blog.articles by 12 -%}
+      <div ref="grid" class="blog-posts-grid">
   {% for article in blog.articles %}
     
     {% comment %} Check if it's one of the first three articles {% endcomment %}
@@ -42,7 +47,11 @@
 
     {% endif %}
   {% endfor %}
-</div>
+  </div>
+      <span ref="viewMoreNext"></span>
+    {%- endpaginate -%}
+  </div>
+</blog-posts-list>
 
 {% stylesheet %}
   .blog-posts-grid {
