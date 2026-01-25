@@ -1,6 +1,942 @@
+{% doc %}
+  @prompt
+    Create a search component, The layout should be a search icon on the left, and a list of tags to the right of the search icon. Allow scroll if overflowing horizontally. On desktop clicking search should open a modal that lets me search for blog posts by keyword. It has a left pointing icon and a text input. On mobile it should open up a drawer that opens up upwards.Search results should populate under the search bar in the modal / drawer
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-blog-search-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-blog-search-bar-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: {{ block.settings.gap }}px;
+    padding: {{ block.settings.padding }}px;
+    background-color: {{ block.settings.background_color }};
+    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+  }
+
+  .ai-blog-search-icon-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px;
+    height: {{ block.settings.icon_size }}px;
+    cursor: pointer;
+    color: {{ block.settings.icon_color }};
+    transition: color 0.2s ease;
+  }
+
+  .ai-blog-search-icon-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.icon_hover_color }};
+  }
+
+  .ai-blog-search-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-blog-search-tags-{{ ai_gen_id }} {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .ai-blog-search-tags-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-blog-search-tags-list-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.tag_gap }}px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+  }
+
+  .ai-blog-search-tag-{{ ai_gen_id }} {
+    flex-shrink: 0;
+  }
+
+  .ai-blog-search-tag-link-{{ ai_gen_id }} {
+    display: inline-block;
+    padding: {{ block.settings.tag_padding_vertical }}px {{ block.settings.tag_padding_horizontal }}px;
+    background-color: {{ block.settings.tag_background }};
+    color: {{ block.settings.tag_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.tag_border_radius }}px;
+    font-size: {{ block.settings.tag_font_size }}px;
+    transition: all 0.2s ease;
+    border: 1px solid {{ block.settings.tag_border_color }};
+  }
+
+  .ai-blog-search-tag-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.tag_hover_background }};
+    color: {{ block.settings.tag_hover_text_color }};
+    border-color: {{ block.settings.tag_hover_border_color }};
+  }
+
+  .ai-blog-search-overlay-{{ ai_gen_id }} {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .ai-blog-search-overlay-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ai-blog-search-modal-{{ ai_gen_id }} {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.9);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    background-color: {{ block.settings.modal_background }};
+    border-radius: {{ block.settings.modal_border_radius }}px;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .ai-blog-search-modal-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  .ai-blog-search-drawer-{{ ai_gen_id }} {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 80vh;
+    background-color: {{ block.settings.modal_background }};
+    border-radius: {{ block.settings.modal_border_radius }}px {{ block.settings.modal_border_radius }}px 0 0;
+    z-index: 9999;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .ai-blog-search-drawer-{{ ai_gen_id }}.active {
+    transform: translateY(0);
+  }
+
+  .ai-blog-search-header-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    border-bottom: 1px solid {{ block.settings.border_color }};
+  }
+
+  .ai-blog-search-back-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    color: {{ block.settings.icon_color }};
+    background: none;
+    border: none;
+    padding: 0;
+    transition: color 0.2s ease;
+  }
+
+  .ai-blog-search-back-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.icon_hover_color }};
+  }
+
+  .ai-blog-search-back-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .ai-blog-search-input-{{ ai_gen_id }} {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid {{ block.settings.input_border_color }};
+    border-radius: {{ block.settings.input_border_radius }}px;
+    font-size: 16px;
+    background-color: {{ block.settings.input_background }};
+    color: {{ block.settings.input_text_color }};
+  }
+
+  .ai-blog-search-input-{{ ai_gen_id }}:focus {
+    outline: none;
+    border-color: {{ block.settings.input_focus_border_color }};
+  }
+
+  .ai-blog-search-results-{{ ai_gen_id }} {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+  }
+
+  .ai-blog-search-result-{{ ai_gen_id }} {
+    padding: 16px;
+    border-bottom: 1px solid {{ block.settings.border_color }};
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    display: block;
+    color: inherit;
+  }
+
+  .ai-blog-search-result-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.result_hover_background }};
+  }
+
+  .ai-blog-search-result-{{ ai_gen_id }}:last-child {
+    border-bottom: none;
+  }
+
+  .ai-blog-search-result-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.result_title_size }}px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: {{ block.settings.result_title_color }};
+  }
+
+  .ai-blog-search-result-excerpt-{{ ai_gen_id }} {
+    font-size: {{ block.settings.result_excerpt_size }}px;
+    color: {{ block.settings.result_excerpt_color }};
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .ai-blog-search-empty-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: {{ block.settings.result_excerpt_color }};
+  }
+
+  .ai-blog-search-loading-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: {{ block.settings.result_excerpt_color }};
+  }
+
+  @media screen and (min-width: 750px) {
+    .ai-blog-search-drawer-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-blog-search-modal-{{ ai_gen_id }} {
+      display: none;
+    }
+  }
+{% endstyle %}
+
+<blog-search-{{ ai_gen_id }} class="ai-blog-search-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-blog-search-bar-{{ ai_gen_id }}">
+    <button class="ai-blog-search-icon-{{ ai_gen_id }}" aria-label="Search blog posts">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+    </button>
+
+    <div class="ai-blog-search-tags-{{ ai_gen_id }}">
+      <ul class="ai-blog-search-tags-list-{{ ai_gen_id }}">
+        {% if block.settings.tag_1 != blank %}
+          <li class="ai-blog-search-tag-{{ ai_gen_id }}">
+            <a href="{{ block.settings.tag_1_link }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">
+              {{ block.settings.tag_1 }}
+            </a>
+          </li>
+        {% endif %}
+        {% if block.settings.tag_2 != blank %}
+          <li class="ai-blog-search-tag-{{ ai_gen_id }}">
+            <a href="{{ block.settings.tag_2_link }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">
+              {{ block.settings.tag_2 }}
+            </a>
+          </li>
+        {% endif %}
+        {% if block.settings.tag_3 != blank %}
+          <li class="ai-blog-search-tag-{{ ai_gen_id }}">
+            <a href="{{ block.settings.tag_3_link }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">
+              {{ block.settings.tag_3 }}
+            </a>
+          </li>
+        {% endif %}
+        {% if block.settings.tag_4 != blank %}
+          <li class="ai-blog-search-tag-{{ ai_gen_id }}">
+            <a href="{{ block.settings.tag_4_link }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">
+              {{ block.settings.tag_4 }}
+            </a>
+          </li>
+        {% endif %}
+        {% if block.settings.tag_5 != blank %}
+          <li class="ai-blog-search-tag-{{ ai_gen_id }}">
+            <a href="{{ block.settings.tag_5_link }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">
+              {{ block.settings.tag_5 }}
+            </a>
+          </li>
+        {% endif %}
+        {% if block.settings.tag_6 != blank %}
+          <li class="ai-blog-search-tag-{{ ai_gen_id }}">
+            <a href="{{ block.settings.tag_6_link }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">
+              {{ block.settings.tag_6 }}
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="ai-blog-search-overlay-{{ ai_gen_id }}"></div>
+
+  <div class="ai-blog-search-modal-{{ ai_gen_id }}">
+    <div class="ai-blog-search-header-{{ ai_gen_id }}">
+      <button class="ai-blog-search-back-{{ ai_gen_id }}" aria-label="Close search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6"></path>
+        </svg>
+      </button>
+      <input 
+        type="text" 
+        class="ai-blog-search-input-{{ ai_gen_id }}" 
+        placeholder="{{ block.settings.search_placeholder }}"
+        aria-label="Search blog posts"
+      >
+    </div>
+    <div class="ai-blog-search-results-{{ ai_gen_id }}">
+      <div class="ai-blog-search-empty-{{ ai_gen_id }}">
+        {{ block.settings.empty_message }}
+      </div>
+    </div>
+  </div>
+
+  <div class="ai-blog-search-drawer-{{ ai_gen_id }}">
+    <div class="ai-blog-search-header-{{ ai_gen_id }}">
+      <button class="ai-blog-search-back-{{ ai_gen_id }}" aria-label="Close search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6"></path>
+        </svg>
+      </button>
+      <input 
+        type="text" 
+        class="ai-blog-search-input-{{ ai_gen_id }}" 
+        placeholder="{{ block.settings.search_placeholder }}"
+        aria-label="Search blog posts"
+      >
+    </div>
+    <div class="ai-blog-search-results-{{ ai_gen_id }}">
+      <div class="ai-blog-search-empty-{{ ai_gen_id }}">
+        {{ block.settings.empty_message }}
+      </div>
+    </div>
+  </div>
+</blog-search-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class BlogSearch{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.searchIcon = this.querySelector('.ai-blog-search-icon-{{ ai_gen_id }}');
+        this.overlay = this.querySelector('.ai-blog-search-overlay-{{ ai_gen_id }}');
+        this.modal = this.querySelector('.ai-blog-search-modal-{{ ai_gen_id }}');
+        this.drawer = this.querySelector('.ai-blog-search-drawer-{{ ai_gen_id }}');
+        this.backButtons = this.querySelectorAll('.ai-blog-search-back-{{ ai_gen_id }}');
+        this.inputs = this.querySelectorAll('.ai-blog-search-input-{{ ai_gen_id }}');
+        this.resultsContainers = this.querySelectorAll('.ai-blog-search-results-{{ ai_gen_id }}');
+        this.blogHandle = '{{ block.settings.blog.handle }}';
+        this.searchTimeout = null;
+      }
+
+      connectedCallback() {
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        this.searchIcon.addEventListener('click', () => this.openSearch());
+        this.overlay.addEventListener('click', () => this.closeSearch());
+        
+        this.backButtons.forEach(button => {
+          button.addEventListener('click', () => this.closeSearch());
+        });
+
+        this.inputs.forEach(input => {
+          input.addEventListener('input', (e) => this.handleSearch(e.target.value));
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            this.closeSearch();
+          }
+        });
+      }
+
+      openSearch() {
+        this.overlay.classList.add('active');
+        this.modal.classList.add('active');
+        this.drawer.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        setTimeout(() => {
+          this.inputs[0].focus();
+        }, 100);
+      }
+
+      closeSearch() {
+        this.overlay.classList.remove('active');
+        this.modal.classList.remove('active');
+        this.drawer.classList.remove('active');
+        document.body.style.overflow = '';
+        
+        this.inputs.forEach(input => {
+          input.value = '';
+        });
+        
+        this.resultsContainers.forEach(container => {
+          container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.empty_message }}</div>';
+        });
+      }
+
+      handleSearch(query) {
+        clearTimeout(this.searchTimeout);
+        
+        if (query.length < 2) {
+          this.resultsContainers.forEach(container => {
+            container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.empty_message }}</div>';
+          });
+          return;
+        }
+
+        this.resultsContainers.forEach(container => {
+          container.innerHTML = '<div class="ai-blog-search-loading-{{ ai_gen_id }}">Searching...</div>';
+        });
+
+        this.searchTimeout = setTimeout(() => {
+          this.performSearch(query);
+        }, 300);
+      }
+
+      async performSearch(query) {
+        try {
+          const blogHandle = this.blogHandle || 'news';
+          const response = await fetch(`/search?q=${encodeURIComponent(query)}&type=article&options[prefix]=last`);
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          
+          const articles = doc.querySelectorAll('.search__result');
+          
+          if (articles.length === 0) {
+            this.resultsContainers.forEach(container => {
+              container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.no_results_message }}</div>';
+            });
+            return;
+          }
+
+          let resultsHTML = '';
+          articles.forEach(article => {
+            const link = article.querySelector('a');
+            const title = article.querySelector('.search__result-title, h3, h2');
+            const excerpt = article.querySelector('.search__result-excerpt, p');
+            
+            if (link && title) {
+              const articleTitle = title.textContent.trim();
+              const articleExcerpt = excerpt ? excerpt.textContent.trim() : '';
+              const articleUrl = link.getAttribute('href');
+              
+              resultsHTML += `
+                <a href="${articleUrl}" class="ai-blog-search-result-{{ ai_gen_id }}">
+                  <h3 class="ai-blog-search-result-title-{{ ai_gen_id }}">${articleTitle}</h3>
+                  ${articleExcerpt ? `<p class="ai-blog-search-result-excerpt-{{ ai_gen_id }}">${articleExcerpt}</p>` : ''}
+                </a>
+              `;
+            }
+          });
+
+          if (resultsHTML === '') {
+            this.fetchArticlesDirectly(query);
+          } else {
+            this.resultsContainers.forEach(container => {
+              container.innerHTML = resultsHTML;
+            });
+          }
+        } catch (error) {
+          this.fetchArticlesDirectly(query);
+        }
+      }
+
+      async fetchArticlesDirectly(query) {
+        try {
+          const blogHandle = this.blogHandle || 'news';
+          const response = await fetch(`/blogs/${blogHandle}?view=json`);
+          
+          if (!response.ok) {
+            throw new Error('Failed to fetch articles');
+          }
+
+          const data = await response.json();
+          const articles = data.articles || [];
+          
+          const filteredArticles = articles.filter(article => {
+            const searchText = query.toLowerCase();
+            return article.title.toLowerCase().includes(searchText) || 
+                   (article.excerpt && article.excerpt.toLowerCase().includes(searchText));
+          });
+
+          if (filteredArticles.length === 0) {
+            this.resultsContainers.forEach(container => {
+              container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.no_results_message }}</div>';
+            });
+            return;
+          }
+
+          let resultsHTML = '';
+          filteredArticles.forEach(article => {
+            resultsHTML += `
+              <a href="${article.url}" class="ai-blog-search-result-{{ ai_gen_id }}">
+                <h3 class="ai-blog-search-result-title-{{ ai_gen_id }}">${article.title}</h3>
+                ${article.excerpt ? `<p class="ai-blog-search-result-excerpt-{{ ai_gen_id }}">${article.excerpt}</p>` : ''}
+              </a>
+            `;
+          });
+
+          this.resultsContainers.forEach(container => {
+            container.innerHTML = resultsHTML;
+          });
+        } catch (error) {
+          this.resultsContainers.forEach(container => {
+            container.innerHTML = '<div class="ai-blog-search-empty-{{ ai_gen_id }}">{{ block.settings.error_message }}</div>';
+          });
+        }
+      }
+    }
+
+    customElements.define('blog-search-{{ ai_gen_id }}', BlogSearch{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Blog search",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Search bar"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Padding",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Border width",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Search icon"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Hover color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Tags"
+    },
+    {
+      "type": "range",
+      "id": "tag_gap",
+      "label": "Gap between tags",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "tag_padding_vertical",
+      "label": "Vertical padding",
+      "min": 4,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "tag_padding_horizontal",
+      "label": "Horizontal padding",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "tag_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "tag_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "tag_background",
+      "label": "Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "tag_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "tag_border_color",
+      "label": "Border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "tag_hover_background",
+      "label": "Hover background",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "tag_hover_text_color",
+      "label": "Hover text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "tag_hover_border_color",
+      "label": "Hover border color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Tag 1"
+    },
+    {
+      "type": "text",
+      "id": "tag_1",
+      "label": "Tag text",
+      "default": "Latest"
+    },
+    {
+      "type": "url",
+      "id": "tag_1_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Tag 2"
+    },
+    {
+      "type": "text",
+      "id": "tag_2",
+      "label": "Tag text",
+      "default": "Featured"
+    },
+    {
+      "type": "url",
+      "id": "tag_2_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Tag 3"
+    },
+    {
+      "type": "text",
+      "id": "tag_3",
+      "label": "Tag text",
+      "default": "Guides"
+    },
+    {
+      "type": "url",
+      "id": "tag_3_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Tag 4"
+    },
+    {
+      "type": "text",
+      "id": "tag_4",
+      "label": "Tag text"
+    },
+    {
+      "type": "url",
+      "id": "tag_4_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Tag 5"
+    },
+    {
+      "type": "text",
+      "id": "tag_5",
+      "label": "Tag text"
+    },
+    {
+      "type": "url",
+      "id": "tag_5_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Tag 6"
+    },
+    {
+      "type": "text",
+      "id": "tag_6",
+      "label": "Tag text"
+    },
+    {
+      "type": "url",
+      "id": "tag_6_link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Search modal"
+    },
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog to search"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search blog posts..."
+    },
+    {
+      "type": "color",
+      "id": "modal_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "modal_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Search input"
+    },
+    {
+      "type": "color",
+      "id": "input_background",
+      "label": "Background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "input_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "input_border_color",
+      "label": "Border color",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "color",
+      "id": "input_focus_border_color",
+      "label": "Focus border color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "input_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Search results"
+    },
+    {
+      "type": "range",
+      "id": "result_title_size",
+      "label": "Title size",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "color",
+      "id": "result_title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "result_excerpt_size",
+      "label": "Excerpt size",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "result_excerpt_color",
+      "label": "Excerpt color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "result_hover_background",
+      "label": "Hover background",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "text",
+      "id": "empty_message",
+      "label": "Empty state message",
+      "default": "Start typing to search blog posts"
+    },
+    {
+      "type": "text",
+      "id": "no_results_message",
+      "label": "No results message",
+      "default": "No blog posts found"
+    },
+    {
+      "type": "text",
+      "id": "error_message",
+      "label": "Error message",
+      "default": "Unable to search. Please try again."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog search"
+    }
+  ]
+}
 {% endschema %}
