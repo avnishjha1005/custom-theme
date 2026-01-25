@@ -8,110 +8,130 @@
 
 <blog-posts-list section-id="{{ section.id }}">
   <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-  <div class="section color-{{ section.settings.color_scheme }} blog-posts spacing-style" style="{% render 'spacing-style', settings: section.settings %}">
-    
+  <div
+    class="
+      section
+      color-{{ section.settings.color_scheme }}
+      blog-posts
+      spacing-style
+      size-style
+    "
+    style="{% render 'spacing-style', settings: section.settings %}"
+  >
+    {% content_for 'blocks' %}
+
     {%- paginate blog.articles by 12 -%}
-      <div ref="grid" class="blog-posts-grid">
-  {% for article in blog.articles %}
-    
-    {% comment %} Check if it's one of the first three articles {% endcomment %}
-    {% if forloop.index <= 3 %}
-      
-      {% comment %} TOP ROW: 3 Columns {% endcomment %}
-      <div class="blog-post-card card-featured">
-        <div class="card-image-wrapper">
-          <a href="{{ article.url }}"><img src="{{ article.image | image_url: width: 400 }}" alt="{{ article.title }}" width="auto" height="auto"></a>
-        </div>
-        <div class="card-content">
-          <span class="card-tag">{{ article.tags.first | default: 'Journal' }}</span>
-          <h2 class="card-title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
-          <p class="card-excerpt">{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</p>
-          <a href="{{ article.url }}" class="read-more">Read More</a>
-        </div>
+      <span ref="viewMorePrevious"></span>
+      <div
+        ref="grid"
+        class="blog-posts-container"
+        data-last-page="{{ paginate.pages }}"
+      >
+        {% for article in blog.articles %}
+          <div
+            class="blog-post-item"
+            ref="cards[]"
+            data-page="{{ paginate.current_page }}"
+          >
+            {% content_for 'block', id: 'static-blog-post-card', type: '_blog-post-card', article: article %}
+          </div>
+        {% endfor %}
       </div>
-
-    {% else %}
-      
-      {% comment %} REMAINING ROWS: Side-by-Side List {% endcomment %}
-      <div class="blog-post-card card-list-item">
-        <div class="card-image-wrapper">
-          <a href="{{ article.url }}"><img src="{{ article.image | image_url: width: 250 }}" alt="{{ article.title }}" width="auto" height="auto"></a>
-        </div>
-        <div class="card-content">
-          <span class="card-tag">{{ article.tags.first | default: 'Journal' }}</span>
-          <h2 class="card-title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
-          <p class="card-subheading">{{ article.excerpt_or_content | strip_html | truncatewords: 25 }}</p>
-          <a href="{{ article.url }}" class="read-more">Read More</a>
-        </div>
-      </div>
-
-    {% endif %}
-  {% endfor %}
-  </div>
       <span ref="viewMoreNext"></span>
     {%- endpaginate -%}
   </div>
 </blog-posts-list>
 
 {% stylesheet %}
-  .blog-posts-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns for the top row */
-  gap: 40px;
-}
-
-/* Featured (Top 3) */
-.card-featured {
-  display: flex;
-  flex-direction: column;
-}
-
-/* List Items (Article 4, 5+) - They span all 3 columns to act like a row */
-.card-list-item {
-  grid-column: span 3; 
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* Image left, Content right */
-  gap: 30px;
-  align-items: center;
-  border-top: 1px solid #eee;
-  padding-top: 40px;
-}
-
-.card-image-wrapper img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.card-tag {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #888;
-}
-
-.card-title {
-  font-family: serif; /* Matches AltarRasa's aesthetic */
-  font-size: 24px;
-  margin: 10px 0;
-}
-
-.read-more {
-  display: inline-block;
-  margin-top: 15px;
-  text-decoration: underline;
-  font-weight: bold;
-}
-
-/* Mobile: Stack everything */
-@media (max-width: 767px) {
-  .blog-posts-grid { grid-template-columns: 1fr; }
-  .card-list-item { 
-    grid-column: span 1; 
-    grid-template-columns: 1fr; 
+  /**
+   * Blog posts page layout
+   */
+  .blog-posts {
+    --page-content-width: var(--narrow-page-width);
+    --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+    --columns-gap: 36px;
+    --rows-gap: 36px;
   }
-}
+
+  .blog-posts-container {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 1rem;
+    width: 100%;
+    column-gap: var(--columns-gap);
+    row-gap: var(--rows-gap);
+  }
+
+  /**
+   * Apart from the first and second rows in the grid, all remaining blog posts
+   * are arranged in a three-column layout:
+   * +------------+------------+-------------+
+   * |            |            |             |
+   * |  (span 2)  |  (span 2)  |  (span 2)   |
+   * |            |            |             |
+   * +------------+------------+-------------+
+   */
+  .blog-post-item {
+    --blog-post-card-scale: 0.6;
+
+    grid-column: span 2;
+
+    @media screen and (max-width: 749px) {
+      --blog-post-card-scale: 0.5;
+
+      grid-column: span 6;
+    }
+  }
+
+  /**
+   * The second row of blog posts has two columns:
+   * +-------------------+-------------------+
+   * |                   |                   |
+   * |  (column span 3)  |  (column span 3)  |
+   * |                   |                   |
+   * +-------------------+-------------------+
+   */
+  .blog-post-item:nth-child(2),
+  .blog-post-item:nth-child(3) {
+    --blog-post-card-scale: 0.8;
+
+    grid-column: span 3;
+
+    @media screen and (max-width: 749px) {
+      --blog-post-card-scale: 0.5;
+
+      grid-column: span 6;
+    }
+  }
+
+  /**
+   * The first row of blog posts has only one column:
+   * +---------------------------------------+
+   * |                                       |
+   * |           (1 column span 6)           |
+   * |                                       |
+   * +---------------------------------------+
+   */
+  .blog-post-item:first-child {
+    --blog-post-card-scale: 1;
+
+    grid-column: span 6;
+  }
+
+  /**
+   * When there's no image, the blog post item has a border.
+   */
+  .blog-post-item {
+    border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-20));
+    padding: 0 1rem 1rem;
+  }
+
+  .blog-post-item:has(.blog-post-card__image-container) {
+    border: none;
+    padding: 0;
+  }
 {% endstylesheet %}
+
 {% schema %}
 {
   "name": "t:names.blog_posts",
