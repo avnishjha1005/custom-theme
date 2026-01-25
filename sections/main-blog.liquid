@@ -20,7 +20,7 @@
       {% comment %} TOP ROW: 3 Columns {% endcomment %}
       <div class="blog-post-card card-featured">
         <div class="card-image-wrapper">
-          <a href="{{ article.url }}"><img src="{{ article.image | image_url: width: 600 }}" alt="{{ article.title }}"></a>
+          <a href="{{ article.url }}"><img src="{{ article.image | image_url: width: 400 }}" alt="{{ article.title }}" width="auto" height="auto"></a>
         </div>
         <div class="card-content">
           <span class="card-tag">{{ article.tags.first | default: 'Journal' }}</span>
