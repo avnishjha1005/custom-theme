@@ -65,7 +65,7 @@
           "blocks": {}
         },
         "ai_gen_block_004ee6f_3QpYYd": {
-          "type": "ai_gen_block_004ee6f",
+          "type": "blog-search",
           "settings": {
             "padding": 16,
             "gap": 16,
