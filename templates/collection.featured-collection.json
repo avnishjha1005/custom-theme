@@ -146,15 +146,10 @@
         "bundle_a3dqMi": {
           "type": "bundle",
           "settings": {
-            "bundle_product": "wedding-collection",
-            "title": "",
-            "description": "",
-            "enable_hs_1": true,
-            "hs_1_product": "olive-green-jacket",
+            "show_hs_1": false,
             "hs_1_x": 50,
             "hs_1_y": 50,
-            "enable_hs_2": false,
-            "hs_2_product": "",
+            "show_hs_2": false,
             "hs_2_x": 30,
             "hs_2_y": 30
           }
@@ -162,28 +157,45 @@
         "bundle_qTJRmr": {
           "type": "bundle",
           "settings": {
-            "bundle_product": "wedding-collection",
-            "title": "",
-            "description": "",
-            "enable_hs_1": false,
-            "hs_1_product": "",
+            "show_hs_1": false,
             "hs_1_x": 50,
             "hs_1_y": 50,
-            "enable_hs_2": false,
-            "hs_2_product": "",
+            "show_hs_2": false,
             "hs_2_x": 30,
             "hs_2_y": 30
+          }
+        },
+        "bundle_6YmHMq": {
+          "type": "bundle",
+          "settings": {
+            "show_hs_1": false,
+            "hs_1_x": 50,
+            "hs_1_y": 50,
+            "show_hs_2": false,
+            "hs_2_x": 40,
+            "hs_2_y": 40
+          }
+        },
+        "bundle_hRPr6n": {
+          "type": "bundle",
+          "settings": {
+            "show_hs_1": false,
+            "hs_1_x": 50,
+            "hs_1_y": 50,
+            "show_hs_2": false,
+            "hs_2_x": 40,
+            "hs_2_y": 40
           }
         }
       },
       "block_order": [
         "bundle_a3dqMi",
-        "bundle_qTJRmr"
+        "bundle_qTJRmr",
+        "bundle_6YmHMq",
+        "bundle_hRPr6n"
       ],
       "name": "Bundle List Section",
-      "settings": {
-        "context_collection": "the-editorial"
-      }
+      "settings": {}
     },
     "section": {
       "type": "section",
