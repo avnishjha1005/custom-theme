@@ -154,7 +154,7 @@
             "hs_1_bg": "#ffffff",
             "hs_1_border": "#000000",
             "hs_1_product": "white-cotton-shirt",
-            "show_hs_2": false,
+            "show_hs_2": true,
             "hs_2_label": "+",
             "hs_2_x": 30,
             "hs_2_y": 30,
