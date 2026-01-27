@@ -1,0 +1,172 @@
+{% comment %}
+  Bundle List Section with Hotspots
+{% endcomment %}
+
+<section class="bundle-list-container" id="section-{{ section.id }}">
+  <div class="page-width">
+    {% if section.settings.title != blank %}
+      <h2 class="bundle-list-title">{{ section.settings.title }}</h2>
+    {% endif %}
+
+    <div class="bundle-items-wrapper">
+      {% for block in section.blocks %}
+        <div class="bundle-item" {{ block.shopify_attributes }}>
+          
+          {%- comment -%} 1. Image & Hotspots Part {%- endcomment -%}
+          <div class="bundle-image-container">
+            {% if block.settings.bundle_image != blank %}
+              <img src="{{ block.settings.bundle_image | image_url: width: 1000 }}" 
+                   alt="{{ block.settings.bundle_name }}" 
+                   loading="lazy" 
+                   class="bundle-main-image">
+            {% else %}
+              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+
+            {%- comment -%} Hotspot Logic (Up to 3 Hotspots) {%- endcomment -%}
+            {% for i in (1..3) %}
+              {% capture show_hs %}show_hotspot_{{ i }}{% endcapture %}
+              {% capture hs_x %}hotspot_{{ i }}_x{% endcapture %}
+              {% capture hs_y %}hotspot_{{ i }}_y{% endcapture %}
+              {% capture hs_prod %}hotspot_{{ i }}_product{% endcapture %}
+
+              {% if block.settings[show_hs] %}
+                {% assign hs_product = all_products[block.settings[hs_prod]] %}
+                <div class="hotspot" 
+                     style="top: {{ block.settings[hs_y] }}%; left: {{ block.settings[hs_x] }}%;">
+                  <div class="hotspot-trigger"></div>
+                  {% if hs_product != blank %}
+                    <div class="hotspot-tooltip">
+                      <p>{{ hs_product.title }}</p>
+                      <span>{{ hs_product.price | money }}</span>
+                      <a href="{{ hs_product.url }}">View</a>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {%- comment -%} 2. Content Part (Name & Description) {%- endcomment -%}
+          <div class="bundle-content">
+            <h3 class="bundle-name">{{ block.settings.bundle_name }}</h3>
+            <div class="bundle-description">
+              {{ block.settings.bundle_description }}
+            </div>
+            
+            {% if block.settings.main_product != blank %}
+              <a href="{{ block.settings.main_product.url }}" class="button">Shop the Look</a>
+            {% endif %}
+          </div>
+          
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Bundle List",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Curated Bundles"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "bundle",
+      "name": "Bundle Item",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Main Content"
+        },
+        {
+          "type": "product",
+          "id": "main_product",
+          "label": "Primary Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "bundle_image",
+          "label": "Bundle Image"
+        },
+        {
+          "type": "text",
+          "id": "bundle_name",
+          "label": "Bundle Name",
+          "default": "The Summer Collection"
+        },
+        {
+          "type": "richtext",
+          "id": "bundle_description",
+          "label": "Description",
+          "default": "<p>Write a short description about this bundle here.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Hotspot 1"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_hotspot_1",
+          "label": "Show Hotspot 1",
+          "default": false
+        },
+        {
+          "type": "product",
+          "id": "hotspot_1_product",
+          "label": "Hotspot 1 Product"
+        },
+        {
+          "type": "range",
+          "id": "hotspot_1_x",
+          "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Horizontal Position", "default": 50
+        },
+        {
+          "type": "range",
+          "id": "hotspot_1_y",
+          "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Vertical Position", "default": 50
+        },
+        {
+          "type": "header",
+          "content": "Hotspot 2"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_hotspot_2",
+          "label": "Show Hotspot 2",
+          "default": false
+        },
+        {
+          "type": "product",
+          "id": "hotspot_2_product",
+          "label": "Hotspot 2 Product"
+        },
+        {
+          "type": "range",
+          "id": "hotspot_2_x",
+          "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Horizontal Position", "default": 30
+        },
+        {
+          "type": "range",
+          "id": "hotspot_2_y",
+          "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Vertical Position", "default": 30
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bundle List",
+      "blocks": [
+        { "type": "bundle" }
+      ]
+    }
+  ]
+}
+{% endschema %}
