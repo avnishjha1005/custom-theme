@@ -170,3 +170,94 @@
   ]
 }
 {% endschema %}
+{% stylesheet %}
+  .bundle-items-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  margin-top: 40px;
+}
+
+.bundle-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* For repeating/alternating layout like the image */
+.bundle-item:nth-child(even) {
+  direction: rtl;
+}
+.bundle-item:nth-child(even) .bundle-content {
+  direction: ltr;
+}
+
+.bundle-image-container {
+  position: relative;
+  line-height: 0;
+}
+
+.bundle-main-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Hotspot Styling */
+.hotspot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.hotspot-trigger {
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  border: 2px solid #000;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.hotspot:hover .hotspot-trigger {
+  transform: scale(1.2);
+}
+
+.hotspot-tooltip {
+  visibility: hidden;
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  padding: 10px;
+  min-width: 120px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  z-index: 20;
+}
+
+.hotspot:hover .hotspot-tooltip {
+  visibility: visible;
+}
+
+.bundle-name {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .bundle-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .bundle-item:nth-child(even) {
+    direction: ltr;
+  }
+}
+{% endstylesheet %}
