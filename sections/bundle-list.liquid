@@ -15,11 +15,11 @@
     flex-direction: column;
   }
   .bundle-visual {
-    position: relative; /* Keeps hotspots and overlays contained here */
+    position: relative;
     width: 100%;
     aspect-ratio: 1.2/1;
     overflow: hidden;
-    background: #f8f8f8;
+    background: #000;
     min-height: 400px;
   }
   .bundle-visual img {
@@ -27,76 +27,84 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: opacity 0.4s ease;
   }
-  
-  /* The Dot Trigger */
-  .hotspot-trigger {
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    background: rgba(255,255,255,0.9);
-    border: 1px solid #000;
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    cursor: pointer;
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    transition: transform 0.2s ease;
-  }
-  .hotspot-trigger:hover { transform: translate(-50%, -50%) scale(1.1); }
 
-  /* The Full-Image Overlay */
-  .hotspot-overlay {
+  /* The Dimmer Overlay (spans the image) */
+  .bundle-visual::after {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4); /* Dims the image */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
+    z-index: 2;
+    pointer-events: none;
   }
-  
-  .hotspot-overlay.is-active {
+
+  /* When any hotspot is active, dim the image */
+  .bundle-visual.has-active-hotspot::after {
     opacity: 1;
     visibility: visible;
   }
 
-  /* The White Box in the Center */
-  .hotspot-card {
+  .hotspot-node {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    transform: translate(-16px, -16px);
+    cursor: pointer;
+    transition: z-index 0s;
+  }
+
+  .hotspot-dot {
+    width: 32px;
+    height: 32px;
     background: #fff;
-    padding: 30px 40px;
-    text-align: center;
-    min-width: 220px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    cursor: default;
+    border: 1px solid #000;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    flex-shrink: 0;
+    z-index: 11;
   }
-  .hotspot-card-title {
-    font-size: 20px;
+
+  .hotspot-text {
+    margin-left: 15px;
+    color: #fff;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  /* Active State Styles */
+  .hotspot-node.is-active .hotspot-text {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+  
+  .hotspot-node.is-active {
+    z-index: 15; /* Ensure active text is on top of everything */
+  }
+
+  .hs-title {
+    font-size: 18px;
     font-weight: 500;
-    margin-bottom: 5px;
+    display: block;
     text-transform: uppercase;
-    color: #000;
   }
-  .hotspot-card-price {
+  .hs-price {
     font-size: 16px;
-    color: #666;
-    margin-bottom: 15px;
-  }
-  .hotspot-card-link {
-    display: inline-block;
-    font-size: 14px;
-    text-decoration: underline;
-    color: #000;
-    text-underline-offset: 4px;
+    display: block;
   }
 
   .bundle-item--hero { grid-column: 1 / span 2; }
@@ -106,7 +114,6 @@
 
   @media (max-width: 768px) {
     .bundle-wrapper { grid-template-columns: 1fr; }
-    .bundle-item--hero { grid-column: 1 / -1; }
     .bundle-visual { min-height: 300px; }
   }
 {%- endstyle -%}
@@ -141,17 +148,15 @@
                   {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
                   {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
 
-                  <div class="hotspot-trigger" 
-                       data-target="hs-{{ block.id }}-{{ i }}"
-                       style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">
-                    {{ block.settings[hs_label] }}
-                  </div>
-
-                  <div id="hs-{{ block.id }}-{{ i }}" class="hotspot-overlay">
-                    <div class="hotspot-card">
-                      <div class="hotspot-card-title">{{ hs_product.title }}</div>
-                      <div class="hotspot-card-price">{{ hs_product.price | money }}</div>
-                      <a href="{{ hs_product.url }}" class="hotspot-card-link">View Details</a>
+                  <div class="hotspot-node" 
+                       data-url="{{ hs_product.url }}"
+                       style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%;">
+                    <div class="hotspot-dot" style="background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">
+                      {{ block.settings[hs_label] }}
+                    </div>
+                    <div class="hotspot-text">
+                      <span class="hs-title">{{ hs_product.title }}</span>
+                      <span class="hs-price">{{ hs_product.price | money }}</span>
                     </div>
                   </div>
                 {% endif %}
@@ -179,31 +184,34 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const triggers = document.querySelectorAll('.hotspot-trigger');
-    const overlays = document.querySelectorAll('.hotspot-overlay');
+    const nodes = document.querySelectorAll('.hotspot-node');
 
-    triggers.forEach(trigger => {
-      trigger.addEventListener('click', function(e) {
+    nodes.forEach(node => {
+      node.addEventListener('click', function(e) {
         e.stopPropagation();
-        const targetId = this.getAttribute('data-target');
-        const targetOverlay = document.getElementById(targetId);
-        
-        // Hide all others
-        overlays.forEach(o => o.classList.remove('is-active'));
-        
-        // Show this one
-        if (targetOverlay) targetOverlay.classList.add('is-active');
+        const parentVisual = this.closest('.bundle-visual');
+        const isActive = this.classList.contains('is-active');
+
+        // Remove active from everything
+        document.querySelectorAll('.hotspot-node').forEach(n => n.classList.remove('is-active'));
+        document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
+
+        if (!isActive) {
+          // First click: Activate this hotspot and dim image
+          this.classList.add('is-active');
+          parentVisual.classList.add('has-active-hotspot');
+        } else {
+          // Second click: Navigate
+          const url = this.getAttribute('data-url');
+          if (url) window.location.href = url;
+        }
       });
     });
 
-    // Close when clicking the dark background area
-    overlays.forEach(overlay => {
-      overlay.addEventListener('click', function(e) {
-        // If clicking the background (not the white card)
-        if (e.target === this) {
-          this.classList.remove('is-active');
-        }
-      });
+    // Reset when clicking anywhere else
+    document.addEventListener('click', function() {
+      document.querySelectorAll('.hotspot-node').forEach(n => n.classList.remove('is-active'));
+      document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
     });
   });
 </script>
