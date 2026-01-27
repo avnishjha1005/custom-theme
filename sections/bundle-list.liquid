@@ -1,265 +1,213 @@
-{% comment %}
-  Bundle List Section with Hotspots
-{% endcomment %}
+{%- style -%}
+  .bundle-list-{{ section.id }} {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+  .bundle-container {
+    display: flex;
+    flex-direction: column;
+    gap: 100px; /* Space between bundles */
+  }
+  .bundle-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  /* Alternating Layout */
+  .bundle-row:nth-child(even) {
+    direction: rtl;
+  }
+  .bundle-row:nth-child(even) .bundle-text-content {
+    direction: ltr;
+    padding-right: 0;
+    padding-left: 40px;
+  }
+  .bundle-image-wrapper {
+    position: relative;
+    line-height: 0;
+  }
+  .bundle-image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+  .bundle-text-content {
+    padding-right: 40px;
+  }
+  .bundle-name {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .bundle-desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    color: #444;
+  }
+  
+  /* Hotspot Styling */
+  .hotspot {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid #000;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+  }
+  .hotspot:hover { transform: translate(-50%, -50%) scale(1.2); background: #fff; }
+  .hotspot-tooltip {
+    visibility: hidden;
+    position: absolute;
+    bottom: 130%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    padding: 8px;
+    border: 1px solid #eee;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 11;
+  }
+  .hotspot:hover .hotspot-tooltip { visibility: visible; }
 
-<section class="bundle-list-container" id="section-{{ section.id }}">
-  <div class="page-width">
-    {% if section.settings.title != blank %}
-      <h2 class="bundle-list-title">{{ section.settings.title }}</h2>
-    {% endif %}
+  @media (max-width: 768px) {
+    .bundle-row, .bundle-row:nth-child(even) {
+      grid-template-columns: 1fr;
+      direction: ltr;
+    }
+    .bundle-text-content { padding: 0; }
+  }
+{%- endstyle -%}
 
-    <div class="bundle-items-wrapper">
-      {% for block in section.blocks %}
-        <div class="bundle-item" {{ block.shopify_attributes }}>
-          
-          {%- comment -%} 1. Image & Hotspots Part {%- endcomment -%}
-          <div class="bundle-image-container">
-            {% if block.settings.bundle_image != blank %}
-              <img src="{{ block.settings.bundle_image | image_url: width: 1000 }}" 
-                   alt="{{ block.settings.bundle_name }}" 
-                   loading="lazy" 
-                   height="auto"
-                   width="auto"
-                   class="bundle-main-image">
-            {% else %}
-              {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
-            {% endif %}
+<div class="bundle-list-{{ section.id }}">
+  <div class="bundle-container">
+    {%- for block in section.blocks -%}
+      {%- assign bundle_product = block.settings.bundle_product -%}
+      
+      <div class="bundle-row" {{ block.shopify_attributes }}>
+        
+        <div class="bundle-image-wrapper">
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy' }}
+          {%- elsif bundle_product.featured_image != blank -%}
+            {{ bundle_product.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy' }}
+          {%- else -%}
+            {{ 'collection-1' | placeholder_svg_tag }}
+          {%- endif -%}
 
-            {%- comment -%} Hotspot Logic (Up to 3 Hotspots) {%- endcomment -%}
-            {% for i in (1..3) %}
-              {% capture show_hs %}show_hotspot_{{ i }}{% endcapture %}
-              {% capture hs_x %}hotspot_{{ i }}_x{% endcapture %}
-              {% capture hs_y %}hotspot_{{ i }}_y{% endcapture %}
-              {% capture hs_prod %}hotspot_{{ i }}_product{% endcapture %}
+          {%- comment -%} Dynamic Hotspots {%- endcomment -%}
+          {%- for i in (1..3) -%}
+            {%- capture hs_enable -%}enable_hs_{{ i }}{%- endcapture -%}
+            {%- capture hs_x -%}hs_{{ i }}_x{%- endcapture -%}
+            {%- capture hs_y -%}hs_{{ i }}_y{%- endcapture -%}
+            {%- capture hs_prod -%}hs_{{ i }}_product{%- endcapture -%}
 
-              {% if block.settings[show_hs] %}
-                {% assign hs_product = all_products[block.settings[hs_prod]] %}
-                <div class="hotspot" 
-                     style="top: {{ block.settings[hs_y] }}%; left: {{ block.settings[hs_x] }}%;">
-                  <div class="hotspot-trigger"></div>
-                  {% if hs_product != blank %}
-                    <div class="hotspot-tooltip">
-                      <p>{{ hs_product.title }}</p>
-                      <span>{{ hs_product.price | money }}</span>
-                      <a href="{{ hs_product.url }}">View</a>
-                    </div>
-                  {% endif %}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-
-          {%- comment -%} 2. Content Part (Name & Description) {%- endcomment -%}
-          <div class="bundle-content">
-            <h3 class="bundle-name">{{ block.settings.bundle_name }}</h3>
-            <div class="bundle-description">
-              {{ block.settings.bundle_description }}
-            </div>
-            
-            {% if block.settings.main_product != blank %}
-              <a href="{{ block.settings.main_product.url }}" class="button">Shop the Look</a>
-            {% endif %}
-          </div>
-          
+            {%- if block.settings[hs_enable] -%}
+              {%- assign target_prod = block.settings[hs_prod] -%}
+              <div class="hotspot" style="top: {{ block.settings[hs_y] }}%; left: {{ block.settings[hs_x] }}%;">
+                <span>+</span>
+                {%- if target_prod != blank -%}
+                  <div class="hotspot-tooltip">
+                    <strong>{{ target_prod.title }}</strong><br>
+                    {{ target_prod.price | money }}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
         </div>
-      {% endfor %}
-    </div>
+
+        <div class="bundle-text-content">
+          <h2 class="bundle-name">
+            {%- if block.settings.title != blank -%}{{ block.settings.title }}{%- else -%}{{ bundle_product.title }}{%- endif -%}
+          </h2>
+          <div class="bundle-desc">
+            {%- if block.settings.description != blank -%}{{ block.settings.description }}{%- else -%}{{ bundle_product.description | strip_html | truncatewords: 30 }}{%- endif -%}
+          </div>
+          {%- if bundle_product != blank -%}
+            <a href="{{ bundle_product.url }}" class="button button--primary">View Bundle</a>
+          {%- endif -%}
+        </div>
+
+      </div>
+    {%- endfor -%}
   </div>
-</section>
+</div>
 
 {% schema %}
 {
-  "name": "Bundle List",
+  "name": "Bundle List Section",
   "settings": [
     {
-      "type": "text",
-      "id": "title",
-      "label": "Section Title",
-      "default": "Curated Bundles"
+      "type": "collection",
+      "id": "context_collection",
+      "label": "Source Collection",
+      "info": "Select the collection these bundles belong to."
     }
   ],
   "blocks": [
     {
       "type": "bundle",
-      "name": "Bundle Item",
+      "name": "Product Bundle",
       "settings": [
         {
-          "type": "header",
-          "content": "Main Content"
-        },
-        {
           "type": "product",
-          "id": "main_product",
-          "label": "Primary Product"
+          "id": "bundle_product",
+          "label": "Select Bundle Product"
         },
         {
           "type": "image_picker",
-          "id": "bundle_image",
-          "label": "Bundle Image"
+          "id": "image",
+          "label": "Override Image"
         },
         {
           "type": "text",
-          "id": "bundle_name",
-          "label": "Bundle Name",
-          "default": "The Summer Collection"
+          "id": "title",
+          "label": "Override Name"
         },
         {
           "type": "richtext",
-          "id": "bundle_description",
-          "label": "Description",
-          "default": "<p>Write a short description about this bundle here.</p>"
+          "id": "description",
+          "label": "Override Description"
         },
         {
           "type": "header",
           "content": "Hotspot 1"
         },
-        {
-          "type": "checkbox",
-          "id": "show_hotspot_1",
-          "label": "Show Hotspot 1",
-          "default": false
-        },
-        {
-          "type": "product",
-          "id": "hotspot_1_product",
-          "label": "Hotspot 1 Product"
-        },
-        {
-          "type": "range",
-          "id": "hotspot_1_x",
-          "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Horizontal Position", "default": 50
-        },
-        {
-          "type": "range",
-          "id": "hotspot_1_y",
-          "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Vertical Position", "default": 50
-        },
+        { "type": "checkbox", "id": "enable_hs_1", "label": "Enable Hotspot 1", "default": false },
+        { "type": "product", "id": "hs_1_product", "label": "Hotspot 1 Product" },
+        { "type": "range", "id": "hs_1_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Horizontal Pos", "default": 50 },
+        { "type": "range", "id": "hs_1_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Vertical Pos", "default": 50 },
         {
           "type": "header",
           "content": "Hotspot 2"
         },
-        {
-          "type": "checkbox",
-          "id": "show_hotspot_2",
-          "label": "Show Hotspot 2",
-          "default": false
-        },
-        {
-          "type": "product",
-          "id": "hotspot_2_product",
-          "label": "Hotspot 2 Product"
-        },
-        {
-          "type": "range",
-          "id": "hotspot_2_x",
-          "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Horizontal Position", "default": 30
-        },
-        {
-          "type": "range",
-          "id": "hotspot_2_y",
-          "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Vertical Position", "default": 30
-        }
+        { "type": "checkbox", "id": "enable_hs_2", "label": "Enable Hotspot 2", "default": false },
+        { "type": "product", "id": "hs_2_product", "label": "Hotspot 2 Product" },
+        { "type": "range", "id": "hs_2_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Horizontal Pos", "default": 30 },
+        { "type": "range", "id": "hs_2_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Vertical Pos", "default": 30 }
       ]
     }
   ],
   "presets": [
     {
-      "name": "Bundle List",
+      "name": "Bundle List Section",
       "blocks": [
+        { "type": "bundle" },
         { "type": "bundle" }
       ]
     }
   ]
 }
 {% endschema %}
-{% stylesheet %}
-  .bundle-items-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-  margin-top: 40px;
-}
-
-.bundle-item {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: center;
-}
-
-/* For repeating/alternating layout like the image */
-.bundle-item:nth-child(even) {
-  direction: rtl;
-}
-.bundle-item:nth-child(even) .bundle-content {
-  direction: ltr;
-}
-
-.bundle-image-container {
-  position: relative;
-  line-height: 0;
-}
-
-.bundle-main-image {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Hotspot Styling */
-.hotspot {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-}
-
-.hotspot-trigger {
-  width: 24px;
-  height: 24px;
-  background: #fff;
-  border-radius: 50%;
-  border: 2px solid #000;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease;
-}
-
-.hotspot:hover .hotspot-trigger {
-  transform: scale(1.2);
-}
-
-.hotspot-tooltip {
-  visibility: hidden;
-  position: absolute;
-  bottom: 120%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fff;
-  padding: 10px;
-  min-width: 120px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  text-align: center;
-  z-index: 20;
-}
-
-.hotspot:hover .hotspot-tooltip {
-  visibility: visible;
-}
-
-.bundle-name {
-  font-size: 2rem;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-@media (max-width: 768px) {
-  .bundle-item {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  .bundle-item:nth-child(even) {
-    direction: ltr;
-  }
-}
-{% endstylesheet %}
