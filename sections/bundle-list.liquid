@@ -85,7 +85,7 @@
         {% endfor %}
         <div class="bundle-item {% if is_hero %}bundle-item--hero{% endif %}" {{ block.shopify_attributes }}>
           {% if is_hero %}
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; grid-column: span 2;">
               <div class="bundle-visual" style="order: {% if idx == 3 %}1{% else %}2{% endif %};">
                 {% if block.settings.product != blank %}
                   {{ block.settings.product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
