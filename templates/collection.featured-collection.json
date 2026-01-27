@@ -78,7 +78,7 @@
           "name": "Full-Width Offset Hero",
           "settings": {
             "image": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b.jpg",
-            "text_color": "#FFFFFF",
+            "text_color": "#ffffff",
             "font_weight": 400,
             "height_desktop": 600,
             "height_mobile": 500,
@@ -109,6 +109,9 @@
       },
       "block_order": [
         "image_text_overlay_y4QVwD"
+      ],
+      "custom_css": [
+        ".custom-section-content{padding:0px !important;}"
       ],
       "settings": {
         "content_direction": "column",
