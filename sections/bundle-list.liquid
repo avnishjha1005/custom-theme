@@ -9,7 +9,7 @@
   }
   .bundle-wrapper {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Maintains 2 columns */
+    grid-template-columns: repeat(2, 1fr);
     gap: 40px;
     max-width: 1200px;
   }
@@ -32,7 +32,6 @@
     transition: opacity 0.4s ease;
   }
 
-  /* Hotspot Dimming Logic */
   .bundle-visual::after {
     content: '';
     position: absolute;
@@ -44,6 +43,7 @@
     z-index: 2;
     pointer-events: none;
   }
+
   .bundle-visual.has-active-hotspot::after {
     opacity: 1;
     visibility: visible;
@@ -57,6 +57,7 @@
     transform: translate(-16px, -16px);
     cursor: pointer;
   }
+
   .hotspot-dot {
     width: 32px;
     height: 32px;
@@ -71,6 +72,7 @@
     flex-shrink: 0;
     z-index: 11;
   }
+
   .hotspot-text {
     margin-left: 15px;
     color: #fff;
@@ -81,57 +83,54 @@
     white-space: nowrap;
     pointer-events: none;
   }
+
   .hotspot-node.is-active .hotspot-text {
     opacity: 1;
     visibility: visible;
     transform: translateX(0);
   }
+  
   .hotspot-node.is-active { z-index: 15; }
 
-  /* Hero Layout Logic */
+  .hs-title { font-size: 18px; font-weight: 500; display: block; text-transform: uppercase; }
+  .hs-price { font-size: 16px; display: block; }
+
+  /* Hero Layout Styles */
   .bundle-item--hero {
     grid-column: 1 / span 2;
   }
+
   .hero-grid {
     display: grid;
-    grid-template-columns: 7fr 3fr; /* 70% Image/Title, 30% Description */
+    /* Image column takes 70%, Description column takes 30% */
+    grid-template-columns: 7fr 3fr; 
     gap: 40px;
     align-items: start;
   }
 
-  /* Alternating Hero Sides (Desktop Only) */
-  @media (min-width: 769px) {
-    .bundle-item--hero:nth-of-type(even) .hero-grid {
-      direction: rtl;
-    }
-    .bundle-item--hero:nth-of-type(even) .hero-grid > div {
-      direction: ltr;
-    }
+  /* Alternating layout for hero items */
+  .bundle-item--hero:nth-of-type(even) .hero-grid {
+    direction: rtl;
+  }
+  .bundle-item--hero:nth-of-type(even) .hero-grid > div {
+    direction: ltr;
   }
 
   .bundle-meta { padding-top: 20px; }
   .bundle-name { font-size: 24px; text-transform: uppercase; margin: 0 0 10px 0; }
   .bundle-desc { font-size: 16px; line-height: 1.6; color: #333; }
 
-  /* Mobile Adjustments */
   @media (max-width: 768px) {
-    .bundle-wrapper {
-      gap: 20px; /* Tighter gap for mobile 2-column grid */
-    }
-    .hero-grid {
-      grid-template-columns: 1fr; /* Hero stacks vertically for readability */
-      gap: 20px;
-    }
-    .bundle-name { font-size: 18px; }
-    .bundle-item--hero {
-        grid-column: 1 / span 2; /* Keeps hero full width even on mobile */
-    }
+    .bundle-wrapper { grid-template-columns: 1fr; }
+    .bundle-item--hero { grid-column: auto; }
+    .hero-grid { grid-template-columns: 1fr; gap: 20px; }
+    .bundle-item--hero:nth-of-type(even) .hero-grid { direction: ltr; }
   }
 {%- endstyle -%}
 
 <div class="bundle-section-{{ section.id }}">
   <div class="bundle-wrapper">
-    {% assign hero_indices = "3,6" | split: "," %}
+    {% assign hero_indices = "2,5" | split: "," %}
     
     {% for block in section.blocks %}
       {% if block.type == 'bundle' %}
