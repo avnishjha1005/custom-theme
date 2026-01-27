@@ -70,6 +70,76 @@
         "padding-block-end": 0
       }
     },
+    "1768274530727e625a": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_1755f5a_rbCzmQ": {
+          "type": "image-text-overlay",
+          "settings": {
+            "image": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b.jpg",
+            "text_color": "#ffffff",
+            "font_weight": 400,
+            "height_desktop": 700,
+            "height_mobile": 500,
+            "line1": "LOREM IPSUM",
+            "line1_size": 72,
+            "line1_h": 20,
+            "line1_v": 35,
+            "line1_size_m": 40,
+            "line1_h_m": 10,
+            "line1_v_m": 30,
+            "line2": "DOLOR",
+            "line2_size": 48,
+            "line2_h": 50,
+            "line2_v": 45,
+            "line2_size_m": 40,
+            "line2_h_m": 40,
+            "line2_v_m": 38,
+            "subheading": "Exclusive collection 2025/2",
+            "sub_size": 14,
+            "sub_h": 50,
+            "sub_v": 52,
+            "sub_size_m": 12,
+            "sub_h_m": 40,
+            "sub_v_m": 44
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_1755f5a_rbCzmQ"
+      ],
+      "custom_css": [
+        ".custom-section-content {padding: 0px !important;}"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "full-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
     "bundle_list_paKprr": {
       "type": "bundle-list",
       "blocks": {
@@ -837,6 +907,7 @@
   },
   "order": [
     "section_3cRnJq",
+    "1768274530727e625a",
     "bundle_list_paKprr",
     "section",
     "main",
