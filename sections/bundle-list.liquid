@@ -18,6 +18,8 @@
               <img src="{{ block.settings.bundle_image | image_url: width: 1000 }}" 
                    alt="{{ block.settings.bundle_name }}" 
                    loading="lazy" 
+                   height="auto"
+                   width="auto"
                    class="bundle-main-image">
             {% else %}
               {{ 'collection-1' | placeholder_svg_tag: 'placeholder-svg' }}
