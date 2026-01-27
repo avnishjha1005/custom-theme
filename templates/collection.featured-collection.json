@@ -250,49 +250,12 @@
             "hs_5_bg": "#ffffff",
             "hs_5_border": "#000000"
           }
-        },
-        "bundle_hRPr6n": {
-          "type": "bundle",
-          "settings": {
-            "product": "",
-            "show_hs_1": false,
-            "hs_1_label": "+",
-            "hs_1_x": 50,
-            "hs_1_y": 50,
-            "hs_1_bg": "#ffffff",
-            "hs_1_border": "#000000",
-            "show_hs_2": false,
-            "hs_2_label": "+",
-            "hs_2_x": 40,
-            "hs_2_y": 40,
-            "hs_2_bg": "#ffffff",
-            "hs_2_border": "#000000",
-            "show_hs_3": false,
-            "hs_3_label": "+",
-            "hs_3_x": 70,
-            "hs_3_y": 70,
-            "hs_3_bg": "#ffffff",
-            "hs_3_border": "#000000",
-            "show_hs_4": false,
-            "hs_4_label": "+",
-            "hs_4_x": 10,
-            "hs_4_y": 90,
-            "hs_4_bg": "#ffffff",
-            "hs_4_border": "#000000",
-            "show_hs_5": false,
-            "hs_5_label": "+",
-            "hs_5_x": 90,
-            "hs_5_y": 10,
-            "hs_5_bg": "#ffffff",
-            "hs_5_border": "#000000"
-          }
         }
       },
       "block_order": [
         "bundle_a3dqMi",
         "bundle_qTJRmr",
-        "bundle_6YmHMq",
-        "bundle_hRPr6n"
+        "bundle_6YmHMq"
       ],
       "name": "Bundle List Section",
       "settings": {
