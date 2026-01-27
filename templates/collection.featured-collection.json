@@ -109,7 +109,9 @@
       "block_order": [
         "ai_gen_block_1755f5a_rbCzmQ"
       ],
-      "custom_css": [],
+      "custom_css": [
+        ".custom-section-content {padding: 0px !important;}"
+      ],
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
