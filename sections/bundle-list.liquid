@@ -109,8 +109,17 @@
                   {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
                   {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
                   {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
+                  {% capture hs_product %}hs_{{ i }}_product{% endcapture %}
+                  {% assign product = block.settings[hs_product] %}
                   {% if block.settings[hs_show] %}
-                    <div class="hotspot-trigger" style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">{{ block.settings[hs_label] }}</div>
+                    <div class="hotspot-trigger" 
+                      data-hs-index="{{ i }}"
+                      data-product-title="{{ product.title | escape }}"
+                      data-product-price="{{ product.price | money }}"
+                      data-product-url="{{ product.url }}"
+                      style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">
+                      {{ block.settings[hs_label] }}
+                    </div>
                   {% endif %}
                 {% endfor %}
               </div>
@@ -133,8 +142,17 @@
                 {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
                 {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
                 {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
+                {% capture hs_product %}hs_{{ i }}_product{% endcapture %}
+                {% assign product = block.settings[hs_product] %}
                 {% if block.settings[hs_show] %}
-                  <div class="hotspot-trigger" style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">{{ block.settings[hs_label] }}</div>
+                  <div class="hotspot-trigger" 
+                    data-hs-index="{{ i }}"
+                    data-product-title="{{ product.title | escape }}"
+                    data-product-price="{{ product.price | money }}"
+                    data-product-url="{{ product.url }}"
+                    style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">
+                    {{ block.settings[hs_label] }}
+                  </div>
                 {% endif %}
               {% endfor %}
             </div>
@@ -147,7 +165,57 @@
       {% endif %}
     {% endfor %}
   </div>
+  <!-- Hotspot Overlay (desktop only) -->
+  <div id="hotspot-overlay" style="display:none; position:absolute; z-index:100; pointer-events:none;">
+    <div id="hotspot-overlay-content" style="background:rgba(255,255,255,0.95); border:1px solid #000; border-radius:8px; padding:16px 24px; min-width:180px; box-shadow:0 2px 12px rgba(0,0,0,0.12);">
+      <div id="hotspot-overlay-title" style="font-weight:bold;"></div>
+      <div id="hotspot-overlay-price" style="margin-top:4px;"></div>
+      <button id="hotspot-overlay-link" style="margin-top:12px; background:#000; color:#fff; border:none; border-radius:4px; padding:6px 16px; cursor:pointer;">View Product</button>
+    </div>
+  </div>
 </div>
+<script>
+  (function() {
+    if (window.matchMedia('(pointer: fine)').matches) {
+      var overlay = document.getElementById('hotspot-overlay');
+      var overlayContent = document.getElementById('hotspot-overlay-content');
+      var overlayTitle = document.getElementById('hotspot-overlay-title');
+      var overlayPrice = document.getElementById('hotspot-overlay-price');
+      var overlayLink = document.getElementById('hotspot-overlay-link');
+      var lastHotspot = null;
+      document.querySelectorAll('.hotspot-trigger').forEach(function(hotspot) {
+        hotspot.addEventListener('click', function(e) {
+          e.stopPropagation();
+          var rect = hotspot.getBoundingClientRect();
+          var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+          if (lastHotspot === hotspot && overlay.style.display === 'block') {
+            // Second click: go to product
+            var url = hotspot.getAttribute('data-product-url');
+            if (url) window.location.href = url;
+            return;
+          }
+          lastHotspot = hotspot;
+          overlayTitle.textContent = hotspot.getAttribute('data-product-title') || '';
+          overlayPrice.textContent = hotspot.getAttribute('data-product-price') || '';
+          overlayLink.onclick = function(ev) {
+            ev.stopPropagation();
+            var url = hotspot.getAttribute('data-product-url');
+            if (url) window.location.href = url;
+          };
+          overlay.style.display = 'block';
+          overlay.style.left = (rect.left + rect.width/2 + scrollLeft) + 'px';
+          overlay.style.top = (rect.top + rect.height/2 + scrollTop) + 'px';
+          overlay.style.pointerEvents = 'auto';
+        });
+      });
+      document.addEventListener('click', function() {
+        overlay.style.display = 'none';
+        lastHotspot = null;
+      });
+    }
+  })();
+</script>
 
 {% schema %}
 {
