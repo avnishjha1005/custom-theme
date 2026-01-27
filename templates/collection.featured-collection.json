@@ -140,6 +140,51 @@
         "padding-block-end": 0
       }
     },
+    "bundle_list_paKprr": {
+      "type": "bundle-list",
+      "blocks": {
+        "bundle_a3dqMi": {
+          "type": "bundle",
+          "settings": {
+            "bundle_product": "wedding-collection",
+            "title": "",
+            "description": "",
+            "enable_hs_1": true,
+            "hs_1_product": "olive-green-jacket",
+            "hs_1_x": 50,
+            "hs_1_y": 50,
+            "enable_hs_2": false,
+            "hs_2_product": "",
+            "hs_2_x": 30,
+            "hs_2_y": 30
+          }
+        },
+        "bundle_qTJRmr": {
+          "type": "bundle",
+          "settings": {
+            "bundle_product": "wedding-collection",
+            "title": "",
+            "description": "",
+            "enable_hs_1": false,
+            "hs_1_product": "",
+            "hs_1_x": 50,
+            "hs_1_y": 50,
+            "enable_hs_2": false,
+            "hs_2_product": "",
+            "hs_2_x": 30,
+            "hs_2_y": 30
+          }
+        }
+      },
+      "block_order": [
+        "bundle_a3dqMi",
+        "bundle_qTJRmr"
+      ],
+      "name": "Bundle List Section",
+      "settings": {
+        "context_collection": "the-editorial"
+      }
+    },
     "section": {
       "type": "section",
       "blocks": {
@@ -644,6 +689,7 @@
   "order": [
     "section_3cRnJq",
     "1768274530727e625a",
+    "bundle_list_paKprr",
     "section",
     "main",
     "whatsapp_fab_apNmVc",
