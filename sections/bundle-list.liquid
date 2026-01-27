@@ -92,9 +92,15 @@
                 {% else %}
                   {{ 'collection-1' | placeholder_svg_tag }}
                 {% endif %}
-                {% for hs in section.blocks %}
-                  {% if hs.type == 'hotspot' and hs.settings.bundle_index == idx %}
-                    <div class="hotspot-trigger" style="left: {{ hs.settings.x }}%; top: {{ hs.settings.y }}%; background: {{ hs.settings.bg }}; border-color: {{ hs.settings.border }};">{{ hs.settings.label }}</div>
+                {% for i in (1..5) %}
+                  {% capture hs_show %}show_hs_{{ i }}{% endcapture %}
+                  {% capture hs_label %}hs_{{ i }}_label{% endcapture %}
+                  {% capture hs_x %}hs_{{ i }}_x{% endcapture %}
+                  {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
+                  {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
+                  {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
+                  {% if block.settings[hs_show] %}
+                    <div class="hotspot-trigger" style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">{{ block.settings[hs_label] }}</div>
                   {% endif %}
                 {% endfor %}
               </div>
@@ -110,9 +116,15 @@
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag }}
               {% endif %}
-              {% for hs in section.blocks %}
-                {% if hs.type == 'hotspot' and hs.settings.bundle_index == idx %}
-                  <div class="hotspot-trigger" style="left: {{ hs.settings.x }}%; top: {{ hs.settings.y }}%; background: {{ hs.settings.bg }}; border-color: {{ hs.settings.border }};">{{ hs.settings.label }}</div>
+              {% for i in (1..5) %}
+                {% capture hs_show %}show_hs_{{ i }}{% endcapture %}
+                {% capture hs_label %}hs_{{ i }}_label{% endcapture %}
+                {% capture hs_x %}hs_{{ i }}_x{% endcapture %}
+                {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
+                {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
+                {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
+                {% if block.settings[hs_show] %}
+                  <div class="hotspot-trigger" style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">{{ block.settings[hs_label] }}</div>
                 {% endif %}
               {% endfor %}
             </div>
@@ -142,19 +154,42 @@
       "type": "bundle",
       "name": "Bundle Product",
       "settings": [
-        { "type": "product", "id": "product", "label": "Product" }
-      ]
-    },
-    {
-      "type": "hotspot",
-      "name": "Hotspot",
-      "settings": [
-        { "type": "number", "id": "bundle_index", "label": "Bundle Index (1-based)", "default": 1 },
-        { "type": "text", "id": "label", "label": "Hotspot Label", "default": "+" },
-        { "type": "range", "id": "x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
-        { "type": "range", "id": "y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
-        { "type": "color", "id": "bg", "label": "Background Color", "default": "#fff" },
-        { "type": "color", "id": "border", "label": "Border Color", "default": "#000" }
+        { "type": "product", "id": "product", "label": "Product" },
+        { "type": "header", "content": "Hotspot 1" },
+        { "type": "checkbox", "id": "show_hs_1", "label": "Show Hotspot 1", "default": false },
+        { "type": "text", "id": "hs_1_label", "label": "Hotspot Label", "default": "+" },
+        { "type": "range", "id": "hs_1_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
+        { "type": "range", "id": "hs_1_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
+        { "type": "color", "id": "hs_1_bg", "label": "Background Color", "default": "#fff" },
+        { "type": "color", "id": "hs_1_border", "label": "Border Color", "default": "#000" },
+        { "type": "header", "content": "Hotspot 2" },
+        { "type": "checkbox", "id": "show_hs_2", "label": "Show Hotspot 2", "default": false },
+        { "type": "text", "id": "hs_2_label", "label": "Hotspot Label", "default": "+" },
+        { "type": "range", "id": "hs_2_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 30 },
+        { "type": "range", "id": "hs_2_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 30 },
+        { "type": "color", "id": "hs_2_bg", "label": "Background Color", "default": "#fff" },
+        { "type": "color", "id": "hs_2_border", "label": "Border Color", "default": "#000" },
+        { "type": "header", "content": "Hotspot 3" },
+        { "type": "checkbox", "id": "show_hs_3", "label": "Show Hotspot 3", "default": false },
+        { "type": "text", "id": "hs_3_label", "label": "Hotspot Label", "default": "+" },
+        { "type": "range", "id": "hs_3_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 70 },
+        { "type": "range", "id": "hs_3_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 70 },
+        { "type": "color", "id": "hs_3_bg", "label": "Background Color", "default": "#fff" },
+        { "type": "color", "id": "hs_3_border", "label": "Border Color", "default": "#000" },
+        { "type": "header", "content": "Hotspot 4" },
+        { "type": "checkbox", "id": "show_hs_4", "label": "Show Hotspot 4", "default": false },
+        { "type": "text", "id": "hs_4_label", "label": "Hotspot Label", "default": "+" },
+        { "type": "range", "id": "hs_4_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 10 },
+        { "type": "range", "id": "hs_4_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 90 },
+        { "type": "color", "id": "hs_4_bg", "label": "Background Color", "default": "#fff" },
+        { "type": "color", "id": "hs_4_border", "label": "Border Color", "default": "#000" },
+        { "type": "header", "content": "Hotspot 5" },
+        { "type": "checkbox", "id": "show_hs_5", "label": "Show Hotspot 5", "default": false },
+        { "type": "text", "id": "hs_5_label", "label": "Hotspot Label", "default": "+" },
+        { "type": "range", "id": "hs_5_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 90 },
+        { "type": "range", "id": "hs_5_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 10 },
+        { "type": "color", "id": "hs_5_bg", "label": "Background Color", "default": "#fff" },
+        { "type": "color", "id": "hs_5_border", "label": "Border Color", "default": "#000" }
       ]
     }
   ],
