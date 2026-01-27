@@ -39,7 +39,7 @@
       ],
       "custom_css": [
         ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; height: 0; padding: 0; }}",
-        "custom-section-content{}"
+        ".custom-section-content {padding:0px;}"
       ],
       "name": "t:names.large_logo",
       "settings": {
