@@ -38,16 +38,6 @@
     background: rgba(255,255,255,0.8);
     border: 1px solid #000;
     border-radius: 50%;
-      .bundle-item--hero {
-        grid-column: 1 / span 2;
-        grid-row: auto;
-      }
-      @media (max-width: 768px) {
-        .bundle-item--hero {
-          grid-column: 1 / -1;
-          grid-row: auto;
-        }
-      }
     transform: translate(-50%, -50%);
     cursor: pointer;
     z-index: 5;
@@ -57,6 +47,16 @@
     font-size: 18px;
     font-weight: bold;
   }
+  .bundle-item--hero {
+        grid-column: 1 / span 2;
+        grid-row: auto;
+      }
+      @media (max-width: 768px) {
+        .bundle-item--hero {
+          grid-column: 1 / -1;
+          grid-row: auto;
+        }
+      }
   .bundle-meta {
     padding-top: 20px;
   }
