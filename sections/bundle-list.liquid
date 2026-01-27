@@ -1,34 +1,4 @@
 {%- style -%}
-.hotspot-overlay {
-  display: none;
-  position: absolute;
-  bottom: 120%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #000;
-  color: #fff;
-  padding: 10px;
-  border-radius: 4px;
-  z-index: 10;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.hotspot-trigger.is-active .hotspot-overlay {
-  display: block;
-}
-
-/* Add a little triangle pointer */
-.hotspot-overlay::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: #000 transparent transparent transparent;
-}
   .bundle-section-{{ section.id }} {
     max-width: 1440px;
     margin: 0 auto;
@@ -43,16 +13,13 @@
   .bundle-item {
     display: flex;
     flex-direction: column;
-    justify-content: stretch;
   }
   .bundle-visual {
-    position: relative;
+    position: relative; /* Keeps hotspots and overlays contained here */
     width: 100%;
     aspect-ratio: 1.2/1;
     overflow: hidden;
     background: #f8f8f8;
-    display: flex;
-    align-items: stretch;
     min-height: 400px;
   }
   .bundle-visual img {
@@ -61,11 +28,13 @@
     object-fit: cover;
     display: block;
   }
+  
+  /* The Dot Trigger */
   .hotspot-trigger {
     position: absolute;
     width: 32px;
     height: 32px;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.9);
     border: 1px solid #000;
     border-radius: 50%;
     transform: translate(-50%, -50%);
@@ -75,41 +44,70 @@
     align-items: center;
     justify-content: center;
     font-size: 18px;
-    font-weight: bold;
+    transition: transform 0.2s ease;
   }
-  .bundle-item--hero {
-        grid-column: 1 / span 2;
-        grid-row: auto;
-      }
-      @media (max-width: 768px) {
-        .bundle-item--hero {
-          grid-column: 1 / -1;
-          grid-row: auto;
-        }
-      }
-  .bundle-meta {
-    padding-top: 20px;
+  .hotspot-trigger:hover { transform: translate(-50%, -50%) scale(1.1); }
+
+  /* The Full-Image Overlay */
+  .hotspot-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* Dims the image */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
   }
-  .bundle-name {
-    font-size: 24px;
+  
+  .hotspot-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* The White Box in the Center */
+  .hotspot-card {
+    background: #fff;
+    padding: 30px 40px;
+    text-align: center;
+    min-width: 220px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    cursor: default;
+  }
+  .hotspot-card-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 5px;
     text-transform: uppercase;
-    margin: 0 0 10px 0;
+    color: #000;
   }
-  .bundle-desc {
+  .hotspot-card-price {
     font-size: 16px;
-    line-height: 1.6;
-    color: #333;
+    color: #666;
+    margin-bottom: 15px;
   }
+  .hotspot-card-link {
+    display: inline-block;
+    font-size: 14px;
+    text-decoration: underline;
+    color: #000;
+    text-underline-offset: 4px;
+  }
+
+  .bundle-item--hero { grid-column: 1 / span 2; }
+  .bundle-meta { padding-top: 20px; }
+  .bundle-name { font-size: 24px; text-transform: uppercase; margin: 0 0 10px 0; }
+  .bundle-desc { font-size: 16px; line-height: 1.6; color: #333; }
+
   @media (max-width: 768px) {
-    .bundle-wrapper {
-      grid-template-columns: 1fr;
-    }
-    .bundle-item {
-      flex-direction: column;
-    }
-    .bundle-visual {
-      min-height: 250px;
-    }
+    .bundle-wrapper { grid-template-columns: 1fr; }
+    .bundle-item--hero { grid-column: 1 / -1; }
+    .bundle-visual { min-height: 300px; }
   }
 {%- endstyle -%}
 
@@ -120,120 +118,95 @@
       {% if block.type == 'bundle' %}
         {% assign idx = forloop.index | append: '' %}
         {% assign is_hero = false %}
-        {% for h in hero_indices %}
-          {% if h == idx %}{% assign is_hero = true %}{% endif %}
-        {% endfor %}
-        <div class="bundle-item {% if is_hero %}bundle-item--hero{% endif %}" {{ block.shopify_attributes }}>
-          {% if is_hero %}
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; grid-column: span 2;">
-              <div class="bundle-visual" style="order: {% if idx == 3 %}1{% else %}2{% endif %};">
-                {% if block.settings.product != blank %}
-                  {{ block.settings.product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
-                {% else %}
-                  {{ 'collection-1' | placeholder_svg_tag }}
-                {% endif %}
-                {% for i in (1..5) %}
-  {% capture hs_show %}show_hs_{{ i }}{% endcapture %}
-  {% capture hs_product_key %}hs_{{ i }}_product{% endcapture %}
-  {% assign hs_product = block.settings[hs_product_key] %}
-  
-  {% if block.settings[hs_show] and hs_product != blank %}
-    {% capture hs_label %}hs_{{ i }}_label{% endcapture %}
-    {% capture hs_x %}hs_{{ i }}_x{% endcapture %}
-    {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
-    {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
-    {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
+        {% for h in hero_indices %}{% if h == idx %}{% assign is_hero = true %}{% endif %}{% endfor %}
 
-    <div class="hotspot-trigger" 
-      data-product-url="{{ hs_product.url }}"
-      style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">
-      {{ block.settings[hs_label] }}
-      
-      <div class="hotspot-overlay">
-        <div class="hotspot-overlay-title">{{ hs_product.title }}</div>
-        <div class="hotspot-overlay-price">{{ hs_product.price | money }}</div>
-      </div>
-    </div>
-  {% endif %}
-{% endfor %}
-              </div>
-              <div class="bundle-meta" style="order: {% if idx == 3 %}2{% else %}1{% endif %};">
-                <h3 class="bundle-name">{{ block.settings.product.title }}</h3>
-                <div class="bundle-desc">{{ block.settings.product.description }}</div>
-              </div>
-            </div>
-          {% else %}
+        <div class="bundle-item {% if is_hero %}bundle-item--hero{% endif %}" {{ block.shopify_attributes }}>
+          {% capture item_content %}
             <div class="bundle-visual">
               {% if block.settings.product != blank %}
                 {{ block.settings.product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag }}
               {% endif %}
+
               {% for i in (1..5) %}
                 {% capture hs_show %}show_hs_{{ i }}{% endcapture %}
-                {% capture hs_label %}hs_{{ i }}_label{% endcapture %}
-                {% capture hs_x %}hs_{{ i }}_x{% endcapture %}
-                {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
-                {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
-                {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
-                {% if block.settings[hs_show] %}
+                {% capture hs_product_setting %}hs_{{ i }}_product{% endcapture %}
+                {% assign hs_product = block.settings[hs_product_setting] %}
+
+                {% if block.settings[hs_show] and hs_product != blank %}
+                  {% capture hs_label %}hs_{{ i }}_label{% endcapture %}
+                  {% capture hs_x %}hs_{{ i }}_x{% endcapture %}
+                  {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
+                  {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
+                  {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
+
                   <div class="hotspot-trigger" 
-                    data-hs-index="{{ i }}"
-                    data-product-title="{{ product.title | escape }}"
-                    data-product-price="{{ product.price | money }}"
-                    data-product-url="{{ product.url }}"
-                    style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">
+                       data-target="hs-{{ block.id }}-{{ i }}"
+                       style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">
                     {{ block.settings[hs_label] }}
-                    <div class="hotspot-overlay" style="display:none; position:absolute; left:50%; top:100%; transform:translate(-50%, 10px); color:#fff; text-align:left; font-size:18px; font-weight:400; pointer-events:none; white-space:nowrap;">
-                      <div class="hotspot-overlay-title" style="font-weight:500;">{{ product.title }}</div>
-                      <div class="hotspot-overlay-price" style="font-size:16px; margin-top:2px;">{{ product.price | money }}</div>
+                  </div>
+
+                  <div id="hs-{{ block.id }}-{{ i }}" class="hotspot-overlay">
+                    <div class="hotspot-card">
+                      <div class="hotspot-card-title">{{ hs_product.title }}</div>
+                      <div class="hotspot-card-price">{{ hs_product.price | money }}</div>
+                      <a href="{{ hs_product.url }}" class="hotspot-card-link">View Details</a>
                     </div>
                   </div>
                 {% endif %}
               {% endfor %}
             </div>
+
             <div class="bundle-meta">
               <h3 class="bundle-name">{{ block.settings.product.title }}</h3>
               <div class="bundle-desc">{{ block.settings.product.description }}</div>
             </div>
+          {% endcapture %}
+
+          {% if is_hero %}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; width: 100%;">
+               {{ item_content }}
+            </div>
+          {% else %}
+            {{ item_content }}
           {% endif %}
         </div>
       {% endif %}
     {% endfor %}
   </div>
 </div>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const hotspots = document.querySelectorAll('.hotspot-trigger');
+    const triggers = document.querySelectorAll('.hotspot-trigger');
+    const overlays = document.querySelectorAll('.hotspot-overlay');
 
-    hotspots.forEach(hotspot => {
-      hotspot.addEventListener('click', function(e) {
-        e.preventDefault();
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', function(e) {
         e.stopPropagation();
-
-        const isActive = this.classList.contains('is-active');
-
-        // Close all other hotspots
-        hotspots.forEach(h => h.classList.remove('is-active'));
-
-        if (!isActive) {
-          // First click: Show overlay
-          this.classList.add('is-active');
-        } else {
-          // Second click: Navigate
-          const url = this.getAttribute('data-product-url');
-          if (url) window.location.href = url;
-        }
+        const targetId = this.getAttribute('data-target');
+        const targetOverlay = document.getElementById(targetId);
+        
+        // Hide all others
+        overlays.forEach(o => o.classList.remove('is-active'));
+        
+        // Show this one
+        if (targetOverlay) targetOverlay.classList.add('is-active');
       });
     });
 
-    // Close overlays when clicking anywhere else
-    document.addEventListener('click', function() {
-      hotspots.forEach(h => h.classList.remove('is-active'));
+    // Close when clicking the dark background area
+    overlays.forEach(overlay => {
+      overlay.addEventListener('click', function(e) {
+        // If clicking the background (not the white card)
+        if (e.target === this) {
+          this.classList.remove('is-active');
+        }
+      });
     });
   });
 </script>
-
 {% schema %}
 {
   "name": "Bundle List",
