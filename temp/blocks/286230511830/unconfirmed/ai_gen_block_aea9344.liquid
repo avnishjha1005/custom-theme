@@ -1,6 +1,781 @@
+{% doc %}
+  @prompt
+    Generate a section that is functionally like the collection list. First element is the collection description. First row has two columns with product media and the name of the bundle. Under that a 70:30 split of image and next to it the description of that product. This same layout should be repeatable. I should be able to add many blocks with hotspots enabled and configure the hotspots on them one by one. The hotspot once hovered on put an overlay over the image and display the product name and price under the hotspots. On mobile clicking on it once triggers the overlay and once more takes you to the product. , The first row should have two such bundles. 
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collection-bundle-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    padding: 40px 20px;
+  }
+
+  .ai-collection-bundle__container-{{ ai_gen_id }} {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .ai-collection-bundle__description-{{ ai_gen_id }} {
+    margin-bottom: 40px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: {{ block.settings.text_color }};
+  }
+
+  .ai-collection-bundle__header-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 40px;
+  }
+
+  .ai-collection-bundle__bundle-item-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ai-collection-bundle__header-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-collection-bundle__header-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 1;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-collection-bundle__header-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .ai-collection-bundle__bundle-name-{{ ai_gen_id }} {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: {{ block.settings.heading_color }};
+    text-align: center;
+  }
+
+  .ai-collection-bundle__product-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 24px;
+    align-items: start;
+    margin-bottom: 40px;
+  }
+
+  .ai-collection-bundle__product-image-wrapper-{{ ai_gen_id }} {
+    position: relative;
+    width: 100%;
+  }
+
+  .ai-collection-bundle__product-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .ai-collection-bundle__product-image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-collection-bundle__product-image-placeholder-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    max-width: 400px;
+    max-height: 400px;
+  }
+
+  .ai-collection-bundle__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .ai-collection-bundle__hotspot-{{ ai_gen_id }} {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .ai-collection-bundle__hotspot-button-{{ ai_gen_id }} {
+    width: {{ block.settings.hotspot_size }}px;
+    height: {{ block.settings.hotspot_size }}px;
+    border-radius: 50%;
+    background-color: {{ block.settings.hotspot_color }};
+    border: 2px solid {{ block.settings.hotspot_border_color }};
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: {{ block.settings.hotspot_icon_color }};
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease;
+  }
+
+  .ai-collection-bundle__hotspot-button-{{ ai_gen_id }}:hover {
+    transform: scale(1.1);
+  }
+
+  .ai-collection-bundle__hotspot-button-{{ ai_gen_id }} svg {
+    width: calc({{ block.settings.hotspot_size }}px * 0.5);
+    height: calc({{ block.settings.hotspot_size }}px * 0.5);
+  }
+
+  .ai-collection-bundle__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: {{ block.settings.overlay_color }};
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .ai-collection-bundle__overlay-{{ ai_gen_id }}.active {
+    opacity: {{ block.settings.overlay_opacity }};
+    visibility: visible;
+  }
+
+  .ai-collection-bundle__hotspot-info-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: {{ block.settings.info_bg_color }};
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    pointer-events: none;
+    z-index: 3;
+    min-width: 200px;
+    text-align: center;
+  }
+
+  .ai-collection-bundle__hotspot-info-{{ ai_gen_id }}.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .ai-collection-bundle__hotspot-product-name-{{ ai_gen_id }} {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: {{ block.settings.info_text_color }};
+  }
+
+  .ai-collection-bundle__hotspot-product-price-{{ ai_gen_id }} {
+    font-size: 14px;
+    margin: 0;
+    color: {{ block.settings.info_text_color }};
+  }
+
+  .ai-collection-bundle__product-description-{{ ai_gen_id }} {
+    font-size: 14px;
+    line-height: 1.6;
+    color: {{ block.settings.text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collection-bundle__header-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-collection-bundle__product-{{ ai_gen_id }} {
+      grid-template-columns: 1fr;
+    }
+
+    .ai-collection-bundle__bundle-name-{{ ai_gen_id }} {
+      font-size: 20px;
+    }
+
+    .ai-collection-bundle__hotspot-button-{{ ai_gen_id }} {
+      width: calc({{ block.settings.hotspot_size }}px * 0.8);
+      height: calc({{ block.settings.hotspot_size }}px * 0.8);
+    }
+
+    .ai-collection-bundle__hotspot-button-{{ ai_gen_id }} svg {
+      width: calc({{ block.settings.hotspot_size }}px * 0.4);
+      height: calc({{ block.settings.hotspot_size }}px * 0.4);
+    }
+  }
+{% endstyle %}
+
+<collection-bundle-{{ ai_gen_id }} class="ai-collection-bundle-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-collection-bundle__container-{{ ai_gen_id }}">
+    {% if block.settings.collection_description != blank %}
+      <div class="ai-collection-bundle__description-{{ ai_gen_id }}">
+        {{ block.settings.collection_description }}
+      </div>
+    {% endif %}
+
+    <div class="ai-collection-bundle__header-{{ ai_gen_id }}">
+      <div class="ai-collection-bundle__bundle-item-{{ ai_gen_id }}">
+        {% if block.settings.bundle_1_image %}
+          <img
+            src="{{ block.settings.bundle_1_image | image_url: width: 800 }}"
+            alt="{{ block.settings.bundle_1_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.bundle_1_image.width }}"
+            height="{{ block.settings.bundle_1_image.height }}"
+            class="ai-collection-bundle__header-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-collection-bundle__header-image-placeholder-{{ ai_gen_id }}">
+            {{ 'product-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+        {% if block.settings.bundle_1_name != blank %}
+          <h2 class="ai-collection-bundle__bundle-name-{{ ai_gen_id }}">{{ block.settings.bundle_1_name }}</h2>
+        {% endif %}
+      </div>
+
+      <div class="ai-collection-bundle__bundle-item-{{ ai_gen_id }}">
+        {% if block.settings.bundle_2_image %}
+          <img
+            src="{{ block.settings.bundle_2_image | image_url: width: 800 }}"
+            alt="{{ block.settings.bundle_2_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.bundle_2_image.width }}"
+            height="{{ block.settings.bundle_2_image.height }}"
+            class="ai-collection-bundle__header-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-collection-bundle__header-image-placeholder-{{ ai_gen_id }}">
+            {{ 'product-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+        {% if block.settings.bundle_2_name != blank %}
+          <h2 class="ai-collection-bundle__bundle-name-{{ ai_gen_id }}">{{ block.settings.bundle_2_name }}</h2>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="ai-collection-bundle__product-{{ ai_gen_id }}">
+      <div class="ai-collection-bundle__product-image-wrapper-{{ ai_gen_id }}">
+        {% if block.settings.product_image %}
+          <img
+            src="{{ block.settings.product_image | image_url: width: 1200 }}"
+            alt="{{ block.settings.product_image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.product_image.width }}"
+            height="{{ block.settings.product_image.height }}"
+            class="ai-collection-bundle__product-image-{{ ai_gen_id }}"
+          >
+        {% else %}
+          <div class="ai-collection-bundle__product-image-placeholder-{{ ai_gen_id }}">
+            {{ 'product-1' | placeholder_svg_tag }}
+            <div class="ai-collection-bundle__empty-state-{{ ai_gen_id }}">
+              Add an image and configure hotspots
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="ai-collection-bundle__overlay-{{ ai_gen_id }}" data-overlay></div>
+
+        {% for i in (1..5) %}
+          {% liquid
+            assign hotspot_enabled_key = 'hotspot_' | append: i | append: '_enabled'
+            assign hotspot_x_key = 'hotspot_' | append: i | append: '_x'
+            assign hotspot_y_key = 'hotspot_' | append: i | append: '_y'
+            assign product_key = 'hotspot_' | append: i | append: '_product'
+
+            assign hotspot_enabled = block.settings[hotspot_enabled_key]
+            assign hotspot_x = block.settings[hotspot_x_key]
+            assign hotspot_y = block.settings[hotspot_y_key]
+            assign product = block.settings[product_key]
+          %}
+
+          {% if hotspot_enabled and product != blank %}
+            <div
+              class="ai-collection-bundle__hotspot-{{ ai_gen_id }}"
+              style="left: {{ hotspot_x }}%; top: {{ hotspot_y }}%;"
+              data-hotspot="{{ i }}"
+              data-product-url="{{ product.url }}"
+            >
+              <button
+                class="ai-collection-bundle__hotspot-button-{{ ai_gen_id }}"
+                aria-label="View {{ product.title }}"
+                data-hotspot-button
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+            </div>
+
+            <div class="ai-collection-bundle__hotspot-info-{{ ai_gen_id }}" data-info="{{ i }}">
+              <h3 class="ai-collection-bundle__hotspot-product-name-{{ ai_gen_id }}">{{ product.title }}</h3>
+              <p class="ai-collection-bundle__hotspot-product-price-{{ ai_gen_id }}">{{ product.price | money }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <div class="ai-collection-bundle__product-description-{{ ai_gen_id }}">
+        {{ block.settings.product_description }}
+      </div>
+    </div>
+  </div>
+</collection-bundle-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class CollectionBundle{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.isMobile = window.innerWidth < 750;
+        this.activeHotspot = null;
+      }
+
+      connectedCallback() {
+        this.setupHotspots();
+        this.handleResize();
+      }
+
+      setupHotspots() {
+        const wrapper = this.querySelector('.ai-collection-bundle__product-image-wrapper-{{ ai_gen_id }}');
+        if (!wrapper) return;
+
+        const hotspots = wrapper.querySelectorAll('[data-hotspot]');
+        const overlay = wrapper.querySelector('[data-overlay]');
+
+        hotspots.forEach((hotspot) => {
+          const button = hotspot.querySelector('[data-hotspot-button]');
+          const hotspotId = hotspot.getAttribute('data-hotspot');
+          const info = wrapper.querySelector(`[data-info="${hotspotId}"]`);
+          const productUrl = hotspot.getAttribute('data-product-url');
+
+          if (this.isMobile) {
+            let clickCount = 0;
+            let clickTimer = null;
+
+            button.addEventListener('click', (e) => {
+              e.preventDefault();
+              clickCount++;
+
+              if (clickCount === 1) {
+                this.showOverlay(wrapper, info, overlay);
+                this.activeHotspot = { wrapper, info, overlay };
+
+                clickTimer = setTimeout(() => {
+                  clickCount = 0;
+                }, 500);
+              } else if (clickCount === 2) {
+                clearTimeout(clickTimer);
+                window.location.href = productUrl;
+              }
+            });
+          } else {
+            button.addEventListener('mouseenter', () => {
+              this.showOverlay(wrapper, info, overlay);
+            });
+
+            wrapper.addEventListener('mouseleave', () => {
+              this.hideOverlay(wrapper, info, overlay);
+            });
+          }
+        });
+
+        if (this.isMobile) {
+          document.addEventListener('click', (e) => {
+            if (this.activeHotspot && !e.target.closest('.ai-collection-bundle__hotspot-{{ ai_gen_id }}')) {
+              this.hideOverlay(
+                this.activeHotspot.wrapper,
+                this.activeHotspot.info,
+                this.activeHotspot.overlay
+              );
+              this.activeHotspot = null;
+            }
+          });
+        }
+      }
+
+      showOverlay(wrapper, info, overlay) {
+        const allInfos = wrapper.querySelectorAll('.ai-collection-bundle__hotspot-info-{{ ai_gen_id }}');
+        allInfos.forEach((i) => i.classList.remove('active'));
+
+        overlay.classList.add('active');
+        if (info) {
+          info.classList.add('active');
+        }
+      }
+
+      hideOverlay(wrapper, info, overlay) {
+        overlay.classList.remove('active');
+        if (info) {
+          info.classList.remove('active');
+        }
+      }
+
+      handleResize() {
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            const wasMobile = this.isMobile;
+            this.isMobile = window.innerWidth < 750;
+            if (wasMobile !== this.isMobile) {
+              this.setupHotspots();
+            }
+          }, 250);
+        });
+      }
+    }
+
+    customElements.define('collection-bundle-{{ ai_gen_id }}', CollectionBundle{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Collection bundle product",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Collection"
+    },
+    {
+      "type": "richtext",
+      "id": "collection_description",
+      "label": "Collection description",
+      "default": "<p>Discover our curated collection of premium products</p>"
+    },
+    {
+      "type": "header",
+      "content": "Bundle 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_1_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "bundle_1_name",
+      "label": "Name",
+      "default": "Bundle 1"
+    },
+    {
+      "type": "header",
+      "content": "Bundle 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "bundle_2_image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "bundle_2_name",
+      "label": "Name",
+      "default": "Bundle 2"
+    },
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "richtext",
+      "id": "product_description",
+      "label": "Product description",
+      "default": "<p>Add a description for this product</p>"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 1"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_1_enabled",
+      "label": "Enable hotspot 1",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_1_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "hotspot_1_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 25
+    },
+    {
+      "type": "product",
+      "id": "hotspot_1_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 2"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_2_enabled",
+      "label": "Enable hotspot 2",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_2_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 50
+    },
+    {
+      "type": "range",
+      "id": "hotspot_2_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 50
+    },
+    {
+      "type": "product",
+      "id": "hotspot_2_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 3"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_3_enabled",
+      "label": "Enable hotspot 3",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_3_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "hotspot_3_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 75
+    },
+    {
+      "type": "product",
+      "id": "hotspot_3_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 4"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_4_enabled",
+      "label": "Enable hotspot 4",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_4_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "hotspot_4_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 70
+    },
+    {
+      "type": "product",
+      "id": "hotspot_4_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot 5"
+    },
+    {
+      "type": "checkbox",
+      "id": "hotspot_5_enabled",
+      "label": "Enable hotspot 5",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "hotspot_5_x",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Horizontal position",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "hotspot_5_y",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Vertical position",
+      "default": 30
+    },
+    {
+      "type": "product",
+      "id": "hotspot_5_product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Hotspot style"
+    },
+    {
+      "type": "range",
+      "id": "hotspot_size",
+      "min": 24,
+      "max": 60,
+      "step": 4,
+      "unit": "px",
+      "label": "Hotspot size",
+      "default": 40
+    },
+    {
+      "type": "color",
+      "id": "hotspot_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_border_color",
+      "label": "Border",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_icon_color",
+      "label": "Icon",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Overlay style"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "label": "Opacity",
+      "default": 0.5
+    },
+    {
+      "type": "color",
+      "id": "info_bg_color",
+      "label": "Info background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "info_text_color",
+      "label": "Info text",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection bundle product"
+    }
+  ]
+}
 {% endschema %}
