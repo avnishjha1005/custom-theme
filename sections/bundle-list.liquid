@@ -109,9 +109,8 @@
                   {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
                   {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
                   {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
-                  {% capture hs_product %}hs_{{ i }}_product{% endcapture %}
-                  {% assign product = block.settings[hs_product] %}
                   {% if block.settings[hs_show] %}
+                    <div class="hotspot-trigger" style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%; background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">{{ block.settings[hs_label] }}</div>
                     <div class="hotspot-trigger" 
                       data-hs-index="{{ i }}"
                       data-product-title="{{ product.title | escape }}"
@@ -146,8 +145,6 @@
                 {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
                 {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
                 {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
-                {% capture hs_product %}hs_{{ i }}_product{% endcapture %}
-                {% assign product = block.settings[hs_product] %}
                 {% if block.settings[hs_show] %}
                   <div class="hotspot-trigger" 
                     data-hs-index="{{ i }}"
