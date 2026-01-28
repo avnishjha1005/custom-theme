@@ -121,7 +121,6 @@
   .bundle-desc { font-size: 16px; line-height: 1.6; color: #333; }
 
   @media (max-width: 768px) {
-    /* Set the main wrapper to 2 columns */
     .bundle-wrapper { 
       grid-template-columns: repeat(2, 1fr); 
       gap: 20px 15px; /* Adjust gap for smaller screens */
@@ -137,19 +136,8 @@
       grid-template-columns: 1fr; 
       gap: 20px; 
     }
-    
-    .bundle-item--hero:nth-of-type(even) .hero-grid { 
-      direction: ltr; 
-    }
-
-    /* Adjust typography for mobile grids */
-    .bundle-name {
-      font-size: 18px;
-    }
-    
-    .bundle-section-{{ section.id }} {
-      padding: 40px 15px;
-    }
+    .hero-grid { grid-template-columns: 1fr; gap: 20px; }
+    .bundle-item--hero:nth-of-type(even) .hero-grid { direction: ltr; }
   }
 {%- endstyle -%}
 
