@@ -33,7 +33,18 @@
             ref="cards[]"
             data-page="{{ paginate.current_page }}"
           >
-            {% content_for 'block', id: 'static-blog-post-card', type: '_blog-post-card', article: article %}
+            {% if forloop.index <= 3 %}
+              <div class="blog-post-hero-wrapper">
+                {% content_for 'block', id: 'hero-card-{{ forloop.index }}', type: '_blog-post-card-hero', article: article %}
+              </div>
+              {% if forloop.index > 1 %}
+                <div class="blog-post-regular-wrapper">
+                  {% content_for 'block', id: 'regular-card-{{ forloop.index }}', type: '_blog-post-card', article: article %}
+                </div>
+              {% endif %}
+            {% else %}
+              {% content_for 'block', id: 'static-blog-post-card', type: '_blog-post-card', article: article %}
+            {% endif %}
           </div>
         {% endfor %}
       </div>
@@ -63,8 +74,30 @@
   }
 
   /**
-   * Apart from the first and second rows in the grid, all remaining blog posts
-   * are arranged in a three-column layout:
+   * Show/hide hero vs regular cards based on screen size
+   */
+  .blog-post-hero-wrapper {
+    display: block;
+  }
+
+  .blog-post-regular-wrapper {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-post-item:nth-child(2) .blog-post-hero-wrapper,
+    .blog-post-item:nth-child(3) .blog-post-hero-wrapper {
+      display: none;
+    }
+
+    .blog-post-item:nth-child(2) .blog-post-regular-wrapper,
+    .blog-post-item:nth-child(3) .blog-post-regular-wrapper {
+      display: block;
+    }
+  }
+
+  /**
+   * All blog posts are arranged in a three-column layout:
    * +------------+------------+-------------+
    * |            |            |             |
    * |  (span 2)  |  (span 2)  |  (span 2)   |
@@ -84,38 +117,20 @@
   }
 
   /**
-   * The second row of blog posts has two columns:
-   * +-------------------+-------------------+
-   * |                   |                   |
-   * |  (column span 3)  |  (column span 3)  |
-   * |                   |                   |
-   * +-------------------+-------------------+
+   * First three hero cards have equal width in one row
    */
+  .blog-post-item:nth-child(1),
   .blog-post-item:nth-child(2),
   .blog-post-item:nth-child(3) {
-    --blog-post-card-scale: 0.8;
+    --blog-post-card-scale: 0.7;
 
-    grid-column: span 3;
+    grid-column: span 2;
 
     @media screen and (max-width: 749px) {
       --blog-post-card-scale: 0.5;
 
       grid-column: span 6;
     }
-  }
-
-  /**
-   * The first row of blog posts has only one column:
-   * +---------------------------------------+
-   * |                                       |
-   * |           (1 column span 6)           |
-   * |                                       |
-   * +---------------------------------------+
-   */
-  .blog-post-item:first-child {
-    --blog-post-card-scale: 1;
-
-    grid-column: span 6;
   }
 
   /**
@@ -126,7 +141,8 @@
     padding: 0 1rem 1rem;
   }
 
-  .blog-post-item:has(.blog-post-card__image-container) {
+  .blog-post-item:has(.blog-post-card__image-container),
+  .blog-post-item:has(.blog-post-hero-wrapper) {
     border: none;
     padding: 0;
   }
