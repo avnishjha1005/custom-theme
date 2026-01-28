@@ -121,8 +121,8 @@
   .bundle-desc { font-size: 16px; line-height: 1.6; color: #333; }
 
   @media (max-width: 768px) {
-    .bundle-wrapper { grid-template-columns: 1fr; }
-    .bundle-item--hero { grid-column: auto; }
+    .bundle-wrapper { grid-template-columns: 2fr; }
+    .bundle-item--hero { grid-column: 1 / span 2; }
     .hero-grid { grid-template-columns: 1fr; gap: 20px; }
     .bundle-item--hero:nth-of-type(even) .hero-grid { direction: ltr; }
   }
