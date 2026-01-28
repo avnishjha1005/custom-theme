@@ -8,11 +8,12 @@
   .ai-parallax-scroll-{{ ai_gen_id }} {
     display: block;
     width: 100%;
-    overflow: hidden;
+    position: relative;
   }
 
   .ai-parallax-section-{{ ai_gen_id }} {
-    position: relative;
+    position: sticky;
+    top: 0;
     width: 100%;
     min-height: 100vh;
     display: flex;
@@ -23,6 +24,13 @@
 
   .ai-parallax-large-{{ ai_gen_id }} {
     min-height: {{ block.settings.large_image_height }}vh;
+    background: #000;
+  }
+
+  .ai-parallax-small-{{ ai_gen_id }} {
+    background: white;
+    padding: 80px 0;
+    min-height: auto;
   }
 
   .ai-parallax-small-container-{{ ai_gen_id }} {
@@ -30,7 +38,7 @@
     grid-template-columns: 1fr 1fr;
     gap: {{ block.settings.small_image_gap }}px;
     width: 100%;
-    padding: {{ block.settings.section_padding }}px;
+    padding: 0 {{ block.settings.section_padding }}px;
     max-width: 1400px;
     margin: 0 auto;
   }
@@ -40,6 +48,7 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    border-radius: 0;
   }
 
   .ai-parallax-large-{{ ai_gen_id }} .ai-parallax-image-wrapper-{{ ai_gen_id }} {
@@ -79,10 +88,14 @@
   }
 
   @media screen and (max-width: 749px) {
+    .ai-parallax-small-{{ ai_gen_id }} {
+      padding: 40px 0;
+    }
+
     .ai-parallax-small-container-{{ ai_gen_id }} {
       grid-template-columns: 1fr;
       gap: {{ block.settings.small_image_gap | times: 0.5 }}px;
-      padding: {{ block.settings.section_padding | times: 0.5 }}px;
+      padding: 0 {{ block.settings.section_padding | times: 0.5 }}px;
     }
 
     .ai-parallax-large-{{ ai_gen_id }} {
@@ -92,26 +105,6 @@
 {% endstyle %}
 
 <parallax-scroll-{{ ai_gen_id }} class="ai-parallax-scroll-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
-  <div class="ai-parallax-section-{{ ai_gen_id }} ai-parallax-large-{{ ai_gen_id }}" data-parallax-speed="{{ block.settings.parallax_speed_large }}">
-    <div class="ai-parallax-image-wrapper-{{ ai_gen_id }}">
-      {% if block.settings.large_image_1 %}
-        <img
-          src="{{ block.settings.large_image_1 | image_url: width: 2000 }}"
-          alt="{{ block.settings.large_image_1.alt | escape }}"
-          loading="lazy"
-          width="{{ block.settings.large_image_1.width }}"
-          height="{{ block.settings.large_image_1.height }}"
-          class="ai-parallax-image-{{ ai_gen_id }}"
-          data-parallax-image
-        >
-      {% else %}
-        <div class="ai-parallax-placeholder-{{ ai_gen_id }}">
-          {{ 'hero-apparel-1' | placeholder_svg_tag }}
-        </div>
-      {% endif %}
-    </div>
-  </div>
-
   <div class="ai-parallax-section-{{ ai_gen_id }} ai-parallax-small-{{ ai_gen_id }}">
     <div class="ai-parallax-small-container-{{ ai_gen_id }}">
       <div class="ai-parallax-image-wrapper-{{ ai_gen_id }}" data-parallax-speed="{{ block.settings.parallax_speed_small }}">
@@ -153,13 +146,13 @@
 
   <div class="ai-parallax-section-{{ ai_gen_id }} ai-parallax-large-{{ ai_gen_id }}" data-parallax-speed="{{ block.settings.parallax_speed_large }}">
     <div class="ai-parallax-image-wrapper-{{ ai_gen_id }}">
-      {% if block.settings.large_image_2 %}
+      {% if block.settings.large_image_1 %}
         <img
-          src="{{ block.settings.large_image_2 | image_url: width: 2000 }}"
-          alt="{{ block.settings.large_image_2.alt | escape }}"
+          src="{{ block.settings.large_image_1 | image_url: width: 2000 }}"
+          alt="{{ block.settings.large_image_1.alt | escape }}"
           loading="lazy"
-          width="{{ block.settings.large_image_2.width }}"
-          height="{{ block.settings.large_image_2.height }}"
+          width="{{ block.settings.large_image_1.width }}"
+          height="{{ block.settings.large_image_1.height }}"
           class="ai-parallax-image-{{ ai_gen_id }}"
           data-parallax-image
         >
@@ -207,6 +200,26 @@
           </div>
         {% endif %}
       </div>
+    </div>
+  </div>
+
+  <div class="ai-parallax-section-{{ ai_gen_id }} ai-parallax-large-{{ ai_gen_id }}" data-parallax-speed="{{ block.settings.parallax_speed_large }}">
+    <div class="ai-parallax-image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.large_image_2 %}
+        <img
+          src="{{ block.settings.large_image_2 | image_url: width: 2000 }}"
+          alt="{{ block.settings.large_image_2.alt | escape }}"
+          loading="lazy"
+          width="{{ block.settings.large_image_2.width }}"
+          height="{{ block.settings.large_image_2.height }}"
+          class="ai-parallax-image-{{ ai_gen_id }}"
+          data-parallax-image
+        >
+      {% else %}
+        <div class="ai-parallax-placeholder-{{ ai_gen_id }}">
+          {{ 'hero-apparel-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
     </div>
   </div>
 </parallax-scroll-{{ ai_gen_id }}>
@@ -257,17 +270,18 @@
 
       updateParallax() {
         const scrollY = window.pageYOffset;
+        const windowHeight = window.innerHeight;
 
         this.sections.forEach((item) => {
           const rect = item.element.getBoundingClientRect();
-          const elementTop = rect.top + scrollY;
-          const elementHeight = rect.height;
-          const windowHeight = window.innerHeight;
 
-          if (rect.top < windowHeight && rect.bottom > 0) {
-            const scrollProgress = (scrollY + windowHeight - elementTop) / (elementHeight + windowHeight);
-            const translateY = (scrollProgress - 0.5) * item.speed * 100;
-            
+          if (rect.top <= windowHeight && rect.bottom >= 0) {
+            // Calculate how far the section has scrolled into view
+            const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
+
+            // Move image slower than scroll to create parallax depth
+            const translateY = -(scrollProgress * item.speed * 100);
+
             item.image.style.transform = 'translateY(' + translateY + 'px)';
           }
         });
