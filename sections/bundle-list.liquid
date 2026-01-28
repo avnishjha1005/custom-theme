@@ -121,10 +121,35 @@
   .bundle-desc { font-size: 16px; line-height: 1.6; color: #333; }
 
   @media (max-width: 768px) {
-    .bundle-wrapper { grid-template-columns: 2fr; }
-    .bundle-item--hero { grid-column: 1 / span 2; }
-    .hero-grid { grid-template-columns: 1fr; gap: 20px; }
-    .bundle-item--hero:nth-of-type(even) .hero-grid { direction: ltr; }
+    /* Set the main wrapper to 2 columns */
+    .bundle-wrapper { 
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 20px 15px; /* Adjust gap for smaller screens */
+    }
+
+    /* Force the Hero item to span across both columns */
+    .bundle-item--hero { 
+      grid-column: 1 / span 2; 
+    }
+
+    /* Keep internal Hero layout logic as is */
+    .hero-grid { 
+      grid-template-columns: 1fr; 
+      gap: 20px; 
+    }
+    
+    .bundle-item--hero:nth-of-type(even) .hero-grid { 
+      direction: ltr; 
+    }
+
+    /* Adjust typography for mobile grids */
+    .bundle-name {
+      font-size: 18px;
+    }
+    
+    .bundle-section-{{ section.id }} {
+      padding: 40px 15px;
+    }
   }
 {%- endstyle -%}
 
