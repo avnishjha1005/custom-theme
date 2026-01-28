@@ -1,278 +1,113 @@
-
 {%- assign block_settings = block.settings -%}
-{%- assign slideshow_images = article.metafields.custom.slideshow_images.value -%}
 
 {% capture title %}
   {% content_for 'block', id: 'heading', type: '_heading', text: article.title %}
 {% endcapture %}
 
-{% capture description %}
-  {% content_for 'block', id: 'content', type: '_blog-post-description', article: article, show_read_more: false %}
+{% capture details %}
+  {% content_for 'block',
+    id: 'blog-post-details',
+    type: '_blog-post-info-text',
+    alignment: block_settings.alignment,
+    article: article
+  %}
 {% endcapture %}
 
-<div
-  class="blog-post-card-hero"
-  style="--text-align: {{ block_settings.alignment }}"
-  data-blog-post-hero
->
-  {%- if article.tags.size > 0 -%}
-    <span class="blog-post-card-hero__tag">{{ article.tags.first | upcase }}</span>
-  {%- endif -%}
+{% capture description %}
+  {% content_for 'block', id: 'content', type: '_blog-post-description', article: article, show_read_more: true %}
+{% endcapture %}
 
-  {%- if slideshow_images.size > 0 -%}
-    <div class="blog-post-card-hero__slideshow">
-      <div class="blog-post-card-hero__slides">
-        {%- for image in slideshow_images -%}
-          <div class="blog-post-card-hero__slide {% if forloop.first %}active{% endif %}">
-            <a href="{{ article.url }}">
-              <img
-                src="{{ image | image_url: width: 1200 }}"
-                alt="{{ article.title }}"
-                loading="lazy"
-                width="{{ image.width }}"
-                height="{{ image.height }}"
-              >
-            </a>
-          </div>
-        {%- endfor -%}
+<div class="blog-post-card" style="--text-align: {{ block_settings.alignment }}">
+  <a href="{{ article.url }}" class="blog-post-card__link-wrapper">
+    {%- if article.image -%}
+      <div class="blog-post-card__image-container">
+          {% content_for 'block', id: 'image', type: '_blog-post-image', image: article.image %}
       </div>
+    {%- endif -%}
 
-      {%- if slideshow_images.size > 1 -%}
-        <div class="blog-post-card-hero__indicators">
-          {%- for image in slideshow_images -%}
-            <button
-              class="blog-post-card-hero__indicator {% if forloop.first %}active{% endif %}"
-              data-slide-index="{{ forloop.index0 }}"
-              aria-label="Go to slide {{ forloop.index }}"
-            ></button>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
+    <div class="blog-post-card__overlay">
+      <div class="blog-post-card__content">
+        <div class="blog-post-card__meta">{{ details }}</div>
+        <h3 class="blog-post-card__title">{{ title }}</h3>
+        <div class="blog-post-card__description">{{ description }}</div>
+      </div>
     </div>
-  {%- elsif article.image -%}
-    <div class="blog-post-card-hero__image-container">
-      <a href="{{ article.url }}">
-        <img
-          src="{{ article.image | image_url: width: 1200 }}"
-          alt="{{ article.title }}"
-          loading="lazy"
-          width="{{ article.image.width }}"
-          height="{{ article.image.height }}"
-        >
-      </a>
-    </div>
-  {%- endif -%}
-
-  <div class="blog-post-card-hero__content">
-    <a href="{{ article.url }}" class="blog-post-card-hero__title">{{ title }}</a>
-
-    <div class="blog-post-card-hero__excerpt">
-      {{ description }}
-    </div>
-
-    <a href="{{ article.url }}" class="blog-post-card-hero__read-more">
-      READ MORE
-    </a>
-  </div>
+  </a>
 </div>
 
 {% stylesheet %}
-  .blog-post-card-hero {
-    display: flex;
-    flex-direction: column;
-    text-align: var(--text-align);
+  .blog-post-card {
     position: relative;
-  }
-
-  .blog-post-card-hero__tag {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    color: var(--color-foreground);
-    opacity: 0.6;
-    margin-bottom: 0.75rem;
-    display: block;
-  }
-
-  .blog-post-card-hero__slideshow,
-  .blog-post-card-hero__image-container {
-    position: relative;
-    width: 100%;
     overflow: hidden;
-    border-radius: 4px;
+    height: 100%;
+    min-height: 450px; /* Adjust based on your design */
+    display: flex;
   }
 
-  .blog-post-card-hero__slides {
-    position: relative;
+  .blog-post-card__link-wrapper {
+    display: block;
     width: 100%;
-    aspect-ratio: 3 / 2;
+    height: 100%;
+    position: relative;
+    text-decoration: none;
+    color: #ffffff; /* White text for overlay */
   }
 
-  .blog-post-card-hero__slide {
+  .blog-post-card__image-container {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    opacity: 0;
-    transition: opacity 0.6s ease-in-out;
+    z-index: 1;
   }
 
-  .blog-post-card-hero__slide.active {
-    opacity: 1;
-  }
-
-  .blog-post-card-hero__slide a,
-  .blog-post-card-hero__image-container a {
-    display: block;
-    width: 100%;
-    height: 100%;
-  }
-
-  .blog-post-card-hero__slide img,
-  .blog-post-card-hero__image-container img {
+  .blog-post-card__image-container img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
   }
 
-  .blog-post-card-hero__indicators {
+  /* The Gradient Overlay to make text readable */
+  .blog-post-card__overlay {
     position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 0.5rem;
-    z-index: 10;
-  }
-
-  .blog-post-card-hero__indicator {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.6);
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    transition: all 0.3s ease;
-  }
-
-  .blog-post-card-hero__indicator.active {
-    background-color: rgba(255, 255, 255, 1);
-    width: 8px;
-    height: 8px;
-  }
-
-  .blog-post-card-hero__indicator:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-  }
-
-  .blog-post-card-hero__content {
-    padding-block-start: 1rem;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60%; /* Only covers bottom half */
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+    z-index: 2;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    justify-content: flex-end;
+    padding: 2rem;
+    text-align: var(--text-align);
   }
 
-  .blog-post-card-hero__title {
-    display: block;
-    text-decoration: none;
-    margin-bottom: 0.25rem;
+  .blog-post-card__content {
+    z-index: 3;
+    pointer-events: none; /* Allows clicks to go through to the link */
   }
 
-  .blog-post-card-hero__title:hover,
-  .blog-post-card-hero__title:hover [style*='--color: var(--color-primary)'] {
-    color: var(--color-primary-hover);
+  /* Specific styling for the elements inside the overlay */
+  .blog-post-card__title {
+    margin: 0.5rem 0;
+    font-size: 1.5rem;
+    color: #ffffff !important;
   }
 
-  .blog-post-card-hero__title:hover [style*='--color: var(--color-foreground-heading)'] {
-    color: rgb(var(--color-foreground-heading-rgb) / var(--opacity-subdued-text));
+  .blog-post-card__meta, 
+  .blog-post-card__description {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
   }
 
-  .blog-post-card-hero__title:hover [style*='--color: var(--color-foreground)'] {
-    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
-  }
-
-  .blog-post-card-hero__excerpt {
-    font-size: 0.875rem;
-    line-height: 1.5;
-    color: var(--color-foreground);
-    opacity: 0.8;
-  }
-
-  .blog-post-card-hero__read-more {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    color: var(--color-foreground);
-    text-decoration: none;
-    margin-top: 0.5rem;
-    display: inline-block;
-    transition: color 0.2s ease;
-  }
-
-  .blog-post-card-hero__read-more:hover {
-    color: var(--color-primary);
+  /* Remove default link padding from your previous version */
+  .blog-post-card__content a {
+    padding: 0;
+    display: inline;
   }
 {% endstylesheet %}
-
-{% javascript %}
-  class BlogPostHero {
-    constructor(element) {
-      this.element = element;
-      this.slides = element.querySelectorAll('.blog-post-card-hero__slide');
-      this.indicators = element.querySelectorAll('.blog-post-card-hero__indicator');
-      this.currentSlide = 0;
-      this.autoplayInterval = null;
-
-      if (this.slides.length <= 1) return;
-
-      this.init();
-    }
-
-    init() {
-      this.indicators.forEach((indicator, index) => {
-        indicator.addEventListener('click', () => this.goToSlide(index));
-      });
-
-      this.startAutoplay();
-
-      this.element.addEventListener('mouseenter', () => this.stopAutoplay());
-      this.element.addEventListener('mouseleave', () => this.startAutoplay());
-    }
-
-    goToSlide(index) {
-      this.slides[this.currentSlide].classList.remove('active');
-      this.indicators[this.currentSlide].classList.remove('active');
-
-      this.currentSlide = index;
-
-      this.slides[this.currentSlide].classList.add('active');
-      this.indicators[this.currentSlide].classList.add('active');
-    }
-
-    nextSlide() {
-      const next = (this.currentSlide + 1) % this.slides.length;
-      this.goToSlide(next);
-    }
-
-    startAutoplay() {
-      this.autoplayInterval = setInterval(() => this.nextSlide(), 3000);
-    }
-
-    stopAutoplay() {
-      if (this.autoplayInterval) {
-        clearInterval(this.autoplayInterval);
-        this.autoplayInterval = null;
-      }
-    }
-  }
-
-  document.querySelectorAll('[data-blog-post-hero]').forEach(element => {
-    new BlogPostHero(element);
-  });
-{% endjavascript %}
 
 {% schema %}
 {
