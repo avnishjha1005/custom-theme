@@ -125,7 +125,7 @@
               "settings": {
                 "image": "shopify://shop_images/69d69906cfee086ba51f0c2d11282aea1dd7bf5a.png",
                 "link": "",
-                "image_ratio": "adapt",
+                "image_ratio": "portrait",
                 "width": "fill",
                 "custom_width": 100,
                 "width_mobile": "fill",
@@ -148,7 +148,7 @@
               "settings": {
                 "image": "shopify://shop_images/a94f7a15c53bd0bf667277defcf6476ff8a7cf75_1.jpg",
                 "link": "",
-                "image_ratio": "adapt",
+                "image_ratio": "portrait",
                 "width": "fill",
                 "custom_width": 100,
                 "width_mobile": "fill",
