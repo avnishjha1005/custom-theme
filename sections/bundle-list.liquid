@@ -131,10 +131,11 @@
     }
 
     /* Force the Hero item to span across both columns */
-    .bundle-item--hero { 
-      grid-column: 1 / span 2; 
+    .hero-grid { 
+      grid-template-columns: 7fr 3fr; 
+      gap: 15px; 
+      align-items: center; /* Keeps text aligned with the image center if preferred */
     }
-
     /* Keep internal Hero layout logic as is */
     .hero-grid { 
       grid-template-columns: 1fr; 
