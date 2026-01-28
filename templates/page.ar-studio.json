@@ -180,10 +180,10 @@
             "align_baseline": false,
             "horizontal_alignment_flex_direction_column": "flex-start",
             "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
+            "gap": 0,
             "width": "custom",
             "custom_width": 100,
-            "width_mobile": "fill",
+            "width_mobile": "custom",
             "custom_width_mobile": 100,
             "height": "fit",
             "custom_height": 100,
@@ -214,10 +214,10 @@
               "name": "t:names.image",
               "settings": {
                 "link": "",
-                "image_ratio": "adapt",
-                "width": "fill",
+                "image_ratio": "landscape",
+                "width": "custom",
                 "custom_width": 100,
-                "width_mobile": "fill",
+                "width_mobile": "custom",
                 "custom_width_mobile": 100,
                 "height": "fit",
                 "border": "none",
@@ -333,7 +333,7 @@
         "group_9ciRX7"
       ],
       "custom_css": [
-        ".custom-section-content{padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
