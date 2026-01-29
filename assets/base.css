@@ -4532,6 +4532,7 @@ text-component {
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"]{
   width:100%;
   /* overflow-x: visible; */
+  scroll-snap-type: unset !important;
   padding-left:calc(-720px + 50vw);
   padding-right: calc(-720px + 50vw);
 }

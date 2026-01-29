@@ -97,27 +97,12 @@
   }
 
   /**
-   * All blog posts are arranged in a three-column layout:
+   * First three hero cards have equal width in one row
    * +------------+------------+-------------+
    * |            |            |             |
    * |  (span 2)  |  (span 2)  |  (span 2)   |
    * |            |            |             |
    * +------------+------------+-------------+
-   */
-  .blog-post-item {
-    --blog-post-card-scale: 0.6;
-
-    grid-column: span 2;
-
-    @media screen and (max-width: 749px) {
-      --blog-post-card-scale: 0.5;
-
-      grid-column: span 6;
-    }
-  }
-
-  /**
-   * First three hero cards have equal width in one row
    */
   .blog-post-item:nth-child(1),
   .blog-post-item:nth-child(2),
@@ -130,6 +115,25 @@
       --blog-post-card-scale: 0.5;
 
       grid-column: span 6;
+    }
+  }
+
+  /**
+   * Non-hero posts (4th onwards) in a single vertical column
+   * Card size: 544px x 316px, centered
+   */
+  .blog-post-item:nth-child(n+4) {
+    --blog-post-card-scale: 0.6;
+
+    grid-column: span 6;
+    justify-self: center;
+    width: 544px;
+    height: 316px;
+
+    @media screen and (max-width: 749px) {
+      --blog-post-card-scale: 0.5;
+      width: 100%;
+      height: auto;
     }
   }
 
