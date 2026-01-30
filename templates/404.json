@@ -75,7 +75,8 @@
         "ai_gen_block_d0f1473_DBztKp"
       ],
       "custom_css": [
-        ".custom-section-content {padding: 0px;}"
+        ".custom-section-content {padding: 0px;}",
+        "@media screen and(min-width:768px){.logo_block{display:none; }}"
       ],
       "settings": {
         "content_direction": "column",
