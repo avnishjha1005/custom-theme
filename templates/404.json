@@ -12,137 +12,7 @@
     "main": {
       "type": "main-404",
       "blocks": {
-        "group_ccPtWf": {
-          "type": "group",
-          "name": "t:names.group",
-          "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "center",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "link": "",
-            "open_in_new_tab": false,
-            "placeholder": "",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "text_DEeqtr": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "button_L6qrPm": {
-              "type": "button",
-              "name": "t:names.button",
-              "settings": {
-                "label": "Continue shopping",
-                "link": "shopify://collections/all",
-                "open_in_new_tab": false,
-                "style_class": "button",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_DEeqtr",
-            "button_L6qrPm"
-          ]
-        },
-        "image_X4pnU3": {
-          "type": "image",
-          "name": "t:names.image",
-          "settings": {
-            "image": "shopify://shop_images/3c0609b199e9b9a1631fd64ad2501868830a3179.jpg",
-            "link": "",
-            "image_ratio": "landscape",
-            "width": "custom",
-            "custom_width": 100,
-            "width_mobile": "custom",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "group_ccPtWf",
-        "image_X4pnU3"
-      ],
-      "settings": {
-        "content_direction": "column",
-        "section_width": "full-width",
-        "section_height": "full-screen",
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 20,
-        "color_scheme": "",
-        "padding-block-start": 100,
-        "padding-block-end": 100
-      }
-    },
-    "17697796256e4e35b0": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_d0f1473_yFME8z": {
+        "ai_gen_block_d0f1473_DBztKp": {
           "type": "ai_gen_block_d0f1473",
           "settings": {
             "image": "shopify://shop_images/3c0609b199e9b9a1631fd64ad2501868830a3179.jpg",
@@ -179,10 +49,27 @@
         }
       },
       "block_order": [
-        "ai_gen_block_d0f1473_yFME8z"
+        "ai_gen_block_d0f1473_DBztKp"
       ],
       "custom_css": [
         ".custom-section-content{padding:0px;}"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "section_width": "full-width",
+        "section_height": "full-screen",
+        "horizontal_alignment_flex_direction_column": "center",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 20,
+        "color_scheme": "",
+        "padding-block-start": 100,
+        "padding-block-end": 100
+      }
+    },
+    "17697796256e4e35b0": {
+      "type": "_blocks",
+      "custom_css": [
+        ".custom-section-content {padding: 0px;}"
       ],
       "settings": {
         "content_direction": "column",
