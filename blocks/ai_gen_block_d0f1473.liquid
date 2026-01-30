@@ -117,8 +117,7 @@
   .ai-fullscreen-hero__button-{{ ai_gen_id }} {
     display: inline-block;
     padding: 14px 32px;
-    text-decoration: none;
-    border-radius: {{ block.settings.button_border_radius }}px;
+    text-decoration: underline;
     font-weight: 500;
     transition: all 0.3s ease;
     border: none;
@@ -141,7 +140,7 @@
   .ai-fullscreen-hero__button-secondary-{{ ai_gen_id }} {
     background-color: {{ block.settings.button_secondary_bg }};
     color: {{ block.settings.button_secondary_text }};
-    border: 1px solid {{ block.settings.button_secondary_border }};
+    
   }
 
   .ai-fullscreen-hero__button-secondary-{{ ai_gen_id }}:hover {
