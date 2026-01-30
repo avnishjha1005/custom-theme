@@ -12,6 +12,28 @@
     "main": {
       "type": "main-404",
       "blocks": {
+        "logo_pFck9K": {
+          "type": "logo",
+          "name": "t:names.logo",
+          "settings": {
+            "logo_type": "default",
+            "inverse": false,
+            "font": "heading",
+            "vertical_align": "center",
+            "unit": "pixel",
+            "percent_width": 100,
+            "pixel_height": 24,
+            "custom_mobile_size": false,
+            "unit_mobile": "percent",
+            "percent_width_mobile": 100,
+            "pixel_height_mobile": 120,
+            "padding-block-start": 12,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "ai_gen_block_d0f1473_DBztKp": {
           "type": "ai_gen_block_d0f1473",
           "settings": {
@@ -49,6 +71,7 @@
         }
       },
       "block_order": [
+        "logo_pFck9K",
         "ai_gen_block_d0f1473_DBztKp"
       ],
       "custom_css": [
