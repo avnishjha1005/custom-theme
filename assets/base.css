@@ -2478,6 +2478,8 @@ product-price.text-block:is(.h1, .h2, .h3, .h4, .h5, .h6) > *:not(.tax-note) {
     border-inline-start: 1.5px solid rgb(var(--color-foreground-rgb) / var(--opacity-25));
     font-style: italic;
     font-weight: 500;
+    max-width:500px;
+    line-height:1;
   }
 
   .rte-table-wrapper {
