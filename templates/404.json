@@ -27,7 +27,7 @@
             "unit_mobile": "percent",
             "percent_width_mobile": 100,
             "pixel_height_mobile": 120,
-            "padding-block-start": 12,
+            "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
@@ -76,7 +76,7 @@
       ],
       "custom_css": [
         ".custom-section-content {padding: 0px;}",
-        "@media screen and(min-width:768px) {.logo_block {display: none; }}"
+        "@media screen and (min-width: 768px) {.logo-block {display: none; }}"
       ],
       "settings": {
         "content_direction": "column",
