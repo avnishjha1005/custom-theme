@@ -656,7 +656,7 @@
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
-        "section_width": "page-width",
+        "section_width": "full-width",
         "section_height": "custom",
         "section_height_custom": 20,
         "color_scheme": "",
@@ -863,7 +863,7 @@
       "custom_css": [
         "a {font-weight: bold; text-decoration: underline;}",
         ".image-block__image {object-position: center center;}",
-        ".section--page-width {max-width: 1440px; margin: auto;}",
+        ".section--full-width {max-width: 1440px; margin: auto;}",
         ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}",
         ".section-resource-list__content {display: none;}"
       ],
@@ -886,7 +886,7 @@
         "max_collections": 4,
         "icons_style": "arrow",
         "icons_shape": "none",
-        "section_width": "page-width",
+        "section_width": "full-width",
         "gap": 32,
         "color_scheme": "scheme-6",
         "padding-block-start": 35,

@@ -1,17 +1,26 @@
 
+
 {%- assign block_settings = block.settings -%}
-{%- assign slideshow_images = article.metafields.custom.slideshow_images.value -%}
 
 {% capture title %}
   {% content_for 'block', id: 'heading', type: '_heading', text: article.title %}
 {% endcapture %}
 
+{% capture details %}
+  {% content_for 'block',
+    id: 'blog-post-details',
+    type: '_blog-post-info-text',
+    alignment: block_settings.alignment,
+    article: article
+  %}
+{% endcapture %}
+
 {% capture description %}
-  {% content_for 'block', id: 'content', type: '_blog-post-description', article: article, show_read_more: false %}
+  {% content_for 'block', id: 'content', type: '_blog-post-description', article: article, show_read_more: true %}
 {% endcapture %}
 
 <div
-  class="blog-post-card-hero"
+  class="blog-post-card"
   style="--text-align: {{ block_settings.alignment }}"
 >
   {%- if slideshow_images.size > 0 -%}
@@ -81,9 +90,7 @@
 
     <div class="blog-post-card-hero__title">{{ title }}</div>
 
-    <div class="blog-post-card-hero__excerpt">
-      {{ description }}
-    </div>
+    {{ details }}
 
     <span class="blog-post-card-hero__read-more">
       READ MORE
