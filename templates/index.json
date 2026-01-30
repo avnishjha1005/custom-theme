@@ -578,7 +578,8 @@
       "custom_css": [
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
         ".wishlist-button {margin-top: 10px;}",
-        "slideshow-controls {z-index: 1;}"
+        "slideshow-controls {z-index: 1;}",
+        " .section--full-width{padding-inline:16px; }"
       ],
       "name": "Featured collection",
       "settings": {
@@ -642,7 +643,7 @@
         "ai_gen_block_4ce6f26_pz87jb"
       ],
       "custom_css": [
-        ".section--page-width {max-width: 1440px; margin: auto;}",
+        ".section--full-width {max-width: 1440px; margin: auto; padding-inline: 16px;}",
         ".custom-section-content {padding: 0px !important;}",
         "@media screen and (min-width: 750px) {.ai-quote-section__content-wrapper-abs9mvhpiswndkzu0eaigenblock4ce6f26pz87jb {width: 60%; background-color: #692c23; order: 2; }}"
       ],
@@ -863,7 +864,7 @@
       "custom_css": [
         "a {font-weight: bold; text-decoration: underline;}",
         ".image-block__image {object-position: center center;}",
-        ".section--full-width {max-width: 1440px; margin: auto;}",
+        ".section--full-width {max-width: 1440px; margin: auto; padding-inline: 16px;}",
         ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}",
         ".section-resource-list__content {display: none;}"
       ],
