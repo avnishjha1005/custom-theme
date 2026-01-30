@@ -693,6 +693,9 @@ export class Slideshow extends Component {
 
       if (!newSlide) throw new Error(`Slide not found at index ${newIndex}`);
 
+      // Re-enable snap before scrolling so the slide snaps into place properly
+      this.#scroll.snap = true;
+
       this.#scroll.to(newSlide);
 
       this.removeAttribute('dragging');
@@ -718,7 +721,6 @@ export class Slideshow extends Component {
       // It's possible that the user started dragging again before the scroll finished
       if (this.#dragging) return;
 
-      this.#scroll.snap = true;
       this.resume();
     };
 
@@ -847,8 +849,8 @@ export class Slideshow extends Component {
     const { slides } = this;
     if (!slides || !slides.length) return 0;
 
-    const visibleSlides = this.visiblesSlides;
-    if(!visibleSlides)return;
+    const visibleSlides = this.visibleSlides;
+    if (!visibleSlides) return 0;
     // Batch writes to the DOM
     scheduler.schedule(() => {
       // Update aria-hidden based on visibility

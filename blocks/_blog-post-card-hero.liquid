@@ -98,10 +98,23 @@
   </a>
 </div>
 
+{% schema %}
+{
+  "name": "blog post card hero",
+  "settings": [
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "default": "left"
+    }
+  ]
+}
+{% endschema %}
 {% stylesheet %}
 .blog-post-card__image{
   height: unset !important;
-}
+  }
   .blog-post-card-hero {
     position: relative;
     text-align: var(--text-align);
@@ -250,18 +263,3 @@
     background-color: #fff;
   }
 {% endstylesheet %}
-
-
-{% schema %}
-{
-  "name": "blog post card hero",
-  "settings": [
-    {
-      "type": "text_alignment",
-      "id": "alignment",
-      "label": "t:settings.alignment",
-      "default": "left"
-    }
-  ]
-}
-{% endschema %}
