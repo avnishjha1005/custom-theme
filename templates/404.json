@@ -20,7 +20,7 @@
             "show_overlay": true,
             "overlay_color": "#000000",
             "overlay_opacity": 30,
-            "heading": "404 Error! Page not Found",
+            "heading": "404 Error! \n<br> Page not Found",
             "heading_font": "marcellus_n4",
             "heading_size": 36,
             "heading_color": "#ffffff",
