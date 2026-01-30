@@ -3313,11 +3313,6 @@ slideshow-slide {
   &[hidden]:not([reveal]) {
     display: none;
   }
-
-  /* Make the last visible slide snap to end instead of start to prevent trailing space */
-  &:last-of-type:not([hidden]) {
-    scroll-snap-align: end;
-  }
 }
 
 slideshow-slide.product-media-container--tallest {
@@ -4061,11 +4056,6 @@ slideshow-arrows .slideshow-control.slideshow-control--style-none {
   min-width: 0;
 }
 
-/* Make the last slide snap to end to prevent trailing space */
-.resource-list__carousel .resource-list__slide:last-of-type {
-  scroll-snap-align: end;
-}
-
 /* Base styles */
 .group-block,
 .group-block-content {
@@ -4546,7 +4536,7 @@ text-component {
   /* overflow-x: visible; */
   scroll-snap-type: unset !important;
   padding-left:calc(-720px + 50vw);
-  padding-right: calc(-720px + 50vw);
+  padding-right: calc(-720px + 50vw + 16px);
 }
 
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"] > .swiper-wrapper{
