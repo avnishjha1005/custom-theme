@@ -1,0 +1,291 @@
+{%- liquid
+    assign blockid = block.id
+
+    assign accent_color = block.settings.accent_color
+    assign border_radius = block.settings.border_radius
+    assign horizontal_lockup = block.settings.horizontal_lockup
+    assign flex_direction = block.settings.flex_direction
+    assign center_align =  block.settings.center_align
+    assign flex_columns = block.settings.flex_columns
+    assign gap = block.settings.gap
+    assign subheadings = 'first,second,third' | split: ','
+
+    assign dev_mode = block.settings.dev_mode
+    assign custom_class = block.settings.custom_class
+    assign css_code = block.settings.css_code
+  -%}
+  
+{%- style -%}
+  {% if center_align %}
+    #{{ blockid }} {
+      justify-content: center;
+    }
+  {% endif %}
+  #{{ blockid }} .flexi-block-wrapper {
+    flex-direction: {% if flex_direction %}column{% else %}row{% endif %}; 
+    gap: {{ gap }}px;
+  }
+  @media only screen and (max-width: 768px) {
+    #{{ blockid }} .flexi-block-wrapper {
+          flex-direction: {% if flex_columns %}row{% else %}column{% endif %};
+          gap: {{ gap }}px;
+      }
+  }
+  #{{ blockid }} .flexi-icon-component {
+      {% if horizontal_lockup %}
+          flex-direction: row;
+          gap: 8px;
+      {% else %}
+          flex-direction: column;
+          gap: 4px;
+      {% endif %}
+      {% if center_align %}
+          max-width: 300px;
+      {% elsif flex_direction %}
+          max-width: 540px;
+      {% else %}
+          max-width: 300px;
+      {% endif %}       
+      background-color: {{ accent_color }};
+      {% if accent_color != blank and accent_color != 'rgba(0,0,0,0)' %}
+          padding: 12px;
+      {% endif %}
+      border-radius: {{ border_radius }}px;
+  }
+  #{{ blockid }} .flexi-icon-holder {
+      width: {% if horizontal_lockup %}{{ block.settings.icon_size }}px{% else %}100%{% endif %};
+      height: {{ block.settings.icon_size }}px;
+  }
+  #{{ blockid }} .flexi-icon-holder img,
+  #{{ blockid }} .flexi-icon-holder svg {
+      {% if horizontal_lockup %}
+          text-align: left;
+          width: fit-content;
+      {% elsif center_align %}
+          text-align: center;
+          width: 100%;
+      {% else %}
+          text-align: left;
+          width: fit-content;
+      {% endif %}
+      height: {{ block.settings.icon_size }}px;
+      object-fit: contain;
+  }
+  #{{ blockid }} .flexi-icon-text-wrapper {
+      {% if horizontal_lockup %}
+          text-align: left;
+      {% elsif center_align %}
+          text-align: center;
+      {% else %}
+          text-align: left;
+      {% endif %}
+      width: 100%;
+  }
+  #{{ blockid }} .flexi-icon-text {
+      font-size: {{ block.settings.title_font_size }}px;    
+      margin: 0px;
+      line-height: normal;
+      width: 100%;
+      color: {{ block.settings.font_color }};
+  }
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+  
+  <div id="{{ blockid }}" class="flexi-brand-benefits-block flexi-library u-flex u-w-fit u-h-full {% if dev_mode %}{{ custom_class }}{% endif %}" {{ block.shopify_attributes }}>
+      <div class="flexi-block-wrapper u-flex">
+          {% for subheading in subheadings %}
+              {% assign subheading_text_key = subheading | append: '_subheading' %}
+              {% assign image_key = subheading | append: '_image' %}
+              {% assign subheading_text = block.settings[subheading_text_key] %}
+              {% assign image = block.settings[image_key] %}
+              
+              {% if subheading_text != blank %}
+                  <div class="flexi-icon-component u-flex u-items-center">
+                      <div class="flexi-icon-holder">
+                          {% if image != blank %}
+                              {{ image | image_url: width: 600 | image_tag: widths: '200, 300, 400' }}
+                          {% else %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                  <path fill-rule="evenodd" clip-rule="evenodd" d="M21 6.285L9.84 19.018L3 13L4.319 11.51L9.66 16.196L19.525 5L21 6.285Z" fill="black"/>
+                                </svg>
+                          {% endif %}
+                      </div>
+                      <div class="flexi-icon-text-wrapper">
+                          <p class="flexi-icon-text">{{ subheading_text }}</p>
+                      </div>
+                  </div>
+              {% endif %}
+          {% endfor %}
+      </div>
+  </div>
+  
+  {% schema %}
+  {
+    "name": "Brand benefits",
+    "tag": null,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Placement"
+      },
+      {
+        "type": "checkbox",
+        "id": "horizontal_lockup",
+        "label": "Place icon left",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "center_align",
+        "label": "Center align icon",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "flex_direction",
+        "label": "Desktop Only: Stack",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "flex_columns",
+        "label": "Mobile Only: Three column layout",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "First icon"
+      },
+      {
+        "type": "image_picker",
+        "id": "first_image",
+        "label": "Upload icon",
+        "info": "Upload your own icon as an image."
+      },
+      {
+        "type": "inline_richtext",
+        "id": "first_subheading",
+        "label": "First text",
+        "default": "30-day money back guarantee"
+      },
+      {
+        "type": "header",
+        "content": "Second icon"
+      },
+      {
+        "type": "image_picker",
+        "id": "second_image",
+        "label": "Upload icon",
+        "info": "Upload your own icon as an image."
+      },
+      {
+        "type": "inline_richtext",
+        "id": "second_subheading",
+        "label": "Second text",
+        "default": "Free shipping on all orders"
+      },
+      {
+        "type": "header",
+        "content": "Third icon"
+      },
+      {
+        "type": "image_picker",
+        "id": "third_image",
+        "label": "Upload icon",
+        "info": "Upload your own icon as an image."
+      },
+      {
+        "type": "inline_richtext",
+        "id": "third_subheading",
+        "label": "Third text"
+      },
+      {
+        "type": "header",
+        "content": "Basic settings"
+      },
+      {
+        "type": "range",
+        "id": "title_font_size",
+        "min": 12,
+        "max": 16,
+        "step": 1,
+        "unit": "px",
+        "label": "Font size",
+        "default": 14
+      }, 
+      {
+        "type": "color",
+        "id": "font_color",
+        "label": "Font color",
+        "default": "#000000"
+      },
+      {
+        "type": "range",
+        "id": "icon_size",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Icon size",
+        "default": 20
+      },
+      {
+        "type": "range",
+        "id": "gap",
+        "min": 1,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Gap",
+        "default": 8
+      },
+      {
+        "type": "color",
+        "id": "accent_color",
+        "label": "Background color"
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Border radius",
+        "default": 4
+      },
+      {
+        "type": "header",
+        "content": "Advanced"
+      },
+      {
+          "type": "checkbox",
+          "id": "dev_mode",
+          "label": "Enable developer mode",
+          "default": false,
+          "info": "Enable dev mode for additional styling and debugging features.",
+      },
+      {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom classes",
+          "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+          "visible_if": "{{ block.settings.dev_mode == true }}"
+      },
+      {
+          "type": "liquid",
+          "id": "css_code",
+          "label": "Custom CSS",
+          "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+          "visible_if": "{{ block.settings.dev_mode == true }}"
+      }
+    ],
+    "presets": [
+        {
+          "name": "Brand benefits",
+          "category": "Flexi Advanced Blocks"
+        }
+    ]
+  }
+  {% endschema %}
+  

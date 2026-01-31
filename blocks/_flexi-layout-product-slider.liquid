@@ -1,0 +1,642 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign bg_color = block.settings.bg_color
+  assign border_color = block.settings.border_color
+  assign has_bg = false
+  assign has_border = false
+  if bg_color != blank and bg_color != 'rgba(0,0,0,0)'
+    assign has_bg = true
+  endif
+  if border_color != blank and border_color != 'rgba(0,0,0,0)'
+    assign has_border = true
+  endif
+
+  assign spacing = block.settings.spacing
+  assign padding_top = block.settings.padding_top
+  assign padding_bottom = block.settings.padding_bottom
+  assign padding_left = block.settings.padding_left
+  assign padding_right = block.settings.padding_right
+  assign dt_margin = block.settings.dt_margin
+  assign mb_margin = block.settings.mb_margin
+  assign dt_padding = block.settings.dt_padding
+  assign mb_padding = block.settings.mb_padding
+
+  assign text = block.settings.text
+  assign show_heading = block.settings.show_heading
+  assign font_size = block.settings.font_size
+  assign mb_font_size = block.settings.mb_font_size
+  assign font_color = block.settings.font_color
+  assign arrows_position = block.settings.arrows_position
+  assign arrows_visibility = block.settings.arrows_visibility
+  assign arrow_bg_color = block.settings.arrow_bg_color
+  assign arrow = block.settings.arrow
+  assign liquid = block.settings.liquid
+  assign advanced_liquid = block.settings.advanced_liquid
+
+  assign desktop_slides = block.settings.desktop_slides
+  assign tablet_slides = block.settings.tablet_slides
+  assign mobile_slides = block.settings.mobile_slides
+  assign loop = block.settings.loop
+  assign draggable = block.settings.draggable
+  assign auto_play = block.settings.auto_play
+  assign auto_play_duration = block.settings.auto_play_duration
+  assign auto_play_pause = block.settings.auto_play_pause
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  {% if has_bg %}
+  #{{ blockid }} {
+    background-color: {{ bg_color }};
+    border-radius: var(--flexi-card-border-radius);
+  }
+  {% endif %}
+  {% if has_border  %}
+    #{{ blockid }} {
+      border: 1px solid {{ border_color }};
+      border-radius: var(--flexi-card-border-radius);
+    }
+  {% endif %}
+  {% if spacing == 'basic' %}
+  #{{ blockid }} {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_left }}px;
+      padding-right: {{ padding_right }}px;
+  }
+  {% elsif spacing == 'custom' %}
+  @media only screen and (min-width: 768px) {
+      #{{ blockid }} {
+          padding: {{ dt_padding }};
+          margin: {{ dt_margin }};
+     }
+  }
+  @media only screen and (max-width: 767.8px) {
+      #{{ blockid }} {
+          padding: {{ mb_padding }};
+          margin: {{ mb_margin }};
+      }
+  }
+  {% endif %}
+
+  #{{ blockid }} .flexi-heading {
+      color: {{ font_color }};
+      font-size: {{ font_size }}px;
+  }
+  @media only screen and (max-width: 768px) {
+      #{{ blockid }} .flexi-heading {
+          font-size: {{ mb_font_size }}px;
+      }
+  }
+
+  /* SLIDER CSS */
+  .blaze-track-wrapper {
+      overflow: hidden;
+  }
+  .flexi-blaze-slider {
+      --slides-to-show: {{ desktop_slides }};
+  }
+  @media only screen and (max-width: 900px) {
+      .flexi-blaze-slider {
+          --slides-to-show: {{ tablet_slides }};
+      }
+  }
+  @media only screen and (max-width: 500px) {
+      .flexi-blaze-slider {
+          --slides-to-show: {{ mobile_slides }};
+      }
+  }
+
+  /* ADJUSTABLE ARROWS */
+  .adjustable-arrow-controls {
+      display: flex;
+      width: 100%;
+      gap: 8px;
+  }
+  {% if arrows_position == 'middle' %}
+      #{{ blockid }} .adjustable-arrow-controls {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          justify-content: space-between;
+          padding: 0px 24px;
+          opacity: .9;
+      }
+  {% endif %}
+  {% if arrows_position == 'bottom-left'  %}
+      #{{ blockid }} .adjustable-arrow-controls {
+          padding-top: 1.5rem;
+          justify-content: start;
+      }
+  {% endif %}
+  {% if arrows_position == 'bottom-center' %}
+      #{{ blockid }} .adjustable-arrow-controls {
+          padding-top: 1.5rem;
+          justify-content: center;
+      }
+  {% endif %}
+  {% if arrows_position == 'bottom-right' %}
+      #{{ blockid }} .adjustable-arrow-controls {
+          padding-top: 1.5rem;
+          justify-content: end;
+      }
+  {% endif %}
+
+  #{{ blockid }} .blaze-next,
+  #{{ blockid }} .blaze-prev {
+      background-color: {{ arrow_bg_color }};
+  }
+
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+<div
+  id="{{ blockid }}"
+  class="flexi-layout-product-slider u-grid u-grid-cols-1 u-justify-center u-items-center u-h-full u-w-full {% if dev_mode %}{{ custom_class }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <div
+    class="flexi-blaze-slider blaze-slider"
+    data-blaze-desktop="{{ desktop_slides }}"
+    data-blaze-tablet="{{ tablet_slides }}"
+    data-blaze-mobile="{{ mobile_slides }}"
+    data-blaze-loop="{{ loop }}"
+    data-blaze-draggable="{{ draggable }}"
+    data-blaze-autoplay="{{ auto_play }}"
+    data-blaze-autoplay-duration="{{ auto_play_duration }}"
+    data-blaze-autoplay-pause="{{ auto_play_pause }}"
+  >
+    <div class="blaze-container">
+      {% if show_heading == true %}
+        <div class="blaze-wrapper-top">
+          <div class="flexi-slider-blocks">
+            {% if text != blank %}
+              <h3 class="flexi-heading u-m-0 u-p-0">
+                {{ text }}
+              </h3>
+            {% endif %}
+            {% if liquid != blank and advanced_liquid == true %}
+              <span class="flexi-description p-default">
+                {{ liquid }}
+              </span>
+            {% endif %}
+          </div>
+          {% if arrows_position == 'top' %}
+            <div class="arrow-controls {{ arrows_visibility }}">
+              <button class="blaze-prev">
+                {{ arrow }}
+              </button>
+              <button class="blaze-next">
+                {{ arrow }}
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <div class="blaze-track-wrapper">
+        <div class="blaze-track">
+          {% content_for 'blocks' %}
+        </div>
+      </div>
+
+      {% if arrows_position != 'top' %}
+        <div class="adjustable-arrow-controls {{ arrows_visibility }}">
+          <button class="blaze-prev">
+            {{ arrow }}
+          </button>
+          <button class="blaze-next">
+            {{ arrow }}
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function () {
+    function initBlazeSliders(target = document) {
+      target.querySelectorAll('.flexi-blaze-slider').forEach((el) => {
+        const parent = el.parentNode;
+        const clone = el.cloneNode(true);
+        parent.replaceChild(clone, el);
+
+        const desktopSlides = parseFloat(clone.dataset.blazeDesktop) || 4;
+        const tabletSlides = parseFloat(clone.dataset.blazeTablet) || 2.2;
+        const mobileSlides = parseFloat(clone.dataset.blazeMobile) || 1.2;
+        const loop = clone.dataset.blazeLoop === 'true';
+        const draggable = clone.dataset.blazeDraggable === 'true';
+        const autoplay = clone.dataset.blazeAutoplay === 'true';
+        const autoplayDuration = parseFloat(clone.dataset.blazeAutoplayDuration) || 2000;
+        const autoplayPause = clone.dataset.blazeAutoplayPause === 'true';
+
+        new BlazeSlider(clone, {
+          all: {
+            slidesToShow: desktopSlides,
+            slidesToScroll: 1,
+            transitionDuration: 200,
+            loop: loop,
+            draggable: draggable,
+            autoplayInterval: autoplayDuration,
+            enableAutoplay: autoplay,
+            stopAutoplayOnInteraction: autoplayPause,
+            prevArrow: el.querySelector('.blaze-prev'),
+            nextArrow: el.querySelector('.blaze-next'),
+          },
+          '(max-width: 900px)': {
+            slidesToShow: tabletSlides,
+          },
+          '(max-width: 500px)': {
+            slidesToShow: mobileSlides,
+          },
+        });
+      });
+    }
+
+    initBlazeSliders();
+
+    document.addEventListener('shopify:section:load', function (event) {
+      initBlazeSliders(event.target);
+    });
+
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Layout (product slider)",
+  "tag": null,
+  "blocks": [{ "type": "_flexi-group-product" }],
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_heading",
+      "label": "Show heading",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Text",
+      "default": "Product carousel",
+      "visible_if": "{{ block.settings.show_heading == true }}"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Font color",
+      "default": "#000000",
+      "visible_if": "{{ block.settings.show_heading == true }}"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 32,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_heading == true }}"
+    },
+    {
+      "type": "range",
+      "id": "mb_font_size",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size (mobile)",
+      "default": 24,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_heading == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "advanced_liquid",
+      "label": "Add code below heading",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_heading == true }}"
+    },
+    {
+      "type": "liquid",
+      "id": "liquid",
+      "label": "Liquid below heading (advanced)",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_heading == true and block.settings.advanced_liquid == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Slider",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_slider_settings",
+      "label": "Show slider settings",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "desktop_slides",
+      "label": "Desktop slides",
+      "default": "5.5",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_slider_settings == true }}"
+    },
+    {
+      "type": "text",
+      "id": "tablet_slides",
+      "label": "Tablet slides",
+      "default": "2.2",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_slider_settings == true }}"
+    },
+    {
+      "type": "text",
+      "id": "mobile_slides",
+      "label": "Mobile slides",
+      "default": "1.2",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_slider_settings == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Loop",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_slider_settings == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_play",
+      "label": "Enable auto play",
+      "info": "Loop needs to be set to be enabled.",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_slider_settings == true }}"
+    },
+    {
+      "type": "text",
+      "id": "auto_play_duration",
+      "label": "Auto play duration (milliseconds)",
+      "default": "2000",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_slider_settings == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_play_pause",
+      "label": "Pause auto play on interaction",
+      "info": "On interaction auto play will pause.",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_slider_settings == true }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "draggable",
+      "label": "Draggable",
+      "default": true,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_slider_settings == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Arrows",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrow_settings",
+      "label": "Show arrow settings",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "select",
+      "id": "arrows_position",
+      "label": "Arrows position",
+      "default": "top",
+      "options": [
+        {
+          "value": "top",
+          "label": "Top"
+        },
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom-left",
+          "label": "Bottom left"
+        },
+        {
+          "value": "bottom-center",
+          "label": "Bottom center"
+        },
+        {
+          "value": "bottom-right",
+          "label": "Bottom right"
+        }
+      ],
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_arrow_settings == true }}"
+    },
+    {
+      "type": "html",
+      "id": "arrow",
+      "label": "Arrow",
+      "default": "<svg width=\"16\" height=\"16\" viewbox=\"0 0 16 16\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M6 1L12.2929 7.29289C12.6834 7.68342 12.6834 8.31658 12.2929 8.70711L6 15\" stroke=\"#787878\" stroke-width=\"1.5\" stroke-linecap=\"round\"></path>\n</svg>",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_arrow_settings == true }}"
+    },
+    {
+      "type": "color",
+      "id": "arrow_bg_color",
+      "label": "Arrow background color",
+      "default": "#f5f5f5",
+      "visible_if": "{{ block.settings.show_arrow_settings == true }}"
+    },
+    {
+      "type": "select",
+      "id": "arrows_visibility",
+      "label": "Arrows visible on",
+      "default": "u-hide-mobile",
+      "options": [
+        {
+          "value": "u-hide-none",
+          "label": "All Screens"
+        },
+        {
+          "value": "u-hide-all",
+          "label": "No Screens"
+        },
+        {
+          "value": "u-hide-desktop",
+          "label": "Mobile"
+        },
+        {
+          "value": "u-hide-mobile",
+          "label": "Desktop"
+        }
+      ],
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.show_arrow_settings == true }}"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 6,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 6,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "60px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "30px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_margin",
+      "label": "Margin (desktop)",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "mb_margin",
+      "label": "Margin (mobile)",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Layout (product slider)",
+      "category": "Flexi Layouts"
+    }
+  ]
+}
+{% endschema %}

@@ -184,6 +184,58 @@
         "settings": {
           "version": "main"
         }
+      },
+      "14352861888369326317": {
+        "type": "shopify://apps/flexi-theme-sections-library/blocks/app-embed-buttons/5a4df4d6-1efe-4f41-80b3-12e6a6deefaf",
+        "disabled": false,
+        "settings": {
+          "primary-color": "#FAFAFA",
+          "primary-bg-color": "#171307",
+          "primary-hover-color": "#FFFFFF",
+          "primary-bg-hover-color": "#000000",
+          "secondary-color": "#000000",
+          "secondary-bg-color": "#E4E4E4",
+          "secondary-hover-color": "#121212",
+          "secondary-bg-hover-color": "#CECECE",
+          "btn-font-size-small": 14,
+          "btn-font-size": 16,
+          "btn-font-size-large": 18,
+          "btn-size-small": "6px 20px",
+          "btn-size-default": "12px 32px",
+          "btn-size-large": "16px 36px",
+          "btn-border-radius": 4,
+          "btn-border-thickness": 1
+        }
+      },
+      "3378203618662001038": {
+        "type": "shopify://apps/flexi-theme-sections-library/blocks/app-embed-theme/5a4df4d6-1efe-4f41-80b3-12e6a6deefaf",
+        "disabled": false,
+        "settings": {
+          "card-border-radius": 4,
+          "img-border-radius": 4,
+          "link-color": "#000000",
+          "enable-alpinejs": true,
+          "css": ""
+        }
+      },
+      "2529250193914914422": {
+        "type": "shopify://apps/flexi-theme-sections-library/blocks/app-embed-typography/5a4df4d6-1efe-4f41-80b3-12e6a6deefaf",
+        "disabled": false,
+        "settings": {
+          "h1": 64,
+          "h1-mb": 42,
+          "h2": 42,
+          "h2-mb": 36,
+          "h3": 32,
+          "h3-mb": 24,
+          "h4": 24,
+          "h4-mb": 20,
+          "h5": 18,
+          "h5-mb": 16,
+          "p-small": 14,
+          "p-default": 16,
+          "p-large": 18
+        }
       }
     },
     "color_schemes": {
@@ -874,7 +926,7 @@
     "custom_css": [
       "shopify-section-template--20837767905494__section {}",
       "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
-      "footer{margin-bottom:-1px}"
+      "footer {margin-bottom: -1px;}"
     ]
   }
 }

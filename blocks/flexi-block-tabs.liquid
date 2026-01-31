@@ -1,0 +1,318 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+  assign equal_width = block.settings.equal_width
+  assign description_space = block.settings.description_space
+
+  assign heading_1 = block.settings.heading_1
+  assign description_1 = block.settings.description_1
+  assign heading_2 = block.settings.heading_2
+  assign description_2 = block.settings.description_2
+  assign heading_3 = block.settings.heading_3
+  assign description_3 = block.settings.description_3
+
+  assign active_underline_color = block.settings.active_underline_color
+  assign title_color = block.settings.title_color
+  assign description_color = block.settings.description_color
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+{% if spacing == 'basic' %}
+#{{ blockid }} {
+    padding-top: {{ padding_top }}px;
+    padding-bottom: {{ padding_bottom }}px;
+    padding-left: {{ padding_left }}px;
+    padding-right: {{ padding_right }}px;
+}
+{% elsif spacing == 'custom' %}
+@media only screen and (min-width: 768px) {
+    #{{ blockid }} {
+        padding: {{ dt_padding }};
+    }
+}
+@media only screen and (max-width: 767.8px) {
+    #{{ blockid }} {
+        padding: {{ mb_padding }};
+    }
+}
+{% endif %}
+#{{ blockid }} .not-active {
+  border-bottom-color: {{ active_underline_color | color_modify: 'alpha', 0.1 }} !important;
+}
+#{{ blockid }} .active {
+  border-bottom-color: {{ active_underline_color }} !important;
+}
+#{{ blockid }} .flexi-tab-title {
+  color: {{ title_color }};
+}
+#{{ blockid }} .flexi-tabs-text p,
+#{{ blockid }} .flexi-tabs-text h1,
+#{{ blockid }} .flexi-tabs-text h2,
+#{{ blockid }} .flexi-tabs-text h3,
+#{{ blockid }} .flexi-tabs-text h4,
+#{{ blockid }} .flexi-tabs-text h5,
+#{{ blockid }} .flexi-tabs-text ul,
+#{{ blockid }} .flexi-tabs-text ol,
+#{{ blockid }} .flexi-tabs-text li {
+  color: {{ description_color }};
+}
+#{{ blockid }} .flexi-description {
+    margin: {{ description_space }}px 0px 0px 0px;
+}
+{% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+<div id="{{ blockid }}" class="flexi-tabs-block flexi-library u-flex u-w-fit {% if equal_width %}u-w-full{% endif %} u-h-full {% if dev_mode %}{{ custom_class }}{% endif %}" {{ block.shopify_attributes }}>
+  <div class="flexi-block-wrapper u-w-full">
+
+      <div x-cloak x-data="{ selectedTab: '{% if heading_1 != blank  %}tab-1{% elsif heading_2 != blank %}tab-2{% elsif heading_3 != blank %}tab-3{% endif %}' }" class="u-w-full">
+          <div @keydown.right.prevent="$focus.wrap().next()" @keydown.left.prevent="$focus.wrap().previous()" class="u-flex u-items-end u-overflow-x-auto" role="tablist" aria-label="tab options">
+              {% if heading_1 != blank  %}
+                  <button @click="selectedTab = 'tab-1'" :aria-selected="selectedTab === 'tab-1'" :tabindex="selectedTab === 'tab-1' ? '0' : '-1'" :class="selectedTab === 'tab-1' ? 'active' : 'not-active'" class="flexi-tab-title {% if equal_width %}u-w-full{% endif %} u-cursor-pointer u-h-min u-px-5 u-py-2 u-text-sm u-border-b-2 u-border-solid" type="button" role="tab" aria-controls="tabpanelOne">{{ heading_1 }}</button>
+              {% endif %}
+              {% if heading_2 != blank  %}
+                  <button @click="selectedTab = 'tab-2'" :aria-selected="selectedTab === 'tab-2'" :tabindex="selectedTab === 'tab-2' ? '0' : '-1'" :class="selectedTab === 'tab-2' ? 'active' : 'not-active'" class="flexi-tab-title {% if equal_width %}u-w-full{% endif %} u-cursor-pointer u-h-min u-px-5 u-py-2 u-text-sm u-border-b-2 u-border-solid" type="button" role="tab" aria-controls="tabpanelTwo" >{{ heading_2 }}</button>
+              {% endif %}
+              {% if heading_3 != blank  %}
+                  <button @click="selectedTab = 'tab-3'" :aria-selected="selectedTab === 'tab-3'" :tabindex="selectedTab === 'tab-3' ? '0' : '-1'" :class="selectedTab === 'tab-3' ? 'active' : 'not-active'" class="flexi-tab-title {% if equal_width %}u-w-full{% endif %} u-cursor-pointer u-h-min u-px-5 u-py-2 u-text-sm u-border-b-2 u-border-solid" type="button" role="tab" aria-controls="tabpanelThree" >{{ heading_3 }}</button>
+              {% endif %}
+          </div>
+          <div>
+              {% if heading_1 != blank or description_1 != blank %}
+                  <div x-show="selectedTab === 'tab-1'" id="tabpanelOne" role="tabpanel" aria-label="tab-1" class="flexi-tabs-text">
+                      <div class="flexi-description p-default">
+                        {{ description_1 }}
+                      </div>
+                  </div>
+              {% endif %}
+              {% if heading_2 != blank or description_2 != blank %}
+                  <div x-show="selectedTab === 'tab-2'" id="tabpanelTwo" role="tabpanel" aria-label="tab-2" class="flexi-tabs-text">
+                    <div class="flexi-description p-default">
+                      {{ description_2 }}
+                    </div>
+                  </div>
+              {% endif %}
+              {% if heading_3 != blank or description_3 != blank %}
+                  <div x-show="selectedTab === 'tab-3'" id="tabpanelThree" role="tabpanel" aria-label="tab-3" class="flexi-tabs-text">
+                    <div class="flexi-description p-default">
+                      {{ description_3 }}
+                    </div>
+                  </div>
+              {% endif %}
+          </div>
+      </div>
+
+  </div>
+</div>
+  
+  {% schema %}
+  {
+    "name": "Tabs",
+    "tag": null,
+    "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading_1",
+          "label": "First Tab",
+          "default": "Tab 1"
+        },
+        {
+          "type": "richtext",
+          "id": "description_1",
+          "label": "First Description",
+          "default": "<p>First Description</p>"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading_2",
+          "label": "Second Tab",
+          "default": "Tab 2"
+        },
+        {
+          "type": "richtext",
+          "id": "description_2",
+          "label": "Second Description",
+          "default": "<p>Second Description</p>"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading_3",
+          "label": "Third Tab",
+          "default": "Tab 3"
+        },
+        {
+          "type": "richtext",
+          "id": "description_3",
+          "label": "Third Description",
+          "default": "<p>Third Description</p>"
+        },
+        {
+          "type": "header",
+          "content": "Colors"
+        },
+        {
+            "type": "color",
+            "id": "active_underline_color",
+            "label": "Active underline color",
+            "default": "#000000"
+        },
+        {
+            "type": "color",
+            "id": "title_color",
+            "label": "Tab text color",
+            "default": "#000000"
+        },
+        {
+            "type": "color",
+            "id": "description_color",
+            "label": "Description text color",
+            "default": "#000000"
+        },
+        {
+            "type": "header",
+            "content": "Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "equal_width",
+            "label": "Full width",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "description_space",
+            "min": 2,
+            "max": 24,
+            "step": 2,
+            "unit": "px",
+            "label": "Space above description",
+            "default": 8
+        },
+        {
+            "type": "header",
+            "content": "Spacing"
+        },
+        {
+            "type": "select",
+            "id": "spacing",
+            "label": "Padding",
+            "options": [
+            {
+                "value": "basic",
+                "label": "Basic"
+            },
+            {
+                "value": "custom",
+                "label": "Custom"
+            }
+            ],
+            "default": "basic"
+        },
+        {
+            "type": "range",
+            "id": "padding_top",
+            "min": 0,
+            "max": 96,
+            "step": 2,
+            "unit": "px",
+            "label": "Top padding",
+            "default": 0,
+            "visible_if": "{{ block.settings.spacing == 'basic' }}"
+        },
+        {
+            "type": "range",
+            "id": "padding_bottom",
+            "min": 0,
+            "max": 96,
+            "step": 2,
+            "unit": "px",
+            "label": "Bottom padding",
+            "default": 0,
+            "visible_if": "{{ block.settings.spacing == 'basic' }}"
+        },
+        {
+            "type": "range",
+            "id": "padding_left",
+            "min": 0,
+            "max": 96,
+            "step": 2,
+            "unit": "px",
+            "label": "Left padding",
+            "default": 0,
+            "visible_if": "{{ block.settings.spacing == 'basic' }}"
+        },
+        {
+            "type": "range",
+            "id": "padding_right",
+            "min": 0,
+            "max": 96,
+            "step": 2,
+            "unit": "px",
+            "label": "Right padding",
+            "default": 0,
+            "visible_if": "{{ block.settings.spacing == 'basic' }}"
+        },
+        {
+            "type": "text",
+            "id": "dt_padding",
+            "label": "Padding (desktop)",
+            "default": "0px 0px",
+            "visible_if": "{{ block.settings.spacing == 'custom' }}",
+            "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+        },
+        {
+            "type": "text",
+            "id": "mb_padding",
+            "label": "Padding (mobile)",
+            "default": "0px 0px",
+            "visible_if": "{{ block.settings.spacing == 'custom' }}"
+        },
+        {
+            "type": "header",
+            "content": "Advanced"
+        },
+        {
+            "type": "checkbox",
+            "id": "dev_mode",
+            "label": "Enable developer mode",
+            "default": false,
+            "info": "Enable dev mode for additional styling and debugging features.",
+        },
+        {
+            "type": "text",
+            "id": "custom_class",
+            "label": "Custom classes",
+            "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+            "visible_if": "{{ block.settings.dev_mode == true }}"
+        },
+        {
+            "type": "liquid",
+            "id": "css_code",
+            "label": "Custom CSS",
+            "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+            "visible_if": "{{ block.settings.dev_mode == true }}"
+        }
+    ],
+    "presets": [
+        {
+          "name": "Tabs",
+          "category": "Flexi Advanced Blocks"
+        }
+    ]
+  }
+  {% endschema %}
+  

@@ -1,0 +1,380 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+
+  assign flex_direction = block.settings.flex_direction
+  assign full_width = block.settings.full_width
+  assign text_align = block.settings.text_align
+  assign gap = block.settings.gap
+  assign btn_size = block.settings.btn_size
+  assign buttons = 'first,second' | split: ','
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  {% if spacing == 'basic' %}
+  #{{ blockid }} {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_left }}px;
+      padding-right: {{ padding_right }}px;
+  }
+  {% elsif spacing == 'custom' %}
+  @media only screen and (min-width: 768px) {
+      #{{ blockid }} {
+          padding: {{ dt_padding }};
+      }
+  }
+  @media only screen and (max-width: 767.8px) {
+      #{{ blockid }} {
+          padding: {{ mb_padding }};
+      }
+  }
+  {% endif %}
+  #{{ blockid }} {
+    justify-content: {{ text_align }};
+  }
+  #{{ blockid }} .flexi-block-wrapper {
+    flex-direction: {% if flex_direction %}column{% else %}row{% endif %};
+    gap: {{ gap }}px;
+    {% if full_width %}width: 100%;{% endif %}
+  }
+  {% if full_width %}
+    #{{ blockid }} .flexi-btn-component {
+        width: 100%;
+    }
+  {% endif %}
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+<div
+  id="{{ blockid }}"
+  class="flexi-buttons-block flexi-library u-flex u-w-full u-h-full {% if dev_mode %}{{ custom_class }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <div class="flexi-block-wrapper u-flex u-items-center">
+    {% for btn in buttons %}
+      {% assign btn_text_key = btn | append: '_button_text' %}
+      {% assign btn_url_key = btn | append: '_button_url' %}
+      {% assign btn_style_key = btn | prepend: 'btn_' | append: '_style' %}
+      {% assign btn_text = block.settings[btn_text_key] %}
+      {% assign btn_url = block.settings[btn_url_key] %}
+      {% assign btn_style = block.settings[btn_style_key] %}
+
+      {% if btn_text != blank %}
+        <div class="flexi-btn-component u-w-full">
+          <a
+            href="{{ btn_url }}"
+            class="flexi-button flexi-btn--{{ btn_style }} flexi-btn--{{ btn_size }} hover-underline-animation u-block u-relative u-whitespace-nowrap u-text-center"
+            role="button"
+          >
+            {{ btn_text }}
+          </a>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Button",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "First button"
+    },
+    {
+      "type": "text",
+      "id": "first_button_text",
+      "label": "First button text",
+      "default": "View More"
+    },
+    {
+      "type": "url",
+      "id": "first_button_url",
+      "label": "First button link"
+    },
+    {
+      "type": "select",
+      "id": "btn_first_style",
+      "label": "First button style",
+      "default": "primary",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "light-outline",
+          "label": "Dark Outline"
+        },
+        {
+          "value": "dark-outline",
+          "label": "Light Outline"
+        },
+        {
+          "value": "underline",
+          "label": "Dark Underline"
+        },
+        {
+          "value": "light-underline",
+          "label": "Light Underline"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Second button"
+    },
+    {
+      "type": "text",
+      "id": "second_button_text",
+      "label": "Second button text"
+    },
+    {
+      "type": "url",
+      "id": "second_button_url",
+      "label": "Second button link"
+    },
+    {
+      "type": "select",
+      "id": "btn_second_style",
+      "label": "Second button style",
+      "default": "primary",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "light-outline",
+          "label": "Dark Outline"
+        },
+        {
+          "value": "dark-outline",
+          "label": "Light Outline"
+        },
+        {
+          "value": "underline",
+          "label": "Dark Underline"
+        },
+        {
+          "value": "light-underline",
+          "label": "Light Underline"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Size"
+    },
+    {
+      "type": "select",
+      "id": "btn_size",
+      "label": "Buttons size",
+      "default": "sm",
+      "options": [
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "md",
+          "label": "Medium"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "text_alignment",
+      "id": "text_align",
+      "label": "Alignment",
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_width",
+      "label": "Force full width",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "flex_direction",
+      "label": "Stack buttons",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Gap",
+      "default": 12,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Button",
+      "category": "Flexi Blocks"
+    }
+  ]
+}
+{% endschema %}

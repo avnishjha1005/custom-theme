@@ -1,0 +1,263 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign bg_color = block.settings.bg_color
+  assign border_color = block.settings.border_color
+  assign has_bg = false
+  assign has_border = false
+  if bg_color != blank and bg_color != 'rgba(0,0,0,0)'
+    assign has_bg = true
+  endif
+  if border_color != blank and border_color != 'rgba(0,0,0,0)'
+    assign has_border = true
+  endif
+
+  assign spacing = block.settings.spacing
+  assign padding_top = block.settings.padding_top
+  assign padding_bottom = block.settings.padding_bottom
+  assign padding_left = block.settings.padding_left
+  assign padding_right = block.settings.padding_right
+  assign dt_margin = block.settings.dt_margin
+  assign mb_margin = block.settings.mb_margin
+  assign dt_padding = block.settings.dt_padding
+  assign mb_padding = block.settings.mb_padding
+
+  assign height = block.settings.height
+  assign spacing = block.settings.spacing
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  {% if has_bg %}
+  #{{ blockid }} {
+    background-color: {{ bg_color }};
+    border-radius: var(--flexi-card-border-radius);
+  }
+  {% endif %}
+  {% if has_border  %}
+    #{{ blockid }} {
+      border: 1px solid {{ border_color }};
+      border-radius: var(--flexi-card-border-radius);
+    }
+  {% endif %}
+  {% if spacing == 'basic' %}
+  #{{ blockid }} {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_left }}px;
+      padding-right: {{ padding_right }}px;
+  }
+  {% elsif spacing == 'custom' %}
+  @media only screen and (min-width: 768px) {
+      #{{ blockid }} {
+          padding: {{ dt_padding }};
+          margin: {{ dt_margin }};
+     }
+  }
+  @media only screen and (max-width: 767.8px) {
+      #{{ blockid }} {
+          padding: {{ mb_padding }};
+          margin: {{ mb_margin }};
+      }
+  }
+  {% endif %}
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+<div
+  id="{{ blockid }}"
+  class="flexi-layout u-grid u-grid-cols-1 u-justify-center u-items-center {% if height == 'hug' %}u-h-auto{% elsif height == 'full' %}u-h-full{% endif %} u-w-full {% if dev_mode %}{{ custom_class }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+{
+  "name": "Layout",
+  "tag": null,
+  "blocks": [{ "type": "_flexi-group" }],
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color"
+    },
+    {
+      "type": "header",
+      "content": "Height",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "label": "Height",
+      "options": [
+        {
+          "value": "hug",
+          "label": "Hug"
+        },
+        {
+          "value": "full",
+          "label": "Full"
+        }
+      ],
+      "default": "hug",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 6,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 6,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "60px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "30px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_margin",
+      "label": "Margin (desktop)",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "mb_margin",
+      "label": "Margin (mobile)",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Layout",
+      "category": "Flexi Layouts"
+    }
+  ]
+}
+{% endschema %}

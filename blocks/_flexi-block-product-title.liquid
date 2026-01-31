@@ -1,0 +1,311 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+
+  assign product = block.settings.product
+  assign link = product.url
+
+  assign text = block.settings.text
+  assign font_size = block.settings.font_size
+  assign mb_font_size = block.settings.mb_font_size
+  assign font_color = block.settings.font_color
+  assign type = block.settings.type
+  assign text_align = block.settings.text_align
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  {% if spacing == 'basic' %}
+  #{{ blockid }} {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_left }}px;
+      padding-right: {{ padding_right }}px;
+  }
+  {% elsif spacing == 'custom' %}
+  @media only screen and (min-width: 768px) {
+      #{{ blockid }} {
+          padding: {{ dt_padding }};
+      }
+  }
+  @media only screen and (max-width: 767.8px) {
+      #{{ blockid }} {
+          padding: {{ mb_padding }};
+      }
+  }
+  {% endif %}
+  #{{ blockid }} .flexi-block-wrapper {
+      text-align: {{ text_align }};
+  }
+  #{{ blockid }} .flexi-text,
+  #{{ blockid }} .flexi-text a {
+      color: {{ font_color }};
+  }
+  @media only screen and (min-width: 768px) {
+    #{{ blockid }} .flexi-text,
+    #{{ blockid }} .flexi-text a {
+        font-size: {{ font_size }}px;
+    }
+  }
+  @media (max-width: 768px) {
+    #{{ blockid }} .flexi-text,
+    #{{ blockid }} .flexi-text a {
+          font-size: {{ mb_font_size }}px;
+      }
+  }
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+<div
+  id="{{ blockid }}"
+  class="flexi-product-title-block flexi-library u-flex u-w-fit u-h-full {% if dev_mode %}{{ custom_class }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <div class="flexi-block-wrapper u-w-full">
+    <{{ type }} class="flexi-text u-m-0 u-p-0">
+      <a class="flexi-product-title-link" href="{{ link }}">
+        {% if text != blank %}
+          {{ text }}
+        {% else %}
+          {{ product.title | default: 'Example product title' }}
+        {% endif %}
+      </a>
+    </{{ type }}>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Product title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Text"
+    },
+    {
+      "type": "text_alignment",
+      "id": "text_align",
+      "label": "Text alignment",
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Font color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 24,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "mb_font_size",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size (mobile)",
+      "default": 20,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "select",
+      "id": "type",
+      "label": "Type",
+      "info": "Adjust to improve SEO",
+      "default": "h3",
+      "options": [
+        {
+          "value": "h1",
+          "label": "h1"
+        },
+        {
+          "value": "h2",
+          "label": "h2"
+        },
+        {
+          "value": "h3",
+          "label": "h3"
+        },
+        {
+          "value": "h4",
+          "label": "h4"
+        },
+        {
+          "value": "p",
+          "label": "p"
+        }
+      ],
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product title",
+      "category": "Flexi Blocks",
+      "settings": {
+        "product": "{{ closest.product }}"
+      }
+    }
+  ]
+}
+{% endschema %}
