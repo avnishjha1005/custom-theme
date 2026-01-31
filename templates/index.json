@@ -61,7 +61,7 @@
           "type": "slide",
           "source": "{{ metaobjects.hero_image[\"new-image\"] }}",
           "settings": {
-            "image": "{{ metaobjects.hero_image[\"new-image\"].image.value }}",
+            "image": "{{ metaobjects.hero_image[\"the-editorial\"].image.value }}",
             "heading": "<h4>{{ metaobjects.hero_image[\"new-image\"].hero_text.value }}</h4>",
             "text_max_width": 300,
             "button_link": "",
