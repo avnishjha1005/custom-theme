@@ -1,0 +1,638 @@
+{% comment %}
+  FEATURES:
+  - Basic Functionality (Adds product ot the cart using /cart/add.js)
+  - Error Handling (Displays error messages when adding to the cart fails)
+  - Cart Integration (Updates the cart notification or drawer if present - falls back to redirecting to the cart page)
+  - Submit Button State (Disables and updates the button text during submission - resets the button state after the process completes)
+
+  -------------------------------------------------------------------------------------------------
+   on:variant:change
+  -------------------------------------------------------------------------------------------------
+   Fires whenever a variant is selected (e.g. Product page, Quickbuy, Featured Product etc).
+
+   How to listen:
+   document.addEventListener('on:variant:change', (event) => {
+    // your code here
+   });
+
+   Returned data:
+    - variant: the selected variant object
+{% endcomment %}
+
+{%- liquid
+  assign blockid = block.id
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+
+  assign product = block.settings.product
+  assign selected_variant = product.selected_or_first_available_variant
+  assign variants_bold_titles = block.settings.variants_bold_titles
+  assign variant_style = block.settings.variant_style
+  assign quantity_visibility = block.settings.quantity_visibility
+  assign show_price = block.settings.show_price
+  assign atc_text = block.settings.atc_text
+  assign btn_atc_style = block.settings.btn_atc_style
+
+  if product == blank
+    assign price = 2495
+  else
+    assign price = selected_variant.price
+  endif
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  {% if spacing == 'basic' %}
+  #{{ blockid }} {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_left }}px;
+      padding-right: {{ padding_right }}px;
+  }
+  {% elsif spacing == 'custom' %}
+  @media only screen and (min-width: 768px) {
+      #{{ blockid }} {
+          padding: {{ dt_padding }};
+      }
+  }
+  @media only screen and (max-width: 767.8px) {
+      #{{ blockid }} {
+          padding: {{ mb_padding }};
+      }
+  }
+  {% endif %}
+  {% if variant_style == 'fill' %}
+      #{{ blockid }} .flexi-variants-input:checked + .flexi-label-text {
+          color: #FFF;
+          border-color: #000;
+          background-color: #000;
+      }
+  {% endif %}
+  #{{ blockid }} .flexi-atc-btn {
+      font-size: 14px;
+      {% case btn_atc_style %}
+          {% when 'primary' %}
+              color: var(--flexi-primary-color);
+              background-color: var(--flexi-primary-bg-color);
+              border: solid var(--flexi-border-width) var(--flexi-primary-bg-color);
+              border-radius: var(--flexi-border-radius);
+          {% when 'secondary' %}
+              color: var(--flexi-secondary-color);
+              background-color: var(--flexi-secondary-bg-color);
+              border: solid var(--flexi-border-width) var(--flexi-secondary-bg-color);
+              border-radius: var(--flexi-border-radius);
+          {% when 'light-outline' %}
+              background-color: transparent;
+              color: var(--flexi-black-color);
+              border: solid var(--flexi-border-width) var(--flexi-black-color);
+              border-radius: var(--flexi-border-radius);
+          {% when 'dark-outline' %}
+              background-color: transparent;
+              color: var(--flexi-white-color);
+              border: solid var(--flexi-border-width) var(--flexi-white-color);
+              border-radius: var(--flexi-border-radius);
+      {% endcase %}
+  }
+  #{{ blockid }} .flexi-atc-btn:hover {
+      {% case btn_atc_style %}
+          {% when 'primary' %}
+              color: var(--flexi-primary-hover-color);
+              background-color: var(--flexi-primary-bg-hover-color);
+              border-color: var(--flexi-primary-bg-hover-color);
+          {% when 'secondary' %}
+              color: var(--flexi-secondary-hover-color);
+              background-color: var(--flexi-secondary-bg-hover-color);
+              border-color: var(--flexi-secondary-bg-hover-color);
+          {% when 'light-outline' %}
+              opacity: 0.75;
+          {% when 'dark-outline' %}
+              opacity: 0.75;
+      {% endcase %}
+  }
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+<div
+  id="{{ blockid }}"
+  data-product-id="{{ product.id }}"
+  class="flexi-product-form-block flexi-library {% if dev_mode %}{{ custom_class }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  {% if product != blank %}
+    {% unless product.has_only_default_variant %}
+      <div class="flexi-variants-wrapper">
+        <form-selector>
+          {%- for option in product.options_with_values -%}
+            <fieldset class="flexi-fieldset">
+              <legend class="flexi-legend">
+                <span class="flexi-legend-text {% if variants_bold_titles %}u-font-bold{% endif %}">
+                  {{- option.name -}}
+                </span>
+              </legend>
+              <div class="flexi-variants-wrapper">
+                {%- for value in option.values -%}
+                  {% assign variant_in_stock = false %}
+                  {% for variant in product.variants %}
+                    {% if variant.available and variant.options contains value %}
+                      {% assign variant_in_stock = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+                  <label
+                    class="flexi-variants-label {% unless variant_in_stock %}flexi-variant-disabled{% endunless %}"
+                    for="{{ blockid }}-{{ option.position }}-{{ forloop.index0 }}"
+                  >
+                    <input
+                      class="flexi-variants-input"
+                      type="radio"
+                      id="{{ blockid }}-{{ option.position }}-{{ forloop.index0 }}"
+                      name="{{ option.name }}-{{ blockid }}"
+                      value="{{ value | escape }}"
+                      {% unless variant_in_stock %}
+                        disabled
+                      {% endunless %}
+                      {% if option.selected_value == value %}
+                        checked
+                      {% endif %}
+                    >
+                    <span class="flexi-label-text flexi-label-text--{{ blockid }}">{{ value }}</span>
+                  </label>
+                {%- endfor -%}
+              </div>
+            </fieldset>
+          {%- endfor -%}
+          <script type="application/json">
+            {{ product.variants | json }}
+          </script>
+        </form-selector>
+      </div>
+    {% endunless %}
+  {% endif %}
+
+  <div class="flexi-atc-wrapper">
+    <input id="flexi-variant-id" type="hidden" name="id" value="{{ selected_variant.id }}">
+
+    {% if quantity_visibility == 'show' %}
+      <form-quantity>
+        <div
+          x-data="
+            {
+                currentVal: 1,
+                minVal: 1,
+                maxVal: 10,
+                decimalPoints: 0,
+                incrementAmount: 1,
+                validateValue() {
+                    this.currentVal = Math.max(this.minVal, Math.min(this.maxVal, this.currentVal));
+                }
+            }
+          "
+          class="flexi-form-quantity-wrapper"
+        >
+          <div class="flexi-quantity">
+            <button
+              @click.prevent="currentVal = Math.max(minVal, currentVal - incrementAmount)"
+              class="flexi-subtract"
+              aria-label="subtract"
+            >
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="13" y="7.16504" width="1" height="11" transform="rotate(90 13 7.16504)" fill="#151515"/>
+              </svg>
+            </button>
+            <input
+              x-model.number="currentVal"
+              id="counterInput"
+              type="number"
+              name="quantity"
+              min="1"
+              max="10"
+              step="1"
+              @input="validateValue()"
+              @blur="validateValue()"
+              class="flexi-quantity-input flexi-no-spinner"
+            >
+            <button
+              @click.prevent="currentVal = Math.min(maxVal, currentVal + incrementAmount)"
+              class="flexi-add"
+              aria-label="add"
+            >
+              <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="7" y="2.16504" width="1" height="11" fill="#151515"/>
+                <rect x="13" y="7.16504" width="1" height="11" transform="rotate(90 13 7.16504)" fill="#151515"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </form-quantity>
+    {% else %}
+      <input type="number" name="quantity" value="1" hidden>
+    {% endif %}
+
+    <form-button>
+      <button
+        type="submit"
+        name="add"
+        class="flexi-button flexi-atc-btn"
+        {% if selected_variant.available == false %}
+          disabled
+        {% endif %}
+      >
+        <div class="flexi-loading-spinner hidden"></div>
+        <div class="flexi-atc-content">
+          {% if selected_variant.available == false %}
+            Sold out
+          {% else %}
+            {% if show_price %}
+              <span class="flexi-atc-compare-at-price" style="text-decoration: line-through;">
+                {% if selected_variant.compare_at_price > price %}
+                  {{ selected_variant.compare_at_price | money }}
+                {% endif %}
+              </span>
+              <span class="flexi-atc-price">{{ price | money }}</span> -
+            {% endif %}
+            <span class="flexi-atc-text">{{ atc_text }}</span>
+          {% endif %}
+        </div>
+      </button>
+    </form-button>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    class FormSelector extends HTMLElement {
+      constructor() {
+        super();
+        this.productFormBlock = this.closest('.flexi-product-form-block');
+        this.productId = this.productFormBlock.dataset.productId;
+        this.fieldsets = Array.from(this.querySelectorAll('fieldset'));
+        this.variantInput = this.closest('.flexi-product-form-block').querySelector('input[name="id"]');
+        this.priceDisplay = this.closest('.flexi-product-form-block').querySelector('.flexi-atc-price');
+        this.compareAtPriceDisplay =
+          this.closest('.flexi-product-form-block').querySelector('.flexi-atc-compare-at-price');
+        this.priceBlockDisplay = document.querySelector(`[flexi-data-price-id="flexi-product-${this.productId}"]`);
+        this.compareAtPriceBlockDisplay = document.querySelector(
+          `[flexi-data-price-id="flexi-product-${this.productId}-compare"]`
+        );
+        this.addToCartButton = this.closest('.flexi-product-form-block').querySelector('[type="submit"]');
+        this.currencyCode = document.documentElement.getAttribute('data-currency') || 'USD';
+        this.addEventListener('change', this.onVariantChange.bind(this));
+      }
+
+      onVariantChange() {
+        this.getSelectedOptions();
+        this.getSelectedVariant();
+        this.updatePrice();
+        this.updateBlockPrice();
+        this.updateVariantID();
+
+        this.dispatchEvent(
+          new CustomEvent('on:variant:change', {
+            bubbles: true,
+            detail: { variant: this.currentVariant },
+          })
+        );
+      }
+
+      getSelectedOptions() {
+        this.variantoptions = this.fieldsets.map((fieldset) => {
+          const selected = Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked);
+          return selected ? selected.value : null;
+        });
+      }
+
+      getVariantJSON() {
+        this.variantData = this.variantData || JSON.parse(this.querySelector('[type="application/json"]').textContent);
+        return this.variantData;
+      }
+
+      getSelectedVariant() {
+        const variants = this.getVariantJSON();
+        this.currentVariant = variants.find((variant) => {
+          return variant.options.every((option, index) => option === this.variantoptions[index]);
+        });
+      }
+
+      updatePrice() {
+        if (this.currentVariant && this.priceDisplay) {
+          const priceInCents = this.currentVariant.price;
+          const compareAtPriceInCents = this.currentVariant.compare_at_price;
+
+          const formattedPrice = this.formatPrice(priceInCents, this.currencyCode);
+          const formattedCompareAtPrice = this.formatPrice(compareAtPriceInCents, this.currencyCode);
+
+          // Update the regular price
+          this.priceDisplay.textContent = formattedPrice;
+
+          // Update the comparison price
+          if (compareAtPriceInCents > priceInCents && this.compareAtPriceDisplay) {
+            this.compareAtPriceDisplay.textContent = formattedCompareAtPrice;
+            this.compareAtPriceDisplay.style.display = 'inline';
+          } else if (this.compareAtPriceDisplay) {
+            this.compareAtPriceDisplay.style.display = 'none';
+          }
+        }
+      }
+
+      updateBlockPrice() {
+        if (this.currentVariant && this.priceBlockDisplay) {
+          const priceInCents = this.currentVariant.price;
+          const compareAtPriceInCents = this.currentVariant.compare_at_price;
+
+          const formattedPrice = this.formatPrice(priceInCents, this.currencyCode);
+          const formattedCompareAtPrice = this.formatPrice(compareAtPriceInCents, this.currencyCode);
+
+          // Update the regular price
+          this.priceBlockDisplay.textContent = formattedPrice;
+
+          // Update the comparison price
+          if (compareAtPriceInCents > priceInCents && this.compareAtPriceBlockDisplay) {
+            this.compareAtPriceBlockDisplay.textContent = formattedCompareAtPrice;
+            this.compareAtPriceBlockDisplay.style.display = 'inline';
+          } else if (this.compareAtPriceBlockDisplay) {
+            this.compareAtPriceBlockDisplay.style.display = 'none';
+          }
+        }
+      }
+
+      formatPrice(priceInCents, currency) {
+        const priceInDollars = priceInCents / 100;
+
+        if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+          return Shopify.formatMoney(priceInCents, window.Shopify.theme.moneyFormat || '${{amount}}');
+        }
+
+        return new Intl.NumberFormat(navigator.language, {
+          style: 'currency',
+          currency: currency,
+        }).format(priceInDollars);
+      }
+
+      updateVariantID() {
+        if (this.currentVariant) {
+          this.variantInput.value = this.currentVariant.id;
+          console.log(`Updated Variant ID to: ${this.currentVariant.id}`);
+        }
+      }
+    }
+
+    customElements.define('form-selector', FormSelector);
+
+    // document.addEventListener('on:variant:change', (event) => {
+    //   console.log('Variant changed:', event.detail.variant);
+    // });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product form",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Variants",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "variants_bold_titles",
+      "label": "Bold variant titles",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "select",
+      "id": "variant_style",
+      "label": "Variant style",
+      "default": "fill",
+      "options": [
+        {
+          "value": "fill",
+          "label": "Fill"
+        },
+        {
+          "value": "outline",
+          "label": "Outline"
+        }
+      ],
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Quantity"
+    },
+    {
+      "type": "select",
+      "id": "quantity_visibility",
+      "label": "Quantity visibility",
+      "default": "hide",
+      "options": [
+        {
+          "value": "hide",
+          "label": "Hide"
+        },
+        {
+          "value": "show",
+          "label": "Show"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Add to cart button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "atc_text",
+      "label": "Add To Cart Text",
+      "default": "Add To Cart"
+    },
+    {
+      "type": "select",
+      "id": "btn_atc_style",
+      "label": "Button style",
+      "default": "primary",
+      "options": [
+        {
+          "value": "primary",
+          "label": "Primary"
+        },
+        {
+          "value": "secondary",
+          "label": "Secondary"
+        },
+        {
+          "value": "light-outline",
+          "label": "Light Outline"
+        },
+        {
+          "value": "dark-outline",
+          "label": "Dark Outline"
+        }
+      ],
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product form",
+      "category": "Flexi Blocks",
+      "settings": {
+        "product": "{{ closest.product }}"
+      }
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,563 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+
+  assign bg_color = block.settings.bg_color
+  assign border_color = block.settings.border_color
+  assign has_bg = false
+  assign has_border = false
+  if bg_color != blank and bg_color != 'rgba(0,0,0,0)'
+    assign has_bg = true
+  endif
+  if border_color != blank and border_color != 'rgba(0,0,0,0)'
+    assign has_border = true
+  endif
+
+  assign product = block.settings.product
+  assign unique_id = 'flexi-' | append: section.id
+  assign form_id = unique_id | append: '-product-form'
+  assign link = product.url
+
+  assign align_items = block.settings.align_items
+  assign gap_type = block.settings.gap_type
+  assign gap = block.settings.gap
+
+  assign image = block.settings.image
+  assign size = block.settings.size
+  if section.index <= 3
+    assign loading_strategy = 'eager'
+    assign fetch_priority = 'high'
+  else
+    assign loading_strategy = 'lazy'
+    assign fetch_priority = 'auto'
+  endif
+  assign widths = '165, 360, 535, 750, 1070, 1500'
+  assign img_alt = image.alt | escape
+  assign image_space = block.settings.image_space
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  {% if has_bg %}
+  #{{ blockid }} {
+    background-color: {{ bg_color }};
+    border-radius: var(--flexi-card-border-radius);
+  }
+  {% endif %}
+  {% if has_border %}
+    #{{ blockid }} {
+      border: 1px solid {{ border_color }};
+      border-radius: var(--flexi-card-border-radius);
+    }
+  {% endif %}
+  {% if spacing == 'basic' %}
+    #{{ blockid }} .flexi-group-content {
+        padding-top: {{ padding_top }}px;
+        padding-bottom: {{ padding_bottom }}px;
+        padding-left: {{ padding_left }}px;
+        padding-right: {{ padding_right }}px;
+    }
+  {% elsif spacing == 'custom' %}
+    @media only screen and (min-width: 768px) {
+        #{{ blockid }} .flexi-group-content {
+            padding: {{ dt_padding }};
+        }
+    }
+    @media only screen and (max-width: 767.8px) {
+        #{{ blockid }} .flexi-group-content {
+            padding: {{ mb_padding }};
+        }
+    }
+  {% endif %}
+  #{{ blockid }} .flexi-group-wrapper {
+      gap: {% if gap_type == 'custom' %}{{ image_space }}{% elsif gap_type == 'basic' %}0.5rem{% endif %};
+  }
+  #{{ blockid }} .flexi-card-image {
+      {{ size }}
+  }
+  #{{ blockid }} .flexi-group-content {
+      display: flex;
+      flex-direction: column;
+      align-items: {{ align_items }};
+      gap: {% if gap_type == 'custom' %}{{ gap }}{% elsif gap_type == 'basic' %}0.5rem{% endif %};
+  }
+  {% if has_bg or has_border %}
+    #{{ blockid }} .flexi-card-image {
+      border-radius: var(--flexi-card-border-radius) var(--flexi-card-border-radius) 0px 0px;
+    }
+  {% else %}
+    #{{ blockid }} .flexi-card-image {
+      border-radius: var(--flexi-img-border-radius);
+    }
+  {% endif %}
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+{% capture image_content %}
+    {% if image != blank %}
+        {{ image |
+            image_url: width: 1080 |
+            image_tag:
+            widths: widths,
+            sizes: '(min-width: 1000px) 760px, (min-width: 800px) calc(100vw - 380px), (min-width: 400px) 298px, 78.75vw',
+            class: 'mb-size-fix u-w-full u-h-full u-object-cover',
+            loading: loading_strategy, 
+            fetchpriority: fetch_priority,
+            alt: img_alt
+        }}
+      {% elsif product.featured_image != blank %}
+        {{ product.featured_image |
+            image_url: width: 1080 |
+            image_tag:
+            widths: widths,
+            sizes: '(min-width: 1000px) 760px, (min-width: 800px) calc(100vw - 380px), (min-width: 400px) 298px, 78.75vw',
+            class: 'mb-size-fix u-w-full u-h-full u-object-cover',
+            loading: loading_strategy, 
+            fetchpriority: fetch_priority,
+            alt: img_alt
+        }}
+    {% else %}
+        <svg id="flexi-image-placeholder" width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="512" height="512" fill=""/>
+        </svg> 
+    {% endif %}
+{% endcapture %}
+
+<div
+  id="{{ blockid }}"
+  class="flexi-group-product flexi-group flexi-library u-inline-block u-w-full u-h-full {% if dev_mode %}{{ custom_class }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <div class="flexi-group-wrapper u-flex u-flex-col">
+    <div class="flexi-card-image u-w-full u-h-full u-overflow-hidden">
+      {% if link != blank %}
+        <a href="{{ link }}" class="u-block u-relative u-w-full u-h-full u-m-0 u-p-0">
+          {{ image_content }}
+        </a>
+      {% else %}
+        {{ image_content }}
+      {% endif %}
+    </div>
+    <product-form>
+      <form
+        method="post"
+        action="/cart/add"
+        class="product-form"
+        novalidate="novalidate"
+        id="product-form-{{ form_id }}"
+      >
+        <div class="flexi-group-content">
+          {% content_for 'blocks' %}
+        </div>
+      </form>
+    </product-form>
+  </div>
+</div>
+
+<script>
+  if (!customElements.get('product-form')) {
+    customElements.define(
+      'product-form',
+      class ProductForm extends HTMLElement {
+        constructor() {
+          super();
+
+          this.form = this.querySelector('form');
+          this.variantIdInput = this.form.querySelector('[name="id"]');
+          this.submitButton = this.querySelector('[type="submit"]');
+          this.submitButtonText = this.submitButton.querySelector('span');
+          this.spinner = this.querySelector('.flexi-loading-spinner');
+          this.cart = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+          this.quantityInput = this.querySelector('[name="quantity"]');
+
+          this.variantIdInput.disabled = false;
+
+          if (this.quantityInput) {
+            this.quantityInput.addEventListener('input', this.onQuantityChange.bind(this));
+          }
+
+          this.form.addEventListener('submit', this.onSubmitHandler.bind(this));
+        }
+
+        onQuantityChange(evt) {
+          evt.preventDefault();
+          const quantity = parseInt(evt.target.value, 10) || 1;
+          if (quantity < 1) {
+            this.quantityInput.value = 1;
+          }
+        }
+
+        onSubmitHandler(evt) {
+          evt.preventDefault();
+          if (this.submitButton.getAttribute('aria-disabled') === 'true') return;
+
+          this.toggleLoadingState(true);
+
+          const formData = new FormData(this.form);
+          const config = {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            body: formData,
+          };
+
+          if (this.cart) {
+            formData.append(
+              'sections',
+              this.cart.getSectionsToRender().map((section) => section.id)
+            );
+            formData.append('sections_url', window.location.pathname);
+            this.cart.setActiveElement(document.activeElement);
+          }
+
+          fetch('/cart/add.js', config)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.status) {
+                this.handleErrorMessage(data.description || 'An error occurred.');
+                this.toggleSubmitButton(true, 'Sold Out');
+                return;
+              }
+
+              if (this.cart) {
+                this.triggerCartNotification(data);
+              } else {
+                window.location = '/cart';
+              }
+            })
+            .catch((err) => console.error(err))
+            .finally(() => this.toggleLoadingState(false));
+        }
+
+        triggerCartNotification(cartData) {
+          if (this.cart.tagName.toLowerCase() === 'cart-notification') {
+            this.cart.renderContents(cartData);
+          } else if (this.cart.tagName.toLowerCase() === 'cart-drawer') {
+            this.cart.renderContents(cartData);
+            this.cart.classList.add('is-open');
+          }
+        }
+
+        toggleLoadingState(isLoading) {
+          if (isLoading) {
+            this.submitButton.setAttribute('aria-disabled', true);
+            this.submitButton.classList.add('loading');
+            if (this.spinner) {
+              this.spinner.classList.add('visible');
+            }
+            const atcContent = this.submitButton.querySelector('.flexi-atc-content');
+            if (atcContent) {
+              atcContent.classList.add('hidden');
+            }
+          } else {
+            this.submitButton.removeAttribute('aria-disabled');
+            this.submitButton.classList.remove('loading');
+            if (this.spinner) {
+              this.spinner.classList.remove('visible');
+            }
+            const atcContent = this.submitButton.querySelector('.flexi-atc-content');
+            if (atcContent) {
+              atcContent.classList.remove('hidden');
+            }
+          }
+        }
+
+        handleErrorMessage(errorMessage = '') {
+          const errorWrapper = this.querySelector('.product-form__error-message-wrapper');
+          const errorElement = this.querySelector('.product-form__error-message');
+          if (!errorWrapper || !errorElement) return;
+
+          if (errorMessage) {
+            errorWrapper.hidden = false;
+            errorElement.textContent = errorMessage;
+          } else {
+            errorWrapper.hidden = true;
+          }
+        }
+
+        toggleSubmitButton(disable, text) {
+          if (disable) {
+            this.submitButton.setAttribute('disabled', 'disabled');
+            if (text) this.submitButtonText.textContent = text;
+          } else {
+            this.submitButton.removeAttribute('disabled');
+            this.submitButtonText.textContent = 'Add to Cart';
+          }
+        }
+      }
+    );
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Group (product)",
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" },
+    { "type": "_flexi-block-product-title" },
+    { "type": "_flexi-block-product-price" },
+    { "type": "_flexi-block-product-form" }
+  ],
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "Product"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "size",
+      "label": "Image size",
+      "options": [
+        {
+          "value": "aspect-ratio: 4 / 3;",
+          "label": "4:3 Aspect Ratio"
+        },
+        {
+          "value": "aspect-ratio: 1 / 1;",
+          "label": "1:1 Aspect Ratio"
+        },
+        {
+          "value": "aspect-ratio: 3 / 4;",
+          "label": "3:4 Aspect Ratio"
+        },
+        {
+          "value": "aspect-ratio: 16 / 9;",
+          "label": "16:9 Aspect Ratio"
+        },
+        {
+          "value": "height: 100%;",
+          "label": "Auto"
+        }
+      ],
+      "default": "aspect-ratio: 1 / 1;"
+    },
+    {
+      "type": "header",
+      "content": "Layout",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "select",
+      "id": "gap_type",
+      "label": "Gap",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "image_space",
+      "label": "Gap below image",
+      "default": "12px",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.gap_type == 'custom' }}"
+    },
+    {
+      "type": "text",
+      "id": "gap",
+      "label": "Gap between blocks",
+      "default": "6px",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.gap_type == 'custom' }}"
+    },
+    {
+      "type": "select",
+      "id": "align_items",
+      "label": "Alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "end",
+          "label": "Right"
+        }
+      ],
+      "default": "start",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 6,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 6,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "60px 0px",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.spacing == 'custom' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "30px 0px",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.spacing == 'custom' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.dev_mode == true }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.dev_mode == true }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Group (product)",
+      "category": "Flexi Groups"
+    }
+  ]
+}
+{% endschema %}

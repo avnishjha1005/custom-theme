@@ -1,0 +1,365 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign width = block.settings.width
+  assign max_width = block.settings.max_width
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+
+  assign star_color = block.settings.star_color
+  assign star_rating = block.settings.star_rating
+  assign font_color = block.settings.font_color
+  assign font_size = block.settings.font_size
+  assign icon_size = block.settings.icon_size
+  assign review_url = block.settings.review_url
+  assign reviews_text = block.settings.reviews_text
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  #{{ blockid }} {
+    max-width: {% if width == 'fixed' %}{{ max_width }}px{% elsif width == 'full' %}100%{% elsif width == 'fit' %}fit-content{% endif %};
+  }
+  {% if spacing == 'basic' %}
+  #{{ blockid }} {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_left }}px;
+      padding-right: {{ padding_right }}px;
+  }
+  {% elsif spacing == 'custom' %}
+  @media only screen and (min-width: 768px) {
+      #{{ blockid }} {
+          padding: {{ dt_padding }};
+      }
+  }
+  @media only screen and (max-width: 767.8px) {
+      #{{ blockid }} {
+          padding: {{ mb_padding }};
+      }
+  }
+  {% endif %}
+  #{{ blockid }} .flexi-review-text {
+    color: {{ font_color }};
+    font-size: {{ font_size }}px;
+  }
+  #{{ blockid }} .flexi-rating-wrapper svg {
+    width: {{ icon_size }}px;
+  }
+  #{{ blockid }} .flexi-rating-wrapper .flexi-rating {
+    width: {{ star_rating }}%;
+  }
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+{% capture flexi_empty_star %}
+  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8.72313 0.770968L8.72317 0.771062L10.5542 5.17206L10.6714 5.45393L10.9757 5.47839L15.7277 5.86039L15.7283 5.86044C16.1169 5.89122 16.2763 6.37721 15.9785 6.63229L15.9785 6.63233L12.3585 9.73433L12.1266 9.933L12.1975 10.23L13.3035 14.867L13.3035 14.8671C13.3943 15.2476 12.9798 15.5482 12.6467 15.3444L12.6464 15.3443L8.57741 12.8593L8.31678 12.7001L8.05616 12.8593L3.98823 15.3443C3.98821 15.3443 3.98819 15.3443 3.98816 15.3443C3.65327 15.5487 3.23952 15.2469 3.33016 14.8671L3.33017 14.867L4.43617 10.23L4.50701 9.933L4.27516 9.73433L0.655155 6.63233L0.655109 6.63229C0.357786 6.37757 0.516168 5.89074 0.905898 5.85939L5.65876 5.4784L5.96322 5.454L6.08049 5.17197L7.91049 0.770972L7.91049 0.770968C8.06072 0.409677 8.57291 0.409677 8.72313 0.770968Z" stroke="{{ star_color }}"/>
+  </svg>
+{% endcapture %}
+
+{% capture flexi_full_star %}
+  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.18481 0.579C8.86381 -0.193 7.76981 -0.193 7.44881 0.579L5.61881 4.98L0.865811 5.361C0.0328114 5.428 -0.305189 6.468 0.329811 7.012L3.94981 10.114L2.84381 14.751C2.64981 15.564 3.53481 16.207 4.24881 15.771L8.31681 13.286L12.3858 15.771C13.0988 16.207 13.9838 15.564 13.7898 14.751L12.6838 10.114L16.3038 7.012C16.9388 6.468 16.6008 5.428 15.7678 5.362L11.0158 4.98L9.18481 0.579Z" fill="{{ star_color }}"/>
+  </svg>
+{% endcapture %}
+
+<div
+  id="{{ blockid }}"
+  class="flexi-reviews-block u-flex u-h-full u-w-full {% if dev_mode %}{{ custom_class }}{% endif %}"
+  {{ block.shopify_attributes }}
+>
+  <div class="flexi-block-wrapper u-flex u-gap-3 u-items-center u-w-full">
+    <div class="flexi-rating-wrapper u-relative u-align-middle u-inline-block">
+      <div class="flexi-star-empty u-align-middle u-leading-none">
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_empty_star }}
+        </div>
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_empty_star }}
+        </div>
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_empty_star }}
+        </div>
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_empty_star }}
+        </div>
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_empty_star }}
+        </div>
+      </div>
+      <div class="flexi-rating u-align-middle u-block u-absolute u-left-0 u-top-0 u-whitespace-nowrap u-overflow-hidden u-leading-none">
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_full_star }}
+        </div>
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_full_star }}
+        </div>
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_full_star }}
+        </div>
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_full_star }}
+        </div>
+        <div class="flexi-star-svg u-inline-block u-align-middle u-h-auto">
+          {{ flexi_full_star }}
+        </div>
+      </div>
+    </div>
+    {% if review_url != blank and reviews_text != blank %}
+      <a href="{{ review_url }}" class="flexi-review-text u-p-0 u-m-0 u-leading-none">
+        {{ reviews_text }}
+      </a>
+    {% elsif reviews_text != blank %}
+      <p class="flexi-review-text u-p-0 u-m-0 u-leading-none">{{ reviews_text }}</p>
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Review",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "Reviews"
+    },
+    {
+      "type": "range",
+      "id": "star_rating",
+      "min": 5,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Star rating",
+      "default": 92
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Icon size",
+      "default": 16
+    },
+    {
+      "type": "text",
+      "id": "reviews_text",
+      "label": "Text",
+      "default": "(4.9)"
+    },
+    {
+      "type": "url",
+      "id": "review_url",
+      "label": "Review URL"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "Star Color",
+      "default": "#000000"
+    },
+    {
+      "type": "header",
+      "content": "Width",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Block width",
+      "options": [
+        {
+          "value": "fit",
+          "label": "Fit"
+        },
+        {
+          "value": "fixed",
+          "label": "Fixed"
+        },
+        {
+          "value": "full",
+          "label": "Full"
+        }
+      ],
+      "default": "fit",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 24,
+      "max": 2400,
+      "step": 24,
+      "unit": "px",
+      "label": "Max width",
+      "default": 2400,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.width == 'fixed' }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews",
+      "category": "Flexi Blocks"
+    }
+  ]
+}
+{% endschema %}

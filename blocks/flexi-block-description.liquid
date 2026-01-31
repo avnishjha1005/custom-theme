@@ -1,0 +1,307 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign width = block.settings.width
+  assign max_width = block.settings.max_width
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+
+  assign description = block.settings.description
+  assign font_color = block.settings.font_color
+  assign font_size = block.settings.font_size
+  assign text_align = block.settings.text_align
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign block_class = block.settings.block_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  #{{ blockid }} {
+    max-width: {% if width == 'fixed' %}{{ max_width }}px{% elsif width == 'full' %}100%{% elsif width == 'fit' %}fit-content{% endif %};
+  }
+  {% if spacing == 'basic' %}
+  #{{ blockid }} {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_left }}px;
+      padding-right: {{ padding_right }}px;
+  }
+  {% elsif spacing == 'custom' %}
+  @media only screen and (min-width: 768px) {
+      #{{ blockid }} {
+          padding: {{ dt_padding }};
+      }
+  }
+  @media only screen and (max-width: 767.8px) {
+      #{{ blockid }} {
+          padding: {{ mb_padding }};
+      }
+  }
+  {% endif %}
+  #{{ blockid }} .flexi-block-wrapper {
+      text-align: {{ text_align }};
+  }
+  #{{ blockid }} .flexi-description,
+  #{{ blockid }} .flexi-description h1,
+  #{{ blockid }} .flexi-description h2,
+  #{{ blockid }} .flexi-description h3,
+  #{{ blockid }} .flexi-description h4,
+  #{{ blockid }} .flexi-description h5,
+  #{{ blockid }} .flexi-description h6,
+  #{{ blockid }} .flexi-description p,
+  #{{ blockid }} .flexi-description span,
+  #{{ blockid }} .flexi-description li {
+      color: {{ font_color }};
+  }
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+{% if description != blank %}
+  <div
+    id="{{ blockid }}"
+    class="flexi-description-block flexi-library u-flex u-w-full u-h-full {% if dev_mode %}{{ custom_class }}{% endif %}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="flexi-block-wrapper u-w-full">
+      <span class="{% if block_class != blank %}{{ block_class }}{% endif %} {{ font_size }}">
+        {{ description }}
+      </span>
+    </div>
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Description",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description text",
+      "default": "<p>This is a great place to highlight what makes your offer unique.</p>"
+    },
+    {
+      "type": "text_alignment",
+      "id": "text_align",
+      "label": "Text alignment",
+      "default": "left"
+    },
+    {
+      "type": "color",
+      "id": "font_color",
+      "label": "Font color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "font_size",
+      "label": "Font size",
+      "default": "p-default",
+      "options": [
+        {
+          "value": "p-small",
+          "label": "Small"
+        },
+        {
+          "value": "p-default",
+          "label": "Default"
+        },
+        {
+          "value": "p-large",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Width",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "select",
+      "id": "width",
+      "label": "Block width",
+      "options": [
+        {
+          "value": "fit",
+          "label": "Fit"
+        },
+        {
+          "value": "fixed",
+          "label": "Fixed"
+        },
+        {
+          "value": "full",
+          "label": "Full"
+        }
+      ],
+      "default": "fit",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 24,
+      "max": 2400,
+      "step": 24,
+      "unit": "px",
+      "label": "Max width",
+      "default": 2400,
+      "visible_if": "{{ block.settings.editor == 'advanced' and block.settings.width == 'fixed' }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "block_class",
+      "label": "Block classes",
+      "default": "flexi-description u-m-0 u-p-0",
+      "info": "Adjust default Flexi classes at the content level. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/block-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Description",
+      "category": "Flexi Blocks"
+    }
+  ]
+}
+{% endschema %}

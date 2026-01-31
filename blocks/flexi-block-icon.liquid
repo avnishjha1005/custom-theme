@@ -1,0 +1,270 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+
+  assign image = block.settings.image
+  assign svg = block.settings.svg
+  assign link = block.settings.link
+  assign metafield_mode = block.settings.metafield_mode
+  assign padding_top = block.settings.padding_top
+  assign padding_bottom = block.settings.padding_bottom
+  assign max_width = block.settings.max_width
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+  {% if spacing == 'basic' %}
+  #{{ blockid }} {
+      padding-top: {{ padding_top }}px;
+      padding-bottom: {{ padding_bottom }}px;
+      padding-left: {{ padding_left }}px;
+      padding-right: {{ padding_right }}px;
+  }
+  {% elsif spacing == 'custom' %}
+  @media only screen and (min-width: 768px) {
+      #{{ blockid }} {
+          padding: {{ dt_padding }};
+      }
+  }
+  @media only screen and (max-width: 767.8px) {
+      #{{ blockid }} {
+          padding: {{ mb_padding }};
+      }
+  }
+  {% endif %}
+  #{{ blockid }} {
+      max-width: {{ max_width }}px;
+  }
+  #{{ blockid }} img,
+  #{{ blockid }} svg {
+      width: 100%;
+      height: auto;
+      background-color: transparent;
+  }
+  {% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+{% if metafield_mode != true or image != blank %}
+  {% capture image_content %}
+        {% if image != blank %}
+            {{ image | image_url: width: 1080 | image_tag: loading: 'lazy', class: 'lazy-load' }}
+        {% else %}
+            {% if metafield_mode != true %}
+                {{ svg }} 
+            {% endif %}
+        {% endif %}
+    {% endcapture %}
+
+  <div
+    id="{{ blockid }}"
+    class="flexi-icon-block flexi-library u-flex u-w-full u-h-auto {% if dev_mode %}{{ custom_class }}{% endif %}"
+    {{ block.shopify_attributes }}
+  >
+    {% if link != blank %}
+      <a href="{{ link }}" class="u-block u-relative u-w-full u-h-auto u-p-0 u-m-0">
+        {{ image_content }}
+      </a>
+    {% else %}
+      {{ image_content }}
+    {% endif %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Icon",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "editor",
+      "label": "Editing Mode",
+      "options": [
+        {
+          "value": "simple",
+          "label": "Content"
+        },
+        {
+          "value": "advanced",
+          "label": "Customize"
+        }
+      ],
+      "default": "simple"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image icon"
+    },
+    {
+      "type": "html",
+      "id": "svg",
+      "label": "SVG",
+      "info": "SVG icon",
+      "default": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\" viewbox=\"0 0 32 32\" fill=\"none\">\n<g clip-path=\"url(#clip0_265_6)\">\n<circle cx=\"16\" cy=\"16\" r=\"15.5\" stroke=\"#121212\"></circle>\n<path d=\"M24.166 17.067H18.233C17.9568 17.067 17.733 17.2909 17.733 17.567V23.5C17.733 23.7762 17.9568 24 18.233 24H24.166C24.4421 24 24.666 23.7762 24.666 23.5V17.567C24.666 17.2909 24.4421 17.067 24.166 17.067Z\" fill=\"#121212\"></path>\n<path d=\"M19.333 11.4665C19.333 9.552 17.781 8 15.8665 8C13.952 8 12.4 9.552 12.4 11.4665C12.4 13.381 13.952 14.933 15.8665 14.933C17.781 14.933 19.333 13.381 19.333 11.4665Z\" fill=\"#121212\"></path>\n<path d=\"M14.633 21.333H7.49998C7.40828 21.333 7.31835 21.3078 7.24002 21.2601C7.1617 21.2124 7.09799 21.1441 7.05587 21.0627C7.01375 20.9812 6.99484 20.8897 7.00121 20.7983C7.00758 20.7068 7.03898 20.6188 7.09198 20.544L10.658 15.51C10.7042 15.4448 10.7653 15.3916 10.8363 15.3549C10.9073 15.3182 10.9861 15.299 11.066 15.299C11.1459 15.299 11.2247 15.3182 11.2956 15.3549C11.3666 15.3916 11.4278 15.4448 11.474 15.51L15.041 20.545C15.0943 20.6198 15.1259 20.7079 15.1324 20.7995C15.1389 20.8911 15.1201 20.9828 15.0779 21.0644C15.0358 21.146 14.9719 21.2145 14.8935 21.2622C14.815 21.3099 14.7248 21.3351 14.633 21.335V21.333Z\" fill=\"#121212\"></path>\n</g>\n<defs>\n<clippath id=\"clip0_265_6\">\n<rect width=\"32\" height=\"32\" fill=\"white\"></rect>\n</clippath>\n</defs>\n</svg>",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "Width"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "min": 4,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Width (px)",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Metafield mode",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "metafield_mode",
+      "label": "Display nothing if there is no icon.",
+      "default": false,
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "select",
+      "id": "spacing",
+      "label": "Padding",
+      "options": [
+        {
+          "value": "basic",
+          "label": "Basic"
+        },
+        {
+          "value": "custom",
+          "label": "Custom"
+        }
+      ],
+      "default": "basic",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_left",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Left padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "range",
+      "id": "padding_right",
+      "min": 0,
+      "max": 96,
+      "step": 2,
+      "unit": "px",
+      "label": "Right padding",
+      "default": 0,
+      "visible_if": "{{ block.settings.spacing == 'basic' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "dt_padding",
+      "label": "Padding (desktop)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}",
+      "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+    },
+    {
+      "type": "text",
+      "id": "mb_padding",
+      "label": "Padding (mobile)",
+      "default": "0px 0px",
+      "visible_if": "{{ block.settings.spacing == 'custom' and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "header",
+      "content": "Advanced",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "dev_mode",
+      "label": "Enable developer mode",
+      "default": false,
+      "info": "Enable dev mode for additional styling and debugging features.",
+      "visible_if": "{{ block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "text",
+      "id": "custom_class",
+      "label": "Custom classes",
+      "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    },
+    {
+      "type": "liquid",
+      "id": "css_code",
+      "label": "Custom CSS",
+      "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+      "visible_if": "{{ block.settings.dev_mode == true and block.settings.editor == 'advanced' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Icon",
+      "category": "Flexi Blocks"
+    }
+  ]
+}
+{% endschema %}

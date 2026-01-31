@@ -1,0 +1,343 @@
+{%- liquid
+  assign blockid = block.id
+
+  assign width = block.settings.width
+  assign max_width = block.settings.max_width
+
+  assign spacing = block.settings.spacing
+  if spacing == 'custom'
+    assign dt_padding = block.settings.dt_padding
+    assign mb_padding = block.settings.mb_padding
+  elsif spacing == 'basic'
+    assign padding_top = block.settings.padding_top
+    assign padding_bottom = block.settings.padding_bottom
+    assign padding_left = block.settings.padding_left
+    assign padding_right = block.settings.padding_right
+  endif
+
+  assign text = block.settings.text
+  assign text_font_size = block.settings.text_font_size
+  assign text_font_color = block.settings.text_font_color
+  assign heading = block.settings.heading
+  assign description = block.settings.description
+  assign preset_font_size = block.settings.preset_font_size
+  assign font_color = block.settings.font_color
+  assign image = block.settings.image
+  assign max_width = block.settings.max_width
+
+  assign dev_mode = block.settings.dev_mode
+  assign custom_class = block.settings.custom_class
+  assign css_code = block.settings.css_code
+-%}
+
+{%- style -%}
+#{{ blockid }} {
+  max-width: {% if width == 'fixed' %}{{ max_width }}px{% elsif width == 'full' %}100%{% elsif width == 'fit' %}fit-content{% endif %};
+}
+{% if spacing == 'basic' %}
+#{{ blockid }} {
+    padding-top: {{ padding_top }}px;
+    padding-bottom: {{ padding_bottom }}px;
+    padding-left: {{ padding_left }}px;
+    padding-right: {{ padding_right }}px;
+}
+{% elsif spacing == 'custom' %}
+@media only screen and (min-width: 768px) {
+    #{{ blockid }} {
+        padding: {{ dt_padding }};
+    }
+}
+@media only screen and (max-width: 767.8px) {
+    #{{ blockid }} {
+        padding: {{ mb_padding }};
+    }
+}
+{% endif %}
+.flexi-modal-wrapper {
+  border-radius: var(--flexi-card-border-radius, 4px);
+}
+#{{ blockid }} .flexi-image-block {
+  max-width: {{ max_width }}px;
+}
+#{{ blockid }} .flexi-image-block img,
+#{{ blockid }} .flexi-image-block svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+#{{ blockid }} .flexi-popup-text {
+  font-size: {{ text_font_size }}px;
+  color: {{ text_font_color }};
+}
+#{{ blockid }} .flexi-heading,
+#{{ blockid }} .flexi-description h1,
+#{{ blockid }} .flexi-description h2,
+#{{ blockid }} .flexi-description h3,
+#{{ blockid }} .flexi-description h4,
+#{{ blockid }} .flexi-description h5,
+#{{ blockid }} .flexi-description h6,
+#{{ blockid }} .flexi-description p,
+#{{ blockid }} .flexi-description span,
+#{{ blockid }} .flexi-description li {
+  color: {{ font_color }};
+}
+{% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+{% if text != blank %}
+<div id="{{ blockid }}" class="flexi-popup-block flexi-library u-flex u-w-fit u-h-full {% if dev_mode %}{{ custom_class }}{% endif %}" {{ block.shopify_attributes }}>
+  <div class="flexi-block-wrapper u-w-full" x-data="{modalIsOpen: false}">
+
+      <button @click="modalIsOpen = true" type="button" class="flexi-popup-text u-inline-block u-cursor-pointer u-whitespace-nowrap u-transition hover:u-opacity-75 u-underline u-border-0 u-p-0">{{ text }}</button>
+
+      <div id="modal-container-{{ blockid }}" x-cloak x-show="modalIsOpen" x-transition.opacity.duration.200ms x-trap.inert.noscroll="modalIsOpen" @keydown.esc.window="modalIsOpen = false" @click.self="modalIsOpen = false" class="u-fixed u-inset-0 u-z-30 u-flex u-justify-center u-bg-black/40 u-p-4 u-pb-8 !u-backdrop-blur u-items-center lg:u-p-8" role="dialog" aria-modal="true" aria-labelledby="{{ heading }}">
+          <div x-show="modalIsOpen" x-transition:enter="u-transition u-ease-out u-duration-200 u-delay-100 motion-reduce:u-transition-opacity" x-transition:enter-start="u-opacity-0 u-scale-50" x-transition:enter-end="u-opacity-100 u-scale-100" class="flexi-modal-wrapper flexi-library u-flex u-max-w-lg u-flex-col u-gap-2 u-overflow-hidden u-bg-white">
+              <div class="u-flex u-items-center u-justify-between u-p-4 u-pb-0">
+                  {% if heading != blank %}
+                      <h4 id="{{ heading }}" class="flexi-heading u-m-0 u-p-0 u-bg-transparent">
+                          {{ heading }}
+                      </h4>
+                  {% endif %}
+                  <button @click="modalIsOpen = false" aria-label="close modal" class="u-border-0 u-cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" stroke="currentColor" fill="none" stroke-width="1.5" class="u-w-5 u-h-5">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                  </button>
+              </div>
+
+              <div class="flexi-image-block u-flex u-w-full u-h-full u-px-4">
+                  {% if image != blank %}
+                    {{ image | image_url: width: 1080 | image_tag: loading: 'lazy', class: 'lazy-load' }}
+                  {% else %}
+                    <svg class="u-rounded" width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="512" height="512"/></svg>
+                  {% endif %}
+              </div>
+
+              {% if description != blank %}
+              <div class="u-px-4 u-pb-4"> 
+                  <span class="flexi-description {{ preset_font_size }} u-m-0 u-p-0">
+                      {{ description }}
+                  </span>
+              </div>
+              {% endif %}
+
+          </div>
+      </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      let modalContainer = document.getElementById('modal-container-{{ blockid }}');
+      if (modalContainer) {
+          document.body.appendChild(modalContainer);
+      }
+  });
+</script>
+{% endif %}
+
+
+{% schema %}
+    {
+    "name": "Popup",
+    "tag": null,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Text"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "More Info"
+      },
+      {
+        "type": "range",
+        "id": "text_font_size",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Text font size",
+        "default": 16
+      },
+      {
+        "type": "color",
+        "id": "text_font_color",
+        "label": "Text font color",
+        "default": "#000000"
+      },
+      {
+        "type": "header",
+        "content": "Popup content"
+      },
+      {
+        "type": "inline_richtext",
+        "id": "heading",
+        "label": "Popup heading",
+        "default": "Product Info"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "range",
+        "id": "max_width",
+        "min": 20,
+        "max": 1440,
+        "step": 20,
+        "unit": "px",
+        "label": "Image max width",
+        "default": 1440
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "label": "Description text",
+        "default": "<p>Either add your own text here or check the box above to use the product description text added from the product page.</p>"
+      },          
+      {
+        "type": "select",
+        "id": "preset_font_size",
+        "label": "Preset font size",
+        "default": "p-default",
+        "options": [
+          {
+            "value": "p-small",
+            "label": "Small"
+          },
+          {
+            "value": "p-default",
+            "label": "Default"
+          },
+          {
+            "value": "p-large",
+            "label": "large"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "font_color",
+        "label": "Heading font color",
+        "default": "#000000"
+      },
+      {
+          "type": "header",
+          "content": "Spacing"
+      },
+      {
+          "type": "select",
+          "id": "spacing",
+          "label": "Padding",
+          "options": [
+          {
+              "value": "basic",
+              "label": "Basic"
+          },
+          {
+              "value": "custom",
+              "label": "Custom"
+          }
+          ],
+          "default": "basic"
+      },
+      {
+          "type": "range",
+          "id": "padding_top",
+          "min": 0,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "label": "Top padding",
+          "default": 0,
+          "visible_if": "{{ block.settings.spacing == 'basic' }}"
+      },
+      {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom padding",
+          "default": 0,
+          "visible_if": "{{ block.settings.spacing == 'basic' }}"
+      },
+      {
+          "type": "range",
+          "id": "padding_left",
+          "min": 0,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "label": "Left padding",
+          "default": 0,
+          "visible_if": "{{ block.settings.spacing == 'basic' }}"
+      },
+      {
+          "type": "range",
+          "id": "padding_right",
+          "min": 0,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "label": "Right padding",
+          "default": 0,
+          "visible_if": "{{ block.settings.spacing == 'basic' }}"
+      },
+      {
+          "type": "text",
+          "id": "dt_padding",
+          "label": "Padding (desktop)",
+          "default": "0px 0px",
+          "visible_if": "{{ block.settings.spacing == 'custom' }}",
+          "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+      },
+      {
+          "type": "text",
+          "id": "mb_padding",
+          "label": "Padding (mobile)",
+          "default": "0px 0px",
+          "visible_if": "{{ block.settings.spacing == 'custom' }}"
+      },
+      {
+          "type": "header",
+          "content": "Advanced"
+      },
+      {
+          "type": "checkbox",
+          "id": "dev_mode",
+          "label": "Enable developer mode",
+          "default": false,
+          "info": "Enable dev mode for additional styling and debugging features.",
+      },
+      {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom classes",
+          "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+          "visible_if": "{{ block.settings.dev_mode == true }}"
+      },
+      {
+          "type": "liquid",
+          "id": "css_code",
+          "label": "Custom CSS",
+          "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+          "visible_if": "{{ block.settings.dev_mode == true }}"
+      }
+    ],
+    "presets": [
+        {
+          "name": "Popup",
+          "category": "Flexi Advanced Blocks"
+        }
+    ]
+  }
+{% endschema %}

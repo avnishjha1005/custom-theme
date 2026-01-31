@@ -1,0 +1,354 @@
+{%- liquid
+    assign blockid = block.id
+
+    assign width = block.settings.width
+    assign max_width = block.settings.max_width
+  
+    assign spacing = block.settings.spacing
+    if spacing == 'custom'
+      assign dt_padding = block.settings.dt_padding
+      assign mb_padding = block.settings.mb_padding
+    elsif spacing == 'basic'
+      assign padding_top = block.settings.padding_top
+      assign padding_bottom = block.settings.padding_bottom
+      assign padding_left = block.settings.padding_left
+      assign padding_right = block.settings.padding_right
+    endif
+  
+    assign border_color = block.settings.border_color
+    assign font_color = block.settings.font_color
+    assign icon_color = block.settings.icon_color
+    assign open = block.settings.open
+
+    assign dev_mode = block.settings.dev_mode
+    assign custom_class = block.settings.custom_class
+    assign css_code = block.settings.css_code
+  -%}
+  
+{%- style -%}
+#{{ blockid }} {
+  max-width: {% if width == 'fixed' %}{{ max_width }}px{% elsif width == 'full' %}100%{% endif %};
+}
+{% if spacing == 'basic' %}
+#{{ blockid }} {
+    padding-top: {{ padding_top }}px;
+    padding-bottom: {{ padding_bottom }}px;
+    padding-left: {{ padding_left }}px;
+    padding-right: {{ padding_right }}px;
+}
+{% elsif spacing == 'custom' %}
+@media only screen and (min-width: 768px) {
+    #{{ blockid }} {
+        padding: {{ dt_padding }};
+    }
+}
+@media only screen and (max-width: 767.8px) {
+    #{{ blockid }} {
+        padding: {{ mb_padding }};
+    }
+}
+{% endif %}
+#{{ blockid }} .flexi-accordion-item {
+  border-color: {{ border_color }};
+}
+#{{ blockid }} .flexi-accordion-button {
+  color: {{ font_color }};
+}
+#{{ blockid }} .flexi-accordion-text p,
+#{{ blockid }} .flexi-accordion-text h1,
+#{{ blockid }} .flexi-accordion-text h2,
+#{{ blockid }} .flexi-accordion-text h3,
+#{{ blockid }} .flexi-accordion-text h4,
+#{{ blockid }} .flexi-accordion-text h5,
+#{{ blockid }} .flexi-accordion-text ul,
+#{{ blockid }} .flexi-accordion-text ol,
+#{{ blockid }} .flexi-accordion-text li {
+  color: {{ font_color }};
+}
+{% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+
+  <div id="{{ blockid }}" class="flexi-accordion-block flexi-library u-w-full u-h-full {% if dev_mode %}{{ custom_class }}{% endif %}" {{ block.shopify_attributes }}>
+    <div class="u-w-full u-overflow-hidden">
+        {% for i in (1..5) %}
+            {% assign text_var = "accordion_" | append: i | append: "_text" %}
+            {% assign desc_var = "accordion_" | append: i | append: "_description" %}
+            {% assign text = block.settings[text_var] %}
+            {% assign description = block.settings[desc_var] %}
+            {% if text != blank %}
+                <div 
+                    x-data="{% if forloop.index == 1 and open %}{ isExpanded: true }{% else %}{ isExpanded: false }{% endif %}" 
+                    x-cloak 
+                    class="flexi-accordion-item u-border-solid u-border-r-0 u-border-l-0 u-border-b first:u-border-t"
+                >
+                    <button 
+                        id="controlsAccordionItem{{ forloop.index }}" 
+                        type="button" 
+                        class="flexi-accordion-button !u-flex u-w-full u-items-center u-justify-between u-gap-4 u-p-4 u-text-left u-underline-offset-2 u-bg-transparent u-border-none u-cursor-pointer" 
+                        aria-controls="accordionItem{{ forloop.index }}" 
+                        @click="isExpanded = ! isExpanded" :aria-expanded="isExpanded ? 'true' : 'false'"
+                    >
+                        {{ text }}
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="{{ icon_color }}" class="u-size-4 u-shrink-0 flexi-rotate-icon" aria-hidden="true" :class="isExpanded  ?  'flexi-rotate-icon--active'  :  ''">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/>
+                        </svg>
+                    </button>
+                    <div 
+                        x-cloak 
+                        x-show="isExpanded" 
+                        id="accordionItem{{ forloop.index }}" 
+                        role="region" 
+                        aria-labelledby="controlsAccordionItem{{ forloop.index }}" 
+                        x-collapse
+                    >
+                        <div class="flexi-accordion-text flexi-description p-default u-text-left u-p-4 u-pt-0">
+                            {{ description }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+  </div>
+  
+  {% schema %}
+  {
+    "name": "Accordion",
+    "tag": null,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "accordion_1_text",
+            "label": "Question 1",
+            "default": "Question is asked?"
+          },
+          {
+            "type": "richtext",
+            "id": "accordion_1_description",
+            "label": "Answer 1",
+            "default": "<p>Answer goes here.</p>"
+          },
+          {
+            "type": "checkbox",
+            "id": "open",
+            "label": "Open by default",
+            "default": false
+          },
+          {
+            "type": "inline_richtext",
+            "id": "accordion_2_text",
+            "label": "Question 2",
+            "default": "Question is asked?"
+          },
+          {
+            "type": "richtext",
+            "id": "accordion_2_description",
+            "label": "Answer 2",
+            "default": "<p>Answer goes here.</p>"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "accordion_3_text",
+            "label": "Question 3",
+            "default": "Question is asked?"
+          },
+          {
+            "type": "richtext",
+            "id": "accordion_3_description",
+            "label": "Answer 3",
+            "default": "<p>Answer goes here.</p>"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "accordion_4_text",
+            "label": "Question 4",
+            "default": "Question is asked?"
+          },
+          {
+            "type": "richtext",
+            "id": "accordion_4_description",
+            "label": "Answer 4",
+            "default": "<p>Answer goes here.</p>"
+          },
+          {
+            "type": "inline_richtext",
+            "id": "accordion_5_text",
+            "label": "Question 5",
+            "default": "Question is asked?"
+          },
+          {
+            "type": "richtext",
+            "id": "accordion_5_description",
+            "label": "Answer 5",
+            "default": "<p>Answer goes here.</p>"
+          },
+                  {
+            "type": "header",
+            "content": "Width"
+        },
+        {
+            "type": "select",
+            "id": "width",
+            "label": "Block width",
+            "options": [
+            {
+                "value": "fixed",
+                "label": "Fixed"
+            },
+            {
+                "value": "full",
+                "label": "Full"
+            }
+            ],
+            "default": "full"
+        },
+        {
+            "type": "range",
+            "id": "max_width",
+            "min": 24,
+            "max": 2400,
+            "step": 24,
+            "unit": "px",
+            "label": "Max width",
+            "default": 2400,
+            "visible_if": "{{ block.settings.width == 'fixed' }}"
+        },
+          {
+            "type": "header",
+            "content": "Basic settings"
+          },
+          {
+            "type": "color",
+            "id": "font_color",
+            "label": "Font color",
+            "default": "#000000"
+          },
+          {
+            "type": "color",
+            "id": "icon_color",
+            "label": "Icon color",
+            "default": "#000000"
+          },
+          {
+            "type": "color",
+            "id": "border_color",
+            "label": "Border Color",
+            "default": "#000000"
+          },
+          {
+              "type": "header",
+              "content": "Spacing"
+          },
+          {
+              "type": "select",
+              "id": "spacing",
+              "label": "Padding",
+              "options": [
+              {
+                  "value": "basic",
+                  "label": "Basic"
+              },
+              {
+                  "value": "custom",
+                  "label": "Custom"
+              }
+              ],
+              "default": "basic"
+          },
+          {
+              "type": "range",
+              "id": "padding_top",
+              "min": 0,
+              "max": 96,
+              "step": 2,
+              "unit": "px",
+              "label": "Top padding",
+              "default": 0,
+              "visible_if": "{{ block.settings.spacing == 'basic' }}"
+          },
+          {
+              "type": "range",
+              "id": "padding_bottom",
+              "min": 0,
+              "max": 96,
+              "step": 2,
+              "unit": "px",
+              "label": "Bottom padding",
+              "default": 0,
+              "visible_if": "{{ block.settings.spacing == 'basic' }}"
+          },
+          {
+              "type": "range",
+              "id": "padding_left",
+              "min": 0,
+              "max": 96,
+              "step": 2,
+              "unit": "px",
+              "label": "Left padding",
+              "default": 0,
+              "visible_if": "{{ block.settings.spacing == 'basic' }}"
+          },
+          {
+              "type": "range",
+              "id": "padding_right",
+              "min": 0,
+              "max": 96,
+              "step": 2,
+              "unit": "px",
+              "label": "Right padding",
+              "default": 0,
+              "visible_if": "{{ block.settings.spacing == 'basic' }}"
+          },
+          {
+              "type": "text",
+              "id": "dt_padding",
+              "label": "Padding (desktop)",
+              "default": "0px 0px",
+              "visible_if": "{{ block.settings.spacing == 'custom' }}",
+              "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+          },
+          {
+              "type": "text",
+              "id": "mb_padding",
+              "label": "Padding (mobile)",
+              "default": "0px 0px",
+              "visible_if": "{{ block.settings.spacing == 'custom' }}"
+          },
+          {
+              "type": "header",
+              "content": "Advanced"
+          },
+          {
+              "type": "checkbox",
+              "id": "dev_mode",
+              "label": "Enable developer mode",
+              "default": false,
+              "info": "Enable dev mode for additional styling and debugging features.",
+          },
+          {
+              "type": "text",
+              "id": "custom_class",
+              "label": "Custom classes",
+              "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+              "visible_if": "{{ block.settings.dev_mode == true }}"
+          },
+          {
+              "type": "liquid",
+              "id": "css_code",
+              "label": "Custom CSS",
+              "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+              "visible_if": "{{ block.settings.dev_mode == true }}"
+          }
+    ],
+    "presets": [
+        {
+          "name": "Accordion",
+          "category": "Flexi Advanced Blocks"
+        }
+    ]
+  }
+  {% endschema %}

@@ -1,0 +1,248 @@
+{%- liquid
+    assign blockid = block.id
+
+    assign spacing = block.settings.spacing
+    if spacing == 'custom'
+      assign dt_padding = block.settings.dt_padding
+      assign mb_padding = block.settings.mb_padding
+    elsif spacing == 'basic'
+      assign padding_top = block.settings.padding_top
+      assign padding_bottom = block.settings.padding_bottom
+      assign padding_left = block.settings.padding_left
+      assign padding_right = block.settings.padding_right
+    endif
+
+    assign logo_width = block.settings.logo_width
+    assign first_image = block.settings.image_1
+
+    assign dev_mode = block.settings.dev_mode
+    assign custom_class = block.settings.custom_class
+    assign css_code = block.settings.css_code
+  -%}
+  
+{%- style -%}
+{% if spacing == 'basic' %}
+#{{ blockid }} {
+    padding-top: {{ padding_top }}px;
+    padding-bottom: {{ padding_bottom }}px;
+    padding-left: {{ padding_left }}px;
+    padding-right: {{ padding_right }}px;
+}
+{% elsif spacing == 'custom' %}
+@media only screen and (min-width: 768px) {
+    #{{ blockid }} {
+        padding: {{ dt_padding }};
+    }
+}
+@media only screen and (max-width: 767.8px) {
+    #{{ blockid }} {
+        padding: {{ mb_padding }};
+    }
+}
+{% endif %}
+#{{ blockid }} .flexi-logo-item img,
+#{{ blockid }} .flexi-logo-item svg {
+  max-width: {{ logo_width }}px;
+  width: 100%;
+  height: auto;
+}
+{% if css_code != blank %}{{ css_code }}{% endif %}
+{%- endstyle -%}
+  
+<div id="{{ blockid }}" class="flexi-logos-block u-flex u-h-full u-w-fit {% if dev_mode %}{{ custom_class }}{% endif %}" {{ block.shopify_attributes }}>
+    <div class="flexi-block-wrapper">
+        <ul class="u-list-none u-flex u-items-center u-justify-center u-m-0 u-p-0 u-gap-4">
+        {% if first_image != blank %}
+            {% for i in (1..6) %}
+                {% assign image_key = "image_" | append: i %}
+                {% assign image = block.settings[image_key] %} 
+                {% if image != blank %}
+                    <li class="flexi-logo-item u-flex u-items-center u-justify-center u-flex-1">{{ image | image_url: width: 512 | image_tag: loading: 'lazy', class: 'lazy-load' }}</li>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            {% for i in (1..3) %}
+                <li class="flexi-logo-item u-flex u-items-center u-justify-center u-flex-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <g clip-path="url(#clip0_265_6)">
+                    <circle cx="16" cy="16" r="15.5" stroke="#121212"></circle>
+                    <path d="M24.166 17.067H18.233C17.9568 17.067 17.733 17.2909 17.733 17.567V23.5C17.733 23.7762 17.9568 24 18.233 24H24.166C24.4421 24 24.666 23.7762 24.666 23.5V17.567C24.666 17.2909 24.4421 17.067 24.166 17.067Z" fill="#121212"></path>
+                    <path d="M19.333 11.4665C19.333 9.552 17.781 8 15.8665 8C13.952 8 12.4 9.552 12.4 11.4665C12.4 13.381 13.952 14.933 15.8665 14.933C17.781 14.933 19.333 13.381 19.333 11.4665Z" fill="#121212"></path>
+                    <path d="M14.633 21.333H7.49998C7.40828 21.333 7.31835 21.3078 7.24002 21.2601C7.1617 21.2124 7.09799 21.1441 7.05587 21.0627C7.01375 20.9812 6.99484 20.8897 7.00121 20.7983C7.00758 20.7068 7.03898 20.6188 7.09198 20.544L10.658 15.51C10.7042 15.4448 10.7653 15.3916 10.8363 15.3549C10.9073 15.3182 10.9861 15.299 11.066 15.299C11.1459 15.299 11.2247 15.3182 11.2956 15.3549C11.3666 15.3916 11.4278 15.4448 11.474 15.51L15.041 20.545C15.0943 20.6198 15.1259 20.7079 15.1324 20.7995C15.1389 20.8911 15.1201 20.9828 15.0779 21.0644C15.0358 21.146 14.9719 21.2145 14.8935 21.2622C14.815 21.3099 14.7248 21.3351 14.633 21.335V21.333Z" fill="#121212"></path>
+                    </g>
+                    <defs>
+                    <clipPath id="clip0_265_6">
+                    <rect width="32" height="32" fill="white"></rect>
+                    </clipPath>
+                    </defs>
+                  </svg>
+                </li>
+            {% endfor %}
+        {% endif %}
+        </ul>
+    </div>
+</div>
+  
+{% schema %}
+  {
+    "name": "Logos",
+    "tag": null,
+    "settings": [
+      {
+        "type": "header",
+        "content": "Add images or icons",
+        "info": "Supported files include png, jpeg, svg, webp"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_1",
+        "label": "First image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_2",
+        "label": "Second image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_3",
+        "label": "Third image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_4",
+        "label": "Fourth image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_5",
+        "label": "Fifth image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_6",
+        "label": "Sixth image"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "min": 12,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Image width",
+        "default": 42
+      },
+      {
+          "type": "header",
+          "content": "Spacing"
+      },
+      {
+          "type": "select",
+          "id": "spacing",
+          "label": "Padding",
+          "options": [
+          {
+              "value": "basic",
+              "label": "Basic"
+          },
+          {
+              "value": "custom",
+              "label": "Custom"
+          }
+          ],
+          "default": "basic"
+      },
+      {
+          "type": "range",
+          "id": "padding_top",
+          "min": 0,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "label": "Top padding",
+          "default": 0,
+          "visible_if": "{{ block.settings.spacing == 'basic' }}"
+      },
+      {
+          "type": "range",
+          "id": "padding_bottom",
+          "min": 0,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "label": "Bottom padding",
+          "default": 0,
+          "visible_if": "{{ block.settings.spacing == 'basic' }}"
+      },
+      {
+          "type": "range",
+          "id": "padding_left",
+          "min": 0,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "label": "Left padding",
+          "default": 0,
+          "visible_if": "{{ block.settings.spacing == 'basic' }}"
+      },
+      {
+          "type": "range",
+          "id": "padding_right",
+          "min": 0,
+          "max": 96,
+          "step": 2,
+          "unit": "px",
+          "label": "Right padding",
+          "default": 0,
+          "visible_if": "{{ block.settings.spacing == 'basic' }}"
+      },
+      {
+          "type": "text",
+          "id": "dt_padding",
+          "label": "Padding (desktop)",
+          "default": "0px 0px",
+          "visible_if": "{{ block.settings.spacing == 'custom' }}",
+          "info": "Pass in CSS padding options below. Visit our documentation for a cheatsheet."
+      },
+      {
+          "type": "text",
+          "id": "mb_padding",
+          "label": "Padding (mobile)",
+          "default": "0px 0px",
+          "visible_if": "{{ block.settings.spacing == 'custom' }}"
+      },
+      {
+          "type": "header",
+          "content": "Advanced"
+      },
+      {
+          "type": "checkbox",
+          "id": "dev_mode",
+          "label": "Enable developer mode",
+          "default": false,
+          "info": "Enable dev mode for additional styling and debugging features.",
+      },
+      {
+          "type": "text",
+          "id": "custom_class",
+          "label": "Custom classes",
+          "info": "Apply custom classes to the outer container. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-classes)",
+          "visible_if": "{{ block.settings.dev_mode == true }}"
+      },
+      {
+          "type": "liquid",
+          "id": "css_code",
+          "label": "Custom CSS",
+          "info": "Add custom CSS specific to this block. [View docs](https://flexi-library.gitbook.io/flexi-theme-library/docs/custom-css)",
+          "visible_if": "{{ block.settings.dev_mode == true }}"
+      }
+    ],
+    "presets": [
+        {
+          "name": "Logos",
+          "category": "Flexi Advanced Blocks"
+        }
+    ]
+  }
+{% endschema %}
