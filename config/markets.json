@@ -9,10 +9,10 @@
  */
 {
   "markets": {
-    "united-states-and-canada": {
+    "in": {
       "parent": "@default"
     },
-    "in": {
+    "united-states-and-canada": {
       "parent": "@default"
     }
   }

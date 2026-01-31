@@ -1,0 +1,45 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "login_hero": {
+      "type": "login-hero-banner",
+      "settings": {
+        "image": "shopify://shop_images/hero-login.jpg",
+        "image_height": "medium",
+        "show_logo": true,
+        "logo_width": 200,
+        "overlay_opacity": 20
+      }
+    },
+    "login_form": {
+      "type": "login-form-section",
+      "settings": {
+        "show_social_login": true,
+        "button_style": "solid",
+        "show_divider": true
+      }
+    },
+    // "login_content": {
+    //   "type": "login-additional-content",
+    //   "disabled": true,
+    //   "settings": {
+    //     "heading": "Meet our experts for a bespoke look",
+    //     "p": "Our styling team works closely with you to curate looks that feel authentic to your personal style.",
+    //     "show_images": true
+    //   }
+    // }
+  },
+  "order": [
+    "login_hero",
+    "login_form",
+    
+  ]
+}

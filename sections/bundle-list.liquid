@@ -54,40 +54,82 @@
     display: flex;
     align-items: center;
     z-index: 10;
-    transform: translate(-16px, -16px);
+    transform: translate(-50%, -50%);
     cursor: pointer;
   }
 
   .hotspot-dot {
-    width: 32px;
-    height: 32px;
-    background: #fff;
-    border: 1px solid #000;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: 2px solid var(--hs-border, #fff);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-weight: bold;
+    position: relative;
+    font-size: 0;
+    color: transparent;
     flex-shrink: 0;
     z-index: 11;
   }
 
+  .hotspot-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    background: var(--hs-bg, #fff);
+    border-radius: 50%;
+  }
+
   .hotspot-text {
-    margin-left: 15px;
+    position: absolute;
     color: #fff;
     opacity: 0;
     visibility: hidden;
-    transform: translateX(-10px);
     transition: all 0.3s ease;
-    white-space: nowrap;
     pointer-events: none;
+    width: max-content;
+    max-width: 160px;
   }
 
   .hotspot-node.is-active .hotspot-text {
     opacity: 1;
     visibility: visible;
-    transform: translateX(0);
+  }
+
+  /* Text below dot (middle 50%: x 25–75) */
+  .hotspot-text--bottom {
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px);
+    text-align: center;
+  }
+  .hotspot-node.is-active .hotspot-text--bottom {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Text right of dot (left quarter: x 0–25) */
+  .hotspot-text--right {
+    left: calc(100% + 15px);
+    top: 50%;
+    transform: translate(-10px, -50%);
+    text-align: left;
+  }
+  .hotspot-node.is-active .hotspot-text--right {
+    transform: translate(0, -50%);
+  }
+
+  /* Text left of dot (right quarter: x 75–100) */
+  .hotspot-text--left {
+    right: calc(100% + 15px);
+    top: 50%;
+    transform: translate(10px, -50%);
+    text-align: right;
+  }
+  .hotspot-node.is-active .hotspot-text--left {
+    transform: translate(0, -50%);
   }
   
   .hotspot-node.is-active { z-index: 15; }
@@ -146,18 +188,21 @@
     .hs-title { font-size: 10px; font-weight: 500; display: block; text-transform: uppercase; }
   .hs-price { font-size: 10px; display: block; }
   .hotspot-dot {
-    width: 10px;
-    height: 10px;
-    background: #transparent;
-    border: 1px solid #000;
+    width: 18px;
+    height: 18px;
+    background: transparent;
+    border: 1.5px solid #fff;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: bold;
+    position: relative;
+    font-size: 0;
+    color: transparent;
     flex-shrink: 0;
     z-index: 11;
+  }
+
+  .hotspot-dot::after {
+    width: 8px;
+    height: 8px;
   }
   }
 {%- endstyle -%}
@@ -188,19 +233,24 @@
                 {% assign hs_product = block.settings[hs_product_setting] %}
 
                 {% if block.settings[hs_show] and hs_product != blank %}
-                  {% capture hs_label %}hs_{{ i }}_label{% endcapture %}
                   {% capture hs_x %}hs_{{ i }}_x{% endcapture %}
                   {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
                   {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
                   {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
 
-                  <div class="hotspot-node" 
+                  <div class="hotspot-node"
                        data-url="{{ hs_product.url }}"
                        style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%;">
-                    <div class="hotspot-dot" style="background: {{ block.settings[hs_bg] }}; border-color: {{ block.settings[hs_border] }};">
-                      {{ block.settings[hs_label] }}
+                    <div class="hotspot-dot" style="--hs-border: {{ block.settings[hs_border] }}; --hs-bg: {{ block.settings[hs_bg] }};">
                     </div>
-                    <div class="hotspot-text">
+                    {% if block.settings[hs_x] <= 25 %}
+                      {% assign hs_text_pos = 'hotspot-text--right' %}
+                    {% elsif block.settings[hs_x] >= 75 %}
+                      {% assign hs_text_pos = 'hotspot-text--left' %}
+                    {% else %}
+                      {% assign hs_text_pos = 'hotspot-text--bottom' %}
+                    {% endif %}
+                    <div class="hotspot-text {{ hs_text_pos }}">
                       <span class="hs-title">{{ hs_product.title }}</span>
                       <span class="hs-price">{{ hs_product.price | money }}</span>
                     </div>

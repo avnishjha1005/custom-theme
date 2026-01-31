@@ -24,28 +24,38 @@
       <span ref="viewMorePrevious"></span>
       <div
         ref="grid"
-        class="blog-posts-container"
+        class="blog-posts-container {% if section.settings.layout_style == 'grid' %}blog-posts-container--grid{% endif %}"
         data-last-page="{{ paginate.pages }}"
       >
         {% for article in blog.articles %}
-          <div
-            class="blog-post-item"
-            ref="cards[]"
-            data-page="{{ paginate.current_page }}"
-          >
-            {% if forloop.index <= 3 %}
-              <div class="blog-post-hero-wrapper">
-                {% content_for 'block', id: 'hero-card-{{ forloop.index }}', type: '_blog-post-card-hero', article: article %}
-              </div>
-              {% if forloop.index > 1 %}
-                <div class="blog-post-regular-wrapper">
-                  {% content_for 'block', id: 'regular-card-{{ forloop.index }}', type: '_blog-post-card', article: article %}
+          {% if section.settings.layout_style == 'grid' %}
+            <div
+              class="blog-post-item blog-post-item--grid"
+              ref="cards[]"
+              data-page="{{ paginate.current_page }}"
+            >
+              {% content_for 'block', id: 'static-grid-card', type: '_blog-post-card-grid', article: article %}
+            </div>
+          {% else %}
+            <div
+              class="blog-post-item"
+              ref="cards[]"
+              data-page="{{ paginate.current_page }}"
+            >
+              {% if forloop.index <= 3 %}
+                <div class="blog-post-hero-wrapper">
+                  {% content_for 'block', id: 'static-hero-card', type: '_blog-post-card-hero', article: article %}
                 </div>
+                {% if forloop.index > 1 %}
+                  <div class="blog-post-regular-wrapper">
+                    {% content_for 'block', id: 'static-regular-card', type: '_blog-post-card', article: article %}
+                  </div>
+                {% endif %}
+              {% else %}
+                {% content_for 'block', id: 'static-blog-post-card', type: '_blog-post-card', article: article %}
               {% endif %}
-            {% else %}
-              {% content_for 'block', id: 'static-blog-post-card', type: '_blog-post-card', article: article %}
-            {% endif %}
-          </div>
+            </div>
+          {% endif %}
         {% endfor %}
       </div>
       <span ref="viewMoreNext"></span>
@@ -150,6 +160,26 @@
     border: none;
     padding: 0;
   }
+
+  /**
+   * Grid layout: uniform 2-column card grid
+   */
+  .blog-posts-container--grid {
+    grid-template-columns: repeat(2, 1fr);
+
+    @media screen and (max-width: 749px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .blog-post-item--grid {
+    grid-column: span 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    justify-self: stretch !important;
+    border: none;
+    padding: 0;
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -191,6 +221,22 @@
     "groups": ["header"]
   },
   "settings": [
+    {
+      "type": "select",
+      "id": "layout_style",
+      "label": "Layout style",
+      "options": [
+        {
+          "value": "editorial",
+          "label": "Editorial"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        }
+      ],
+      "default": "editorial"
+    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
