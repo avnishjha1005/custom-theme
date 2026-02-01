@@ -399,6 +399,9 @@
         "bundle_qTJRmr",
         "bundle_6YmHMq"
       ],
+      "custom_css": [
+        ".bundle-visual{max-width: 700px;}"
+      ],
       "name": "Bundle List Section",
       "settings": {
         "collection": "the-editorial"
