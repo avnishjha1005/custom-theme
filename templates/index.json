@@ -62,7 +62,11 @@
           "source": "{{ metaobjects.hero_image[\"the-editorial\"] }}",
           "settings": {
             "image": "{{ metaobjects.hero_image[\"the-editorial\"].image.value }}",
-            "heading": "<p>{{ metaobjects.hero_image[\"the-editorial\"].hero_text.value }}</p>"
+            "heading": "<h3>{{ metaobjects.hero_image[\"the-editorial\"].hero_text.value }}</h3>",
+            "text_max_width": 300,
+            "button_link": "",
+            "button_label": "SHOP NOW",
+            "open_in_new_tab": false
           }
         }
       },
