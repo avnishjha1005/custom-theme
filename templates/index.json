@@ -868,7 +868,8 @@
         ".image-block__image {object-position: center center;}",
         ".section--full-width {max-width: 1440px; margin: auto; padding-inline: 16px;}",
         ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}",
-        ".section-resource-list__content {display: none;}"
+        ".section-resource-list__content {display: none;}",
+        "img{object-position: 50% 20%;}"
       ],
       "name": "t:names.collections_grid",
       "settings": {
