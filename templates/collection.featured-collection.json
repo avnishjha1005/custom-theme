@@ -79,30 +79,9 @@
           "settings": {
             "image": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b.jpg",
             "text_color": "#ffffff",
-            "font_weight": 400,
-            "height_desktop": 700,
-            "height_mobile": 550,
             "line1": "LOREM IPSUM",
-            "line1_size": 60,
-            "line1_h": 30,
-            "line1_v": 47,
-            "line1_size_m": 30,
-            "line1_h_m": 10,
-            "line1_v_m": 58,
             "line2": "DOLOR",
-            "line2_size": 60,
-            "line2_h": 55,
-            "line2_v": 59,
-            "line2_size_m": 30,
-            "line2_h_m": 40,
-            "line2_v_m": 66,
-            "subheading": "Exclusive Collection  2025/26",
-            "sub_size": 14,
-            "sub_h": 56,
-            "sub_v": 69,
-            "sub_size_m": 12,
-            "sub_h_m": 40,
-            "sub_v_m": 72
+            "subheading": "Exclusive Collection  2025/26"
           },
           "blocks": {}
         }
