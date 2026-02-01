@@ -96,7 +96,7 @@
             "line2_size_m": 30,
             "line2_h_m": 40,
             "line2_v_m": 66,
-            "subheading": "Exclusive Collection <br> 2025/26",
+            "subheading": "Exclusive Collection  2025/26",
             "sub_size": 14,
             "sub_h": 56,
             "sub_v": 69,
@@ -123,7 +123,7 @@
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
         "section_width": "full-width",
-        "section_height": "large",
+        "section_height": "full-screen",
         "section_height_custom": 50,
         "color_scheme": "scheme-6",
         "background_media": "none",
@@ -400,7 +400,7 @@
         "bundle_6YmHMq"
       ],
       "custom_css": [
-        ".bundle-visual{max-width: 700px;}"
+        ".bundle-visual {max-width: 700px;}"
       ],
       "name": "Bundle List Section",
       "settings": {
