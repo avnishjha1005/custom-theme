@@ -322,12 +322,12 @@
                   "settings": {
                     "content_direction": "row",
                     "vertical_on_mobile": false,
-                    "horizontal_alignment": "space-between",
+                    "horizontal_alignment": "flex-start",
                     "vertical_alignment": "flex-end",
                     "align_baseline": false,
                     "horizontal_alignment_flex_direction_column": "flex-start",
                     "vertical_alignment_flex_direction_column": "center",
-                    "gap": 0,
+                    "gap": 23,
                     "width": "fill",
                     "custom_width": 100,
                     "width_mobile": "fill",
@@ -947,7 +947,7 @@
       "custom_css": [
         "@media screen and (min-width: 750px) {.product-information__media {grid-column: 2/3; }}",
         "@media screen and (max-width: 750px) .group-block>.group-block-content>.group-block.group-block-content {}",
-        ".variant-picker{width:75%;}"
+        ".variant-picker {width: 75%;}"
       ],
       "settings": {
         "content_width": "content-center-aligned",
