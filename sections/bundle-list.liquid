@@ -162,7 +162,7 @@
   .bundle-name { font-size: 16px; text-transform: uppercase; margin: 0 0 10px 0; }
   .bundle-desc { font-size: 16px; line-height: 1.6; color: #333; }
 
-  @media (max-width: 768px) {
+  @media (max-width: 750px) {
     .bundle-wrapper { 
       grid-template-columns: repeat(2, 1fr); 
       gap: 20px 15px; /* Adjust gap for smaller screens */
@@ -177,6 +177,12 @@
       grid-template-columns: 7fr 3fr !important; 
       gap: 15px; 
       align-items: center; /* Keeps text aligned with the image center if preferred */
+    }
+    .hero-grid .hero-main-col{
+      grid-column: span 2;
+    } 
+    .hero-grid .hero-side-col{
+      display: none;
     }
     /* Keep internal Hero layout logic as is */
     .hero-grid { 

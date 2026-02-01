@@ -1,107 +1,112 @@
-{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% assign id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
-  /* Full Width Breakout Container */
-  .hero-full-width-{{ ai_gen_id }} {
-    width: 100vw;
+  .hero-{{ id }} {
     position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
     overflow: hidden;
-    height: {{ block.settings.height_desktop }}px;
-    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 520px;
+    height:100%;
   }
 
-  .hero-full-width__img-{{ ai_gen_id }} {
+  .hero-{{ id }}__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    height:100%;
+  }
+
+  .hero-{{ id }}__media img,
+  .hero-{{ id }}__media svg {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position:center;
-    display: block;
   }
 
-  /* Text Positioning Logic */
-  .hero-text-item-{{ ai_gen_id }} {
-    position: absolute;
-    margin: 0;
-    line-height: 1;
-    z-index: 5;
-    white-space: nowrap;
+  .hero-{{ id }}__content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 700px;
+    padding: 60px 24px;
+    box-sizing: border-box;
+  }
+
+  .hero-{{ id }}__line {
     color: {{ block.settings.text_color }};
+    font-size: 80px;
+    font-family: 'Marcellus', serif;
+    font-weight: 400;
     text-transform: uppercase;
-    font-family:'Marcellus'
+    line-height: 1;
+    margin: 0;
   }
 
-  /* Desktop Settings */
-  .line-1-{{ ai_gen_id }} {
-    top: {{ block.settings.line1_v }}%;
-    left: {{ block.settings.line1_h }}%;
-    font-size: {{ block.settings.line1_size }}px;
-    font-weight: {{ block.settings.font_weight }};
+  .hero-{{ id }}__line--right {
+    text-align: right;
   }
 
-  .line-2-{{ ai_gen_id }} {
-    top: {{ block.settings.line2_v }}%;
-    left: {{ block.settings.line2_h }}%;
-    font-size: {{ block.settings.line2_size }}px;
-    font-weight: {{ block.settings.font_weight }};
+  .hero-{{ id }}__sub {
+    color: {{ block.settings.text_color }};
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 12px 0 0;
+    text-align: right;
   }
 
-  .sub-{{ ai_gen_id }} {
-    top: {{ block.settings.sub_v }}%;
-    left: {{ block.settings.sub_h }}%;
-    font-size: {{ block.settings.sub_size }}px;
-    font-weight: 400 !important;
-    letter-spacing:-0.02;
-    font-family:'Inter' !important;
-    white-space:unset;
-    text-transform: none; /* Subheading usually sentence case */
-  }
-
-  /* Mobile Responsive Adjustments */
-  @media screen and (max-width: 768px) {
-    .hero-full-width-{{ ai_gen_id }} {
-      height: {{ block.settings.height_mobile }}px ;
+  @media screen and (max-width: 749px) {
+    .hero-{{ id }} {
+      min-height: 360px;
     }
 
-    .line-1-{{ ai_gen_id }} {
-      top: {{ block.settings.line1_v_m }}%;
-      left: {{ block.settings.line1_h_m }}%;
-      font-size: {{ block.settings.line1_size_m }}px;
+    .hero-{{ id }}__content {
+      padding: 40px 16px;
     }
 
-    .line-2-{{ ai_gen_id }} {
-      top: {{ block.settings.line2_v_m }}%;
-      left: {{ block.settings.line2_h_m }}%;
-      font-size: {{ block.settings.line2_size_m }}px;
+    .hero-{{ id }}__line {
+      font-size: 48px;
     }
 
-    .sub-{{ ai_gen_id }} {
-      top: {{ block.settings.sub_v_m }}%;
-      left: {{ block.settings.sub_h_m }}%;
-      font-size: {{ block.settings.sub_size_m }}px;
-      white-space: unset;
-      font-family:'Inter';
-      font-weight: 400;
-      letter-spacing:-0.02;
+    .hero-{{ id }}__sub {
+      font-size: 14px;
     }
   }
 {% endstyle %}
 
-<section class="hero-full-width-{{ ai_gen_id }}">
-  {% if block.settings.image != blank %}
-    <img 
-      src="{{ block.settings.image | image_url: width: 3000 }}" 
-      alt="{{ block.settings.image.alt }}" 
-      class="hero-full-width__img-{{ ai_gen_id }}"
-      height="auto"
-      width="auto"
-    >
-  {% else %}
-    {{ 'lifestyle-2' | placeholder_svg_tag: 'hero-full-width__img-ai' }}
-  {% endif %}
+<section class="hero-{{ id }}" {{ block.shopify_attributes }}>
+  <div class="hero-{{ id }}__media">
+    {% if block.settings.image != blank %}
+      {{
+        block.settings.image
+        | image_url: width: 3000
+        | image_tag:
+            loading: 'lazy',
+            widths: '375, 750, 1100, 1500, 2200, 3000',
+            sizes: '100vw'
+      }}
+    {% else %}
+      {{ 'lifestyle-2' | placeholder_svg_tag }}
+    {% endif %}
+  </div>
 
-  <div class="hero-text-item-{{ ai_gen_id }} line-1-{{ ai_gen_id }}">{{ block.settings.line1 }}</div>
-  <div class="hero-text-item-{{ ai_gen_id }} line-2-{{ ai_gen_id }}">{{ block.settings.line2 }}</div>
-  <div class="hero-text-item-{{ ai_gen_id }} sub-{{ ai_gen_id }}">{{ block.settings.subheading }}</div>
+  <div class="hero-{{ id }}__content">
+    {% if block.settings.line1 != blank %}
+      <p class="hero-{{ id }}__line">{{ block.settings.line1 }}</p>
+    {% endif %}
+    {% if block.settings.line2 != blank %}
+      <p class="hero-{{ id }}__line hero-{{ id }}__line--right">{{ block.settings.line2 }}</p>
+    {% endif %}
+    {% if block.settings.subheading != blank %}
+      <p class="hero-{{ id }}__sub">{{ block.settings.subheading }}</p>
+    {% endif %}
+  </div>
 </section>
 
 {% schema %}
@@ -120,211 +125,26 @@
       "default": "#FFFFFF"
     },
     {
-      "type": "range",
-      "id": "font_weight",
-      "min": 100,
-      "max": 900,
-      "step": 100,
-      "label": "Main Font Weight",
-      "default": 400
-    },
-    {
       "type": "header",
-      "content": "Section Dimensions"
-    },
-    {
-      "type": "range",
-      "id": "height_desktop",
-      "min": 400,
-      "max": 1000,
-      "step": 50,
-      "unit": "px",
-      "label": "Desktop Height",
-      "default": 600
-    },
-    {
-      "type": "range",
-      "id": "height_mobile",
-      "min": 300,
-      "max": 800,
-      "step": 50,
-      "unit": "px",
-      "label": "Mobile Height",
-      "default": 500
-    },
-    {
-      "type": "header",
-      "content": "Line 1 (Top Line)"
+      "content": "Text Content"
     },
     {
       "type": "text",
       "id": "line1",
-      "label": "Text",
+      "label": "Line 1",
       "default": "LOREM IPSUM"
-    },
-    {
-      "type": "range",
-      "id": "line1_size",
-      "min": 20,
-      "max": 110,
-      "label": "Size",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "line1_h",
-      "min": 0,
-      "max": 100,
-      "label": "Horizontal Pos (%)",
-      "default": 20
-    },
-    {
-      "type": "range",
-      "id": "line1_v",
-      "min": 0,
-      "max": 100,
-      "label": "Vertical Pos (%)",
-      "default": 35
-    },
-    {
-      "type": "range",
-      "id": "line1_size_m",
-      "min": 10,
-      "max": 60,
-      "label": "Mobile Size",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "line1_h_m",
-      "min": 0,
-      "max": 100,
-      "label": "Mobile H-Pos",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "line1_v_m",
-      "min": 0,
-      "max": 100,
-      "label": "Mobile V-Pos",
-      "default": 30
-    },
-    {
-      "type": "header",
-      "content": "Line 2 (Offset Line)"
     },
     {
       "type": "text",
       "id": "line2",
-      "label": "Text",
+      "label": "Line 2",
       "default": "DOLOR"
-    },
-    {
-      "type": "range",
-      "id": "line2_size",
-      "min": 10,
-      "max": 100,
-      "label": "Size",
-      "default": 80
-    },
-    {
-      "type": "range",
-      "id": "line2_h",
-      "min": 0,
-      "max": 100,
-      "label": "Horizontal Pos (%)",
-      "default": 50
-    },
-    {
-      "type": "range",
-      "id": "line2_v",
-      "min": 0,
-      "max": 100,
-      "label": "Vertical Pos (%)",
-      "default": 45
-    },
-    {
-      "type": "range",
-      "id": "line2_size_m",
-      "min": 10,
-      "max": 60,
-      "label": "Mobile Size",
-      "default": 30
-    },
-    {
-      "type": "range",
-      "id": "line2_h_m",
-      "min": 0,
-      "max": 100,
-      "label": "Mobile H-Pos",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "line2_v_m",
-      "min": 0,
-      "max": 100,
-      "label": "Mobile V-Pos",
-      "default": 38
-    },
-    {
-      "type": "header",
-      "content": "Subheading"
     },
     {
       "type": "text",
       "id": "subheading",
-      "label": "Text",
+      "label": "Subheading",
       "default": "Exclusive Collection 2025/26"
-    },
-    {
-      "type": "range",
-      "id": "sub_size",
-      "min": 10,
-      "max": 40,
-      "label": "Size",
-      "default": 14
-    },
-    {
-      "type": "range",
-      "id": "sub_h",
-      "min": 0,
-      "max": 100,
-      "label": "Horizontal Pos (%)",
-      "default": 50
-    },
-    {
-      "type": "range",
-      "id": "sub_v",
-      "min": 0,
-      "max": 100,
-      "label": "Vertical Pos (%)",
-      "default": 52
-    },
-    {
-      "type": "range",
-      "id": "sub_size_m",
-      "min": 8,
-      "max": 30,
-      "label": "Mobile Size",
-      "default": 12
-    },
-    {
-      "type": "range",
-      "id": "sub_h_m",
-      "min": 0,
-      "max": 100,
-      "label": "Mobile H-Pos",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "sub_v_m",
-      "min": 0,
-      "max": 100,
-      "label": "Mobile V-Pos",
-      "default": 44
     }
   ],
   "presets": [
