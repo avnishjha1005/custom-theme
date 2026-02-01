@@ -161,7 +161,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>AltaRasa is a fashion-led platform shaping a contemporary expression of South Asian style — culturally-grounded, globally-fluent, and quietly confident. Each piece is selected for its design intelligence and relevance across people, places, and ways of living.</p>",
+            "text": "<p>AltaRasa is a fashion-led platform shaping a contemporary expression of South Asian style — culturally-grounded, globally-fluent, and quietly confident. </p><p> Each piece is selected for its design intelligence and relevance across people, places, and ways of living.</p>",
             "width": "fit-content",
             "max_width": "none",
             "alignment": "left",
