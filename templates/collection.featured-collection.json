@@ -38,7 +38,7 @@
         "logo_7k4hiH"
       ],
       "custom_css": [
-        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; height: 0; padding: 0; }}",
+        ".logo-block {height: 24px; @media screen and (min-width: 768px) {display: none; height: 0; padding: 0px !important; }}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
@@ -67,7 +67,7 @@
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "padding-block-start": 16,
-        "padding-block-end": 0
+        "padding-block-end": 16
       }
     },
     "1766389154a3d216c8": {
@@ -90,7 +90,8 @@
         "image_text_overlay_y4QVwD"
       ],
       "custom_css": [
-        ".custom-section-content {padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important;}",
+        ".shopify-block {height: 100%; width: 100%;}"
       ],
       "settings": {
         "content_direction": "column",
@@ -102,7 +103,7 @@
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
         "section_width": "full-width",
-        "section_height": "full-screen",
+        "section_height": "large",
         "section_height_custom": 50,
         "color_scheme": "scheme-6",
         "background_media": "none",
