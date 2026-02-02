@@ -50,7 +50,7 @@
         "logo_DPxXBt"
       ],
       "custom_css": [
-        ".logo-block {height: 24px; @media screen and (min-width: 768px) {display: none; padding: 0; height: 0; }}",
+        ".logo-block {height: 24px; @media screen and (min-width: 768px) {display: none !important; padding: 0 !important; height: 0px !important; }}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
