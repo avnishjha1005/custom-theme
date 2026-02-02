@@ -1234,7 +1234,9 @@
       "custom_css": [
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0; padding-right: 0; padding-bottom: 0;}",
         "quick-add-component button {align-items: end; padding-bottom: 0; justify-content: end; padding-right: 0px;}",
-        "quick-add-component .svg-wrapper {justify-content: end; padding-right: 5px;}"
+        "quick-add-component .svg-wrapper {justify-content: end; padding-right: 5px;}",
+        ".slideshow-slides[gutters*=\"start\"] {padding-inline-start: 0px;}",
+        "[ref=\"resourceListCarousel\"] > [ref=\"slideshowContainer\"] > [ref=\"scroller\"] {padding-left: 0; padding-right: 0;}"
       ],
       "name": "t:names.product_recommendations",
       "settings": {
