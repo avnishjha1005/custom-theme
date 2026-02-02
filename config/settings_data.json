@@ -233,8 +233,8 @@
           "icon_size": 11,
           "icon_stroke_width": 1.4,
           "app_integration_preset": "none",
-          "product_link_selector": ".product-media> a[href*=\"/products/\"]",
-          "floating_reference_js": "target.find(\".product-media\")"
+          "product_link_selector": ".product-card > a[href*=\"/products/\"]",
+          "floating_reference_js": ""
         }
       }
     },
