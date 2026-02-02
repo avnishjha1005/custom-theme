@@ -876,7 +876,9 @@
           "the-editorial",
           "the-wedding-edit",
           "everyday-essentials",
-          "the-silk-route"
+          "the-silk-route",
+          "collection4",
+          "collection3"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
