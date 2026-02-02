@@ -15,7 +15,8 @@
       "type": "export-collage",
       "custom_css": [
         ".collage-container {max-width: 1440px; margin: auto;}",
-        ".collage-heading {font-size: 30px;}"
+        ".collage-heading {font-size: 30px;}",
+        ".collage-subheading{color:black}"
       ],
       "name": "Expert Collage",
       "settings": {
