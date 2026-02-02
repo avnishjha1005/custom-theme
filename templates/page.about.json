@@ -216,7 +216,7 @@
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "flex-start",
             "gap": 12,
-            "width": "custom",
+            "width": "fill",
             "custom_width": 84,
             "width_mobile": "fill",
             "custom_width_mobile": 100,
@@ -249,7 +249,7 @@
               "name": "t:names.text",
               "settings": {
                 "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>{{ closest.page.content }}",
-                "width": "fit-content",
+                "width": "100%",
                 "max_width": "none",
                 "alignment": "left",
                 "type_preset": "rte",
@@ -794,7 +794,7 @@
         "accordion_L4JaPx"
       ],
       "custom_css": [
-        ".custom-section-content {padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important; max-width: 735px; margin: auto;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
