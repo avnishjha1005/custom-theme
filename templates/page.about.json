@@ -793,6 +793,9 @@
         "video_byFT4A",
         "accordion_L4JaPx"
       ],
+      "custom_css": [
+        ".custom-section-content {padding: 0px !important;}"
+      ],
       "name": "t:names.custom_section",
       "settings": {
         "content_direction": "column",
