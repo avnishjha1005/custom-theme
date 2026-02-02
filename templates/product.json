@@ -948,7 +948,7 @@
         "@media screen and (min-width: 750px) {.product-information__media {grid-column: 2/3; }}",
         "@media screen and (max-width: 750px) .group-block>.group-block-content>.group-block.group-block-content {}",
         ".variant-picker {width: 75%;}",
-        ".slideshow-controls__thumbnails{padding-inline:2px;}"
+        ".slideshow-controls__thumbnails {padding-inline: 2px;}"
       ],
       "settings": {
         "content_width": "content-center-aligned",
@@ -1134,7 +1134,7 @@
                         "alignment": "left",
                         "type_preset": "custom",
                         "font": "var(--font-body--family)",
-                        "font_size": "0.625rem",
+                        "font_size": "0.875rem",
                         "line_height": "normal",
                         "letter_spacing": "normal",
                         "case": "none",
