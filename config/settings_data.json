@@ -61,6 +61,7 @@
     "currency_code_enabled_product_pages": true,
     "currency_code_enabled_product_cards": true,
     "show_second_image_on_hover": false,
+    "empty_state_collection": "",
     "product_corner_radius": 0,
     "card_corner_radius": 0,
     "card_title_case": "uppercase",
