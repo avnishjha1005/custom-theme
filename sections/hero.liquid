@@ -317,12 +317,12 @@
   .hero__carousel-container > :is(.hero__image, .hero__video, .hero__video-wrapper, svg).carousel-active { opacity: 1; }
 
   .hero__image, .hero__video, .hero__video-poster {
-    height: 100%; width: 100%; object-fit: cover; object-position: 50% 25%;
+    height: 100%; width: 100%; object-fit: cover; object-position: center center;
     overflow: hidden; position: relative; z-index: var(--layer-base);
   }
 
   .hero__image--mobile { display: none; }
-  .hero__image--desktop { display: block; object-fit: cover; object-position: top;}
+  .hero__image--desktop { display: block; object-fit: cover; object-position: center center;}
   @media screen and (max-width: 749px) {
     .hero__image--desktop { display: none; }
     .hero__image--mobile { display: block; }
