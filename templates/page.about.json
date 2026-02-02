@@ -278,7 +278,8 @@
           "type": "video",
           "name": "t:names.video",
           "settings": {
-            "source": "url",
+            "source": "uploaded",
+            "video": "shopify://files/videos/1118437_Pine_High_3840x2160.mp4",
             "video_url": "https://www.youtube.com/watch?v=MtA1Xm3X1-w",
             "video_autoplay": false,
             "video_loop": true,
