@@ -254,7 +254,7 @@
           style="{{ style | strip }}"
         {%- endif -%}
       >
-        <div class="header__columns spacing-style">
+        <div class="header__columns spacing-style" style="max-width: 1440px;margin: auto; width: 100%">
           {{ content }}
         </div>
       </div>
@@ -673,7 +673,7 @@
       width: 100%;
       padding-inline: var(--padding-sm);
     }
-
+    
     /* Strip away the column and action wrappers */
     .header__column,
     header-actions {
