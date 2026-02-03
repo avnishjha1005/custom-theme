@@ -50,7 +50,8 @@
         "logo_DPxXBt"
       ],
       "custom_css": [
-        ".logo-block {height: 24px; @media screen and (min-width: 768px) {display: none; padding: 0; height: 0; }}",
+        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; padding: 0px; }}",
+        "@media screen and (min-width: 768px) {.spacing-style {padding: 0px; }}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
@@ -215,7 +216,7 @@
             "horizontal_alignment_flex_direction_column": "center",
             "vertical_alignment_flex_direction_column": "flex-start",
             "gap": 12,
-            "width": "custom",
+            "width": "fill",
             "custom_width": 84,
             "width_mobile": "fill",
             "custom_width_mobile": 100,
@@ -237,7 +238,7 @@
             "link": "",
             "open_in_new_tab": false,
             "placeholder": "",
-            "padding-block-start": 0,
+            "padding-block-start": 20,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
@@ -248,7 +249,7 @@
               "name": "t:names.text",
               "settings": {
                 "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>{{ closest.page.content }}",
-                "width": "fit-content",
+                "width": "100%",
                 "max_width": "none",
                 "alignment": "left",
                 "type_preset": "rte",
@@ -278,12 +279,13 @@
           "type": "video",
           "name": "t:names.video",
           "settings": {
-            "source": "url",
+            "source": "uploaded",
+            "video": "shopify://files/videos/1118437_Pine_High_3840x2160.mp4",
             "video_url": "https://www.youtube.com/watch?v=MtA1Xm3X1-w",
             "video_autoplay": false,
             "video_loop": true,
             "alt": "",
-            "custom_width": 67,
+            "custom_width": 100,
             "custom_width_mobile": 100,
             "aspect_ratio": "16/9",
             "border": "none",
@@ -330,7 +332,7 @@
                   "settings": {
                     "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
                     "width": "100%",
-                    "max_width": "normal",
+                    "max_width": "none",
                     "alignment": "left",
                     "type_preset": "rte",
                     "font": "var(--font-body--family)",
@@ -369,7 +371,7 @@
                   "settings": {
                     "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
                     "width": "100%",
-                    "max_width": "normal",
+                    "max_width": "none",
                     "alignment": "left",
                     "type_preset": "rte",
                     "font": "var(--font-body--family)",
@@ -514,7 +516,7 @@
                           "settings": {
                             "image": "shopify://shop_images/24a74ed60e163ac576ad1d7d0972d37a13046cf5.jpg",
                             "link": "",
-                            "image_ratio": "adapt",
+                            "image_ratio": "square",
                             "width": "fill",
                             "custom_width": 100,
                             "width_mobile": "fill",
@@ -663,7 +665,7 @@
                           "settings": {
                             "image": "shopify://shop_images/8506f49c1c5af76a0447cda80f307f374a69a2da.jpg",
                             "link": "",
-                            "image_ratio": "adapt",
+                            "image_ratio": "square",
                             "width": "fill",
                             "custom_width": 100,
                             "width_mobile": "fill",
@@ -791,6 +793,9 @@
         "video_byFT4A",
         "accordion_L4JaPx"
       ],
+      "custom_css": [
+        ".custom-section-content {padding: 0px !important; max-width: 735px; margin: auto;}"
+      ],
       "name": "t:names.custom_section",
       "settings": {
         "content_direction": "column",
@@ -817,7 +822,7 @@
         "overlay_style": "solid",
         "gradient_direction": "to top",
         "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-end": 50
       }
     }
   },

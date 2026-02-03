@@ -62,7 +62,11 @@
           "source": "{{ metaobjects.hero_image[\"the-editorial\"] }}",
           "settings": {
             "image": "{{ metaobjects.hero_image[\"the-editorial\"].image.value }}",
-            "heading": "<p>{{ metaobjects.hero_image[\"the-editorial\"].hero_text.value }}</p>"
+            "heading": "<h3>{{ metaobjects.hero_image[\"the-editorial\"].hero_text.value }}</h3>",
+            "text_max_width": 300,
+            "button_link": "",
+            "button_label": "SHOP NOW",
+            "open_in_new_tab": false
           }
         }
       },
@@ -157,7 +161,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>AltaRasa is a fashion-led platform shaping a contemporary expression of South Asian style — culturally-grounded, globally-fluent, and quietly confident. Each piece is selected for its design intelligence and relevance across people, places, and ways of living.</p>",
+            "text": "<p>AltaRasa is a fashion-led platform shaping a contemporary expression of South Asian style — culturally-grounded, globally-fluent, and quietly confident. </p><p> Each piece is selected for its design intelligence and relevance across people, places, and ways of living.</p>",
             "width": "fit-content",
             "max_width": "none",
             "alignment": "left",
@@ -441,8 +445,8 @@
                     "gap": 6,
                     "width": "fit-content",
                     "custom_width": 70,
-                    "width_mobile": "custom",
-                    "custom_width_mobile": 50,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 79,
                     "height": "fill",
                     "custom_height": 100,
                     "inherit_color_scheme": true,
@@ -606,7 +610,7 @@
         "ai_gen_block_4ce6f26_pz87jb": {
           "type": "ai_gen_block_4ce6f26",
           "settings": {
-            "text_background_color": "#692c23",
+            "text_background_color": "#132242",
             "image": "shopify://shop_images/9c12019ba16d20bf89362de37bc242dc33d9dc5a.jpg",
             "desktop_image_position": "left",
             "desktop_min_height": 500,
@@ -861,7 +865,7 @@
       ],
       "custom_css": [
         "a {font-weight: bold; text-decoration: underline;}",
-        ".image-block__image {object-position: center center;}",
+        ".image-block__image {object-position: 50% 25%;}",
         ".section--full-width {max-width: 1440px; margin: auto; padding-inline: 16px;}",
         ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}",
         ".section-resource-list__content {display: none;}"
@@ -872,7 +876,9 @@
           "the-editorial",
           "the-wedding-edit",
           "everyday-essentials",
-          "the-silk-route"
+          "the-silk-route",
+          "collection4",
+          "collection3"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": false,

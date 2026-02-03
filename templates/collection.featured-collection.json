@@ -39,6 +39,7 @@
       ],
       "custom_css": [
         ".logo-block {height: 24px; @media screen and (min-width: 768px) {display: none; height: 0; padding: 0px !important; }}",
+        ".spacing-style {@media screen and (min-width: 768px) {display: none; height: 0; padding: 0px !important; }}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
@@ -91,7 +92,8 @@
       ],
       "custom_css": [
         ".custom-section-content {padding: 0px !important;}",
-        ".shopify-block {height: 100%; width: 100%;}"
+        ".shopify-block {height: 100%; width: 100%;}",
+        "img{object-position: 50% 20%;}"
       ],
       "settings": {
         "content_direction": "column",
@@ -103,7 +105,7 @@
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
         "section_width": "full-width",
-        "section_height": "large",
+        "section_height": "medium",
         "section_height_custom": 50,
         "color_scheme": "scheme-6",
         "background_media": "none",
