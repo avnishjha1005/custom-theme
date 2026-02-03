@@ -29,12 +29,21 @@ class PredictiveSearchComponent extends Component {
   #activeFetch = null;
 
   /**
-   * Get the dialog component.
-   * @returns {DialogComponent | null} The dialog component.
+   * Get the container component (dialog or search dropdown).
+   * @returns {DialogComponent | HTMLElement | null} The container component.
    */
   get dialog() {
-    return this.closest('dialog-component');
+    return this.closest('dialog-component') ?? this.closest('search-dropdown-component');
   }
+
+  /**
+   * Close the container (dialog or dropdown), called by the close button.
+   */
+  closeContainer = () => {
+    /** @type {any} */
+    const container = this.dialog;
+    container?.closeDialog();
+  };
 
   connectedCallback() {
     super.connectedCallback();
@@ -84,11 +93,21 @@ class PredictiveSearchComponent extends Component {
 
   /**
    * Handles the CMD+K key combination.
+   * Only responds if this instance's container matches the current viewport
+   * (desktop-only containers on desktop, mobile-only containers on mobile).
    * @param {KeyboardEvent} event - The keyboard event.
    */
   #handleKeyboardShortcut = (event) => {
     if (event.metaKey && event.key === 'k') {
-      this.dialog?.toggleDialog();
+      const container = this.dialog;
+      if (!container) return;
+
+      const isDesktop = window.matchMedia('(min-width: 750px)').matches;
+      if (container.hasAttribute('data-desktop-only') && !isDesktop) return;
+      if (container.hasAttribute('data-mobile-only') && isDesktop) return;
+
+      event.preventDefault();
+      container.toggleDialog();
     }
   };
 

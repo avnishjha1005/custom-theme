@@ -1,6 +1,6 @@
 import { Component } from '@theme/component';
 import { debounce, onDocumentLoaded } from '@theme/utilities';
-import { MegaMenuHoverEvent } from '@theme/events';
+import { MegaMenuHoverEvent, ThemeEvents } from '@theme/events';
 
 const ACTIVATE_DELAY = 0;
 const DEACTIVATE_DELAY = 350;
@@ -28,6 +28,17 @@ class HeaderMenu extends Component {
     this.overflowMenu?.addEventListener('pointerleave', () => this.#debouncedDeactivate(), {
       signal: this.#abortController.signal,
     });
+
+    // Close mega menu when search dropdown opens
+    document.addEventListener(
+      ThemeEvents.searchDropdownOpen,
+      () => {
+        this.#debouncedActivateHandler.cancel();
+        this.#debouncedDeactivate.cancel();
+        this.#deactivate();
+      },
+      { signal: this.#abortController.signal }
+    );
 
     onDocumentLoaded(this.#preloadImages);
   }

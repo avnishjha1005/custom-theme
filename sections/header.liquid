@@ -261,6 +261,11 @@
     {% endif %}
   {% endfor %}
 
+  {%- comment -%} Desktop search dropdown (mega menu style) {%- endcomment -%}
+  {% if section.settings.show_search %}
+    {% render 'search-dropdown' %}
+  {% endif %}
+
   {% if navigation_bar != blank %}
     <div class="header__row header__row--mobile desktop:hidden color-{{ section.settings.color_scheme_bottom }}">
       {{ navigation_bar }}
@@ -305,7 +310,8 @@
     &[transparent='not-sticky'][data-sticky-state='active'],
     &:has(.mega-menu__list:hover),
     &:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'], [data-animating])),
-    &:has(.menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'], [data-animating])) {
+    &:has(.menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'], [data-animating])),
+    &:has(.search-dropdown__panel[data-open]) {
       --header-logo-display: unset;
       --header-logo-inverse-display: unset;
       --header-bg-color: unset;
@@ -333,7 +339,8 @@
       :has(
           .mega-menu__list:hover,
           .menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'], [data-animating]),
-          .menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'], [data-animating])
+          .menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'], [data-animating]),
+          .search-dropdown__panel[data-open]
         )
     ) {
     --color-foreground: inherit;
@@ -352,13 +359,25 @@
   .header--inherit-color-scheme-on-menu-open:has(
       .menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'], [data-animating])
     )
-    .header__row {
+    .header__row,
+  .header--inherit-color-scheme-on-menu-open:has(.search-dropdown__panel[data-open]) .header__row {
     --color-foreground: inherit;
     --color-foreground-rgb: inherit;
     --color-background: inherit;
     --color-background-rgb: inherit;
     --color-border: inherit;
     --color-border-rgb: inherit;
+  }
+
+  .header {
+    transition: background-color var(--animation-speed) var(--animation-easing);
+  }
+
+  .header:has(.mega-menu__list:hover),
+  .header:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'], [data-animating])),
+  .header:has(.menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'], [data-animating])),
+  .header:has(.search-dropdown__panel[data-open]) {
+    background-color: var(--color-background);
   }
 
   .header-section {
@@ -377,7 +396,8 @@
   }
 
   .header[data-sticky-state] {
-    transition: opacity var(--animation-speed) var(--animation-easing);
+    transition: opacity var(--animation-speed) var(--animation-easing),
+      background-color var(--animation-speed) var(--animation-easing);
     opacity: 1;
   }
 

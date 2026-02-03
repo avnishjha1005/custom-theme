@@ -26,6 +26,8 @@ export class ThemeEvents {
   static discountUpdate = 'discount:update';
   /** @static @constant {string} Event triggered when changing collection filters */
   static FilterUpdate = 'filter:update';
+  /** @static @constant {string} Event triggered when the search dropdown opens */
+  static searchDropdownOpen = 'searchDropdown:open';
 }
 
 /**
@@ -270,6 +272,16 @@ export class ZoomMediaSelectedEvent extends Event {
 export class MegaMenuHoverEvent extends Event {
   constructor() {
     super(ThemeEvents.megaMenuHover, { bubbles: true });
+  }
+}
+
+/**
+ * Event class for search dropdown being opened
+ * @extends {Event}
+ */
+export class SearchDropdownOpenEvent extends Event {
+  constructor() {
+    super(ThemeEvents.searchDropdownOpen, { bubbles: true });
   }
 }
 

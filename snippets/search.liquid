@@ -10,9 +10,25 @@
 
 {% unless style == 'none' %}
   <search-button class="search-action{% if class != blank %} {{ class | strip }}{% endif %}">
+    {%- comment -%} Desktop: opens dropdown below header {%- endcomment -%}
+    <button
+      on:click="#search-dropdown/showDialog"
+      class="button button-unstyled search-modal__button header-actions__action mobile:hidden"
+      aria-label="{{ 'content.search_input_label' | t }}"
+      aria-haspopup="true"
+    >
+      <span
+        aria-hidden="true"
+        class="svg-wrapper"
+      >
+        {{ 'icon-search.svg' | inline_asset_content }}
+      </span>
+    </button>
+
+    {%- comment -%} Mobile: opens modal dialog {%- endcomment -%}
     <button
       on:click="#search-modal/showDialog"
-      class="button button-unstyled search-modal__button header-actions__action"
+      class="button button-unstyled search-modal__button header-actions__action desktop:hidden"
       aria-label="{{ 'content.search_input_label' | t }}"
       aria-haspopup="dialog"
     >
