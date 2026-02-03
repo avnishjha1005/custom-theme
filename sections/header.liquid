@@ -254,7 +254,7 @@
           style="{{ style | strip }}"
         {%- endif -%}
       >
-        <div class="header__columns spacing-style">
+        <div class="header__columns spacing-style" style="max-width: 1440px;margin: auto;">
           {{ content }}
         </div>
       </div>
@@ -666,8 +666,6 @@
 
     /* Reset the main container to a flat flex row */
     .header__columns {
-      width: 1440px !important;
-    margin: auto;
       display: flex !important;
       flex-direction: row !important;
       grid-template-columns: none !important;
@@ -677,7 +675,7 @@
       width: 100%;
       padding-inline: var(--padding-sm);
     }
-
+    
     /* Strip away the column and action wrappers */
     .header__column,
     header-actions {
