@@ -9,6 +9,12 @@
 {% liquid
   assign block_settings = block.settings
   assign animation_speed = 200
+
+  if block_settings.menu_style == 'featured_collections' or block_settings.menu_style == 'collection_images'
+    assign drawer_aspect_ratio = block_settings.featured_collections_aspect_ratio
+  elsif block_settings.menu_style == 'featured_products'
+    assign drawer_aspect_ratio = block_settings.featured_products_aspect_ratio
+  endif
 %}
 
 {% case variant %}
@@ -23,7 +29,8 @@
         linklist: block_settings.menu,
         data_header_drawer_type: 'mobile-drawer',
         menu_content_type: block_settings.menu_style,
-        image_border_radius: block_settings.image_border_radius
+        image_border_radius: block_settings.image_border_radius,
+        content_aspect_ratio: drawer_aspect_ratio
       %}
     </div>
 
