@@ -35,28 +35,28 @@
       --search-border-width: var(--style-border-width);
 
       display: block;
-      position: relative;
-      width: 100%;
-    }
-
-    .search-dropdown__panel {
       position: absolute;
       top: 0;
       left: 0;
+      right: 0;
       width: 100%;
       z-index: var(--layer-header-menu);
+      pointer-events: none;
+    }
+
+    search-dropdown-component:has(.search-dropdown__panel[data-open]) {
+      pointer-events: auto;
+    }
+
+    .search-dropdown__panel {
+      width: 100%;
       background-color: var(--color-background);
       box-shadow: var(--shadow-popover);
       overflow: hidden;
       visibility: hidden;
       pointer-events: none;
-
-      /* clip-path animation matching mega menu pattern */
-      clip-path: rect(0 100% var(--search-dropdown-height, 0px) 0);
       opacity: var(--search-dropdown-opacity, 0);
-      transition:
-        clip-path 200ms var(--ease-out-cubic),
-        opacity 200ms var(--ease-out-cubic);
+      transition: opacity 200ms var(--ease-out-cubic);
     }
 
     .search-dropdown__panel[data-open] {
@@ -82,12 +82,12 @@
       max-height: calc(70vh - var(--header-height, 60px));
     }
 
-    /* Hide the close button on desktop dropdown - use Escape or click-outside */
+    /* Show the close button on desktop as X to dismiss search */
     search-dropdown-component .predictive-search__close-modal-button {
-      display: none;
+      display: flex;
     }
 
-    /* Search header - clean border, no extra padding (form handles it) */
+    /* Search header overlays the header row */
     search-dropdown-component .predictive-search-form__header {
       border: none;
       border-bottom: var(--search-border-width, 1px) solid var(--color-border);

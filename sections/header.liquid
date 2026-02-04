@@ -373,6 +373,12 @@
     transition: background-color var(--animation-speed) var(--animation-easing);
   }
 
+  @media screen and (min-width: 750px) {
+    .header {
+      position: relative;
+    }
+  }
+
   .header:has(.mega-menu__list:hover),
   .header:has(.menu-list__link[aria-haspopup]:is(:hover, [aria-expanded='true'], [data-animating])),
   .header:has(.menu-list__list-item[slot='overflow'] .menu-list__link:is(:hover, [aria-expanded='true'], [data-animating])),
