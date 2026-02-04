@@ -7,10 +7,16 @@
 
 {% if section.settings.enabled and phone != '' %}
   <div id="WA-Widget-{{ section.id }}" class="wa-widget-container">
-    <a 
-      href="{{ chat_url }}" 
-      class="wa-button" 
-      target="_blank" 
+    <button
+      type="button"
+      class="wa-dismiss"
+      aria-label="Dismiss WhatsApp button"
+      onclick="this.parentElement.style.display='none';try{sessionStorage.setItem('wa-fab-dismissed-{{ section.id }}','1')}catch(e){}"
+    >&times;</button>
+    <a
+      href="{{ chat_url }}"
+      class="wa-button"
+      target="_blank"
       rel="noopener"
       aria-label="Chat on WhatsApp"
     >
@@ -20,8 +26,6 @@
       <div class="wa-label-pill">
         <span>{{ section.settings.label_text | default: 'Chat with us' }}</span>
       </div>
-
-      
     </a>
   </div>
 
@@ -33,6 +37,37 @@
       z-index: {{ section.settings.z_index }};
       transform: translate({{ section.settings.offset_x }}px, {{ section.settings.offset_y }}px);
       font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .wa-dismiss {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: none;
+      background: #555;
+      color: #fff;
+      font-size: 14px;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      padding: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      transition: background 0.2s ease;
+      pointer-events: auto;
+    }
+
+    .wa-dismiss:hover {
+      background: #333;
+    }
+
+    .wa-widget-container.wa-hidden {
+      display: none !important;
     }
 
     .wa-button {
@@ -113,27 +148,35 @@
 
   <script>
     (function() {
-      const widget = document.getElementById('WA-Widget-{{ section.id }}');
-      const btn = widget.querySelector('.wa-button');
-      const icon = widget.querySelector('.wa-icon-fab');
-      const pill = widget.querySelector('.wa-label-pill');
+      var storageKey = 'wa-fab-dismissed-{{ section.id }}';
+      var widget = document.getElementById('WA-Widget-{{ section.id }}');
+      var btn = widget.querySelector('.wa-button');
+      var icon = widget.querySelector('.wa-icon-fab');
+      var pill = widget.querySelector('.wa-label-pill');
+      var dismissBtn = widget.querySelector('.wa-dismiss');
+
+      // Hide if previously dismissed this session
+      if (sessionStorage.getItem(storageKey)) {
+        widget.classList.add('wa-hidden');
+      }
+
+      // Dismiss handler
+      dismissBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        sessionStorage.setItem(storageKey, '1');
+        widget.classList.add('wa-hidden');
+      });
 
       btn.addEventListener('click', function(e) {
-        // We only override the click behavior on mobile/touch screens
         if (window.innerWidth <= 767) {
-          
-          // Check if the actual click was on the icon (the FAB)
           if (icon.contains(e.target)) {
-            e.preventDefault(); // Stop the link from opening
-            btn.classList.toggle('is-expanded'); // Open or Close
-          } 
-          
-          // If the click was on the PILL (label), we DON'T preventDefault.
-          // The link will open naturally.
+            e.preventDefault();
+            btn.classList.toggle('is-expanded');
+          }
         }
       });
 
-      // Close pill if user clicks anywhere else on the screen
       document.addEventListener('click', function(e) {
         if (!widget.contains(e.target)) {
           btn.classList.remove('is-expanded');

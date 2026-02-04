@@ -43,41 +43,65 @@
         {% comment %} Main Content Panels {% endcomment %}
         <div class="drawer-panels-container">
           {%- for l1_link in linklist.links -%}
+            {% liquid
+              assign show_collection_images = false
+              if menu_content_type == 'collection_images'
+                assign collection_links = l1_link.links | where: 'type', 'collection_link'
+                assign catalog_links = l1_link.links | where: 'type', 'catalog_link'
+                assign collection_list_links = l1_link.links | where: 'type', 'collections_link'
+                if collection_links.size > 0 or catalog_links.size > 0 or collection_list_links.size > 0
+                  assign show_collection_images = true
+                endif
+              endif
+            %}
             <div class="drawer-panel {% if forloop.first %}is-active{% endif %}" data-panel-l1="{{ forloop.index }}">
-              <ul class="drawer-links-list" role="list">
-                {%- for l2_link in l1_link.links -%}
-                  <li class="drawer-item-container">
-                    {%- if l2_link.links != blank -%}
-                      <button type="button" class="drawer-link-btn"
-                        data-drill-down 
-                        data-target="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}"
-                        data-path="{{ l1_link.title | escape }} / {{ l2_link.title | escape }}">
-                        <span class="link-text">{{ l2_link.title | escape }}</span>
-                        <span class="arrow-icon">
-                          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </span>
-                      </button>
-
-                      {% comment %} Level 3: Nested Slide-in Panel {% endcomment %}
-                      <div class="drawer-panel-nested" id="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}">
-                        <ul class="drawer-links-list" role="list">
-                          {%- for l3_link in l2_link.links -%}
-                            <li>
-                              <a href="{{ l3_link.url }}" class="drawer-link-btn">
-                                {{ l3_link.title | escape }}
-                              </a>
-                            </li>
-                          {%- endfor -%}
-                        </ul>
+              {% if show_collection_images %}
+                <div class="drawer-collection-grid" style="--drawer-image-border-radius: {{ image_border_radius | default: 0 }}px;">
+                  {%- for l2_link in l1_link.links -%}
+                    <a href="{{ l2_link.url }}" class="drawer-collection-card">
+                      <div class="drawer-collection-image-wrap">
+                        {% render 'link-featured-image', link: l2_link, class: 'drawer-collection-image' %}
                       </div>
-                    {%- else -%}
-                      <a href="{{ l2_link.url }}" class="drawer-link-btn">
-                        {{ l2_link.title | escape }}
-                      </a>
-                    {%- endif -%}
-                  </li>
-                {%- endfor -%}
-              </ul>
+                      <span class="drawer-collection-title">{{ l2_link.title | escape }}</span>
+                    </a>
+                  {%- endfor -%}
+                </div>
+              {% else %}
+                <ul class="drawer-links-list" role="list">
+                  {%- for l2_link in l1_link.links -%}
+                    <li class="drawer-item-container">
+                      {%- if l2_link.links != blank -%}
+                        <button type="button" class="drawer-link-btn"
+                          data-drill-down
+                          data-target="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}"
+                          data-path="{{ l1_link.title | escape }} / {{ l2_link.title | escape }}">
+                          <span class="link-text">{{ l2_link.title | escape }}</span>
+                          <span class="arrow-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                          </span>
+                        </button>
+
+                        {% comment %} Level 3: Nested Slide-in Panel {% endcomment %}
+                        <div class="drawer-panel-nested" id="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}">
+                          <ul class="drawer-links-list" role="list">
+                            {%- for l3_link in l2_link.links -%}
+                              <li>
+                                <a href="{{ l3_link.url }}" class="drawer-link-btn">
+                                  {{ l3_link.title | escape }}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      {%- else -%}
+                        <a href="{{ l2_link.url }}" class="drawer-link-btn">
+                          {{ l2_link.title | escape }}
+                        </a>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {% endif %}
             </div>
           {%- endfor -%}
         </div>
@@ -497,6 +521,49 @@
   .is-hidden { visibility: hidden; pointer-events: none; }
   .menu-drawer__inner-container{height: calc(100svh - 56px);}
   .menu-drawer{height: 100vh; z-index:-100;}
+
+  /* Collection image grid in mobile drawer */
+  .drawer-collection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 10px 16px;
+    margin-top: 41px;
+    height: 100%;
+    overflow-y: auto;
+    align-content: start;
+  }
+
+  .drawer-collection-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: #000;
+  }
+
+  .drawer-collection-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: var(--drawer-image-border-radius, 0px);
+    background-color: #f5f5f5;
+  }
+
+  .drawer-collection-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .drawer-collection-title {
+    margin-top: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    line-height: 1.3;
+  }
 </style>
 
 <script>
