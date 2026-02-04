@@ -44,146 +44,63 @@
         <div class="drawer-panels-container">
           {%- for l1_link in linklist.links -%}
             {% liquid
-              assign drawer_featured_image = nil
-              assign drawer_featured_url = nil
-              assign drawer_featured_title = nil
-
-              if menu_content_type == 'featured_collections' or menu_content_type == 'collection_images'
-                if l1_link.type == 'collection_link' and l1_link.object.featured_image
-                  assign drawer_featured_image = l1_link.object.featured_image
-                  assign drawer_featured_url = l1_link.url
-                  assign drawer_featured_title = l1_link.object.title
-                elsif l1_link.type == 'catalog_link' or l1_link.type == 'collections_link'
-                  assign drawer_featured_image = collections.all.featured_image
-                  assign drawer_featured_url = l1_link.url
-                  assign drawer_featured_title = l1_link.title
-                endif
-
-                if drawer_featured_image == nil
-                  for child_link in l1_link.links
-                    if child_link.type == 'collection_link' and child_link.object.featured_image
-                      assign drawer_featured_image = child_link.object.featured_image
-                      assign drawer_featured_url = child_link.url
-                      assign drawer_featured_title = child_link.object.title
-                      break
-                    endif
-                  endfor
-                endif
-
-              elsif menu_content_type == 'featured_products'
-                if l1_link.type == 'collection_link'
-                  assign featured_product = l1_link.object.products | first
-                elsif l1_link.type == 'catalog_link' or l1_link.type == 'collections_link'
-                  assign featured_product = collections.all.products | first
-                else
-                  for child_link in l1_link.links
-                    if child_link.type == 'collection_link'
-                      assign featured_product = child_link.object.products | first
-                      break
-                    endif
-                  endfor
-                endif
-
-                if featured_product and featured_product.featured_image
-                  assign drawer_featured_image = featured_product.featured_image
-                  assign drawer_featured_url = featured_product.url
-                  assign drawer_featured_title = featured_product.title
+              assign show_collection_images = false
+              if menu_content_type == 'collection_images'
+                assign collection_links = l1_link.links | where: 'type', 'collection_link'
+                assign catalog_links = l1_link.links | where: 'type', 'catalog_link'
+                assign collection_list_links = l1_link.links | where: 'type', 'collections_link'
+                if collection_links.size > 0 or catalog_links.size > 0 or collection_list_links.size > 0
+                  assign show_collection_images = true
                 endif
               endif
             %}
             <div class="drawer-panel {% if forloop.first %}is-active{% endif %}" data-panel-l1="{{ forloop.index }}">
-              <ul class="drawer-links-list" role="list">
-                {%- for l2_link in l1_link.links -%}
-                  <li class="drawer-item-container">
-                    {%- if l2_link.links != blank -%}
-                      <button type="button" class="drawer-link-btn"
-                        data-drill-down
-                        data-target="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}"
-                        data-path="{{ l1_link.title | escape }} / {{ l2_link.title | escape }}">
-                        <span class="link-text">{{ l2_link.title | escape }}</span>
-                        <span class="arrow-icon">
-                          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                        </span>
-                      </button>
-
-                      {% comment %} Level 3: Nested Slide-in Panel {% endcomment %}
-                      <div class="drawer-panel-nested" id="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}">
-                        <ul class="drawer-links-list" role="list">
-                          {%- for l3_link in l2_link.links -%}
-                            <li>
-                              <a href="{{ l3_link.url }}" class="drawer-link-btn">
-                                {{ l3_link.title | escape }}
-                              </a>
-                            </li>
-                          {%- endfor -%}
-                        </ul>
-
-                        {% comment %} L3 featured image {% endcomment %}
-                        {% liquid
-                          assign l3_featured_image = nil
-                          assign l3_featured_url = nil
-                          assign l3_featured_title = nil
-
-                          if menu_content_type == 'featured_collections' or menu_content_type == 'collection_images'
-                            if l2_link.type == 'collection_link' and l2_link.object.featured_image
-                              assign l3_featured_image = l2_link.object.featured_image
-                              assign l3_featured_url = l2_link.url
-                              assign l3_featured_title = l2_link.object.title
-                            endif
-                            if l3_featured_image == nil
-                              for l3_child in l2_link.links
-                                if l3_child.type == 'collection_link' and l3_child.object.featured_image
-                                  assign l3_featured_image = l3_child.object.featured_image
-                                  assign l3_featured_url = l3_child.url
-                                  assign l3_featured_title = l3_child.object.title
-                                  break
-                                endif
-                              endfor
-                            endif
-                          elsif menu_content_type == 'featured_products'
-                            if l2_link.type == 'collection_link'
-                              assign l3_product = l2_link.object.products | first
-                            else
-                              for l3_child in l2_link.links
-                                if l3_child.type == 'collection_link'
-                                  assign l3_product = l3_child.object.products | first
-                                  break
-                                endif
-                              endfor
-                            endif
-                            if l3_product and l3_product.featured_image
-                              assign l3_featured_image = l3_product.featured_image
-                              assign l3_featured_url = l3_product.url
-                              assign l3_featured_title = l3_product.title
-                            endif
-                          endif
-                        %}
-                        {% if l3_featured_image %}
-                          <a href="{{ l3_featured_url }}" class="drawer-featured-card" style="--drawer-image-border-radius: {{ image_border_radius | default: 0 }}px; {% if content_aspect_ratio and content_aspect_ratio != 'adapt' %}--drawer-image-aspect-ratio: {{ content_aspect_ratio }};{% endif %}">
-                            <div class="drawer-featured-image-wrap">
-                              {{ l3_featured_image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'drawer-featured-image' }}
-                            </div>
-                            <span class="drawer-featured-title">{{ l3_featured_title | escape }}</span>
-                          </a>
-                        {% endif %}
+              {% if show_collection_images %}
+                <div class="drawer-collection-grid" style="--drawer-image-border-radius: {{ image_border_radius | default: 0 }}px;">
+                  {%- for l2_link in l1_link.links -%}
+                    <a href="{{ l2_link.url }}" class="drawer-collection-card">
+                      <div class="drawer-collection-image-wrap">
+                        {% render 'link-featured-image', link: l2_link, class: 'drawer-collection-image' %}
                       </div>
-                    {%- else -%}
-                      <a href="{{ l2_link.url }}" class="drawer-link-btn">
-                        {{ l2_link.title | escape }}
-                      </a>
-                    {%- endif -%}
-                  </li>
-                {%- endfor -%}
-              </ul>
+                      <span class="drawer-collection-title">{{ l2_link.title | escape }}</span>
+                    </a>
+                  {%- endfor -%}
+                </div>
+              {% else %}
+                <ul class="drawer-links-list" role="list">
+                  {%- for l2_link in l1_link.links -%}
+                    <li class="drawer-item-container">
+                      {%- if l2_link.links != blank -%}
+                        <button type="button" class="drawer-link-btn"
+                          data-drill-down
+                          data-target="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}"
+                          data-path="{{ l1_link.title | escape }} / {{ l2_link.title | escape }}">
+                          <span class="link-text">{{ l2_link.title | escape }}</span>
+                          <span class="arrow-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                          </span>
+                        </button>
 
-              {% comment %} L2 featured image at bottom {% endcomment %}
-              {% if drawer_featured_image %}
-                <a href="{{ drawer_featured_url }}" class="drawer-featured-card" style="--drawer-image-border-radius: {{ image_border_radius | default: 0 }}px; {% if content_aspect_ratio and content_aspect_ratio != 'adapt' %}--drawer-image-aspect-ratio: {{ content_aspect_ratio }};{% endif %}">
-                  <div class="drawer-featured-image-wrap">
-                    {{ drawer_featured_image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'drawer-featured-image' }}
-                  </div>
-                  <span class="drawer-featured-title">{{ drawer_featured_title | escape }}</span>
-                </a>
+                        {% comment %} Level 3: Nested Slide-in Panel {% endcomment %}
+                        <div class="drawer-panel-nested" id="Panel-{{ forloop.parentloop.index }}-{{ forloop.index }}">
+                          <ul class="drawer-links-list" role="list">
+                            {%- for l3_link in l2_link.links -%}
+                              <li>
+                                <a href="{{ l3_link.url }}" class="drawer-link-btn">
+                                  {{ l3_link.title | escape }}
+                                </a>
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+                        </div>
+                      {%- else -%}
+                        <a href="{{ l2_link.url }}" class="drawer-link-btn">
+                          {{ l2_link.title | escape }}
+                        </a>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
               {% endif %}
             </div>
           {%- endfor -%}
@@ -605,35 +522,44 @@
   .menu-drawer__inner-container{height: calc(100svh - 56px);}
   .menu-drawer{height: 100vh; z-index:-100;}
 
-  /* Featured image card in mobile drawer */
-  .drawer-featured-card {
-    display: inline-block;
-    text-decoration: none;
-    color: #000;
-    margin-top: 20px;
-    width: 55%;
+  /* Collection image grid in mobile drawer */
+  .drawer-collection-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 10px 16px;
+    margin-top: 41px;
+    height: 100%;
+    overflow-y: auto;
+    align-content: start;
   }
 
-  .drawer-featured-image-wrap {
+  .drawer-collection-card {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: #000;
+  }
+
+  .drawer-collection-image-wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: var(--drawer-image-aspect-ratio, 3 / 4);
+    aspect-ratio: 3 / 4;
     overflow: hidden;
     border-radius: var(--drawer-image-border-radius, 0px);
     background-color: #f5f5f5;
   }
 
-  .drawer-featured-image {
+  .drawer-collection-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
 
-  .drawer-featured-title {
-    display: block;
+  .drawer-collection-title {
     margin-top: 8px;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
     text-align: left;
     line-height: 1.3;
