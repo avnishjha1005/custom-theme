@@ -43,15 +43,21 @@
         {%- endif -%}
 
         {%- comment -%} MOBILE MEDIA {%- endcomment -%}
-        {%- if block.settings.image != blank -%}
+        {%- liquid
+          assign mobile_image = block.settings.image_mobile
+          if mobile_image == blank
+            assign mobile_image = block.settings.image
+          endif
+        -%}
+        {%- if mobile_image != blank -%}
           {{
-            block.settings.image
+            mobile_image
             | image_url: width: 1600
             | image_tag:
-              width: block.settings.image.width,
+              width: mobile_image.width,
               widths: mobile_widths,
-              height: block.settings.image.height,
-              alt: block.settings.image.alt,
+              height: mobile_image.height,
+              alt: mobile_image.alt,
               class: 'hero__image hero__image--mobile',
               sizes: sizes_mobile,
               fetchpriority: fetch_priority,
