@@ -46,11 +46,10 @@
         },
         "slide_apQzgF": {
           "type": "slide",
-          "source": "{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"] }}",
           "settings": {
             "image": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b_1.jpg",
             "image_mobile": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b_2.jpg",
-            "heading": "<h3>{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].hero_text.value }}</h3>",
+            "heading": "",
             "text_max_width": 300,
             "button_link": "shopify://collections/all",
             "button_label": "SHOP NOW",
