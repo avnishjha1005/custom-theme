@@ -61,7 +61,7 @@
           "settings": {
             "image": "shopify://shop_images/894dd0eab6344161e4e5baeb9b05e2772fec78b1_00e7e2b3-f637-4f45-967e-bd6ad11668db.jpg",
             "image_mobile": "shopify://shop_images/894dd0eab6344161e4e5baeb9b05e2772fec78b1_00e7e2b3-f637-4f45-967e-bd6ad11668db.png",
-            "heading": "<p>PLACEHOLDER</p>",
+            "heading": "<h3>PLACEHOLDER</h3>",
             "text_max_width": 300,
             "button_link": "",
             "button_label": "SHOP NOW",
