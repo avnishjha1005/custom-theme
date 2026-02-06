@@ -623,7 +623,7 @@
             "quote_font_size": 32,
             "quote_font_family": "Marcellus",
             "quote_font_style": "normal",
-            "quote_line_height": "1.4",
+            "quote_line_height": "1.16",
             "quote_font_weight": "400",
             "quote_color": "#ffffff",
             "show_separator": false,
@@ -874,11 +874,9 @@
       "settings": {
         "collection_list": [
           "the-editorial",
-          "the-wedding-edit",
           "everyday-essentials",
           "the-silk-route",
-          "collection4",
-          "collection3"
+          "the-wedding-edit"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
