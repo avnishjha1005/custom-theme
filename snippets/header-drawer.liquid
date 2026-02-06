@@ -324,6 +324,7 @@
     color: #000;
     cursor: pointer;
     transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .drawer-locale-btn:hover {
@@ -388,6 +389,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #000;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .drawer-locale-title {
@@ -433,6 +436,7 @@
     color: #000;
     cursor: pointer;
     transition: opacity 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .drawer-locale-option:hover {
@@ -535,9 +539,19 @@
   .icon-close-container { display: none; }
   details[open] .icon-hamburger-container { display: none; }
   details[open] .icon-close-container { display: block; }
-  
+
   .menu-drawer-icon-wrapper svg {
     display: block;
+  }
+
+  /* iOS Safari fix - prevent blue color on interactive elements */
+  .header__icon--summary {
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .menu-drawer-icon-wrapper {
+    color: inherit;
   }
 
   /* Drawer Styling */
@@ -566,6 +580,8 @@
 
   .drawer-back-btn, .drawer-close-btn {
     background: none; border: none; cursor: pointer; padding: 12px;
+    color: #000;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* L1 Pills */
@@ -577,6 +593,7 @@
     white-space: nowrap; background: #fff; border: none; border-radius: 20px;
     padding:0px; font-size: 10px; font-weight: medium; cursor: pointer; color: #000;
     text-transform:uppercase;
+    -webkit-tap-highlight-color: transparent;
   }
   .pill-item.is-active { text-decoration:underline; font-weight:bold;}
 
@@ -588,8 +605,15 @@
   .drawer-links-list { list-style: none; padding: 0; margin: 0; }
   .drawer-link-btn {
     width: 100%; display: flex; justify-content: space-between; align-items: center;
-    padding: 0 0 12px 0; background: none; 
+    padding: 0 0 12px 0; background: none; border: none;
     font-size: 16px; text-align: left; color: #000; text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .arrow-icon {
+    display: flex;
+    align-items: center;
+    color: inherit;
   }
 
   /* L3 Drill-down */
