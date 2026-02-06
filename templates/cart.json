@@ -26,8 +26,8 @@
             "unit_mobile": "percent",
             "percent_width_mobile": 100,
             "pixel_height_mobile": 120,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
+            "padding-block-start": 10,
+            "padding-block-end": 10,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -36,6 +36,9 @@
       },
       "block_order": [
         "logo_iKbqPx"
+      ],
+      "custom_css": [
+        ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
       "settings": {
