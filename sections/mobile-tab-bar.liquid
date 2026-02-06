@@ -309,6 +309,9 @@ padding-top:41px;padding-right:12px;}
 
 /* Drill Down Panel */
 .drawer-panel-nested { 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   position: absolute; inset: 0; background: #fff; padding: 10px 25px;
   transform: translateX(100%); transition: transform 0.3s ease-out; visibility: hidden; z-index: 10;
 }

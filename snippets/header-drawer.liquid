@@ -118,7 +118,7 @@
                           {%- endfor -%}
                         </ul>
 
-                        {% comment %} L3 featured image {% endcomment %}
+                        {% comment %} L3 featured image - fallback to L1 image if no L3-specific image found {% endcomment %}
                         {% liquid
                           assign l3_featured_image = nil
                           assign l3_featured_url = nil
@@ -156,6 +156,15 @@
                               assign l3_featured_url = l3_product.url
                               assign l3_featured_title = l3_product.title
                             endif
+                          endif
+
+                          comment
+                            Fallback to L1-level featured image if no L3-specific image was found
+                          endcomment
+                          if l3_featured_image == nil and drawer_featured_image
+                            assign l3_featured_image = drawer_featured_image
+                            assign l3_featured_url = drawer_featured_url
+                            assign l3_featured_title = drawer_featured_title
                           endif
                         %}
                         {% if l3_featured_image %}
@@ -618,9 +627,10 @@
 
   /* L3 Drill-down */
   .drawer-panel-nested {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding-top:41px;
-    background: #fff; padding: 10px 16px; transform: translateX(100%);
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: #fff; padding: 10px 16px; padding-top: 41px; transform: translateX(100%);
     transition: transform 0.3s ease; visibility: hidden; z-index: 10;
+    overflow-y: auto;
   }
   .drawer-panel-nested.is-open { transform: translateX(0); visibility: visible; }
 
