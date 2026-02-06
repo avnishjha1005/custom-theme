@@ -49,7 +49,7 @@
           "source": "{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"] }}",
           "settings": {
             "image": "{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].image.value }}",
-            "image_mobile": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b.png",
+            "image_mobile": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b_2.jpg",
             "heading": "<h3>{{ metaobjects.hero_image[\"alta-rasa-x-avnish\"].hero_text.value }}</h3>",
             "text_max_width": 300,
             "button_link": "shopify://collections/all",
