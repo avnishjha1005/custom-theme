@@ -403,7 +403,7 @@
                 "horizontal_alignment_flex_direction_column": "flex-start",
                 "vertical_alignment_flex_direction_column": "space-between",
                 "gap": 21,
-                "width": "fill",
+                "width": "custom",
                 "custom_width": 100,
                 "width_mobile": "fill",
                 "custom_width_mobile": 100,
@@ -427,7 +427,7 @@
                 "padding-block-start": 2,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 23
+                "padding-inline-end": 34
               },
               "blocks": {
                 "group_KJDaTQ": {
