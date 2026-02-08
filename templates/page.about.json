@@ -537,7 +537,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<h5>Advisor Name</h5>",
+                            "text": "<h5>ADVISOR NAME</h5>",
                             "width": "100%",
                             "max_width": "none",
                             "alignment": "left",
