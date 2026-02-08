@@ -147,12 +147,13 @@
       /* Add padding bottom to ensure content isn't hidden behind the absolute image if it sits on top, 
          or just enough space for the design breathing room */
       height: auto;
+      max-height: 500px;
     }
 
     .ai-quote-section__image-wrapper-{{ ai_gen_id }} {
       order:999;
-      width: auto; /* Let image define width or use mobile_image_width */
-      height: auto;
+      height: 170px;
+      width: 141px;
       align-self:center;
        /* Sit on top of content if they overlap */
       background: transparent;
@@ -160,8 +161,8 @@
     }
 
     .ai-quote-section__image-{{ ai_gen_id }} {
-      width: {{ block.settings.mobile_image_width }}px;
-      height: auto;
+      width: 140px;
+      height: 171px;
       max-width: 90vw;
       object-fit: contain;
       display: block;
@@ -169,7 +170,8 @@
 
     .ai-quote-section__content-wrapper-{{ ai_gen_id }} {
       width: 100%;
-      padding: {{ block.settings.mobile_text_padding }}px 0; /* Remove side padding, handle via inner width */
+      padding-bottom:20px;
+      padding-top:38px;
       position: relative;
       z-index: 1;
     }
