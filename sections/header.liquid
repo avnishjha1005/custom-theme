@@ -627,9 +627,28 @@
     }
   }
 
-  /* Mobile-specific styles */
-  @media screen and (max-width: 749px) {
-    .account-drawer{
+  /* Override desktop:hidden for header drawer at 990px breakpoint */
+  .header__drawer.desktop\:hidden {
+    display: flex !important;
+  }
+
+  @media screen and (min-width: 991px) {
+    .header__drawer.desktop\:hidden {
+      display: none !important;
+    }
+  }
+
+  /* Hide desktop menu below 990px */
+  @media screen and (max-width: 990px) {
+    header-menu.mobile\:hidden,
+    .header-menu.mobile\:hidden {
+      display: none !important;
+    }
+  }
+
+  /* Mobile specific styles - bottom navbar */
+  @media screen and (max-width: 990px) {
+    .account-drawer,anchored-popover-component{
       order:2;
     }
     body {
@@ -674,12 +693,12 @@
       flex-direction: row !important;
       grid-template-columns: none !important;
       grid-template-areas: none !important;
-      justify-content: space-evenly !important; 
+      justify-content: space-evenly !important;
       align-items: center;
       width: 100%;
       padding-inline: var(--padding-sm);
     }
-    
+
     /* Strip away the column and action wrappers */
     .header__column,
     header-actions {
@@ -695,33 +714,34 @@
     }
 
     /* Exact Ordering: Search (1), Cart (2), Account (3), Menu (4) */
-    .search-action { 
-      order: 1 !important; 
+    .search-action {
+      order: 1 !important;
     }
 
     .action__cart,
     .header__icon--cart,
-    .cart-drawer { 
-      order: 2 !important; 
+    .cart-drawer {
+      order: 2 !important;
     }
 
-    :is(account-popover, account-drawer, .header-actions__account, .header__icon--account) { 
+    :is(account-popover, account-drawer, .header-actions__account, .header__icon--account) {
       order: 3 !important;
       display: flex !important;
       justify-content: center;
     }
 
     .header__drawer,
-    .header__icon--menu { 
-      order: 4 !important; 
+    .header__icon--menu {
+      order: 4 !important;
     }
 
     /* Force equal distribution */
+    anchored-popover-component,
     .header__columns > *,
     .search-action,
     .header__drawer,
     .cart-drawer,
-    .account-drawer,.action__cart {
+    .account-drawer,.action__cart, .account-button {
       flex: 1 1 0;
       display: flex;
       justify-content: center;

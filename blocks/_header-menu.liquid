@@ -583,6 +583,12 @@
     white-space: normal;
   }
 
+  /* Hide the "More" overflow button entirely */
+  .menu-list__list-item[slot="more"],
+  .overflow-menu::part(more) {
+    display: none !important;
+  }
+
   /* mega more menu */
   .mega-menu__more-list {
     --menu-child-font-size: var(--font-size--xl);
