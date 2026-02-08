@@ -6,12 +6,11 @@
 %}
 
 {% if section.settings.enabled and phone != '' %}
-  <div id="WA-Widget-{{ section.id }}" class="wa-widget-container">
+  <div id="WA-Widget-{{ section.id }}" class="wa-widget-container" style="display:none;">
     <button
       type="button"
       class="wa-dismiss"
       aria-label="Dismiss WhatsApp button"
-      onclick="this.parentElement.style.display='none';try{sessionStorage.setItem('wa-fab-dismissed-{{ section.id }}','1')}catch(e){}"
     >&times;</button>
     <a
       href="{{ chat_url }}"
@@ -78,8 +77,8 @@
     }
 
     .wa-icon-fab {
-      width: 56px;
-      height: 56px;
+      width: 36px;
+      height: 36px;
       background: black;
       border-radius: 50%;
       display: flex;
@@ -92,7 +91,7 @@
       transition: background 0.3s ease;
     }
 
-    .wa-icon-fab svg { width: 30px; height: 30px; }
+    .wa-icon-fab svg { width: 18px; height: 18px; }
 
     .wa-label-pill {
       background: white;
@@ -147,32 +146,35 @@
 
   <script>
     (function() {
-      var storageKey = 'wa-fab-dismissed-{{ section.id }}';
+      var STORAGE_KEY = 'wa_fab_dismissed';
       var widget = document.getElementById('WA-Widget-{{ section.id }}');
+      if (!widget) return;
+
+      // Clear dismissed state on page load and show widget
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch(e) {}
+      widget.style.display = '';
+
       var btn = widget.querySelector('.wa-button');
       var icon = widget.querySelector('.wa-icon-fab');
-      var pill = widget.querySelector('.wa-label-pill');
       var dismissBtn = widget.querySelector('.wa-dismiss');
-
-      // Hide if previously dismissed this session
-      if (sessionStorage.getItem(storageKey)) {
-        widget.classList.add('wa-hidden');
-      }
 
       // Dismiss handler
       dismissBtn.addEventListener('click', function(e) {
         e.preventDefault();
         e.stopPropagation();
-        sessionStorage.setItem(storageKey, '1');
-        widget.classList.add('wa-hidden');
+        widget.style.display = 'none';
+        try {
+          localStorage.setItem(STORAGE_KEY, 'true');
+        } catch(e) {}
       });
 
+      // Mobile expand logic
       btn.addEventListener('click', function(e) {
-        if (window.innerWidth <= 767) {
-          if (icon.contains(e.target)) {
-            e.preventDefault();
-            btn.classList.toggle('is-expanded');
-          }
+        if (window.innerWidth <= 767 && icon.contains(e.target)) {
+          e.preventDefault();
+          btn.classList.toggle('is-expanded');
         }
       });
 
