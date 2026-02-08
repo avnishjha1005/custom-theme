@@ -686,7 +686,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p>Advisor Name</p>",
+                            "text": "<p>ADVISOR NAME</p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
