@@ -3,7 +3,7 @@
 {% style %}
   .ai-three-image-hero-{{ ai_gen_id }} {
     display: block;
-    width: 100%;
+    width: 100vw;
     background-color: {{ block.settings.background_color }};
     padding: {{ block.settings.section_padding }}px 0;
     position: relative;
@@ -11,6 +11,7 @@
   }
 
   .ai-three-image-hero__container-{{ ai_gen_id }} {
+    max-width: 1440px;
     margin: 0 auto;
     padding: 0 20px;
     position: relative;
