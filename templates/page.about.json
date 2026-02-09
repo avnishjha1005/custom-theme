@@ -117,7 +117,7 @@
           "name": "t:names.text",
           "disabled": true,
           "settings": {
-            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>{{ closest.page.content }}",
+            "text": "<p>AltaRasa is a fashion-led platform shaping a contemporary expression of South Asian design - culturally grounded, globally fluent, and quietly confident.</p><p>We are led by silhouette, shape, design intelligence, and the way fashion lives and breathes across bodies, places, and lives.</p><p>This is fashion approached with discovery and discernment. </p><p>South Asian design holds extraordinary depth: in material knowledge, proportion, craftsmanship, and cultural nuance. Yet too often, it has been framed through nostalgia, excess, or occasion alone.</p><p>AltaRasa exists to shift this lens.</p><p>Here, heritage is treated as living intelligence.<br/>Craft is understood as a value system, not an aesthetic.<br/>Fashion is approached as a personal archive built slowly, worn intuitively, and returned to over time.</p><p>We curate with clarity and intention, creating space for designers and garments to be discovered, respected, and worn beyond moment or trend.</p>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "left",
@@ -330,7 +330,7 @@
                 "text_6ARtJm": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
+                    "text": "<p>To build a cultural and commercial ecosystem that redefines luxury, blending depth, discovery, and design intelligence.</p><p>AltaRasa is not only a destination, but a long-term movement in how South Asian design is positioned within the global fashion conversation: with quiet confidence, cultural sensitivity, and timeless relevance.</p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
@@ -369,7 +369,7 @@
                 "text_8zLdKr": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "text": "<p>AltaRasa was founded with a clear point of view: that South Asian fashion deserves to be seen not as a category or moment, but as an evolving, globally relevant design language.</p><p>The platform brings together years of editorial perspective, cultural fluency, and a deep respect for craft, shaping a curatorial voice that values restraint, longevity, and meaning over scale or spectacle.</p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
@@ -408,7 +408,7 @@
                 "text_46WrnC": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>",
+                    "text": "<p>AltaRasa’s journey is one of discipline.</p><p>From its earliest conception, the platform has focused on editing rather than expanding, choosing clarity over noise, and depth over volume.</p><p>Each collection, collaboration, and story builds toward a larger vision: to celebrate South Asian design, and allow garments to speak through how they are worn, lived in, and remembered.</p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
