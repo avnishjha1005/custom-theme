@@ -574,7 +574,7 @@
                         },
                         "text_F7KL8W": {
                           "type": "text",
-                          "name": "t:names.text",
+                          "name": "Advisor Name",
                           "settings": {
                             "text": "<h5>ADVISOR NAME</h5>",
                             "width": "100%",
@@ -723,7 +723,7 @@
                         },
                         "text_W9UVcg": {
                           "type": "text",
-                          "name": "t:names.text",
+                          "name": "Advisor Name",
                           "settings": {
                             "text": "<p>ADVISOR NAME</p>",
                             "width": "fit-content",
