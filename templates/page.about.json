@@ -117,7 +117,7 @@
           "name": "t:names.text",
           "disabled": true,
           "settings": {
-            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>{{ closest.page.content }}",
+            "text": "<p>\"AltaRasa is a fashion-led platform shaping a contemporary expression of South Asian design - culturally grounded, globally fluent, and quietly confident.\"</p><p>AltaRasa is a fashion-led platform shaping a contemporary expression of South Asian design - culturally grounded, globally fluent, and quietly confident.</p><p>We are led by silhouette, shape, design intelligence, and the way fashion lives and breathes across bodies, places, and lives.</p><p>This is fashion approached with discovery and discernment. </p><p>South Asian design holds extraordinary depth: in material knowledge, proportion, craftsmanship, and cultural nuance. Yet too often, it has been framed through nostalgia, excess, or occasion alone.</p><p>AltaRasa exists to shift this lens.</p><p>Here, heritage is treated as living intelligence.<br/>Craft is understood as a value system, not an aesthetic.<br/>Fashion is approached as a personal archive built slowly, worn intuitively, and returned to over time.</p><p>We curate with clarity and intention, creating space for designers and garments to be discovered, respected, and worn beyond moment or trend.</p>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "left",
@@ -248,7 +248,7 @@
               "type": "text",
               "name": "t:names.text",
               "settings": {
-                "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>{{ closest.page.content }}",
+                "text": "<h5>\"AltaRasa is a fashion-led platform shaping a contemporary expression of South Asian design - culturally grounded, globally fluent, and quietly confident.\"</h5><p>We are led by silhouette, shape, design intelligence, and the way fashion lives and breathes across bodies, places, and lives.</p><p>This is fashion approached with discovery and discernment. </p><p>South Asian design holds extraordinary depth: in material knowledge, proportion, craftsmanship, and cultural nuance. Yet too often, it has been framed through nostalgia, excess, or occasion alone.</p><p>AltaRasa exists to shift this lens.</p><p>Here, heritage is treated as living intelligence.<br/>Craft is understood as a value system, not an aesthetic.<br/>Fashion is approached as a personal archive built slowly, worn intuitively, and returned to over time.</p><p>We curate with clarity and intention, creating space for designers and garments to be discovered, respected, and worn beyond moment or trend.</p>",
                 "width": "100%",
                 "max_width": "none",
                 "alignment": "left",
@@ -292,8 +292,8 @@
             "border_width": 1,
             "border_opacity": 100,
             "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
+            "padding-block-start": 20,
+            "padding-block-end": 20,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -330,7 +330,7 @@
                 "text_6ARtJm": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
+                    "text": "<p>To build a cultural and commercial ecosystem that redefines luxury, blending depth, discovery, and design intelligence.</p><p>AltaRasa is not only a destination, but a long-term movement in how South Asian design is positioned within the global fashion conversation: with quiet confidence, cultural sensitivity, and timeless relevance.</p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
@@ -369,7 +369,7 @@
                 "text_8zLdKr": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "text": "<p>AltaRasa was founded with a clear point of view: that South Asian fashion deserves to be seen not as a category or moment, but as an evolving, globally relevant design language.</p><p>The platform brings together years of editorial perspective, cultural fluency, and a deep respect for craft, shaping a curatorial voice that values restraint, longevity, and meaning over scale or spectacle.</p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
@@ -396,6 +396,45 @@
                 "text_8zLdKr"
               ]
             },
+            "accordion_row_bmErhN": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "The Journey",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_tU4QWn": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa’s journey is one of discipline.</p><p>From its earliest conception, the platform has focused on editing rather than expanding, choosing clarity over noise, and depth over volume.</p><p>Each collection, collaboration, and story builds toward a larger vision: to celebrate South Asian design, and allow garments to speak through how they are worn, lived in, and remembered.</p>",
+                    "width": "100%",
+                    "max_width": "none",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_tU4QWn"
+              ]
+            },
             "accordion_row_mih97q": {
               "type": "_accordion-row",
               "settings": {
@@ -408,7 +447,7 @@
                 "text_46WrnC": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>",
+                    "text": "<p>AltaRasa is guided by a circle of advisors across fashion, culture, design, and business - individuals who bring perspective, rigour, and lived experience.</p><p>Their role is not to shape trends, but to strengthen intent, ensuring AltaRasa grows with integrity, intelligence, and long-term vision.</p><p>AltaRasa believes that style, at its best, is not about being seen but about feeling aligned.</p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
@@ -441,7 +480,7 @@
                     "align_baseline": false,
                     "horizontal_alignment_flex_direction_column": "flex-start",
                     "vertical_alignment_flex_direction_column": "center",
-                    "gap": 12,
+                    "gap": 32,
                     "width": "fill",
                     "custom_width": 100,
                     "width_mobile": "fill",
@@ -535,7 +574,7 @@
                         },
                         "text_F7KL8W": {
                           "type": "text",
-                          "name": "t:names.text",
+                          "name": "Advisor Name",
                           "settings": {
                             "text": "<h5>ADVISOR NAME</h5>",
                             "width": "100%",
@@ -684,7 +723,7 @@
                         },
                         "text_W9UVcg": {
                           "type": "text",
-                          "name": "t:names.text",
+                          "name": "Advisor Name",
                           "settings": {
                             "text": "<p>ADVISOR NAME</p>",
                             "width": "fit-content",
@@ -784,6 +823,7 @@
           "block_order": [
             "accordion_row_mQhitH",
             "accordion_row_hXU86c",
+            "accordion_row_bmErhN",
             "accordion_row_mih97q"
           ]
         }
@@ -794,7 +834,8 @@
         "accordion_L4JaPx"
       ],
       "custom_css": [
-        ".custom-section-content {padding: 0px !important; max-width: 735px; margin: auto;}"
+        ".custom-section-content {padding: 0px !important; max-width: 735px; margin: auto;}",
+        "h5{font-weight: 600;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
