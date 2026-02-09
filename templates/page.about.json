@@ -480,7 +480,7 @@
                     "align_baseline": false,
                     "horizontal_alignment_flex_direction_column": "flex-start",
                     "vertical_alignment_flex_direction_column": "center",
-                    "gap": 32,
+                    "gap": 40,
                     "width": "fill",
                     "custom_width": 100,
                     "width_mobile": "fill",
@@ -725,7 +725,7 @@
                           "type": "text",
                           "name": "Advisor Name",
                           "settings": {
-                            "text": "<p>ADVISOR NAME</p>",
+                            "text": "<p><strong>ADVISOR NAME</strong></p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
