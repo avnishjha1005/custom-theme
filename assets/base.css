@@ -4679,6 +4679,9 @@ price-list compare-at-price,
 }
 
 @media screen and (max-width: 768px) {
+  legend{
+    display:none;
+  }
   variant-option__button-label{
     min-height: 30px;
   }
