@@ -704,7 +704,7 @@
                     "text_bkMUN6": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>{{ closest.product.metafields.custom.shipping_policy | metafield_tag }}</p>",
+                        "text": "<p>{{ closest.product.metafields.custom.in_store_availability | metafield_tag }}</p>",
                         "width": "100%",
                         "max_width": "normal",
                         "alignment": "left",
