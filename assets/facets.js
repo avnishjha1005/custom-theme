@@ -209,24 +209,22 @@ if (!customElements.get('facet-inputs-component')) {
  * @typedef {Object} PriceFacetRefs
  * @property {HTMLInputElement} minInput - The minimum price input
  * @property {HTMLInputElement} maxInput - The maximum price input
+ * @property {HTMLDivElement} sliderRange - The slider range element
+ * @property {HTMLElement} minDisplay - The min value display element
+ * @property {HTMLElement} maxDisplay - The max value display element
  */
 
 /**
  * Handles price facet functionality
  * @extends {Component<PriceFacetRefs>}
  */
-// price-facet-component.js
-
-/**
- * @typedef {Object} PriceFacetRefs
- * @property {HTMLInputElement} minInput
- * @property {HTMLInputElement} maxInput
- * @property {HTMLDivElement} sliderRange
- * @property {HTMLElement} minDisplay
- * @property {HTMLElement} maxDisplay
- */
 
 class PriceFacetComponent extends Component {
+  /** @type {number | null} */
+  #rafId = null;
+  /** @type {number | null} */
+  #timeoutId = null;
+
   connectedCallback() {
     super.connectedCallback();
 
@@ -234,15 +232,20 @@ class PriceFacetComponent extends Component {
     this.addEventListener('input', this.#onInput);
     this.addEventListener('change', this.#onChange);
 
+    // Cancel any pending updates from previous connection
+    this.#cancelPendingUpdates();
+
     // Multiple attempts to ensure UI updates after AJAX reload
     this.#updateSliderUI(); // Immediate attempt
-    
-    requestAnimationFrame(() => {
+
+    this.#rafId = requestAnimationFrame(() => {
+      if (!this.isConnected) return;
       this.#updateSliderUI(); // Next frame
     });
-    
+
     // Final backup after a short delay
-    setTimeout(() => {
+    this.#timeoutId = setTimeout(() => {
+      if (!this.isConnected) return;
       this.#updateSliderUI();
     }, 50);
   }
@@ -251,25 +254,40 @@ class PriceFacetComponent extends Component {
     super.disconnectedCallback();
     this.removeEventListener('input', this.#onInput);
     this.removeEventListener('change', this.#onChange);
+    this.#cancelPendingUpdates();
+  }
+
+  #cancelPendingUpdates() {
+    if (this.#rafId !== null) {
+      cancelAnimationFrame(this.#rafId);
+      this.#rafId = null;
+    }
+    if (this.#timeoutId !== null) {
+      clearTimeout(this.#timeoutId);
+      this.#timeoutId = null;
+    }
   }
 
   #onInput = (event) => {
     if (!(event.target instanceof HTMLInputElement)) return;
 
     const { minInput, maxInput } = this.refs;
-    if (!minInput || !maxInput) return;
+    const minEl = Array.isArray(minInput) ? minInput[0] : minInput;
+    const maxEl = Array.isArray(maxInput) ? maxInput[0] : maxInput;
 
-    const minVal = parseFloat(minInput.value);
-    const maxVal = parseFloat(maxInput.value);
-    const gap = parseFloat(maxInput.max) * 0.01; // 1% minimum gap
+    if (!(minEl instanceof HTMLInputElement) || !(maxEl instanceof HTMLInputElement)) return;
 
-    if (event.target === minInput) {
+    const minVal = parseFloat(minEl.value);
+    const maxVal = parseFloat(maxEl.value);
+    const gap = parseFloat(maxEl.max) * 0.01; // 1% minimum gap
+
+    if (event.target === minEl) {
       if (minVal >= maxVal - gap) {
-        minInput.value = String(maxVal - gap);
+        minEl.value = String(maxVal - gap);
       }
-    } else if (event.target === maxInput) {
+    } else if (event.target === maxEl) {
       if (maxVal <= minVal + gap) {
-        maxInput.value = String(minVal + gap);
+        maxEl.value = String(minVal + gap);
       }
     }
 
@@ -283,18 +301,36 @@ class PriceFacetComponent extends Component {
   };
 
   #updateSliderUI() {
+    // Guard against updates when component is disconnected
+    if (!this.isConnected) return;
+
     const { minInput, maxInput, sliderRange, minDisplay, maxDisplay } = this.refs;
 
-    if (!minInput || !maxInput || !sliderRange) {
+    // Ensure sliderRange is a single HTMLElement (not an array) with a style property
+    const rangeElement = Array.isArray(sliderRange) ? sliderRange[0] : sliderRange;
+    if (!rangeElement || !(rangeElement instanceof HTMLElement)) {
       return;
     }
 
-    const min = parseFloat(minInput.min);
-    const max = parseFloat(minInput.max);
-    let minVal = parseFloat(minInput.value);
-    let maxVal = parseFloat(maxInput.value);
+    // If inputs aren't ready, set default full-width range
+    const minEl = Array.isArray(minInput) ? minInput[0] : minInput;
+    const maxEl = Array.isArray(maxInput) ? maxInput[0] : maxInput;
 
-    if (Number.isNaN(minVal) || Number.isNaN(maxVal) || max <= min) {
+    if (!minEl || !maxEl || !(minEl instanceof HTMLInputElement) || !(maxEl instanceof HTMLInputElement)) {
+      rangeElement.style.left = '0%';
+      rangeElement.style.width = '100%';
+      return;
+    }
+
+    const min = parseFloat(minEl.min);
+    const max = parseFloat(minEl.max);
+    let minVal = parseFloat(minEl.value);
+    let maxVal = parseFloat(maxEl.value);
+
+    // If values are invalid, set default full-width range instead of doing nothing
+    if (Number.isNaN(minVal) || Number.isNaN(maxVal) || Number.isNaN(min) || Number.isNaN(max) || max <= min) {
+      rangeElement.style.left = '0%';
+      rangeElement.style.width = '100%';
       return;
     }
 
@@ -309,15 +345,21 @@ class PriceFacetComponent extends Component {
     const clampedMinPercent = Math.max(0, Math.min(100, minPercent));
     const clampedMaxPercent = Math.max(0, Math.min(100, maxPercent));
 
-    // Apply styles with !important to prevent them from being overridden
-    sliderRange.style.setProperty('left', `${clampedMinPercent}%`, 'important');
-    sliderRange.style.setProperty('width', `${clampedMaxPercent - clampedMinPercent}%`, 'important');
+    // Ensure minimum visible width (at least 1%)
+    const width = Math.max(1, clampedMaxPercent - clampedMinPercent);
 
-    if (minDisplay) {
-      minDisplay.textContent = this.#formatDisplayValue(minVal);
+    rangeElement.style.left = `${clampedMinPercent}%`;
+    rangeElement.style.width = `${width}%`;
+
+    // Handle display elements (may also be arrays)
+    const minDisplayEl = Array.isArray(minDisplay) ? minDisplay[0] : minDisplay;
+    const maxDisplayEl = Array.isArray(maxDisplay) ? maxDisplay[0] : maxDisplay;
+
+    if (minDisplayEl instanceof HTMLElement) {
+      minDisplayEl.textContent = this.#formatDisplayValue(minVal);
     }
-    if (maxDisplay) {
-      maxDisplay.textContent = this.#formatDisplayValue(maxVal);
+    if (maxDisplayEl instanceof HTMLElement) {
+      maxDisplayEl.textContent = this.#formatDisplayValue(maxVal);
     }
   }
 
@@ -327,10 +369,13 @@ class PriceFacetComponent extends Component {
 
   updatePriceFilterAndResults() {
     const { minInput, maxInput } = this.refs;
-    if (!minInput || !maxInput) return;
+    const minEl = Array.isArray(minInput) ? minInput[0] : minInput;
+    const maxEl = Array.isArray(maxInput) ? maxInput[0] : maxInput;
 
-    this.#adjustToValidValues(minInput);
-    this.#adjustToValidValues(maxInput);
+    if (!(minEl instanceof HTMLInputElement) || !(maxEl instanceof HTMLInputElement)) return;
+
+    this.#adjustToValidValues(minEl);
+    this.#adjustToValidValues(maxEl);
 
     const facetsForm = this.closest('facets-form-component');
     if (!(facetsForm instanceof FacetsFormComponent)) return;
@@ -343,7 +388,7 @@ class PriceFacetComponent extends Component {
   }
 
   #adjustToValidValues(input) {
-    if (!input || !input.value || input.value.trim() === '') return;
+    if (!(input instanceof HTMLInputElement) || !input.value || input.value.trim() === '') return;
 
     const value = parseFloat(input.value);
     const min = parseFloat(input.min);
@@ -357,12 +402,22 @@ class PriceFacetComponent extends Component {
 
   #updateSummary() {
     const { minInput, maxInput } = this.refs;
+    const minEl = Array.isArray(minInput) ? minInput[0] : minInput;
+    const maxEl = Array.isArray(maxInput) ? maxInput[0] : maxInput;
     const details = this.closest('details');
     const statusComponent = details?.querySelector('facet-status-component');
 
     if (!(statusComponent instanceof FacetStatusComponent)) return;
+    if (!(minEl instanceof HTMLInputElement) || !(maxEl instanceof HTMLInputElement)) return;
 
-    statusComponent.updatePriceSummary(minInput, maxInput);
+    statusComponent.updatePriceSummary(minEl, maxEl);
+  }
+
+  /**
+   * Public method to update slider UI after clearing filters
+   */
+  updateSliderAfterClear() {
+    this.#updateSliderUI();
   }
 }
 
@@ -405,9 +460,20 @@ class FacetClearComponent extends Component {
     container?.querySelectorAll('[type="checkbox"]:checked, input').forEach((input) => {
       if (input instanceof HTMLInputElement) {
         input.checked = false;
-        input.value = '';
+        // For range inputs, reset to min/max defaults instead of empty string
+        if (input.type === 'range') {
+          const isMinInput = input.classList.contains('price-facet__slider--min');
+          input.value = isMinInput ? input.min : input.max;
+        } else {
+          input.value = '';
+        }
       }
     });
+
+    // Update slider UI after clearing price facet
+    if (container instanceof PriceFacetComponent) {
+      container.updateSliderAfterClear();
+    }
 
     const details = event.target.closest('details');
     const statusComponent = details?.querySelector('facet-status-component');
@@ -832,7 +898,7 @@ class FacetStatusComponent extends Component {
    * @returns {number} The money value in cents
    */
   #parseCents(value, fallback = '0') {
-    const parts = value ? value.trim().split(/[^0-9]/) : (parseInt(fallback, 10) / 100).toString();
+    const parts = value ? value.trim().split(/[^0-9]/) : [(parseInt(fallback, 10) / 100).toString()];
     const [wholeStr, fractionStr, ...rest] = parts;
     if (typeof wholeStr !== 'string' || rest.length > 0) return parseInt(fallback, 10);
 
