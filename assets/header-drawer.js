@@ -1,6 +1,7 @@
 import { Component } from '@theme/component';
 import { trapFocus, removeTrapFocus } from '@theme/focus';
 import { onAnimationEnd } from '@theme/utilities';
+import { ThemeEvents } from '@theme/events';
 
 /**
  * A custom element that manages the main menu drawer.
@@ -13,17 +14,36 @@ import { onAnimationEnd } from '@theme/utilities';
 class HeaderDrawer extends Component {
   requiredRefs = ['details'];
 
+  #abortController = new AbortController();
+
   connectedCallback() {
     super.connectedCallback();
 
     this.addEventListener('keyup', this.#onKeyUp);
     this.#setupAnimatedElementListeners();
+
+    // Close drawer when search opens (either modal or dropdown)
+    document.addEventListener(
+      ThemeEvents.searchDropdownOpen,
+      this.#handleSearchOpen,
+      { signal: this.#abortController.signal }
+    );
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('keyup', this.#onKeyUp);
+    this.#abortController.abort();
   }
+
+  /**
+   * Close the drawer when search opens
+   */
+  #handleSearchOpen = () => {
+    if (this.isOpen) {
+      this.close();
+    }
+  };
 
   /**
    * Close the main menu drawer when the Escape key is pressed
@@ -69,11 +89,13 @@ class HeaderDrawer extends Component {
     const summary = details.querySelector('summary');
 
     if (!summary) return;
+
+    // Close search dialog if open before opening menu drawer
+    /** @type {any} */
     const searchDialog = document.querySelector('dialog-component');
-  if (searchDialog?.refs.dialog.open) {
-    console.log('closing dialog');
-    searchDialog.closeDialog();
-  }
+    if (searchDialog?.refs?.dialog?.open) {
+      searchDialog.closeDialog();
+    }
 
     summary.setAttribute('aria-expanded', 'true');
 

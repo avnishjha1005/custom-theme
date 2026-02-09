@@ -71,8 +71,9 @@
           type="button"
           class="button-unstyled predictive-search__reset-button"
           ref="resetButton"
-          
+
           on:click="/resetSearch"
+          style="visibility:hidden;"
         >
           {{ 'icon-arrow.svg' | inline_asset_content }}
         </button>
@@ -104,6 +105,7 @@
         %}
       </div>
 
+      {% comment %}
       <div class="predictive-search-form__footer">
         <button
           class="button button-primary predictive-search__search-button"
@@ -112,6 +114,7 @@
           {{ 'content.search_results_view_all' | t }}
         </button>
       </div>
+      {% endcomment %}
     </div>
   </form>
 </predictive-search-component>

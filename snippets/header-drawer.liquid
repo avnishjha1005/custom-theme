@@ -693,13 +693,18 @@
       // Listen for when drawer opens
       this.details.addEventListener('toggle', (e) => {
         if (this.details.open) {
-          console.log('Menu drawer opened');
           // Close search when menu opens
           const searchDialog = document.querySelector('dialog-component');
           if (searchDialog?.refs?.dialog?.open) {
-            console.log('Closing search dialog from menu');
             searchDialog.closeDialog();
           }
+        }
+      });
+
+      // Close drawer when search opens
+      document.addEventListener('searchDropdown:open', () => {
+        if (this.isOpen) {
+          this.close();
         }
       });
 

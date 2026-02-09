@@ -1,5 +1,6 @@
 import { Component } from '@theme/component';
 import { debounce, isClickedOutside, onAnimationEnd } from '@theme/utilities';
+import { SearchDropdownOpenEvent } from '@theme/events';
 
 /**
  * A custom element that manages a dialog.
@@ -47,11 +48,16 @@ export class DialogComponent extends Component {
     const { dialog } = this.refs;
 
     if (dialog.open) return;
-    const menuDrawer = document.querySelector('details');
-    console.log('closing menu drawer')
-    if (menuDrawer?.isOpen) {
-      menuDrawer.close();
+
+    // Close header drawer if open before opening search dialog
+    /** @type {any} */
+    const headerDrawer = document.querySelector('header-drawer');
+    if (headerDrawer?.isOpen) {
+      headerDrawer.close();
     }
+
+    // Dispatch event so other components know search is opening
+    document.dispatchEvent(new SearchDropdownOpenEvent());
 
     const scrollY = window.scrollY;
     this.#previousScrollY = scrollY;

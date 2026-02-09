@@ -40,6 +40,7 @@
       {% if predictive_search.performed %}
         {%- if search_results_count > 0 -%}
           {% assign shared_results_index = 0 %}
+          {% comment %}
           {% if predictive_search.resources.queries.size > 0 %}
             {% assign shared_results_index = shared_results_index
               | plus: predictive_search.resources.collections.size
@@ -70,6 +71,7 @@
               {% endfor %}
             </ul>
           {% endif %}
+          {% endcomment %}
           {% if predictive_search.resources.products.size > 0 %}
             {%- liquid
               assign title = 'content.search_results_resource_products' | t
@@ -78,6 +80,7 @@
             -%}
           {% endif %}
 
+          {% comment %}
           {% if predictive_search.resources.collections.size > 0 %}
             {% assign shared_results_index = shared_results_index | plus: predictive_search.resources.articles.size %}
             {% assign resource_title = 'content.search_results_resource_collections' | t %}
@@ -110,6 +113,7 @@
               resources: predictive_search.resources.articles
             %}
           {% endif %}
+          {% endcomment %}
         {% else %}
           <p class="predictive-search-results__no-results">
             {{ 'content.search_results_no_results' | t: terms: predictive_search.terms }}
