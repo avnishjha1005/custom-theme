@@ -627,19 +627,19 @@
     }
   }
 
-  /* Override desktop:hidden for header drawer at 990px breakpoint */
+  /* Override desktop:hidden for header drawer at 768px breakpoint */
   .header__drawer.desktop\:hidden {
     display: flex !important;
   }
 
-  @media screen and (min-width: 991px) {
+  @media screen and (min-width: 769px) {
     .header__drawer.desktop\:hidden {
       display: none !important;
     }
   }
 
-  /* Hide desktop menu below 990px */
-  @media screen and (max-width: 990px) {
+  /* Hide desktop menu below 768px */
+  @media screen and (max-width: 768px) {
     header-menu.mobile\:hidden,
     .header-menu.mobile\:hidden {
       display: none !important;
@@ -647,7 +647,7 @@
   }
 
   /* Mobile specific styles - bottom navbar */
-  @media screen and (max-width: 990px) {
+  @media screen and (max-width: 768px) {
     .account-drawer,anchored-popover-component{
       order:2;
     }

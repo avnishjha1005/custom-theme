@@ -76,7 +76,7 @@
         "slide_NmakjB"
       ],
       "custom_css": [
-        "@media screen and (min-width: 990px) {.logo-block__image-wrapper {display: none; }}",
+        "@media screen and (min-width: 768px) {.logo-block__image-wrapper {display: none; }}",
         ".header__column--right {stroke: white;}",
         "h3 {max-width: 452px; font-size: 30px; font-weight: normal; letter-spacing: -0.02rem;}",
         ".hero__content-wrapper {max-width: 1440px; margin: auto;}",

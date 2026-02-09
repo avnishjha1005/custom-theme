@@ -313,7 +313,7 @@
     align-items: var(--vertical-alignment-mobile);
     justify-content: var(--horizontal-alignment);
     z-index: var(--layer-base);
-    @media screen and (min-width: 750px) { align-items: var(--vertical-alignment); }
+    @media screen and (min-width: 768px) { align-items: var(--vertical-alignment); }
   }
   .hero__content-wrapper.page-width { grid-column: 2 / 3; }
   .hero__content-wrapper { position: relative; inset: 0; z-index: var(--layer-flat); display: flex; flex-direction: column; }
@@ -378,7 +378,7 @@
     display: flex;
     flex-direction: column;
 
-    @media screen and (max-width: 750px) {
+    @media screen and (max-width: 768px) {
       max-height: calc(
         var(--logo-height-mobile, var(--logo-height, 100%)) + var(--padding-block-start, 0px) + var(--padding-block-end, 0px)
       );
