@@ -223,8 +223,12 @@
       <div class="swatch-drawer__overlay"></div>
       <div class="swatch-drawer__content">
         <div class="swatch-drawer__header">
-          <h3 class="swatch-drawer__title">Select Option</h3>
+          <h3 class="swatch-drawer__title">Select color</h3>
           <button class="swatch-drawer__close" aria-label="Close">×</button>
+        </div>
+        <div class="swatch-drawer__color-label">
+          <span class="swatch-drawer__color-prefix">Colour:</span>
+          <span class="swatch-drawer__color-value">Blue</span>
         </div>
         <div class="swatch-drawer__body"></div>
       </div>
@@ -238,7 +242,7 @@
 
       const drawer = document.getElementById('swatch-drawer');
       const drawerBody = drawer.querySelector('.swatch-drawer__body');
-      const drawerTitle = drawer.querySelector('.swatch-drawer__title');
+      const drawerColorValue = drawer.querySelector('.swatch-drawer__color-value');
       const closeBtn = drawer.querySelector('.swatch-drawer__close');
       const overlay = drawer.querySelector('.swatch-drawer__overlay');
 
@@ -248,11 +252,12 @@
         if (!trigger) return;
         console.log("triggered");
         const fieldset = trigger.closest('fieldset');
-        const legend = fieldset.querySelector('legend').textContent.trim();
+        const selectedValue = fieldset.querySelector('.variant-option__swatch-value');
         const swatchContainer = fieldset.querySelector('.swatch-container');
 
-        // Clone the swatch options into the drawer
-        drawerTitle.textContent = legend || 'Select Option';
+        // Get current selected color name
+        const currentColor = selectedValue ? selectedValue.textContent.trim() : 'Select';
+        drawerColorValue.textContent = currentColor;
         drawerBody.innerHTML = swatchContainer.innerHTML;
 
         // Open drawer
@@ -262,6 +267,9 @@
         // Handle selections in drawer
         drawerBody.querySelectorAll('input[type="radio"]').forEach(input => {
           input.addEventListener('change', function() {
+            // Update the color label in drawer
+            drawerColorValue.textContent = this.value;
+
             // Find the corresponding input in the main form
             const mainInput = swatchContainer.querySelector(`input[value="${this.value}"]`);
             if (mainInput) {
@@ -347,7 +355,6 @@
     left: 0;
     right: 0;
     background: white;
-    border-radius: 16px 16px 0 0;
     max-height: 70vh;
     transform: translateY(100%);
     transition: transform 0.3s ease;
@@ -363,20 +370,22 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid #eee;
+    padding: 16px 20px;
+    border-bottom: none;
   }
 
   .swatch-drawer__title {
-    font-size: 18px;
-    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
     margin: 0;
+    color: #000;
   }
 
   .swatch-drawer__close {
     background: none;
     border: none;
-    font-size: 32px;
+    font-size: 24px;
     line-height: 1;
     cursor: pointer;
     padding: 0;
@@ -385,13 +394,33 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #000;
+  }
+
+  .swatch-drawer__color-label {
+    padding: 0 20px 12px;
+    margin-bottom: 16px;
+  }
+
+  .swatch-drawer__color-prefix {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+  }
+
+  .swatch-drawer__color-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
   }
 
   .swatch-drawer__body {
-    padding: 20px;
+    padding: 0 20px 20px;
     overflow-y: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 12px;
   }
 
