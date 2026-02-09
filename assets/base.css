@@ -4679,6 +4679,14 @@ price-list compare-at-price,
 }
 
 @media screen and (max-width: 768px) {
+  .variant-option legend{
+    display:none;
+  }
+  .variant-option__button-label{
+    min-height: 30px !important;
+  }
+  .product-card__content
+
   [class*="product_vendor"],
   [class*="product_vendor"] .text-block,
   [class*="product_vendor"] .text-block * {
@@ -4705,5 +4713,8 @@ price-list compare-at-price,
     font-size: 12px !important;
     --font-size: 12px !important;
     font-weight: 400 !important;
+  }
+  .predictive-search-results__inner{
+    padding-inline: 10px;
   }
 }
