@@ -13,7 +13,6 @@
   .ai-three-image-hero__container-{{ ai_gen_id }} {
     max-width: 1440px;
     margin: 0 auto;
-    padding: 68px 40px;
     position: relative;
   }
 
@@ -83,7 +82,6 @@
   */
   @media screen and (max-width: 1024px) {
     .ai-three-image-hero__container-{{ ai_gen_id }} {
-       padding: 0; 
     }
 
     .ai-three-image-hero__grid-{{ ai_gen_id }} {
@@ -92,7 +90,7 @@
       grid-auto-columns: 100%; /* Images take up 80% width so you see the next one */
       gap: 15px;
       overflow-x: auto;
-      padding: 0 20px;
+      padding: 55px;
       scroll-snap-type: x mandatory;
       scrollbar-width: none; 
       -webkit-overflow-scrolling: touch;
@@ -107,7 +105,15 @@
     }
 
     .ai-three-image-hero__heading-{{ ai_gen_id }} {
-      font-size: clamp(24px, 5vw, {{ block.settings.heading_size }}px);
+      font-size: 3.75rem;
+    }
+
+    .ai-three-image-hero__text-overlay-{{ ai_gen_id }} {
+      top: 1%;
+      transform: translateX(-50%);
+      text-align: center;
+      padding: 20px;
+      font-size: 3.75rem;
     }
   }
 {% endstyle %}
