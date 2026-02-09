@@ -835,7 +835,7 @@
       ],
       "custom_css": [
         ".custom-section-content {padding: 0px !important; max-width: 735px; margin: auto;}",
-        " accordion-custom h5 {font-weight: 600;}"
+        "accordion-custom h5 {font-weight: 600;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
@@ -865,12 +865,27 @@
         "padding-block-start": 64,
         "padding-block-end": 96
       }
+    },
+    "whatsapp_fab_fFhRaW": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button",
+      "settings": {
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi! I have a question.",
+        "label_text": "Chat on WhatsApp",
+        "offset_x": 0,
+        "offset_y": -90,
+        "show_on_mobile": true,
+        "z_index": 9999
+      }
     }
   },
   "order": [
     "main",
     "section_A6aPKY",
     "section_EfGNGi",
-    "section_9BkEVp"
+    "section_9BkEVp",
+    "whatsapp_fab_fFhRaW"
   ]
 }
