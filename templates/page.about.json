@@ -50,8 +50,8 @@
         "logo_DPxXBt"
       ],
       "custom_css": [
-        ".logo-block__image {height: 24px; @media screen and (min-width: 768px) {display: none; padding: 0px; }}",
-        "@media screen and (min-width: 768px) {.spacing-style {padding: 0px; }}",
+        ".logo-block__image {height: 24px; @media screen and (min-width: 769px) {display: none; padding: 0px; }}",
+        "@media screen and (min-width: 769px) {.spacing-style {padding: 0px; }}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
@@ -238,7 +238,7 @@
             "link": "",
             "open_in_new_tab": false,
             "placeholder": "",
-            "padding-block-start": 20,
+            "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
             "padding-inline-end": 0
@@ -537,7 +537,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<h5>Advisor Name</h5>",
+                            "text": "<h5>ADVISOR NAME</h5>",
                             "width": "100%",
                             "max_width": "none",
                             "alignment": "left",
@@ -686,7 +686,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p>Advisor Name</p>",
+                            "text": "<p>ADVISOR NAME</p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -821,8 +821,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 50
+        "padding-block-start": 64,
+        "padding-block-end": 96
       }
     }
   },
