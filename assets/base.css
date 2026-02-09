@@ -4679,6 +4679,9 @@ price-list compare-at-price,
 }
 
 @media screen and (max-width: 768px) {
+  variant-option__button-label{
+    min-height: 30px;
+  }
   [class*="product_vendor"],
   [class*="product_vendor"] .text-block,
   [class*="product_vendor"] .text-block * {
