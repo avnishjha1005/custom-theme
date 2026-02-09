@@ -4679,7 +4679,7 @@ price-list compare-at-price,
 }
 
 @media screen and (max-width: 768px) {
-  legend{
+  .variant-option legend{
     display:none;
   }
   variant-option__button-label{
