@@ -38,7 +38,7 @@
         "logo_7k4hiH"
       ],
       "custom_css": [
-        ".logo-block__image {height: 42px; margin: auto; padding-bottom: 16px; @media screen and (min-width: 768px) {display: none; height: 0; padding: 0; margin: 0; }}",
+        ".logo-block__image {height: 42px; margin: auto; padding-bottom: 16px; @media screen and (min-width: 769px) {display: none; height: 0; padding: 0; margin: 0; }}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
@@ -131,7 +131,7 @@
         "text_7cReRg"
       ],
       "custom_css": [
-        "@media screen and (max-width: 768px) {p {text-align: center; } .text-block{align-self:center}}",
+        "@media screen and (max-width: 768px) {p {text-align: center; } .text-block {align-self: center; }}",
         ".section--page-width {max-width: 1440px; margin: auto;}",
         ".section-background {border-top: 0.5px solid #d8d1c6;}",
         ".custom-section-content {padding: 0px !important;}"
