@@ -545,7 +545,7 @@
                     "text_n7A9da": {
                       "type": "text",
                       "settings": {
-                        "text": "{{ closest.product.description }}",
+                        "text": "<p></p>{{ closest.product.description }}",
                         "width": "100%",
                         "max_width": "normal",
                         "alignment": "left",
