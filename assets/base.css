@@ -4718,3 +4718,9 @@ price-list compare-at-price,
     padding-inline: 10px;
   }
 }
+.drawer-close-btn{
+  padding-right: 0px !important;
+}
+.predictive-search-form__header{
+  padding-inline: 10px !important;
+}

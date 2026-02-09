@@ -29,20 +29,32 @@
         {% comment %} Level 1: Horizontal Pill Navigation {% endcomment %}
         <nav class="drawer-l1-nav">
           <div class="l1-nav-inner" id="L1-Pill-Container">
+            {%- assign first_with_links = true -%}
             {%- for link in linklist.links -%}
-              <button type="button" 
-                class="pill-item {% if forloop.first %}is-active{% endif %}" 
-                data-l1-index="{{ forloop.index }}"
-                data-original-title="{{ link.title | escape }}">
-                {{ link.title | escape }}
-              </button>
+              {%- if link.links != blank -%}
+                <button type="button"
+                  class="pill-item {% if first_with_links %}is-active{% endif %}"
+                  data-l1-index="{{ forloop.index }}"
+                  data-original-title="{{ link.title | escape }}">
+                  {{ link.title | escape }}
+                </button>
+                {%- assign first_with_links = false -%}
+              {%- else -%}
+                <a href="{{ link.url }}" class="pill-item pill-item--link">
+                  {{ link.title | escape }}
+                </a>
+              {%- endif -%}
             {%- endfor -%}
           </div>
         </nav>
 
         {% comment %} Main Content Panels {% endcomment %}
         <div class="drawer-panels-container">
+          {%- assign first_panel_with_links = true -%}
           {%- for l1_link in linklist.links -%}
+            {%- if l1_link.links == blank -%}
+              {%- continue -%}
+            {%- endif -%}
             {% liquid
               assign drawer_featured_image = nil
               assign drawer_featured_url = nil
@@ -91,7 +103,8 @@
                 endif
               endif
             %}
-            <div class="drawer-panel {% if forloop.first %}is-active{% endif %}" data-panel-l1="{{ forloop.index }}">
+            <div class="drawer-panel {% if first_panel_with_links %}is-active{% endif %}" data-panel-l1="{{ forloop.index }}">
+            {%- assign first_panel_with_links = false -%}
               <ul class="drawer-links-list" role="list">
                 {%- for l2_link in l1_link.links -%}
                   <li class="drawer-item-container">
@@ -605,11 +618,16 @@
     -webkit-tap-highlight-color: transparent;
   }
   .pill-item.is-active { text-decoration:underline; font-weight:bold;}
+  .pill-item--link { text-decoration: none; color: inherit; }
 
   /* Content */
   .drawer-panels-container { flex: 1; position: relative; overflow: hidden; height:80%}
   .drawer-panel { display: none; padding: 10px 16px; height: 100%; overflow-y: auto; padding-top:41px;}
-  .drawer-panel.is-active { display: block; }
+  .drawer-panel.is-active { display: block; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
 
   .drawer-links-list { list-style: none; padding: 0; margin: 0; }
   .drawer-link-btn {
@@ -631,10 +649,11 @@
     background: #fff; padding: 10px 16px; padding-top: 41px; transform: translateX(100%);
     transition: transform 0.3s ease; visibility: hidden; z-index: 10;
     overflow-y: auto;
+    padding-top: 30px;
   }
   .drawer-panel-nested.is-open { transform: translateX(0); visibility: visible; }
 
-  .drawer-footer { padding: 20px 16px; border-top: 1px solid #f2f2f2; display: flex; justify-content: space-between; font-size: 12px; color: #888; }
+  .drawer-footer { padding: 20px 16px; display: flex; justify-content: space-between; font-size: 12px; color: #888; }
   .is-hidden { visibility: hidden; pointer-events: none; }
   .menu-drawer__inner-container{height: calc(100svh - 56px);}
   .menu-drawer{height: 100vh; z-index:-100;}
@@ -646,6 +665,8 @@
     color: #000;
     margin-top: 20px;
     width: 55%;
+    width: 171px;
+    height: 215px;
   }
 
   .drawer-featured-image-wrap {
@@ -682,7 +703,7 @@
       this.details = this.querySelector('details');
       this.backBtn = this.querySelector('#Drawer-Back-Btn');
       this.closeBtn = this.querySelector('#Drawer-Close-Btn');
-      this.pillBtns = this.querySelectorAll('.pill-item');
+      this.pillBtns = this.querySelectorAll('button.pill-item');
       this.drillBtns = this.querySelectorAll('[data-drill-down]');
       this.panels = this.querySelectorAll('.drawer-panel');
       this.nestedPanels = this.querySelectorAll('.drawer-panel-nested');
