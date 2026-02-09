@@ -4683,7 +4683,7 @@ price-list compare-at-price,
     display:none;
   }
   variant-option__button-label{
-    min-height: 30px;
+    min-height: 30px !important;
   }
   [class*="product_vendor"],
   [class*="product_vendor"] .text-block,
