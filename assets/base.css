@@ -4682,7 +4682,7 @@ price-list compare-at-price,
   .variant-option legend{
     display:none;
   }
-  variant-option__button-label{
+  .variant-option__button-label{
     min-height: 30px !important;
   }
   [class*="product_vendor"],
