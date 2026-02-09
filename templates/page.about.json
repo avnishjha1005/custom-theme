@@ -834,7 +834,8 @@
         "accordion_L4JaPx"
       ],
       "custom_css": [
-        ".custom-section-content {padding: 0px !important; max-width: 735px; margin: auto;}"
+        ".custom-section-content {padding: 0px !important; max-width: 735px; margin: auto;}",
+        "h5{font-weight: 600;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
