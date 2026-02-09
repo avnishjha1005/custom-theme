@@ -4572,8 +4572,8 @@ wk-button{
   right: 0 !important;
 }
 .wk-selected{
-  --icon-fill:red;
-  --icon-stroke:red;
+  --icon-fill: #692C23;
+  --icon-stroke: #692C23ed;
 }
 slideshow-slides slideshow-slide slideshow-slides:has(slideshow-slide .product-media) {
   gap: 0px;
