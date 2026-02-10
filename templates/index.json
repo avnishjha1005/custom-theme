@@ -49,7 +49,7 @@
           "settings": {
             "image": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b_1.jpg",
             "image_mobile": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b_2.jpg",
-            "heading": "<h3>PLACEHOLDER</h3>",
+            "heading": "<h3>Design By Discovery</h3>",
             "text_max_width": 300,
             "button_link": "shopify://collections/all",
             "button_label": "SHOP NOW",
@@ -61,7 +61,7 @@
           "settings": {
             "image": "shopify://shop_images/894dd0eab6344161e4e5baeb9b05e2772fec78b1_00e7e2b3-f637-4f45-967e-bd6ad11668db.jpg",
             "image_mobile": "shopify://shop_images/894dd0eab6344161e4e5baeb9b05e2772fec78b1_00e7e2b3-f637-4f45-967e-bd6ad11668db.png",
-            "heading": "<h3>PLACEHOLDER</h3>",
+            "heading": "<h3>South Asia, Re-Imagined</h3>",
             "text_max_width": 300,
             "button_link": "",
             "button_label": "SHOP NOW",
@@ -593,7 +593,7 @@
         "mobile_card_size": "44cqw",
         "columns_gap": 26,
         "rows_gap": 36,
-        "icons_style": "none",
+        "icons_style": "chevron_large",
         "icons_shape": "circle",
         "section_width": "full-width",
         "horizontal_alignment": "center",
