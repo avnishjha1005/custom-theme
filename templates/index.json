@@ -39,7 +39,7 @@
             "image_mobile": "{{ metaobjects.hero_image[\"limited-collection-the-party-edit\"].image.value }}",
             "heading": "<h3>{{ metaobjects.hero_image[\"limited-collection-the-party-edit\"].hero_text.value }}</h3>",
             "subheading": "<p>Discover independent designers and distinctive pieces across clothing, jewellery, and living.</p>",
-            "text_max_width": 450,
+            "text_max_width": 600,
             "button_link": "shopify://collections/all",
             "button_label": "SHOP NOW",
             "open_in_new_tab": false
