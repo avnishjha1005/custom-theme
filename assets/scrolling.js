@@ -258,7 +258,7 @@ export class Scroller {
   set snap(value) {
     // Changing the snap behavior will trigger a scroll event, which we should ignore
     this.#ignore = true;
-    //this.element.style.setProperty('scroll-snap-type', value ? `${this.axis} mandatory` : 'none');
+    this.element.style.setProperty('scroll-snap-type', value ? `${this.axis} mandatory` : 'none');
   }
 
   /**

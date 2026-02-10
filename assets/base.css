@@ -3230,7 +3230,7 @@ slideshow-slides {
   position: relative;
   display: flex;
   overflow-x: scroll;
-  /* scroll-snap-type: x mandatory; */
+  scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-color: transparent transparent;
   scrollbar-width: none;
@@ -3306,8 +3306,12 @@ slideshow-slide {
     content-visibility: visible;
   }
 
-  slideshow-component slideshow-slide:not([aria-hidden='false']) {
-    content-visibility: hidden;
+  slideshow-component:is([dragging], [transitioning]) & {
+    content-visibility: visible;
+  }
+
+  slideshow-component:not([dragging]):not([transitioning]) slideshow-slide:not([aria-hidden='false']) {
+    content-visibility: visible;
   }
 
   &[hidden]:not([reveal]) {
@@ -4533,15 +4537,8 @@ text-component {
 
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"]{
   width:100%;
-  /* overflow-x: visible; */
-  scroll-snap-type: unset !important;
   padding-left:calc(-720px + 50vw);
   padding-right: calc(-720px + 50vw + 16px);
-}
-
-[ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"] > .swiper-wrapper{
-  width:100%;
-  overflow: visible;
 }
 
 
