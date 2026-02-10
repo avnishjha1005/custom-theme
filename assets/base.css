@@ -4659,6 +4659,7 @@ slideshow-component [ref="scroller"] {
 .product-title,
 .flexi-product-title-block .flexi-text,
 .flexi-product-title-block .flexi-text a {
+  height: 30px;
   font-size: 18px !important;
   --font-size: 18px !important;
   font-weight: 600 !important;
