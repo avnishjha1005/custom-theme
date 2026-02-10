@@ -108,7 +108,7 @@
             "text_shadow_blur": 0,
             "text_shadow_color": "#000000",
             "background_color": "#132242",
-            "section_padding": 76
+            "section_padding": 40
           },
           "blocks": {}
         },
