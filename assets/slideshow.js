@@ -693,9 +693,6 @@ export class Slideshow extends Component {
 
       if (!newSlide) throw new Error(`Slide not found at index ${newIndex}`);
 
-      // Re-enable snap before scrolling so the slide snaps into place properly
-      this.#scroll.snap = true;
-
       this.#scroll.to(newSlide);
 
       this.removeAttribute('dragging');
@@ -717,6 +714,9 @@ export class Slideshow extends Component {
       this.current = newIndex;
 
       await this.#scroll.finished;
+
+      // Re-enable snap after scroll completes to avoid jump
+      this.#scroll.snap = true;
 
       // It's possible that the user started dragging again before the scroll finished
       if (this.#dragging) return;

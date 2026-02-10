@@ -225,4 +225,14 @@
   .product-card [data-available-count='0'] ~ svg {
     display: block;
   }
+
+  /* Prevent title wrapping from causing layout shift */
+  .product-card__content .text-block p,
+  .product-card__content [ref="productTitleLink"] p {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 {% endstylesheet %}
