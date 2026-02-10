@@ -52,7 +52,7 @@
             "image_mobile": "shopify://shop_images/5e457eef570656a76213f679b9dd7615d338c45b_2.jpg",
             "heading": "<h3>Design By Discovery</h3>",
             "subheading": "<p>Pieces chosen for movement, material, and meaning.</p>",
-            "text_max_width": 300,
+            "text_max_width": 600,
             "button_link": "shopify://collections/all",
             "button_label": "SHOP NOW",
             "open_in_new_tab": false
@@ -65,7 +65,7 @@
             "image_mobile": "shopify://shop_images/894dd0eab6344161e4e5baeb9b05e2772fec78b1_00e7e2b3-f637-4f45-967e-bd6ad11668db.png",
             "heading": "<h3>South Asia, Re-Imagined</h3>",
             "subheading": "<p>A considered edit of designers, garments, jewellery, and accessories shaped by region, discovery, and modern use.</p>",
-            "text_max_width": 300,
+            "text_max_width": 600,
             "button_link": "",
             "button_label": "SHOP NOW",
             "open_in_new_tab": false
