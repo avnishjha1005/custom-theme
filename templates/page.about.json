@@ -835,7 +835,8 @@
       ],
       "custom_css": [
         ".custom-section-content {padding: 0px !important; max-width: 735px; margin: auto;}",
-        "accordion-custom h5 {font-weight: 600;}"
+        "accordion-custom h5 {font-weight: 600;}",
+        ".group-block-content .layout-panel-flex .layout-panel-flex--row .mobile-column {gap: 32px;}"
       ],
       "name": "t:names.custom_section",
       "settings": {
