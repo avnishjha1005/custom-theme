@@ -447,7 +447,7 @@
                 "text_CRMLRH": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>AltaRasa’s journey is one of discipline.</p><p>From its earliest conception, the platform has focused on editing rather than expanding, choosing clarity over noise, and depth over volume.</p><p>Each collection, collaboration, and story builds toward a larger vision: to celebrate South Asian design, and allow garments to speak through how they are worn, lived in, and remembered.</p>",
+                    "text": "<p>South Asian design has always held depth - in material knowledge, proportion, craftsmanship, and cultural nuance. Yet it has often been framed through nostalgia, occasion, or excess.</p><p>AltaRasa shifts this lens.</p><p>Here, heritage is treated as living intelligence.<br/>Craft is understood as a value system.<br/><br/>Fashion is approached as a personal archive collected slowly, worn intuitively, and returned to over time.</p><p>We believe South Asian design belongs confidently within the global fashion conversation, not as an exception or category, but as an equal contributor.</p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
@@ -477,7 +477,7 @@
             "accordion_row_LFTrKX": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "The Journey",
+                "heading": "What We Curate",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
