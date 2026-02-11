@@ -486,7 +486,7 @@
                 "text_L6mQfR": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>AltaRasa’s journey is one of discipline.</p><p>From its earliest conception, the platform has focused on editing rather than expanding, choosing clarity over noise, and depth over volume.</p><p>Each collection, collaboration, and story builds toward a larger vision: to celebrate South Asian design, and allow garments to speak through how they are worn, lived in, and remembered.</p>",
+                    "text": "<p>AltaRasa is a considered edit.</p><p>We curate fashion pieces that demonstrate:</p><ul><li>Strength of design and silhouette</li><li>Integrity of textile and construction</li><li>Cultural awareness without performance</li><li>Versatility across lives, not just occasions</li></ul><p>Every piece earns its place. Nothing exists here by accident.</p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
@@ -516,7 +516,7 @@
             "accordion_row_zhghdQ": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "The Journey",
+                "heading": "The AltaRasa Woman",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -525,7 +525,7 @@
                 "text_6CQUfW": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>AltaRasa’s journey is one of discipline.</p><p>From its earliest conception, the platform has focused on editing rather than expanding, choosing clarity over noise, and depth over volume.</p><p>Each collection, collaboration, and story builds toward a larger vision: to celebrate South Asian design, and allow garments to speak through how they are worn, lived in, and remembered.</p>",
+                    "text": "<p>She is globally exposed and culturally rooted.<br/>She notices cut before branding.<br/>She understands craft as intelligence, not ornament.</p><p>Her wardrobe is built slowly, guided by instinct and discovery. </p>",
                     "width": "100%",
                     "max_width": "none",
                     "alignment": "left",
