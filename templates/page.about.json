@@ -435,6 +435,123 @@
                 "text_tU4QWn"
               ]
             },
+            "accordion_row_NKq9He": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Our Point of View",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_CRMLRH": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa’s journey is one of discipline.</p><p>From its earliest conception, the platform has focused on editing rather than expanding, choosing clarity over noise, and depth over volume.</p><p>Each collection, collaboration, and story builds toward a larger vision: to celebrate South Asian design, and allow garments to speak through how they are worn, lived in, and remembered.</p>",
+                    "width": "100%",
+                    "max_width": "none",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_CRMLRH"
+              ]
+            },
+            "accordion_row_LFTrKX": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "The Journey",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_L6mQfR": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa’s journey is one of discipline.</p><p>From its earliest conception, the platform has focused on editing rather than expanding, choosing clarity over noise, and depth over volume.</p><p>Each collection, collaboration, and story builds toward a larger vision: to celebrate South Asian design, and allow garments to speak through how they are worn, lived in, and remembered.</p>",
+                    "width": "100%",
+                    "max_width": "none",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_L6mQfR"
+              ]
+            },
+            "accordion_row_zhghdQ": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "The Journey",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_6CQUfW": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa’s journey is one of discipline.</p><p>From its earliest conception, the platform has focused on editing rather than expanding, choosing clarity over noise, and depth over volume.</p><p>Each collection, collaboration, and story builds toward a larger vision: to celebrate South Asian design, and allow garments to speak through how they are worn, lived in, and remembered.</p>",
+                    "width": "100%",
+                    "max_width": "none",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_6CQUfW"
+              ]
+            },
             "accordion_row_mih97q": {
               "type": "_accordion-row",
               "settings": {
@@ -824,6 +941,9 @@
             "accordion_row_mQhitH",
             "accordion_row_hXU86c",
             "accordion_row_bmErhN",
+            "accordion_row_NKq9He",
+            "accordion_row_LFTrKX",
+            "accordion_row_zhghdQ",
             "accordion_row_mih97q"
           ]
         }
