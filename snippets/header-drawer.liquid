@@ -655,6 +655,8 @@
     display: none;
     flex-direction: column;
     padding: 20px 16px;
+    overflow-x: hidden;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -771,11 +773,21 @@
       // Listen for when drawer opens
       this.details.addEventListener('toggle', (e) => {
         if (this.details.open) {
+          // Lock body scroll when drawer opens
+          document.body.style.overflow = 'hidden';
+          document.body.style.position = 'fixed';
+          document.body.style.width = '100%';
+
           // Close search when menu opens
           const searchDialog = document.querySelector('dialog-component');
           if (searchDialog?.refs?.dialog?.open) {
             searchDialog.closeDialog();
           }
+        } else {
+          // Unlock body scroll when drawer closes
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
         }
       });
 

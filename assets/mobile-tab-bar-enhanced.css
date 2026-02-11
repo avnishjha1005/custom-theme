@@ -17,6 +17,8 @@
 /* Smooth scrolling for better UX */
 .mobile-tab-bar__item {
   scroll-behavior: smooth;
+  /* Safari/iOS: Prevent blue tap highlight on tab items */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Touch device specific styles */

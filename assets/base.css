@@ -2,6 +2,18 @@
   box-sizing: border-box;
 }
 
+/* Safari/iOS: Prevent blue tap highlight on all interactive elements globally */
+button,
+a,
+summary,
+details,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
 body {
   color: var(--color-foreground);
   background: var(--color-background);
@@ -682,6 +694,8 @@ h1{
   width: var(--icon-size-sm);
   height: var(--icon-size-sm);
   pointer-events: none;
+  /* Safari/iOS: Ensure icons inherit parent color, not browser defaults */
+  -webkit-text-fill-color: currentcolor;
 }
 
 .svg-wrapper--smaller {
@@ -697,6 +711,19 @@ h1{
 .svg-wrapper > svg {
   width: var(--icon-size-sm);
   height: var(--icon-size-sm);
+}
+
+/* Safari/iOS: Ensure SVG elements inherit color properly */
+svg {
+  color: inherit;
+}
+
+a svg,
+button svg,
+summary svg {
+  /* Safari/iOS: Force SVG icons in interactive elements to inherit parent color */
+  color: inherit;
+  -webkit-text-fill-color: inherit;
 }
 
 .relative {
@@ -922,6 +949,8 @@ a {
   color: var(--button-color);
   text-decoration-color: transparent;
   text-decoration-thickness: 0.075em;
+  /* Safari/iOS: Prevent blue tap highlight on links */
+  -webkit-tap-highlight-color: transparent;
   text-underline-offset: 0.125em;
   transition: text-decoration-color var(--animation-speed) var(--animation-easing),
     color var(--animation-speed) var(--animation-easing);
@@ -1505,6 +1534,8 @@ summary {
   cursor: pointer;
   list-style: none;
   padding-block: var(--padding-sm);
+  /* Safari/iOS: Prevent blue tap highlight */
+  -webkit-tap-highlight-color: transparent;
 }
 
 summary:hover {
