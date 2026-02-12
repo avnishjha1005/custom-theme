@@ -25,14 +25,9 @@
         "subheading": "<p>Our styling team works closely with you to curate looks that feel personal, considered, and aligned with your life. From occasion dressing to wardrobe building, each appointment is guided by intention, not excess.</p>",
         "link_text": "BOOK AN APPOINTMENT",
         "link_url": "",
-        "image_1": "shopify://shop_images/fc891f9a44088a770c76ec392b3218ba.jpg",
-        "image_2": "shopify://shop_images/ccdeffa824a7f3ae85bd549756c52b56.jpg",
-        "image_3": "shopify://shop_images/50fdf5460b65c84a7813f10ed95e75e8.jpg",
-        "image_4": "shopify://shop_images/ebd9859cbae03467f7ead8e3f5a8ee2e.jpg",
-        "desktop_height": 360,
-        "mobile_height": 550,
+        "image": "shopify://shop_images/fc891f9a44088a770c76ec392b3218ba.jpg",
         "bg_color": "#f3eee6",
-        "text_color": "#692c23"
+        "text_color": "#000000"
       }
     },
     "footer": {
