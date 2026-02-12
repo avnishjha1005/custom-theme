@@ -43,9 +43,6 @@
   {% if request.visual_preview_mode %}
     data-shopify-visual-preview
   {% endif %}
-  {% unless can_add_to_cart %}
-    hidden
-  {% endunless %}
 >
   {% if product != blank %}
     {% if is_price_on_request %}
