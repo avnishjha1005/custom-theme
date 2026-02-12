@@ -398,9 +398,9 @@
             "group_JHtHYm": {
               "type": "_product-card-group",
               "settings": {
-                "content_direction": "column",
+                "content_direction": "row",
                 "vertical_on_mobile": false,
-                "horizontal_alignment": "flex-start",
+                "horizontal_alignment": "space-between",
                 "vertical_alignment": "center",
                 "align_baseline": true,
                 "horizontal_alignment_flex_direction_column": "flex-start",
@@ -427,10 +427,10 @@
                 "gradient_direction": "to top",
                 "link": "",
                 "open_in_new_tab": false,
-                "padding-block-start": 2,
+                "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 34
+                "padding-inline-end": 0
               },
               "blocks": {
                 "group_KJDaTQ": {
