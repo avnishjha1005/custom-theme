@@ -130,17 +130,16 @@
           {%- endunless -%}
 
           {% content_for 'block',
-            type: 'add-to-cart',
+            type: 'add-to-cart-product',
             id: 'add-to-cart',
             can_add_to_cart: can_add_to_cart,
             add_to_cart_text: add_to_cart_text
           %}
 
           {% content_for 'block',
-            type: 'accelerated-checkout',
+            type: 'buy-now',
             id: 'accelerated-checkout',
-            can_add_to_cart: can_add_to_cart,
-            form_obj: form
+            can_add_to_cart: can_add_to_cart
           %}
         </div>
       {%- endform -%}
@@ -576,14 +575,14 @@
           "static": true
         },
         "add-to-cart": {
-          "type": "add-to-cart",
+          "type": "add-to-cart-product",
           "static": true,
           "settings": {
             "style_class": "button-secondary"
           }
         },
         "accelerated-checkout": {
-          "type": "accelerated-checkout",
+          "type": "buy-now",
           "static": true
         }
       }

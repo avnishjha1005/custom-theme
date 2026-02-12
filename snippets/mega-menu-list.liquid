@@ -50,6 +50,7 @@
   endif
 
   if menu_content_type == 'featured_collections'
+    assign collection_handles = ''
     if parent_link.type == 'collection_link'
       assign collection_handles = parent_link.object.handle | append: ','
     elsif parent_link.type == 'catalog_link' or parent_link.type == 'collections_link'
@@ -88,7 +89,7 @@
           assign links_before_wrap = links_before_wrap | minus: 1
         endif
         assign break_after_float = links_before_wrap | times: 1.0
-        assign column_span = link.links.size | divided_by: break_after_float | ceil | at_least: 1
+        assign column_span = 1
         assign column_count = column_count | plus: column_span
         assign should_break_columns = true
 
@@ -148,9 +149,9 @@
           {% for childLink in link.links %}
             {% assign break_after_modulo = forloop.index | modulo: links_before_wrap %}
             <li
-              {% if break_after_modulo == 0 and should_break_columns %}
+              {% comment %} {% if break_after_modulo == 0 and should_break_columns %}
                 style="break-after: column;"
-              {% endif %}
+              {% endif %} {% endcomment %}
             >
               <a
                 href="{{ childLink.url }}"
@@ -188,10 +189,10 @@
 {% liquid
   # decide how many grid columns are needed for the menu list, and how many columns are needed for the featured content
   # prioritize a minimum of 1 featured_collection (2 columns), and minimum 2 featured_products (2 columns)
-  assign min_products = 2
-  assign max_products = 3
+  assign min_products = 1
+  assign max_products = 1
   assign min_products_tablet = 1
-  assign max_products_tablet = 3
+  assign max_products_tablet = 1
   assign min_collections = 1
 
   if menu_content_type == 'featured_products'
@@ -199,7 +200,7 @@
     assign temp_column_count = column_count | plus: min_products
 
     if temp_column_count > max_menu_columns
-      assign max_product_columns = 2
+      assign max_product_columns = 1
     else
       assign max_product_columns = max_menu_columns | minus: column_count | at_most: max_products
     endif

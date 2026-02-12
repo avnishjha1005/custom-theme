@@ -1,0 +1,83 @@
+
+
+{%- doc -%}
+  This block is used to display a Buy Now button that adds to cart and redirects to checkout.
+  Intended for product-form.liquid block.
+
+  @param {string} can_add_to_cart - Whether the product can be added to the cart
+
+  @example
+  {% content_for 'block', type: 'buy-now', id: 'buy-now', can_add_to_cart: can_add_to_cart %}
+{%- enddoc -%}
+
+{% liquid
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+%}
+
+<div
+  class="buy-now-block"
+  {{ block.shopify_attributes }}
+  {% if request.visual_preview_mode %}
+    data-shopify-visual-preview
+  {% endif %}
+  {% unless can_add_to_cart %}
+    hidden
+  {% endunless %}
+>
+  {% if product != blank %}
+    <button
+      type="submit"
+      name="add"
+      class="button buy-now-button"
+      {% unless can_add_to_cart %}
+        disabled
+      {% endunless %}
+      data-buy-now="true"
+    >
+      Buy Now
+    </button>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .buy-now-block {
+    position: relative;
+  }
+
+  .buy-now-block[data-shopify-visual-preview] {
+    width: 300px;
+  }
+
+  .buy-now-button {
+    width: 100%;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('click', function(e) {
+    if (e.target.matches('[data-buy-now="true"]') || e.target.closest('[data-buy-now="true"]')) {
+      e.preventDefault();
+      const button = e.target.closest('[data-buy-now="true"]') || e.target;
+      const form = button.closest('form');
+      if (form) {
+        const formData = new FormData(form);
+        fetch('/cart/add.js', {
+          method: 'POST',
+          body: formData
+        }).then(function() {
+          window.location.href = '/checkout';
+        });
+      }
+    }
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Buy Now",
+  "tag": null
+}
+{% endschema %}

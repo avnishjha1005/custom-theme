@@ -1,0 +1,205 @@
+{% schema %}
+{
+  "name": "Expert Collage",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Text Settings"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Meet our experts for a bespoke look."
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Description",
+      "default": "<p>Our styling team works closely with you to curate looks that feel personal, considered, and aligned with your life. From occasion dressing to wardrobe building, each appointment is guided by intention, not excess.</p>"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text",
+      "default": "BOOK AN APPOINTMENT"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#F4F1EC"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#4A3B32"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Expert Collage",
+      "category": "Image"
+    }
+  ]
+}
+{% endschema %}
+
+<section class="expert-collage" style="--bg-color: {{ section.settings.bg_color }}; --text-color: {{ section.settings.text_color }};">
+  <div class="expert-collage__container">
+    <div class="expert-collage__image-wrapper">
+      {% if section.settings.image %}
+        <img
+          src="{{ section.settings.image | image_url: width: 960 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          loading="lazy"
+          width="480"
+          height="240"
+          class="expert-collage__image"
+        >
+      {% else %}
+        {{ 'image' | placeholder_svg_tag: 'expert-collage__placeholder' }}
+      {% endif %}
+    </div>
+
+    <div class="expert-collage__content">
+      {% if section.settings.heading != blank %}
+        <h2 class="expert-collage__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.subheading != blank %}
+        <div class="expert-collage__description">{{ section.settings.subheading }}</div>
+      {% endif %}
+
+      {% if section.settings.link_text != blank %}
+        <a href="{{ section.settings.link_url }}" class="expert-collage__link">{{ section.settings.link_text }}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .expert-collage {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 3.75rem 1.25rem; /* 60px 20px */
+  }
+
+  .expert-collage__container {
+    max-width: 90rem; /* 1440px */
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 1.25rem; /* 20px */
+    align-items: center;
+  }
+
+  .expert-collage__image-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .expert-collage__image,
+  .expert-collage__placeholder {
+    width: 30rem; /* 480px */
+    height: 17.5rem; /* 240px */
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+
+  .expert-collage__content {
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .expert-collage__heading {
+    font-family: var(--font-heading-family, 'Marcellus', serif);
+    font-size: 2rem; /* 32px */
+    font-weight: 400;
+    margin: 0 0 1.25rem 0; /* 20px bottom */
+    color: #692c23;
+  }
+
+
+  .expert-collage__description {
+    font-size: 12px !important; /* 14px */
+    line-height: 1.6;
+    margin-bottom: 1.5rem; /* 24px */
+    color: inherit;
+    opacity: 0.9;
+  }
+
+  .expert-collage__description p {
+    margin: 0;
+  }
+
+  .expert-collage__link {
+    font-size: 0.75rem; /* 12px */
+    text-transform: uppercase;
+    letter-spacing: 0.0625rem; /* 1px */
+    font-weight: 600;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.25rem; /* 4px */
+  }
+
+  .expert-collage__link:hover {
+    opacity: 0.8;
+  }
+
+  /* Desktop styles */
+  @media screen and (min-width: 769px) {
+    .expert-collage {
+      padding: 5rem 2.5rem; /* 80px 40px */
+    }
+
+    .expert-collage__container {
+      display: flex;
+      padding-inline: 20px;
+      align-items: center;
+      column-gap: clamp(4rem, 6vw, 6rem); /* 64px to 96px responsive */
+    }
+
+    .expert-collage__image-wrapper {
+      justify-content: flex-start;
+      flex-shrink: 0;
+      width: 45%;
+    }
+
+    .expert-collage__content {
+      text-align: left;
+      padding: 0;
+      width: 28.125rem; /* 450px */
+      flex-shrink: 0;
+    }
+
+    .expert-collage__heading {
+      font-size: 1.875rem; /* 40px */
+      line-height: 18px;
+    }
+
+    .expert-collage__description {
+      font-size: 0.9375rem; /* 15px */
+    }
+  }
+</style>

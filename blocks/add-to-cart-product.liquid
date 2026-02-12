@@ -1,0 +1,166 @@
+
+
+{%- doc -%}
+  This block is used to display the Add to Cart button with text.
+  Intended for product-form.liquid block (buy buttons).
+
+  @param {string} can_add_to_cart - Whether the product can be added to the cart
+  @param {string} add_to_cart_text - The text to display on the button (e.g. "Add to Cart", "Sold Out", "Unavailable")
+
+  @example
+  {% content_for 'block', type: 'add-to-cart-product', id: 'add-to-cart-product', can_add_to_cart: can_add_to_cart, add_to_cart_text: add_to_cart_text %}
+{%- enddoc -%}
+
+{% liquid
+  assign product = closest.product
+  if request.visual_preview_mode and product == blank
+    assign product = collections.all.products.first
+  endif
+  assign product_variant_media = product.selected_or_first_available_variant.featured_media.preview_image | image_url: width: 100
+  if product.selected_or_first_available_variant.featured_media.preview_image == blank
+    assign product_variant_media = product.featured_media.preview_image | image_url: width: 100
+  endif
+  assign default_add_to_cart_text = 'products.product.add_to_cart' | t
+%}
+
+<div
+  class="add-to-cart-product-block"
+  {{ block.shopify_attributes }}
+  {% if request.visual_preview_mode %}
+    data-shopify-visual-preview
+  {% endif %}
+  {% unless can_add_to_cart %}
+    hidden
+  {% endunless %}
+>
+  {% if product != blank %}
+    <add-to-cart-component
+      ref="addToCartButtonContainer"
+      data-product-variant-media="{{ product_variant_media }}"
+      data-add-to-cart-animation="{{ settings.add_to_cart_animation }}"
+    >
+      <button
+        type="submit"
+        name="add"
+        ref="addToCartButton"
+        on:click="/handleClick"
+        class="button add-to-cart-product-button {{ block.settings.style_class }}"
+        {% unless can_add_to_cart %}
+          disabled
+        {% endunless %}
+      >
+        <span class="add-to-cart-text" style="padding-bottom:0px;">
+          <span class="add-to-cart-text__content">
+            {{- add_to_cart_text | default: default_add_to_cart_text -}}
+          </span>
+        </span>
+        <span
+          aria-hidden="true"
+          class="add-to-cart-text--added"
+        >
+          <span class="svg-wrapper add-to-cart-icon--added">
+            {{- 'icon-checkmark.svg' | inline_asset_content -}}
+          </span>
+        </span>
+      </button>
+    </add-to-cart-component>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .add-to-cart-product-block[data-shopify-visual-preview] {
+    width: 300px;
+  }
+
+  .add-to-cart-product-block {
+    position: relative;
+  }
+
+  .add-to-cart-product-button {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .add-to-cart-product-button .add-to-cart-text {
+    display: flex;
+    gap: var(--gap-2xs);
+    align-items: center;
+    justify-content: center;
+    animation-duration: var(--animation-speed);
+    animation-timing-function: var(--animation-easing);
+    animation-fill-mode: forwards;
+    transition: opacity var(--animation-speed) var(--animation-easing);
+  }
+
+  .add-to-cart-product-button.atc-added .add-to-cart-text {
+    animation-name: atc-product-slide-out;
+  }
+
+  .add-to-cart-product-button .add-to-cart-text--added {
+    position: absolute;
+    inset: 0;
+    animation-duration: var(--animation-speed);
+    animation-timing-function: var(--animation-easing);
+    animation-fill-mode: forwards;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: width var(--animation-speed) var(--animation-easing),
+      opacity var(--animation-speed) var(--animation-easing);
+  }
+
+  .add-to-cart-product-button.atc-added .add-to-cart-text--added {
+    animation-name: atc-product-slide-in;
+  }
+
+  @keyframes atc-product-slide-in {
+    from {
+      opacity: 0;
+      transform: translateY(0.5em);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes atc-product-slide-out {
+    from {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    to {
+      transform: translateY(-1em);
+      opacity: 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Add to Cart",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "style_class",
+      "label": "t:settings.style",
+      "options": [
+        {
+          "value": "button",
+          "label": "t:options.primary"
+        },
+        {
+          "value": "button-secondary",
+          "label": "t:options.secondary"
+        }
+      ],
+      "default": "button"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,322 @@
+{{ 'dialog.css' | asset_url | stylesheet_tag }}
+
+<dialog-component id="promo-popup-{{ section.id }}" class="dialog-modal">
+  <dialog class="dialog" style="--dialog-width: {{ section.settings.popup_width }}px;">
+    <div class="dialog__content" style="padding: {{ section.settings.popup_padding }}px;">
+      {%- if section.settings.show_close_button -%}
+        <button
+          type="button"
+          class="dialog__close"
+          aria-label="{{ 'general.close' | t }}"
+          style="position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; cursor: pointer;"
+        >
+          {% render 'icon-close' %}
+        </button>
+      {%- endif -%}
+
+      <div class="promo-popup__content" style="text-align: {{ section.settings.text_alignment }};">
+        {%- if section.settings.popup_image != blank -%}
+          <div class="promo-popup__image" style="margin-bottom: 2rem;">
+            {{ section.settings.popup_image | image_url: width: 600 | image_tag: loading: 'lazy', widths: '300, 400, 500, 600' }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.popup_title != blank -%}
+          <h2 class="promo-popup__title" style="margin-bottom: 1rem; font-size: {{ section.settings.title_size }}px;">
+            {{ section.settings.popup_title }}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.popup_text != blank -%}
+          <div class="promo-popup__text rte" style="margin-bottom: 2rem;">
+            {{ section.settings.popup_text }}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.show_newsletter_form -%}
+          <div class="promo-popup__newsletter">
+            {% form 'customer', class: 'newsletter-form' %}
+              <input type="hidden" name="contact[tags]" value="newsletter">
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <input
+                  type="email"
+                  name="contact[email]"
+                  placeholder="{{ section.settings.email_placeholder }}"
+                  required
+                  style="flex: 1; min-width: 200px; padding: 1rem; border: 1px solid rgba(var(--color-foreground), 0.2); border-radius: 4px;"
+                >
+                <button
+                  type="submit"
+                  class="button button--primary"
+                  style="padding: 1rem 2rem; white-space: nowrap;"
+                >
+                  {{ section.settings.button_text }}
+                </button>
+              </div>
+              {%- if form.posted_successfully? -%}
+                <p style="margin-top: 1rem; color: green;">{{ section.settings.success_message }}</p>
+              {%- endif -%}
+            {% endform %}
+          </div>
+        {%- elsif section.settings.button_text != blank and section.settings.button_link != blank -%}
+          <a
+            href="{{ section.settings.button_link }}"
+            class="button button--primary"
+            style="display: inline-block; padding: 1rem 2rem; text-decoration: none;"
+          >
+            {{ section.settings.button_text }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </dialog>
+</dialog-component>
+
+<script src="{{ 'dialog.js' | asset_url }}" defer="defer"></script>
+
+<script>
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const popupId = 'promo-popup-' + sectionId;
+    const storageKey = 'promo-popup-' + sectionId + '-shown';
+    const showOnHomepageOnly = {{ section.settings.show_homepage_only }};
+    const delaySeconds = {{ section.settings.delay_seconds }};
+    const frequencyDays = {{ section.settings.frequency_days }};
+
+    function shouldShowPopup() {
+      // Check if we should only show on homepage
+      if (showOnHomepageOnly && window.location.pathname !== '/') {
+        return false;
+      }
+
+      // Check if popup was shown recently
+      const lastShown = localStorage.getItem(storageKey);
+      if (lastShown) {
+        const daysSinceShown = (Date.now() - parseInt(lastShown)) / (1000 * 60 * 60 * 24);
+        if (daysSinceShown < frequencyDays) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function showPopup() {
+      const popup = document.getElementById(popupId);
+      if (popup && shouldShowPopup()) {
+        setTimeout(() => {
+          popup.showDialog();
+          localStorage.setItem(storageKey, Date.now().toString());
+        }, delaySeconds * 1000);
+      }
+    }
+
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', showPopup);
+    } else {
+      showPopup();
+    }
+  })();
+</script>
+
+<style>
+  .promo-popup__image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .promo-popup__title {
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  .promo-popup__text {
+    line-height: 1.6;
+  }
+
+  .newsletter-form input[type="email"]:focus {
+    outline: 2px solid rgba(var(--color-foreground), 0.5);
+    outline-offset: 2px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .dialog {
+      --dialog-width: 90vw !important;
+    }
+
+    .promo-popup__content {
+      padding: 1rem !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Promotional Popup",
+  "tag": "section",
+  "class": "section-promo-popup",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Display Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_homepage_only",
+      "label": "Show on homepage only",
+      "default": true,
+      "info": "Enable to show popup only on homepage, disable to show on all pages"
+    },
+    {
+      "type": "range",
+      "id": "delay_seconds",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "label": "Delay before showing",
+      "default": 2,
+      "info": "How many seconds to wait before showing the popup"
+    },
+    {
+      "type": "range",
+      "id": "frequency_days",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "d",
+      "label": "Show again after",
+      "default": 7,
+      "info": "Number of days before showing popup again to the same visitor (0 = show every visit)"
+    },
+    {
+      "type": "header",
+      "content": "Popup Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "popup_image",
+      "label": "Image",
+      "info": "Optional image to display at the top"
+    },
+    {
+      "type": "text",
+      "id": "popup_title",
+      "label": "Title",
+      "default": "Special Offer!"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 28
+    },
+    {
+      "type": "richtext",
+      "id": "popup_text",
+      "label": "Text",
+      "default": "<p>Subscribe to our newsletter and get 10% off your first order!</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter Form"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_newsletter_form",
+      "label": "Show newsletter signup form",
+      "default": true,
+      "info": "If disabled, you can show a button with link instead"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for subscribing!"
+    },
+    {
+      "type": "header",
+      "content": "Button (if newsletter form is disabled)"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link",
+      "info": "Only shown if newsletter form is disabled"
+    },
+    {
+      "type": "header",
+      "content": "Popup Styling"
+    },
+    {
+      "type": "range",
+      "id": "popup_width",
+      "min": 400,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Popup width",
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "popup_padding",
+      "min": 20,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Content padding",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "show_close_button",
+      "label": "Show close button",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Promotional Popup"
+    }
+  ]
+}
+{% endschema %}
