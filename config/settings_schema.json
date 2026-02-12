@@ -7,6 +7,31 @@
     "theme_documentation_url": "https://help.shopify.com/manual/online-store/themes",
     "theme_support_url": "https://support.shopify.com/"
   },
+  {
+    "name": "WhatsApp",
+    "settings": [
+      {
+        "type": "text",
+        "id": "whatsapp_phone",
+        "label": "WhatsApp Phone Number",
+        "info": "Enter phone number with country code, no spaces or symbols (e.g., 919972320665)",
+        "default": "919972320665"
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_default_message",
+        "label": "Default Message",
+        "default": "Hi! I have a question."
+      },
+      {
+        "type": "text",
+        "id": "whatsapp_price_request_message",
+        "label": "Price Request Message",
+        "info": "Use {{product_name}} as placeholder for product name",
+        "default": "Hi! I'd like to request a price for {{product_name}}"
+      }
+    ]
+  },
    {
         "name":"Wishlist",
         "settings":[

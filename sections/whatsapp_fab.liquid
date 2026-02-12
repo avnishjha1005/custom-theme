@@ -1,7 +1,8 @@
 {% liquid
-  assign phone_raw = section.settings.phone | strip
+  assign phone_raw = settings.whatsapp_phone | default: section.settings.phone | strip
   assign phone = phone_raw | replace: ' ', '' | replace: '+', '' | replace: '-', '' | replace: '(', '' | replace: ')', ''
-  assign encoded_message = section.settings.message | url_encode
+  assign message = settings.whatsapp_default_message | default: section.settings.message
+  assign encoded_message = message | url_encode
   assign chat_url = 'https://wa.me/' | append: phone | append: '?text=' | append: encoded_message
 %}
 

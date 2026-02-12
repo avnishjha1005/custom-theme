@@ -15,6 +15,12 @@
   if request.visual_preview_mode and product == blank
     assign product = collections.all.products.first
   endif
+
+  assign is_price_on_request = false
+  assign selected_variant = product.selected_or_first_available_variant
+  if selected_variant.price == 0
+    assign is_price_on_request = true
+  endif
 %}
 
 <div
@@ -26,6 +32,9 @@
   {% unless can_add_to_cart %}
     hidden
   {% endunless %}
+  {% if is_price_on_request %}
+    hidden
+  {% endif %}
 >
   {% if product != blank %}
     <button
