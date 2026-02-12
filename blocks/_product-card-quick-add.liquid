@@ -71,7 +71,7 @@
       class="quick-add {% if settings.quick_add_color_scheme %}color-{{ settings.quick_add_color_scheme }}{% endif %} quick-add--inline"
       ref="quickAdd"
       data-product-title="{{ product.title }}"
-      style="height: 100%;width: 97%;"
+      style="height: auto;width: 97%;"
     >
       <product-form-component
         data-section-id="{{ section.id }}"
@@ -139,7 +139,8 @@
 {% endunless %}
 
 {% stylesheet %}
-  /* Quick Add Block - Inline version */
+
+
   .product-card-quick-add-block {
     display: flex;
     align-items: center;
