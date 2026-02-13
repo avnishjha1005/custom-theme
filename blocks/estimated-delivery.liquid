@@ -1,0 +1,286 @@
+{%- liquid
+  assign block_settings = block.settings
+  assign product = closest.product
+  assign variant = product.selected_or_first_available_variant
+
+  # Extract making time from shipping_policy metafield
+  # Expected formats: "7", "7 days", "Ships in 7 days", etc.
+  assign shipping_policy = product.metafields.custom.shipping_policy | default: ''
+  assign making_time = shipping_policy | remove: 'days' | remove: 'day' | remove: 'Ships in' | remove: 'ships in' | strip | plus: 0
+  if making_time == 0
+    assign making_time = block_settings.default_making_time
+  endif
+-%}
+
+<estimated-delivery-component
+  class="estimated-delivery spacing-style"
+  style="{% render 'spacing-style', settings: block_settings %}"
+  {{ block.shopify_attributes }}
+  data-product-id="{{ product.id }}"
+  data-variant-id="{{ variant.id }}"
+  data-making-time="{{ making_time }}"
+  data-origin-pincode="{{ block_settings.origin_pincode }}"
+  data-delivery-text="{{ block_settings.delivery_text }}"
+  data-shiprocket-token="{{ block_settings.shiprocket_token }}"
+>
+  <div class="estimated-delivery__container">
+    <!-- Delivery Date Display -->
+    <div class="estimated-delivery__date-section">
+      <span class="estimated-delivery__label">{{ block_settings.delivery_text }}</span>
+      <span class="estimated-delivery__value" ref="deliveryDate">
+        --
+      </span>
+    </div>
+
+    <!-- Shipping Info Text -->
+    <p class="estimated-delivery__shipping-info">
+      {{ block_settings.shipping_info }}
+    </p>
+
+    <!-- Pincode Input Section -->
+    <div class="estimated-delivery__pincode-section">
+      <span class="svg-wrapper estimated-delivery__location-icon">
+        {{ 'icon-location.svg' | inline_asset_content }}
+      </span>
+      <input
+        type="text"
+        ref="pincodeInput"
+        class="estimated-delivery__pincode-input"
+        placeholder="X X X X X X"
+        maxlength="6"
+        pattern="[0-9]{6}"
+        inputmode="numeric"
+        aria-label="{{ 'accessibility.enter_pincode' | t }}"
+        on:keydown="/handleKeydown"
+      >
+      <button
+        type="button"
+        class="estimated-delivery__change-btn link"
+        ref="changeButton"
+        on:click="/handlePincodeChange"
+      >
+        {{ 'actions.change' | t }}
+      </button>
+    </div>
+
+    <!-- Error State -->
+    <div class="estimated-delivery__error hidden" ref="errorMessage" role="alert">
+      {{ 'content.edd_error' | t }}
+    </div>
+  </div>
+</estimated-delivery-component>
+
+<script src="{{ 'estimated-delivery.js' | asset_url }}" type="module"></script>
+
+{% stylesheet %}
+  .estimated-delivery {
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm, 4px);
+    padding: var(--padding-md, 16px);
+    background: var(--color-background);
+  }
+
+  .estimated-delivery__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--padding-sm, 12px);
+  }
+
+  .estimated-delivery__date-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--padding-xs, 4px);
+    font-size: var(--font-paragraph--size, 1rem);
+    line-height: var(--font-paragraph--line-height, 1.5);
+  }
+
+  .estimated-delivery__label {
+    color: var(--color-foreground);
+  }
+
+  .estimated-delivery__value {
+    font-weight: var(--font-weight-bold, 600);
+    color: var(--color-foreground);
+  }
+
+  .estimated-delivery__value[data-loading="true"] {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: edd-shimmer 1.5s infinite;
+    border-radius: 4px;
+    min-width: 120px;
+    display: inline-block;
+    color: transparent;
+  }
+
+  @keyframes edd-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  .estimated-delivery__shipping-info {
+    font-size: var(--font-size--sm, 0.875rem);
+    color: var(--color-secondary, #666);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .estimated-delivery__pincode-section {
+    display: flex;
+    align-items: center;
+    gap: var(--padding-xs, 8px);
+    padding-top: var(--padding-sm, 12px);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .estimated-delivery__location-icon,
+  .estimated-delivery__location-icon svg {
+    width: var(--icon-size-sm, 20px);
+    height: var(--icon-size-sm, 20px);
+    color: var(--color-foreground);
+    flex-shrink: 0;
+  }
+
+  .estimated-delivery__pincode-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: var(--font-paragraph--size, 1rem);
+    padding: 0;
+    outline: none;
+    max-width: 100px;
+    letter-spacing: 0.15em;
+    color: var(--color-foreground);
+  }
+
+  .estimated-delivery__pincode-input::placeholder {
+    color: var(--color-secondary, #999);
+    letter-spacing: 0.15em;
+  }
+
+  .estimated-delivery__pincode-input:focus {
+    outline: none;
+  }
+
+  .estimated-delivery__change-btn {
+    font-size: var(--font-size--sm, 0.875rem);
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-foreground);
+    margin-left: auto;
+  }
+
+  .estimated-delivery__change-btn:hover {
+    opacity: 0.7;
+  }
+
+  .estimated-delivery__error {
+    color: var(--color-error, #dc3545);
+    font-size: var(--font-size--sm, 0.875rem);
+  }
+
+  .estimated-delivery__error.hidden {
+    display: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.estimated_delivery",
+  "tag": null,
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:content.estimated_delivery_info"
+    },
+    {
+      "type": "text",
+      "id": "shiprocket_token",
+      "label": "t:settings.edd_shiprocket_token",
+      "info": "t:settings.edd_shiprocket_token_info"
+    },
+    {
+      "type": "text",
+      "id": "delivery_text",
+      "label": "t:settings.edd_delivery_text",
+      "default": "Standard delivery by"
+    },
+    {
+      "type": "textarea",
+      "id": "shipping_info",
+      "label": "t:settings.edd_shipping_info",
+      "default": "Free shipping in India. International orders have an added cost."
+    },
+    {
+      "type": "text",
+      "id": "origin_pincode",
+      "label": "t:settings.edd_origin_pincode",
+      "default": "110001",
+      "info": "t:settings.edd_origin_pincode_info"
+    },
+    {
+      "type": "range",
+      "id": "default_making_time",
+      "label": "t:settings.edd_default_making_time",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 3,
+      "unit": "day"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-start",
+      "label": "t:settings.left",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-inline-end",
+      "label": "t:settings.right",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:names.estimated_delivery",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

@@ -94,6 +94,15 @@
 
   assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
 
+  # Calculate focal point for object-position
+  assign focal_x = 50
+  assign focal_y = 50
+  if image_resource.presentation.focal_point
+    assign focal_x = image_resource.presentation.focal_point.x | times: 100
+    assign focal_y = image_resource.presentation.focal_point.y | times: 100
+  endif
+  assign focal_style = 'object-position: ' | append: focal_x | append: '% ' | append: focal_y | append: '%;'
+
   # Generate placeholder info based on content type
   if content_type == 'articles'
     assign placeholder_prefix = 'blog-apparel-'
@@ -152,7 +161,7 @@
     {{
       image_resource
       | image_url: width: 3840
-      | image_tag: widths: widths, class: 'image-block__image', sizes: sizes, loading: loading
+      | image_tag: widths: widths, class: 'image-block__image', sizes: sizes, loading: loading, style: focal_style
     }}
   </div>
 {% else %}

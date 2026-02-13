@@ -1,187 +1,260 @@
+<style>
+  .error-404-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
 
+  .error-404-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+  }
 
-<div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<div
-  class="
-    section section--{{ section.settings.section_width }} color-{{ section.settings.color_scheme }}
-    {% if section.settings.section_height != "" %} {{ section.settings.section_height | prepend: "section--height-" }}{% endif %}
-  "
->
-  <div>
-    <div
-      class="
-        spacing-style
-        layout-panel-flex
-        layout-panel-flex--column
-        section-content-wrapper
-        mobile-column
-      "
-      style="
-        {% render 'layout-panel-style', settings: section.settings %}
-        {% render 'spacing-style', settings: section.settings %}
-      "
-    >
-      {% content_for 'blocks' %}
+  .error-404-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .error-404-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }});
+    z-index: 1;
+  }
+
+  .error-404-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 2rem;
+    max-width: 600px;
+  }
+
+  .error-404-title {
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: 400;
+    letter-spacing: -2%;
+    margin: 0 0 0.5rem 0;
+    color: {{ section.settings.text_color }};
+    text-transform: uppercase;
+  }
+
+  .error-404-subtitle {
+    font-size: {{ section.settings.subtitle_size }}px;
+    font-weight: 400;
+    letter-spacing: -2%;
+    margin: 0 0 1.5rem 0;
+    color: {{ section.settings.text_color }};
+    text-transform: uppercase;
+  }
+
+  .error-404-description {
+    font-size: {{ section.settings.description_size }}px;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    margin: 0 0 2.5rem 0;
+    color: {{ section.settings.text_color }};
+    opacity: 0.9;
+  }
+
+  .error-404-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .error-404-btn {
+    display: inline-block;
+    padding: 0.5rem 1.5rem;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: {{ section.settings.text_color }};
+    border: 1px solid {{ section.settings.text_color }};
+    background: transparent;
+    transition: all 0.3s ease;
+    min-width: 140px;
+  }
+
+  .error-404-btn:hover {
+    background: {{ section.settings.text_color }};
+    color: #000;
+  }
+
+  .error-404-btn--text {
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .error-404-btn--text:hover {
+    background: transparent;
+    color: {{ section.settings.text_color }};
+    opacity: 0.7;
+  }
+
+  @media screen and (max-width: 749px) {
+    .error-404-title {
+      font-size: calc({{ section.settings.title_size }}px * 0.7);
+    }
+    .error-404-subtitle {
+      font-size: calc({{ section.settings.subtitle_size }}px * 0.7);
+    }
+  }
+</style>
+
+<section class="error-404-section">
+  {% if section.settings.background_image != blank %}
+    <div class="error-404-background">
+      {{ section.settings.background_image | image_url: width: 1920 | image_tag: loading: 'eager' }}
+    </div>
+  {% endif %}
+
+  <div class="error-404-overlay"></div>
+
+  <div class="error-404-content">
+    <h1 class="error-404-title">{{ section.settings.title }}</h1>
+    <h2 class="error-404-subtitle">{{ section.settings.subtitle }}</h2>
+    <p class="error-404-description">{{ section.settings.description }}</p>
+
+    <div class="error-404-buttons">
+      {% if section.settings.show_back_button %}
+        <a href="javascript:history.back()" class="error-404-btn error-404-btn--text">{{ section.settings.back_button_text }}</a>
+      {% endif %}
+      {% if section.settings.show_home_button %}
+        <a href="/" class="error-404-btn error-404-btn--text">{{ section.settings.home_button_text }}</a>
+      {% endif %}
     </div>
   </div>
-</div>
+</section>
 
 {% schema %}
 {
   "name": "t:names.404",
-  "class": "section-wrapper",
-  "blocks": [
-    {
-      "type": "@theme"
-    },
-    {
-      "type": "@app"
-    },
-    {
-      "type": "_divider"
-    }
-  ],
+  "class": "section-wrapper section-wrapper--full-width",
   "settings": [
     {
-      "type": "select",
-      "id": "content_direction",
-      "label": "t:settings.direction",
-      "options": [
-        {
-          "value": "column",
-          "label": "t:options.vertical"
-        }
-      ],
-      "default": "column",
-      "visible_if": "{{ section.settings.horizontal_alignment_flex_direction_column == 'fake-value' }}"
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 30
     },
     {
       "type": "header",
-      "content": "t:content.layout"
+      "content": "Content"
     },
     {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "page-width",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "page-width"
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "404 ERROR!"
     },
     {
-      "type": "select",
-      "id": "section_height",
-      "label": "t:settings.height",
-      "options": [
-        {
-          "value": "",
-          "label": "t:options.auto"
-        },
-        {
-          "value": "small",
-          "label": "t:options.small"
-        },
-        {
-          "value": "medium",
-          "label": "t:options.medium"
-        },
-        {
-          "value": "large",
-          "label": "t:options.large"
-        },
-        {
-          "value": "full-screen",
-          "label": "t:options.full_screen"
-        }
-      ],
-      "default": ""
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "PAGE NOT FOUND"
     },
     {
-      "type": "select",
-      "id": "horizontal_alignment_flex_direction_column",
-      "label": "t:settings.alignment",
-      "options": [
-        {
-          "value": "flex-start",
-          "label": "t:options.left"
-        },
-        {
-          "value": "center",
-          "label": "t:options.center"
-        },
-        {
-          "value": "flex-end",
-          "label": "t:options.right"
-        }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "select",
-      "id": "vertical_alignment_flex_direction_column",
-      "label": "t:settings.position",
-      "options": [
-        {
-          "value": "flex-start",
-          "label": "t:options.top"
-        },
-        {
-          "value": "center",
-          "label": "t:options.center"
-        },
-        {
-          "value": "flex-end",
-          "label": "t:options.bottom"
-        }
-      ],
-      "default": "center"
-    },
-    {
-      "type": "range",
-      "id": "gap",
-      "label": "t:settings.gap",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 12
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "t:settings.color_scheme",
-      "default": "scheme-1"
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Even the most curated journeys have a moment out of frame."
     },
     {
       "type": "header",
-      "content": "t:content.padding"
+      "content": "Typography"
     },
     {
       "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 100,
-      "step": 1,
+      "id": "title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 72,
+      "step": 2,
       "unit": "px",
-      "default": 0
+      "default": 24
     },
     {
       "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
-      "min": 0,
-      "max": 100,
+      "id": "subtitle_size",
+      "label": "Subtitle size",
+      "min": 16,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "description_size",
+      "label": "Description size",
+      "min": 12,
+      "max": 24,
       "step": 1,
       "unit": "px",
-      "default": 0
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_back_button",
+      "label": "Show back button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "back_button_text",
+      "label": "Back button text",
+      "default": "PREVIOUS PAGE"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_home_button",
+      "label": "Show home button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "home_button_text",
+      "label": "Home button text",
+      "default": "HOME"
     }
   ]
 }
