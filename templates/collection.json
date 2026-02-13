@@ -265,7 +265,7 @@
             "group": {
               "type": "_product-card-group",
               "settings": {
-                "content_direction": "column",
+                "content_direction": "row",
                 "vertical_on_mobile": true,
                 "horizontal_alignment": "space-between",
                 "vertical_alignment": "flex-start",
@@ -297,7 +297,7 @@
                 "padding-block-start": 2,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 18
+                "padding-inline-end": 0
               },
               "blocks": {
                 "group_wwVYk6": {
