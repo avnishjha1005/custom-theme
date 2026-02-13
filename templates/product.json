@@ -932,11 +932,16 @@
                     "product_title_j8HG94",
                     "price_UBgxQk"
                   ]
+                },
+                "shiprocket_promise_promise_widget_MGQtPA": {
+                  "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
+                  "settings": {}
                 }
               },
               "block_order": [
                 "product_card_gallery_VXkrhd",
-                "product_card_group_HE7bmr"
+                "product_card_group_HE7bmr",
+                "shiprocket_promise_promise_widget_MGQtPA"
               ]
             }
           },
