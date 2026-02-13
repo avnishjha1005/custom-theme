@@ -1,4 +1,5 @@
 {% liquid
+  assign product = closest.product
   assign bundle_products = product.metafields.custom.bundle_products.value
   assign bundle_count = bundle_products.count | default: 0
   

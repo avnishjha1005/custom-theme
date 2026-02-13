@@ -53,6 +53,12 @@
       endif
     endunless
 
+    # Check if product is "price on request" (price = 0)
+    assign is_price_on_request = false
+    if variant_to_use.price == 0
+      assign is_price_on_request = true
+    endif
+
     if variant_to_use.available
       assign can_add_to_cart = true
     else
@@ -61,7 +67,7 @@
   endunless
 %}
 
-{% unless product == blank %}
+{% unless product == blank or is_price_on_request %}
   <div
     class="product-card-quick-add-block spacing-style"
     style="{% render 'spacing-style', settings: block.settings %}"
@@ -181,6 +187,18 @@
     width: fit-content;
     opacity: 1;
     transform: translateX(0);
+  }
+
+  .quick-add--inline .quick-add__button .add-to-cart-text {
+    margin-inline: 0 !important;
+    padding-inline: 0 !important;
+    gap: 0 !important;
+  }
+
+  .quick-add--inline .quick-add__button:is(:focus, :hover) .add-to-cart-text {
+    margin-inline: 0 !important;
+    padding-inline: 0 !important;
+    gap: 0 !important;
   }
 {% endstylesheet %}
 
