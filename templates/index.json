@@ -867,7 +867,6 @@
       ],
       "custom_css": [
         "a {font-weight: bold; text-decoration: underline;}",
-        ".image-block__image {object-position: 50% 25%;}",
         ".section--full-width {max-width: 1440px; margin: auto; padding-inline: 16px;}",
         ".collection-card__content {background: linear-gradient( 0deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 70% );}",
         ".section-resource-list__content {display: none;}"
