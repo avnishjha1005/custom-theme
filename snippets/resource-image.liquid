@@ -95,13 +95,21 @@
   assign widths = '240, 352, 832, 1200, 1600, 1920, 2560, 3840'
 
   # Calculate focal point for object-position
-  assign focal_x = 50
-  assign focal_y = 50
-  if image_resource.presentation.focal_point
+  # Priority: 1) Collection metafield, 2) Block setting, 3) API focal point, 4) Default center
+  assign focal_style = 'object-position: center center;'
+
+  if content_type == 'collections' and collection.metafields.custom.image_position != blank
+    # Use per-collection metafield value
+    assign focal_style = 'object-position: ' | append: collection.metafields.custom.image_position | append: ';'
+  elsif block_settings.image_position != blank and block_settings.image_position != 'center center'
+    # Use block setting as fallback
+    assign focal_style = 'object-position: ' | append: block_settings.image_position | append: ';'
+  elsif image_resource.presentation.focal_point.x != blank and image_resource.presentation.focal_point.y != blank
+    # Use API focal point if available
     assign focal_x = image_resource.presentation.focal_point.x | times: 100
     assign focal_y = image_resource.presentation.focal_point.y | times: 100
+    assign focal_style = 'object-position: ' | append: focal_x | append: '% ' | append: focal_y | append: '%;'
   endif
-  assign focal_style = 'object-position: ' | append: focal_x | append: '% ' | append: focal_y | append: '%;'
 
   # Generate placeholder info based on content type
   if content_type == 'articles'
