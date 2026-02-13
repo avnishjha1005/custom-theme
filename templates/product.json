@@ -765,7 +765,7 @@
             "rows_gap": 16,
             "section_width": "page-width",
             "color_scheme": "",
-            "gap-header": 12
+            "gap-header": 10
           },
           "blocks": {
             "product-card": {
