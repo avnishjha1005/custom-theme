@@ -71,7 +71,7 @@
       class="quick-add {% if settings.quick_add_color_scheme %}color-{{ settings.quick_add_color_scheme }}{% endif %} quick-add--inline"
       ref="quickAdd"
       data-product-title="{{ product.title }}"
-      style="height: auto;width: 97%;"
+      style="width: 97%;"
     >
       <product-form-component
         data-section-id="{{ section.id }}"
@@ -140,6 +140,19 @@
 
 {% stylesheet %}
 
+  product-form-component{
+    width: 100%;
+  }
+
+  quick-add-component{
+    height: 97% !important;
+  }
+
+  @media screen and (max-width: 768px){
+   quick-add-component{
+    height: unset !important;
+  }
+  }
 
   .product-card-quick-add-block {
     display: flex;
