@@ -93,7 +93,7 @@
       "custom_css": [
         ".custom-section-content {padding: 0px !important;}",
         ".shopify-block {height: 100%; width: 100%;}",
-        "img{object-position: 50% 20%;}"
+        "img {object-position: 50% 20%;}"
       ],
       "settings": {
         "content_direction": "column",
@@ -126,6 +126,129 @@
     "bundle_list_paKprr": {
       "type": "bundle-list",
       "blocks": {
+        "bundle_dTpLpX": {
+          "type": "bundle",
+          "settings": {
+            "product": "look-5",
+            "show_hs_1": false,
+            "hs_1_label": "+",
+            "hs_1_x": 50,
+            "hs_1_y": 50,
+            "hs_1_bg": "#ffffff",
+            "hs_1_border": "#000000",
+            "hs_1_product": "",
+            "show_hs_2": false,
+            "hs_2_label": "+",
+            "hs_2_x": 30,
+            "hs_2_y": 30,
+            "hs_2_bg": "#ffffff",
+            "hs_2_border": "#000000",
+            "hs_2_product": "",
+            "show_hs_3": false,
+            "hs_3_label": "+",
+            "hs_3_x": 70,
+            "hs_3_y": 70,
+            "hs_3_bg": "#ffffff",
+            "hs_3_border": "#000000",
+            "hs_3_product": "",
+            "show_hs_4": false,
+            "hs_4_label": "+",
+            "hs_4_x": 10,
+            "hs_4_y": 90,
+            "hs_4_bg": "#ffffff",
+            "hs_4_border": "#000000",
+            "hs_4_product": "",
+            "show_hs_5": false,
+            "hs_5_label": "+",
+            "hs_5_x": 90,
+            "hs_5_y": 10,
+            "hs_5_bg": "#ffffff",
+            "hs_5_border": "#000000",
+            "hs_5_product": ""
+          }
+        },
+        "bundle_KB9dc3": {
+          "type": "bundle",
+          "settings": {
+            "product": "look-5",
+            "show_hs_1": false,
+            "hs_1_label": "+",
+            "hs_1_x": 50,
+            "hs_1_y": 50,
+            "hs_1_bg": "#ffffff",
+            "hs_1_border": "#000000",
+            "hs_1_product": "",
+            "show_hs_2": false,
+            "hs_2_label": "+",
+            "hs_2_x": 30,
+            "hs_2_y": 30,
+            "hs_2_bg": "#ffffff",
+            "hs_2_border": "#000000",
+            "hs_2_product": "",
+            "show_hs_3": false,
+            "hs_3_label": "+",
+            "hs_3_x": 70,
+            "hs_3_y": 70,
+            "hs_3_bg": "#ffffff",
+            "hs_3_border": "#000000",
+            "hs_3_product": "",
+            "show_hs_4": false,
+            "hs_4_label": "+",
+            "hs_4_x": 10,
+            "hs_4_y": 90,
+            "hs_4_bg": "#ffffff",
+            "hs_4_border": "#000000",
+            "hs_4_product": "",
+            "show_hs_5": false,
+            "hs_5_label": "+",
+            "hs_5_x": 90,
+            "hs_5_y": 10,
+            "hs_5_bg": "#ffffff",
+            "hs_5_border": "#000000",
+            "hs_5_product": ""
+          }
+        },
+        "bundle_wtWVNB": {
+          "type": "bundle",
+          "settings": {
+            "product": "look-5",
+            "show_hs_1": false,
+            "hs_1_label": "+",
+            "hs_1_x": 50,
+            "hs_1_y": 50,
+            "hs_1_bg": "#ffffff",
+            "hs_1_border": "#000000",
+            "hs_1_product": "",
+            "show_hs_2": false,
+            "hs_2_label": "+",
+            "hs_2_x": 30,
+            "hs_2_y": 30,
+            "hs_2_bg": "#ffffff",
+            "hs_2_border": "#000000",
+            "hs_2_product": "",
+            "show_hs_3": false,
+            "hs_3_label": "+",
+            "hs_3_x": 70,
+            "hs_3_y": 70,
+            "hs_3_bg": "#ffffff",
+            "hs_3_border": "#000000",
+            "hs_3_product": "",
+            "show_hs_4": false,
+            "hs_4_label": "+",
+            "hs_4_x": 10,
+            "hs_4_y": 90,
+            "hs_4_bg": "#ffffff",
+            "hs_4_border": "#000000",
+            "hs_4_product": "",
+            "show_hs_5": false,
+            "hs_5_label": "+",
+            "hs_5_x": 90,
+            "hs_5_y": 10,
+            "hs_5_bg": "#ffffff",
+            "hs_5_border": "#000000",
+            "hs_5_product": ""
+          }
+        },
         "bundle_6a8xqA": {
           "type": "bundle",
           "settings": {
@@ -374,6 +497,9 @@
         }
       },
       "block_order": [
+        "bundle_dTpLpX",
+        "bundle_KB9dc3",
+        "bundle_wtWVNB",
         "bundle_6a8xqA",
         "bundle_kzexej",
         "bundle_bWa4VE",
@@ -386,7 +512,7 @@
       ],
       "name": "Bundle List Section",
       "settings": {
-        "collection": "the-editorial"
+        "collection": "modern-wardrobe-staples"
       }
     },
     "section": {
