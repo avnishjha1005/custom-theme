@@ -181,7 +181,7 @@
   <div class="bundle-wrapper">
     {% for block in section.blocks %}
       {% if block.type == 'bundle' %}
-        {% assign remainder = forloop.index | modulo: 8 %}
+        {% assign remainder = forloop.index | modulo: 9 %}
         {% assign is_hero = false %}
         {% if remainder == 0 %}{% assign is_hero = true %}{% endif %}
 
