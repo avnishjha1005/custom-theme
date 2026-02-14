@@ -142,25 +142,8 @@
     grid-column: 1 / span 2;
   }
 
-  .hero-grid {
-    display: grid;
-    /* Image column takes 70%, Description column takes 30% */
-    grid-template-columns: 7fr 3fr; 
-    gap: 40px;
-    align-items: start;
-  }
-
-  /* Alternating layout for hero items */
-  .bundle-item--hero:nth-of-type(even) .hero-grid {
-    direction: rtl;
-  }
-  .bundle-item--hero:nth-of-type(even) .hero-grid > div {
-    direction: ltr;
-  }
-
   .bundle-meta { padding-top: 20px; }
   .bundle-name { font-size: 16px; text-transform: uppercase; margin: 0 0 10px 0; }
-  .bundle-desc { font-size: 16px; line-height: 1.6; color: #333; }
 
   @media (max-width: 750px) {
     .bundle-wrapper { 
@@ -172,25 +155,6 @@
       font-size:12px;
     }
 
-    /* Force the Hero item to span across both columns */
-    .hero-grid { 
-      grid-template-columns: 7fr 3fr !important; 
-      gap: 15px; 
-      align-items: center; /* Keeps text aligned with the image center if preferred */
-    }
-    .hero-grid .hero-main-col{
-      grid-column: span 2;
-    } 
-    .hero-grid .hero-side-col{
-      display: none;
-    }
-    /* Keep internal Hero layout logic as is */
-    .hero-grid { 
-      grid-template-columns: 1fr; 
-      gap: 20px; 
-    }
-    .hero-grid { grid-template-columns: 1fr; gap: 20px; }
-    .bundle-item--hero:nth-of-type(even) .hero-grid { direction: ltr; }
     .hs-title { font-size: 10px; font-weight: 500; display: block; text-transform: uppercase; }
   .hs-price { font-size: 10px; display: block; }
   .hotspot-dot {
@@ -215,13 +179,11 @@
 
 <div class="bundle-section-{{ section.id }}">
   <div class="bundle-wrapper">
-    {% assign hero_indices = "3,6" | split: "," %}
-    
     {% for block in section.blocks %}
       {% if block.type == 'bundle' %}
-        {% assign idx = forloop.index | append: '' %}
+        {% assign remainder = forloop.index | modulo: 8 %}
         {% assign is_hero = false %}
-        {% for h in hero_indices %}{% if h == idx %}{% assign is_hero = true %}{% endif %}{% endfor %}
+        {% if remainder == 0 %}{% assign is_hero = true %}{% endif %}
 
         <div class="bundle-item {% if is_hero %}bundle-item--hero{% endif %}" {{ block.shopify_attributes }}>
           
@@ -271,18 +233,9 @@
           {% endcapture %}
 
           {% if is_hero %}
-            <div class="hero-grid">
-               <div class="hero-main-col">
-                  {{ visual_part }}
-                  <div class="bundle-meta">
-                    {{ title_part }}
-                  </div>
-               </div>
-               <div class="hero-side-col">
-                  <div class="bundle-meta">
-                    <div class="bundle-desc">{{ block.settings.product.description }}</div>
-                  </div>
-               </div>
+            {{ visual_part }}
+            <div class="bundle-meta">
+              {{ title_part }}
             </div>
           {% else %}
             {{ visual_part }}
