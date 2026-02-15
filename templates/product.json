@@ -1242,7 +1242,8 @@
         "quick-add-component button {align-items: end; padding-bottom: 0; justify-content: end; padding-right: 0px;}",
         "quick-add-component .svg-wrapper {justify-content: end; padding-right: 5px;}",
         ".slideshow-slides[gutters*=\"start\"] {padding-inline-start: 0px;}",
-        "[ref=\"resourceListCarousel\"] > [ref=\"slideshowContainer\"] > [ref=\"scroller\"] {padding-left: 0; padding-right: 0;}"
+        "[ref=\"resourceListCarousel\"] > [ref=\"slideshowContainer\"] > [ref=\"scroller\"] {padding-left: 0; padding-right: 0;}",
+        ".divider__line {border-bottom: 1px solid black;}"
       ],
       "name": "t:names.product_recommendations",
       "settings": {
