@@ -2,9 +2,56 @@
   Size Guide Drawer Block
   Uses a Metaobject list to handle multiple vendors.
   Structure: product.metafields.custom.selected_size_guide.value
+
+  How to Measure: Auto-matched based on product.type
+  Categories: clothing, footwear, jewelry (add more as needed)
 {% endcomment %}
 
 {%- assign guides = product.metafields.custom.selected_size_guide.value -%}
+
+{% comment %}
+  PRODUCT TYPE → MEASUREMENT CATEGORY MAPPING
+  Edit these lists to match your store's product types
+{% endcomment %}
+{%- assign footwear_types = 'shoes,shoe,footwear,sandals,sandal,boots,boot,heels,heel,sneakers,sneaker,loafers,flats,mules,slides' | split: ',' -%}
+{%- assign jewelry_types = 'rings,ring,bracelets,bracelet,necklaces,necklace,earrings,earring,jewelry,jewellery,bangles,pendant,chain' | split: ',' -%}
+{%- assign bags_types = 'bags,bag,handbags,handbag,purse,clutch,tote,backpack,satchel' | split: ',' -%}
+{%- assign product_type_lower = product.type | downcase | strip -%}
+{%- assign measurement_category = 'clothing' -%}
+
+{%- for type in footwear_types -%}
+  {%- if product_type_lower contains type -%}
+    {%- assign measurement_category = 'footwear' -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if measurement_category == 'clothing' -%}
+  {%- for type in jewelry_types -%}
+    {%- if product_type_lower contains type -%}
+      {%- assign measurement_category = 'jewelry' -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- if measurement_category == 'clothing' -%}
+  {%- for type in bags_types -%}
+    {%- if product_type_lower contains type -%}
+      {%- assign measurement_category = 'bags' -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{% comment %} Fallback: Tops, Jackets, Dresses, Pants, etc. all map to 'clothing' {% endcomment %}
+
+{% comment %}
+  Find matching measurement instructions directly from metaobjects.
+  The metaobject entry HANDLE must match the category key (clothing, footwear, jewelry, bags)
+{% endcomment %}
+{% assign how_to_measure = shop.metaobjects['measurement_instructions'][measurement_category] %}
+
 
 {%- if guides != blank -%}
   <div class="btn-wrapper">
@@ -25,16 +72,40 @@
 
     <div class="sg-body">
       <div class="sg-vendor-tabs">
+        {% comment %} How to Measure tab - always first if available {% endcomment %}
+        {%- if how_to_measure -%}
+          <button class="sg-tab-link active"
+                  onclick="openVendorTab(event, 'how-to-measure')">
+            HOW TO MEASURE
+          </button>
+        {%- endif -%}
+
+        {% comment %} Vendor/Brand tabs {% endcomment %}
         {%- for guide in guides -%}
-          <button class="sg-tab-link {% if forloop.first %}active{% endif %}" 
+          <button class="sg-tab-link {% if how_to_measure == nil and forloop.first %}active{% endif %}"
                   onclick="openVendorTab(event, 'vendor-{{ forloop.index }}')">
             {{ guide.vendor_name | upcase }} SIZE GUIDE
           </button>
         {%- endfor -%}
       </div>
 
+      {% comment %} How to Measure content panel {% endcomment %}
+      {%- if how_to_measure -%}
+        <div id="how-to-measure" class="sg-vendor-content active">
+          {%- if how_to_measure.image -%}
+            <div class="sg-illustration">
+              <img src="{{ how_to_measure.image | image_url: width: 700 }}" loading="lazy" alt="{{ how_to_measure.title | default: 'How to Measure' }}" height="auto" width="auto">
+            </div>
+          {%- endif -%}
+          <div class="sg-htm-instructions">
+            {{ how_to_measure.instructions }}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {% comment %} Vendor size guide content panels {% endcomment %}
       {%- for guide in guides -%}
-        <div id="vendor-{{ forloop.index }}" class="sg-vendor-content {% if forloop.first %}active{% endif %}">
+        <div id="vendor-{{ forloop.index }}" class="sg-vendor-content {% if how_to_measure == nil and forloop.first %}active{% endif %}">
           
           <p class="sg-disclaimer">
             {{ guide.disclaimer | default: "Each item is measured to help you choose the correct fit. Please refer to the garment's measurements below to select the appropriate size." }}
@@ -160,24 +231,50 @@
 
     /* Header & Tabs */
     .sg-header {
-      padding: 25px;
+      padding: 25px 25px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #f2f2f2;
     }
-    .sg-title { font-size: 18px; margin: 0; font-family: serif; }
+    .sg-title {
+      font-family: Inter, sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 20px;
+      letter-spacing: 0;
+      margin: 0;
+    }
     .sg-close-icon { background: none; border: none; cursor: pointer; }
 
-    .sg-body { padding: 25px; overflow-y: auto; }
-    .sg-vendor-tabs { display: flex; gap: 20px; border-bottom: 1px solid #eee; margin-bottom: 20px; }
+    .sg-body { padding: 0 25px 25px; overflow-y: auto; }
+    .sg-vendor-tabs { display: flex; flex-wrap: wrap; gap: 15px 20px; margin-bottom: 20px; padding-bottom: 0; }
     
     .sg-tab-link {
-      background: none; border: none; padding: 10px 0;
-      font-size: 10px; font-weight: bold; color: #aaa; cursor: pointer;
+      background: none;
+      border: none;
+      padding: 10px 0;
+      font-family: Inter, sans-serif;
+      font-weight: 500;
+      font-size: 10px;
+      line-height: 12px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      color: #aaa;
+      cursor: pointer;
       border-bottom: 2px solid transparent;
     }
-    .sg-tab-link.active { color: #000; border-bottom: 2px solid #000; }
+    .sg-tab-link.active {
+      font-family: Inter, sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      line-height: 12px;
+      letter-spacing: 0;
+      text-transform: uppercase;
+      text-decoration: underline;
+      text-decoration-style: solid;
+      color: #000;
+      border-bottom: none;
+    }
 
     .sg-vendor-content { display: none; }
     .sg-vendor-content.active { display: block; }
@@ -193,6 +290,19 @@
     .sg-unit-table table { width: 100%; border-collapse: collapse; font-size: 12px; }
     .sg-unit-table th { text-align: left; padding: 12px 5px; border-bottom: 1px solid #000; text-transform: uppercase; font-size: 10px; }
     .sg-unit-table td { padding: 12px 5px; border-bottom: 1px solid #eee; color: #444; }
+
+    /* How to Measure Instructions */
+    .sg-htm-instructions {
+      font-size: 13px;
+      line-height: 1.7;
+      color: #444;
+    }
+    .sg-htm-instructions ol,
+    .sg-htm-instructions ul {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+    .sg-htm-instructions li { margin-bottom: 8px; }
   </style>
 
   <script>
@@ -222,10 +332,11 @@
       const container = document.querySelector('.sg-table-container-' + index);
       btn.parentElement.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      
+
       container.querySelector('.unit-cm').style.display = (unit === 'cm') ? 'block' : 'none';
       container.querySelector('.unit-in').style.display = (unit === 'in') ? 'block' : 'none';
     }
+
   </script>
 {%- endif -%}
 

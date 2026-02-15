@@ -179,75 +179,83 @@
 
 <div class="bundle-section-{{ section.id }}">
   <div class="bundle-wrapper">
-    {% for block in section.blocks %}
-      {% if block.type == 'bundle' %}
+    {% if section.settings.collection != blank %}
+      {% for product in section.settings.collection.products %}
         {% assign remainder = forloop.index | modulo: 8 %}
         {% assign is_hero = false %}
         {% if remainder == 0 %}{% assign is_hero = true %}{% endif %}
 
-        <div class="bundle-item {% if is_hero %}bundle-item--hero{% endif %}" {{ block.shopify_attributes }}>
-          
+        {%- comment -%} Get bundle products and hotspot positions from metafields {%- endcomment -%}
+        {% assign bundle_products = product.metafields.custom.bundle_products.value %}
+        {% assign hotspot_positions = product.metafields.custom.hotspot_positions.value %}
+
+        <div class="bundle-item {% if is_hero %}bundle-item--hero{% endif %}">
           {% capture visual_part %}
             <div class="bundle-visual">
-              {% if block.settings.product != blank %}
-                {{ block.settings.product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
+              {% if product.featured_image != blank %}
+                {{ product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
               {% else %}
                 {{ 'collection-1' | placeholder_svg_tag }}
               {% endif %}
 
-              {% for i in (1..5) %}
-                {% capture hs_show %}show_hs_{{ i }}{% endcapture %}
-                {% capture hs_product_setting %}hs_{{ i }}_product{% endcapture %}
-                {% assign hs_product = block.settings[hs_product_setting] %}
+              {%- comment -%} DEBUG: Remove this after testing {%- endcomment -%}
+              <!-- DEBUG: hotspot_positions = {{ hotspot_positions | json }} -->
+              <!-- DEBUG: bundle_products count = {{ bundle_products.size }} -->
 
-                {% if block.settings[hs_show] and hs_product != blank %}
-                  {% capture hs_x %}hs_{{ i }}_x{% endcapture %}
-                  {% capture hs_y %}hs_{{ i }}_y{% endcapture %}
-                  {% capture hs_bg %}hs_{{ i }}_bg{% endcapture %}
-                  {% capture hs_border %}hs_{{ i }}_border{% endcapture %}
+              {%- comment -%} Render hotspots from metafield data {%- endcomment -%}
+              {% if hotspot_positions != blank and bundle_products != blank %}
+                {% for hotspot in hotspot_positions %}
+                  {% assign hs_x = hotspot.x | default: 50 %}
+                  {% assign hs_y = hotspot.y | default: 50 %}
+                  {% assign product_index = hotspot.product_index | default: 0 | plus: 0 %}
 
-                  <div class="hotspot-node"
-                       data-url="{{ hs_product.url }}"
-                       style="left: {{ block.settings[hs_x] }}%; top: {{ block.settings[hs_y] }}%;">
-                    <div class="hotspot-dot" style="--hs-border: {{ block.settings[hs_border] }}; --hs-bg: {{ block.settings[hs_bg] }};">
-                    </div>
-                    {% if block.settings[hs_x] <= 25 %}
-                      {% assign hs_text_pos = 'hotspot-text--right' %}
-                    {% elsif block.settings[hs_x] >= 75 %}
-                      {% assign hs_text_pos = 'hotspot-text--left' %}
-                    {% else %}
-                      {% assign hs_text_pos = 'hotspot-text--bottom' %}
+                  {%- comment -%} Find product by iterating through bundle_products {%- endcomment -%}
+                  {% assign hs_product = nil %}
+                  {% for bp in bundle_products %}
+                    {% if forloop.index0 == product_index %}
+                      {% assign hs_product = bp %}
+                      {% break %}
                     {% endif %}
-                    <div class="hotspot-text {{ hs_text_pos }}">
-                      <span class="hs-title">{{ hs_product.title }}</span>
-                      <span class="hs-price">{{ hs_product.price | money }}</span>
+                  {% endfor %}
+                  <!-- DEBUG LOOP: x={{ hs_x }}, y={{ hs_y }}, idx={{ product_index }}, product={{ hs_product.title }} -->
+
+                  {% if hs_product != blank %}
+                    <div class="hotspot-node"
+                         data-url="{{ hs_product.url }}"
+                         style="left: {{ hs_x }}%; top: {{ hs_y }}%;">
+                      <div class="hotspot-dot" style="--hs-border: {{ section.settings.hotspot_border }}; --hs-bg: {{ section.settings.hotspot_bg }};">
+                      </div>
+                      {% if hs_x <= 25 %}
+                        {% assign hs_text_pos = 'hotspot-text--right' %}
+                      {% elsif hs_x >= 75 %}
+                        {% assign hs_text_pos = 'hotspot-text--left' %}
+                      {% else %}
+                        {% assign hs_text_pos = 'hotspot-text--bottom' %}
+                      {% endif %}
+                      <div class="hotspot-text {{ hs_text_pos }}">
+                        <span class="hs-title">{{ hs_product.title }}</span>
+                        <span class="hs-price">{{ hs_product.price | money }}</span>
+                      </div>
                     </div>
-                  </div>
-                {% endif %}
-              {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
             </div>
           {% endcapture %}
 
           {% capture title_part %}
-            <div class="bundle-name">{{ block.settings.product.title }}</div>
+            <div class="bundle-name">{{ product.title }}</div>
           {% endcapture %}
 
-          {% if is_hero %}
-            {{ visual_part }}
-            <div class="bundle-meta">
-              {{ title_part }}
-            </div>
-          {% else %}
-            {{ visual_part }}
-            <div class="bundle-meta">
-              {{ title_part }}
-              {% comment %} Description is hidden for non-hero elements {% endcomment %}
-            </div>
-          {% endif %}
-          
+          {{ visual_part }}
+          <div class="bundle-meta">
+            {{ title_part }}
+          </div>
         </div>
-      {% endif %}
-    {% endfor %}
+      {% endfor %}
+    {% else %}
+      <p style="text-align: center; grid-column: 1 / -1; color: #666;">Select a collection to display looks.</p>
+    {% endif %}
   </div>
 </div>
 
@@ -287,66 +295,29 @@
     {
       "type": "collection",
       "id": "collection",
-      "label": "Collection Context"
-    }
-  ],
-  "blocks": [
+      "label": "Collection",
+      "info": "Select a collection containing your 'look' products (bundles)"
+    },
     {
-      "type": "bundle",
-      "name": "Bundle Product",
-      "settings": [
-        { "type": "product", "id": "product", "label": "Product" },
-        { "type": "header", "content": "Hotspot 1" },
-        { "type": "checkbox", "id": "show_hs_1", "label": "Show Hotspot 1", "default": false },
-        { "type": "text", "id": "hs_1_label", "label": "Hotspot Label", "default": "+" },
-        { "type": "range", "id": "hs_1_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
-        { "type": "range", "id": "hs_1_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 50 },
-        { "type": "color", "id": "hs_1_bg", "label": "Background Color", "default": "#fff" },
-  { "type": "color", "id": "hs_1_border", "label": "Border Color", "default": "#000" },
-  { "type": "product", "id": "hs_1_product", "label": "Hotspot 1 Product" },
-        { "type": "header", "content": "Hotspot 2" },
-        { "type": "checkbox", "id": "show_hs_2", "label": "Show Hotspot 2", "default": false },
-        { "type": "text", "id": "hs_2_label", "label": "Hotspot Label", "default": "+" },
-        { "type": "range", "id": "hs_2_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 30 },
-        { "type": "range", "id": "hs_2_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 30 },
-        { "type": "color", "id": "hs_2_bg", "label": "Background Color", "default": "#fff" },
-  { "type": "color", "id": "hs_2_border", "label": "Border Color", "default": "#000" },
-  { "type": "product", "id": "hs_2_product", "label": "Hotspot 2 Product" },
-        { "type": "header", "content": "Hotspot 3" },
-        { "type": "checkbox", "id": "show_hs_3", "label": "Show Hotspot 3", "default": false },
-        { "type": "text", "id": "hs_3_label", "label": "Hotspot Label", "default": "+" },
-        { "type": "range", "id": "hs_3_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 70 },
-        { "type": "range", "id": "hs_3_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 70 },
-        { "type": "color", "id": "hs_3_bg", "label": "Background Color", "default": "#fff" },
-  { "type": "color", "id": "hs_3_border", "label": "Border Color", "default": "#000" },
-  { "type": "product", "id": "hs_3_product", "label": "Hotspot 3 Product" },
-        { "type": "header", "content": "Hotspot 4" },
-        { "type": "checkbox", "id": "show_hs_4", "label": "Show Hotspot 4", "default": false },
-        { "type": "text", "id": "hs_4_label", "label": "Hotspot Label", "default": "+" },
-        { "type": "range", "id": "hs_4_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 10 },
-        { "type": "range", "id": "hs_4_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 90 },
-        { "type": "color", "id": "hs_4_bg", "label": "Background Color", "default": "#fff" },
-  { "type": "color", "id": "hs_4_border", "label": "Border Color", "default": "#000" },
-  { "type": "product", "id": "hs_4_product", "label": "Hotspot 4 Product" },
-        { "type": "header", "content": "Hotspot 5" },
-        { "type": "checkbox", "id": "show_hs_5", "label": "Show Hotspot 5", "default": false },
-        { "type": "text", "id": "hs_5_label", "label": "Hotspot Label", "default": "+" },
-        { "type": "range", "id": "hs_5_x", "label": "X Position (%)", "min": 0, "max": 100, "step": 1, "default": 90 },
-        { "type": "range", "id": "hs_5_y", "label": "Y Position (%)", "min": 0, "max": 100, "step": 1, "default": 10 },
-        { "type": "color", "id": "hs_5_bg", "label": "Background Color", "default": "#fff" },
-  { "type": "color", "id": "hs_5_border", "label": "Border Color", "default": "#000" },
-  { "type": "product", "id": "hs_5_product", "label": "Hotspot 5 Product" }
-      ]
+      "type": "header",
+      "content": "Hotspot Styling"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_bg",
+      "label": "Hotspot Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "hotspot_border",
+      "label": "Hotspot Border",
+      "default": "#ffffff"
     }
   ],
   "presets": [
     {
-      "name": "Bundle List",
-      "blocks": [
-        { "type": "bundle", "settings": { "product": "" } },
-        { "type": "bundle", "settings": { "product": "" } },
-        { "type": "bundle", "settings": { "product": "" } }
-      ]
+      "name": "Bundle List"
     }
   ]
 }

@@ -11,48 +11,7 @@
   "sections": {
     "main": {
       "type": "main-404",
-      "blocks": {
-        "logo_pFck9K": {
-          "type": "logo",
-          "name": "t:names.logo",
-          "settings": {
-            "logo_type": "default",
-            "inverse": false,
-            "font": "heading",
-            "vertical_align": "center",
-            "unit": "pixel",
-            "percent_width": 100,
-            "pixel_height": 24,
-            "custom_mobile_size": false,
-            "unit_mobile": "percent",
-            "percent_width_mobile": 100,
-            "pixel_height_mobile": 120,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "logo_pFck9K"
-      ],
-      "custom_css": [
-        ".custom-section-content {padding: 0px;}",
-        "@media screen and (min-width: 768px) {.logo-block {display: none; }}"
-      ],
-      "settings": {
-        "content_direction": "column",
-        "section_width": "full-width",
-        "section_height": "full-screen",
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 20,
-        "color_scheme": "",
-        "padding-block-start": 0,
-        "padding-block-end": 1
-      }
+      "settings": {}
     }
   },
   "order": [
