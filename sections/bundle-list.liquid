@@ -10,12 +10,17 @@
   .bundle-wrapper {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
+    gap: 47px 32px;
     max-width: 700px;
   }
-  .bundle-item {
+  .bundle-list-item {
     display: flex;
     flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+  }
+  .bundle-list-item:hover {
+    text-decoration: none;
   }
   .bundle-visual {
     position: relative;
@@ -137,19 +142,25 @@
   .hs-title { font-size: 18px; font-weight: 500; display: block; text-transform: uppercase; }
   .hs-price { font-size: 16px; display: block; }
 
-  /* Hero Layout Styles */
+  /* Hero Layout Styles - 2x2 span */
   .bundle-item--hero {
-    grid-column: 1 / span 2;
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .bundle-item--hero .bundle-visual {
+    aspect-ratio: 0.74;
+    height: 100%;
   }
 
   .bundle-meta { padding-top: 20px; }
   .bundle-name { font-size: 16px; text-transform: uppercase; margin: 0 0 10px 0; }
 
   @media (max-width: 750px) {
-    .bundle-wrapper { 
-      grid-template-columns: repeat(2, 1fr); 
-      gap: 20px 15px; /* Adjust gap for smaller screens */
-      font-size:16px;
+    .bundle-wrapper {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px 16px;
+      font-size: 16px;
     }
     .bundle-name{
       font-size:12px;
@@ -181,7 +192,8 @@
   <div class="bundle-wrapper">
     {% if section.settings.collection != blank %}
       {% for product in section.settings.collection.products %}
-        {% assign remainder = forloop.index | modulo: 8 %}
+        {% comment %} 9th product (and every 9th after: 9, 18, 27...) becomes 2x2 hero {% endcomment %}
+        {% assign remainder = forloop.index | modulo: 9 %}
         {% assign is_hero = false %}
         {% if remainder == 0 %}{% assign is_hero = true %}{% endif %}
 
@@ -189,7 +201,7 @@
         {% assign bundle_products = product.metafields.custom.bundle_products.value %}
         {% assign hotspot_positions = product.metafields.custom.hotspot_positions.value %}
 
-        <div class="bundle-item {% if is_hero %}bundle-item--hero{% endif %}">
+        <a href="{{ product.url }}" class="bundle-list-item {% if is_hero %}bundle-item--hero{% endif %}">
           {% capture visual_part %}
             <div class="bundle-visual">
               {% if product.featured_image != blank %}
@@ -251,7 +263,7 @@
           <div class="bundle-meta">
             {{ title_part }}
           </div>
-        </div>
+        </a>
       {% endfor %}
     {% else %}
       <p style="text-align: center; grid-column: 1 / -1; color: #666;">Select a collection to display looks.</p>
@@ -265,6 +277,7 @@
 
     nodes.forEach(node => {
       node.addEventListener('click', function(e) {
+        e.preventDefault();
         e.stopPropagation();
         const parentVisual = this.closest('.bundle-visual');
         const isActive = this.classList.contains('is-active');
@@ -282,7 +295,9 @@
       });
     });
 
-    document.addEventListener('click', function() {
+    document.addEventListener('click', function(e) {
+      // Don't clear hotspots if clicking on one
+      if (e.target.closest('.hotspot-node')) return;
       document.querySelectorAll('.hotspot-node').forEach(n => n.classList.remove('is-active'));
       document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
     });
