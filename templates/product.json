@@ -545,7 +545,7 @@
                     "text_n7A9da": {
                       "type": "text",
                       "settings": {
-                        "text": "{{ closest.product.description }}",
+                        "text": "<p>{{ closest.product.description }}</p>",
                         "width": "100%",
                         "max_width": "none",
                         "alignment": "left",
@@ -560,7 +560,7 @@
                         "background": false,
                         "background_color": "#00000026",
                         "corner_radius": 0,
-                        "padding-block-start": 12,
+                        "padding-block-start": 0,
                         "padding-block-end": 0,
                         "padding-inline-start": 0,
                         "padding-inline-end": 0
