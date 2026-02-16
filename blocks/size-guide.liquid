@@ -117,51 +117,60 @@
             </div>
           {%- endif -%}
 
-          <div class="sg-unit-toggle">
-            <button class="unit-btn active" onclick="switchSgUnit(this, 'cm', '{{ forloop.index }}')">CM</button>
-            <button class="unit-btn" onclick="switchSgUnit(this, 'in', '{{ forloop.index }}')">IN</button>
-          </div>
+          {%- assign has_cm = guide.sizes.value.centimeters | size | plus: 0 -%}
+          {%- assign has_in = guide.sizes.value.inches | size | plus: 0 -%}
+
+          {%- if has_cm > 0 and has_in > 0 -%}
+            <div class="sg-unit-toggle">
+              <button class="unit-btn active" onclick="switchSgUnit(this, 'cm', '{{ forloop.index }}')">CM</button>
+              <button class="unit-btn" onclick="switchSgUnit(this, 'in', '{{ forloop.index }}')">IN</button>
+            </div>
+          {%- endif -%}
 
           <div class="sg-table-container-{{ forloop.index }}">
-            {% comment %} Centimeters Table {% endcomment %}
-            <div class="sg-unit-table unit-cm" style="display: block;">
-              <table>
-                <thead>
-                  <tr>
-                    {%- for col in guide.sizes.value.centimeters[0] -%}
-                      <th>{{ col[0] }}</th>
-                    {%- endfor -%}
-                  </tr>
-                </thead>
-                <tbody>
-                  {%- for row in guide.sizes.value.centimeters -%}
+            {%- if has_cm > 0 -%}
+              {% comment %} Centimeters Table {% endcomment %}
+              <div class="sg-unit-table unit-cm" style="display: block;">
+                <table>
+                  <thead>
                     <tr>
-                      {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                      {%- for col in guide.sizes.value.centimeters[0] -%}
+                        <th>{{ col[0] }}</th>
+                      {%- endfor -%}
                     </tr>
-                  {%- endfor -%}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {%- for row in guide.sizes.value.centimeters -%}
+                      <tr>
+                        {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                      </tr>
+                    {%- endfor -%}
+                  </tbody>
+                </table>
+              </div>
+            {%- endif -%}
 
-            {% comment %} Inches Table {% endcomment %}
-            <div class="sg-unit-table unit-in" style="display: none;">
-              <table>
-                <thead>
-                  <tr>
-                    {%- for col in guide.sizes.value.inches[0] -%}
-                      <th>{{ col[0] }}</th>
-                    {%- endfor -%}
-                  </tr>
-                </thead>
-                <tbody>
-                  {%- for row in guide.sizes.value.inches -%}
+            {%- if has_in > 0 -%}
+              {% comment %} Inches Table {% endcomment %}
+              <div class="sg-unit-table unit-in" style="display: {% if has_cm > 0 %}none{% else %}block{% endif %};">
+                <table>
+                  <thead>
                     <tr>
-                      {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                      {%- for col in guide.sizes.value.inches[0] -%}
+                        <th>{{ col[0] }}</th>
+                      {%- endfor -%}
                     </tr>
-                  {%- endfor -%}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {%- for row in guide.sizes.value.inches -%}
+                      <tr>
+                        {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                      </tr>
+                    {%- endfor -%}
+                  </tbody>
+                </table>
+              </div>
+            {%- endif -%}
           </div>
         </div>
       {%- endfor -%}
