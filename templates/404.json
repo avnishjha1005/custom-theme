@@ -11,7 +11,21 @@
   "sections": {
     "main": {
       "type": "main-404",
-      "settings": {}
+      "settings": {
+        "background_image": "shopify://shop_images/f64408c97a6c60eca5f267a8cd4d7966063d3658.jpg",
+        "overlay_opacity": 30,
+        "title": "404 ERROR!",
+        "subtitle": "PAGE NOT FOUND",
+        "description": "Even the most curated journeys have a moment out of frame.",
+        "title_size": 24,
+        "subtitle_size": 32,
+        "description_size": 14,
+        "text_color": "#ffffff",
+        "show_back_button": true,
+        "back_button_text": "PREVIOUS PAGE",
+        "show_home_button": true,
+        "home_button_text": "HOME"
+      }
     }
   },
   "order": [
