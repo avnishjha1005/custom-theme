@@ -132,7 +132,10 @@
     grid-template-columns: repeat(auto-fill, minmax(100px, 180px));
   }
 }
-
+.product-grid--{{ section.id }}.product-grid--grid {
+        /* Typical target ~3 cols: min 200px, max 1fr adapts */
+        padding: 16px;
+      }
 {% endstyle %}
 
 <div
