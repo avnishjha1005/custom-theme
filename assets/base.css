@@ -97,6 +97,7 @@ product-recommendations {
 
 .product-card__content {
   position: relative;
+  padding-inline: 0px !important;
 }
 
 .product-card__content {

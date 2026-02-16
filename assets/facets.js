@@ -588,7 +588,49 @@ if (!customElements.get('facet-remove-component')) {
  * @extends {Component}
  */
 class SortingFilterComponent extends Component {
-  requiredRefs = ['details', 'summary', 'listbox'];
+  connectedCallback() {
+    super.connectedCallback();
+    // Add native event listener for checkbox changes
+    this.addEventListener('change', this.#handleCheckboxChange);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('change', this.#handleCheckboxChange);
+  }
+
+  /**
+   * Handles checkbox change with native event listener
+   * @param {Event} event - The change event
+   */
+  #handleCheckboxChange = (event) => {
+    if (!(event.target instanceof HTMLInputElement)) return;
+    if (event.target.name !== 'sort_by' || event.target.type !== 'checkbox') return;
+
+    const clickedCheckbox = event.target;
+
+    // If unchecking, prevent it (must have one selected)
+    if (!clickedCheckbox.checked) {
+      clickedCheckbox.checked = true;
+      return;
+    }
+
+    // Uncheck all other sort checkboxes
+    const allSortCheckboxes = this.querySelectorAll('input[name="sort_by"][type="checkbox"]');
+    allSortCheckboxes.forEach((checkbox) => {
+      if (checkbox instanceof HTMLInputElement && checkbox !== clickedCheckbox) {
+        checkbox.checked = false;
+      }
+    });
+
+    // Trigger the filter update
+    const facetsForm =
+      this.closest('facets-form-component') || this.closest('.shopify-section')?.querySelector('facets-form-component');
+
+    if (facetsForm instanceof FacetsFormComponent) {
+      facetsForm.updateFilters();
+    }
+  };
 
   /**
    * Handles keyboard navigation in the sorting dropdown
@@ -730,6 +772,12 @@ class SortingFilterComponent extends Component {
       this.closest('facets-form-component') || this.closest('.shopify-section')?.querySelector('facets-form-component');
 
     if (!(facetsForm instanceof FacetsFormComponent)) return;
+
+    // Skip if this is a checkbox change - handled by native listener
+    if (event.target instanceof HTMLInputElement && event.target.name === 'sort_by' && event.target.type === 'checkbox') {
+      return;
+    }
+
     const isMobile = window.innerWidth < 750;
 
     const shouldDisable = this.dataset.shouldUseSelectOnMobile === 'true';
