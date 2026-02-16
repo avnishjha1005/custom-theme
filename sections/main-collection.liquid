@@ -64,7 +64,7 @@
     assign remaining_space = desktop_cols | minus: current_col_pos
     assign can_fit_hero = false
 
-    if is_featured and remaining_space >2
+    if is_featured and remaining_space >= 2
       assign can_fit_hero = true
       assign hero_count = hero_count | plus: 1
     endif
