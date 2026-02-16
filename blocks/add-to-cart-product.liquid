@@ -28,6 +28,17 @@
     assign is_price_on_request = true
   endif
 
+  comment
+    Check if this is a bundle product
+  endcomment
+  assign bundle_products = product.metafields.custom.bundle_products.value
+  assign is_bundle = false
+  assign bundle_count = 0
+  if bundle_products and bundle_products.size > 0
+    assign is_bundle = true
+    assign bundle_count = bundle_products.size
+  endif
+
   if is_price_on_request
     assign whatsapp_phone = settings.whatsapp_phone | replace: ' ', '' | replace: '+', '' | replace: '-', '' | replace: '(', '' | replace: ')', ''
     assign price_request_message = settings.whatsapp_price_request_message | default: 'Hi! I would like to request a price for {{product_name}}'
@@ -59,36 +70,52 @@
         </span>
       </a>
     {% else %}
-      <add-to-cart-component
-        ref="addToCartButtonContainer"
-        data-product-variant-media="{{ product_variant_media }}"
-        data-add-to-cart-animation="{{ settings.add_to_cart_animation }}"
-      >
+      {% if is_bundle %}
+        {% comment %} Bundle: Simple button that opens the drawer, no animation {% endcomment %}
         <button
-          type="submit"
-          name="add"
-          ref="addToCartButton"
-          on:click="/handleClick"
+          type="button"
           class="button add-to-cart-product-button {{ block.settings.style_class }}"
-          {% unless can_add_to_cart %}
-            disabled
-          {% endunless %}
+          onclick="window.openBundleSizeDrawer && window.openBundleSizeDrawer()"
+          data-bundle-add-to-cart="true"
         >
           <span class="add-to-cart-text" style="padding-bottom:0px;">
             <span class="add-to-cart-text__content">
               {{- add_to_cart_text | default: default_add_to_cart_text -}}
             </span>
           </span>
-          <span
-            aria-hidden="true"
-            class="add-to-cart-text--added"
-          >
-            <span class="svg-wrapper add-to-cart-icon--added">
-              {{- 'icon-checkmark.svg' | inline_asset_content -}}
-            </span>
-          </span>
         </button>
-      </add-to-cart-component>
+      {% else %}
+        <add-to-cart-component
+          ref="addToCartButtonContainer"
+          data-product-variant-media="{{ product_variant_media }}"
+          data-add-to-cart-animation="{{ settings.add_to_cart_animation }}"
+        >
+          <button
+            type="submit"
+            name="add"
+            ref="addToCartButton"
+            on:click="/handleClick"
+            class="button add-to-cart-product-button {{ block.settings.style_class }}"
+            {% unless can_add_to_cart %}
+              disabled
+            {% endunless %}
+          >
+            <span class="add-to-cart-text" style="padding-bottom:0px;">
+              <span class="add-to-cart-text__content">
+                {{- add_to_cart_text | default: default_add_to_cart_text -}}
+              </span>
+            </span>
+            <span
+              aria-hidden="true"
+              class="add-to-cart-text--added"
+            >
+              <span class="svg-wrapper add-to-cart-icon--added">
+                {{- 'icon-checkmark.svg' | inline_asset_content -}}
+              </span>
+            </span>
+          </button>
+        </add-to-cart-component>
+      {% endif %}
     {% endif %}
   {% endif %}
 </div>

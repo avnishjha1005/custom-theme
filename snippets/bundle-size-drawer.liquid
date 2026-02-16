@@ -1,0 +1,431 @@
+{%- doc -%}
+  Bundle Size Drawer - Allows users to select sizes for each product in a bundle
+  before adding to cart.
+
+  Usage:
+  {% render 'bundle-size-drawer', product: product, bundle_products: bundle_products %}
+{%- enddoc -%}
+
+{% liquid
+  assign bundle_products = product.metafields.custom.bundle_products.value
+  assign bundle_count = bundle_products | size
+%}
+
+{% if bundle_products and bundle_count > 0 %}
+  <bundle-size-drawer class="bundle-size-drawer" id="bundle-size-drawer" data-product-id="{{ product.id }}">
+    <div class="bundle-drawer__overlay"></div>
+    <div class="bundle-drawer__content">
+      <div class="bundle-drawer__header">
+        <h3 class="bundle-drawer__title">Select sizes for your look</h3>
+        <button class="bundle-drawer__close" aria-label="Close" type="button">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="bundle-drawer__body">
+        <div class="bundle-drawer__items">
+          {% for bundle_item in bundle_products %}
+            {% assign item_index = forloop.index0 %}
+            <div class="bundle-item" data-product-id="{{ bundle_item.id }}" data-item-index="{{ item_index }}">
+              <div class="bundle-item__media">
+                {% if bundle_item.featured_image %}
+                  <img
+                    src="{{ bundle_item.featured_image | image_url: width: 120 }}"
+                    alt="{{ bundle_item.title | escape }}"
+                    width="60"
+                    height="75"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="bundle-item__placeholder">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="bundle-item__details">
+                <p class="bundle-item__vendor">{{ bundle_item.vendor }}</p>
+                <h4 class="bundle-item__title">{{ bundle_item.title }}</h4>
+                <p class="bundle-item__price">{{ bundle_item.price | money }}</p>
+
+                {% comment %} Size selector for this bundle item {% endcomment %}
+                {% assign size_option_index = nil %}
+                {% for option in bundle_item.options_with_values %}
+                  {% assign option_name_lower = option.name | downcase %}
+                  {% if option_name_lower == 'size' or option_name_lower == 'sizes' %}
+                    {% assign size_option_index = forloop.index0 %}
+                    <div class="bundle-item__sizes" data-option-name="{{ option.name }}" data-option-index="{{ size_option_index }}">
+                      <p class="bundle-item__size-label">
+                        Size: <span class="bundle-item__selected-size">Select</span>
+                      </p>
+                      <div class="bundle-item__size-options">
+                        {% for value in option.values %}
+                          {% comment %} Find the first available variant with this size {% endcomment %}
+                          {% assign variant_available = false %}
+                          {% assign matching_variant_id = '' %}
+                          {% for variant in bundle_item.variants %}
+                            {% assign variant_size = variant.options[size_option_index] %}
+                            {% if variant_size == value %}
+                              {% assign matching_variant_id = variant.id %}
+                              {% if variant.available %}
+                                {% assign variant_available = true %}
+                                {% break %}
+                              {% endif %}
+                            {% endif %}
+                          {% endfor %}
+                          <label class="bundle-size-option{% unless variant_available %} bundle-size-option--unavailable{% endunless %}">
+                            <input
+                              type="radio"
+                              name="bundle-size-{{ bundle_item.id }}"
+                              value="{{ value | escape }}"
+                              data-variant-id="{{ matching_variant_id }}"
+                              {% unless variant_available %}disabled{% endunless %}
+                            >
+                            <span class="bundle-size-option__text">{{ value }}</span>
+                          </label>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  {% endif %}
+                {% endfor %}
+
+                {% comment %} For products without size option, use the first available variant {% endcomment %}
+                {% if size_option_index == nil %}
+                  {% assign first_available = bundle_item.selected_or_first_available_variant %}
+                  <input type="hidden" name="bundle-size-{{ bundle_item.id }}" value="default" data-variant-id="{{ first_available.id }}" checked>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="bundle-drawer__footer">
+        <div class="bundle-drawer__summary">
+          <span class="bundle-drawer__item-count">{{ bundle_count }} items</span>
+          <span class="bundle-drawer__total-price" data-original-total="{{ product.price }}">{{ product.price | money }}</span>
+        </div>
+        <button type="button" class="bundle-drawer__confirm button" data-bundle-add-all>
+          <span class="bundle-drawer__confirm-text">Add all to bag</span>
+          <span class="bundle-drawer__confirm-loading" style="display: none;">
+            <svg class="bundle-drawer__spinner" viewBox="0 0 24 24" width="20" height="20">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10">
+                <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+              </circle>
+            </svg>
+            Adding...
+          </span>
+        </button>
+      </div>
+    </div>
+  </bundle-size-drawer>
+{% endif %}
+
+{% stylesheet %}
+  .bundle-size-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .bundle-size-drawer--active {
+    pointer-events: auto;
+    opacity: 1;
+  }
+
+  .bundle-drawer__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .bundle-drawer__content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    max-height: 85vh;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px 16px 0 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .bundle-drawer__content {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: auto;
+      width: 420px;
+      max-height: 100vh;
+      border-radius: 0;
+      transform: translateX(100%);
+    }
+
+    .bundle-size-drawer--active .bundle-drawer__content {
+      transform: translateX(0);
+    }
+  }
+
+  .bundle-size-drawer--active .bundle-drawer__content {
+    transform: translateY(0);
+  }
+
+  .bundle-drawer__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e5e5;
+    flex-shrink: 0;
+  }
+
+  .bundle-drawer__title {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .bundle-drawer__close {
+    background: none;
+    border: none;
+    padding: 8px;
+    margin: -8px;
+    cursor: pointer;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .bundle-drawer__close:hover {
+    opacity: 0.7;
+  }
+
+  .bundle-drawer__body {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .bundle-drawer__items {
+    padding: 0;
+  }
+
+  .bundle-item {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .bundle-item:last-child {
+    border-bottom: none;
+  }
+
+  .bundle-item--error {
+    background-color: #fff5f5;
+  }
+
+  .bundle-item--error .bundle-item__size-label {
+    color: #c00;
+  }
+
+  .bundle-item__media {
+    flex-shrink: 0;
+    width: 60px;
+    height: 75px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .bundle-item__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bundle-item__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ccc;
+  }
+
+  .bundle-item__details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .bundle-item__vendor {
+    font-size: 11px;
+    color: #666;
+    margin: 0 0 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .bundle-item__title {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 4px;
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .bundle-item__price {
+    font-size: 13px;
+    color: #000;
+    margin: 0 0 12px;
+  }
+
+  .bundle-item__sizes {
+    margin-top: 8px;
+  }
+
+  .bundle-item__size-label {
+    font-size: 12px;
+    color: #666;
+    margin: 0 0 8px;
+  }
+
+  .bundle-item__selected-size {
+    color: #000;
+    font-weight: 500;
+  }
+
+  .bundle-item__size-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .bundle-size-option {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .bundle-size-option input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .bundle-size-option__text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 13px;
+    transition: all 0.15s ease;
+  }
+
+  .bundle-size-option:hover .bundle-size-option__text {
+    border-color: #000;
+  }
+
+  .bundle-size-option input:checked + .bundle-size-option__text {
+    border-color: #000;
+    background: #000;
+    color: #fff;
+  }
+
+  .bundle-size-option--unavailable {
+    pointer-events: none;
+  }
+
+  .bundle-size-option--unavailable .bundle-size-option__text {
+    color: #ccc;
+    border-color: #e0e0e0;
+    text-decoration: line-through;
+    background: #fafafa;
+  }
+
+  .bundle-drawer__footer {
+    padding: 20px 24px;
+    border-top: 1px solid #e5e5e5;
+    background: #fff;
+    flex-shrink: 0;
+  }
+
+  .bundle-drawer__summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .bundle-drawer__item-count {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .bundle-drawer__total-price {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .bundle-drawer__confirm {
+    width: 100%;
+    padding: 16px 24px;
+    background: #000;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .bundle-drawer__confirm:hover {
+    background: #333;
+  }
+
+  .bundle-drawer__confirm:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .bundle-drawer__confirm-loading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bundle-drawer__spinner {
+    animation: bundle-spin 1s linear infinite;
+  }
+
+  @keyframes bundle-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+{% endstylesheet %}

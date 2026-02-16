@@ -10,6 +10,17 @@
   assign inventory_quantity = variant.inventory_quantity
   assign inventory_policy = variant.inventory_policy
 
+  comment
+    Check if this is a bundle product
+  endcomment
+  assign bundle_products = product.metafields.custom.bundle_products.value
+  assign is_bundle = false
+  assign bundle_count = 0
+  if bundle_products and bundle_products.size > 0
+    assign is_bundle = true
+    assign bundle_count = bundle_products.size
+  endif
+
   if variant.inventory_management == 'shopify'
     assign inventory_managed = true
   endif
@@ -50,6 +61,10 @@
       on:submit="/handleSubmit"
       data-quantity-default="{% if product.selected_or_first_available_variant.quantity_rule.min %}{{ product.selected_or_first_available_variant.quantity_rule.min }}{% else %}1{% endif %}"
       data-quantity-error-max="{{ 'products.product.quantity_error_max' | t }}"
+      {% if is_bundle %}
+        data-is-bundle="true"
+        data-bundle-count="{{ bundle_count }}"
+      {% endif %}
     >
       <div
         class="visually-hidden"
@@ -157,6 +172,49 @@
     </div>
   {%- endif -%}
 </span>
+
+{% comment %} Bundle Size Drawer {% endcomment %}
+{% if is_bundle %}
+  <script src="{{ 'bundle-drawer.js' | asset_url }}" type="module"></script>
+  {% render 'bundle-size-drawer', product: product, bundle_products: bundle_products %}
+
+  <script>
+    (function() {
+      const productForm = document.querySelector('product-form-component[data-is-bundle="true"][data-product-id="{{ product.id }}"]');
+      if (!productForm) return;
+
+      // Intercept form submission for bundles
+      const form = productForm.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.openBundleSizeDrawer();
+        }, true);
+      }
+
+      // Intercept add to cart button clicks
+      const addToCartBtn = productForm.querySelector('[ref="addToCartButton"]');
+      if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.openBundleSizeDrawer();
+        }, true);
+      }
+
+      // Intercept accelerated checkout (Buy Now) button clicks
+      const buyNowContainer = productForm.querySelector('.shopify-payment-button');
+      if (buyNowContainer) {
+        buyNowContainer.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          window.openBundleSizeDrawer();
+        }, true);
+      }
+    })();
+  </script>
+{% endif %}
 
 {% if block_settings.show_pickup_availability %}
   <script

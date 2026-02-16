@@ -21,6 +21,17 @@
   if selected_variant.price == 0
     assign is_price_on_request = true
   endif
+
+  comment
+    Check if this is a bundle product
+  endcomment
+  assign bundle_products = product.metafields.custom.bundle_products.value
+  assign is_bundle = false
+  assign bundle_count = 0
+  if bundle_products and bundle_products.size > 0
+    assign is_bundle = true
+    assign bundle_count = bundle_products.size
+  endif
 %}
 
 <div
@@ -38,15 +49,25 @@
 >
   {% if product != blank %}
     <button
-      type="submit"
-      name="add"
+      type="{% if is_bundle %}button{% else %}submit{% endif %}"
+      {% unless is_bundle %}name="add"{% endunless %}
       class="button buy-now-button"
       {% unless can_add_to_cart %}
         disabled
       {% endunless %}
-      data-buy-now="true"
+      {% if is_bundle %}
+        data-bundle-buy-now="true"
+        data-bundle-count="{{ bundle_count }}"
+        onclick="window.openBundleSizeDrawer && window.openBundleSizeDrawer()"
+      {% else %}
+        data-buy-now="true"
+      {% endif %}
     >
-      Buy Now
+      {% if is_bundle %}
+        BUY NOW ({{ bundle_count }} ITEMS)
+      {% else %}
+        Buy Now
+      {% endif %}
     </button>
   {% endif %}
 </div>
@@ -67,6 +88,11 @@
 
 {% javascript %}
   document.addEventListener('click', function(e) {
+    // Skip if it's a bundle buy now button - those are handled separately
+    if (e.target.matches('[data-bundle-buy-now="true"]') || e.target.closest('[data-bundle-buy-now="true"]')) {
+      return;
+    }
+
     if (e.target.matches('[data-buy-now="true"]') || e.target.closest('[data-buy-now="true"]')) {
       e.preventDefault();
       const button = e.target.closest('[data-buy-now="true"]') || e.target;

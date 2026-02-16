@@ -4,6 +4,17 @@
 
 {% assign block_settings = block.settings %}
 
+{% comment %} Check if this is a bundle product {% endcomment %}
+{% liquid
+  assign bundle_products = product_resource.metafields.custom.bundle_products.value
+  assign is_bundle = false
+  if bundle_products and bundle_products.size > 0
+    assign is_bundle = true
+  endif
+%}
+
+{% comment %} Hide entire variant picker for bundle products - sizes are selected in the bundle drawer {% endcomment %}
+{% unless is_bundle %}
 {% unless product_resource.has_only_default_variant %}
   {% liquid
     assign button_background_brightness = section.settings.color_scheme.settings.foreground | color_brightness
@@ -233,6 +244,7 @@
         <div class="swatch-drawer__body"></div>
       </div>
     </div>
+
   </variant-picker>
 
   <script>
@@ -292,6 +304,7 @@
       overlay.addEventListener('click', closeDrawer);
     });
   </script>
+{% endunless %}
 {% endunless %}
 
 {% stylesheet %}
@@ -469,6 +482,7 @@
     position: relative;
     padding-block: var(--padding-sm);
     padding-inline: var(--padding-sm);
+    padding-right: 0px;
     border: var(--options-border-width) solid var(--color-variant-border);
     border-radius: var(--options-border-radius);
     background-color: var(--color-variant-background);
@@ -516,8 +530,11 @@
     z-index: 2;
   }
 
-  .swatch-container{
+  .swatch-container {
     display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    column-gap: 10px;
   }
 
   /* Hide complex animations */

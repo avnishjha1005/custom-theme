@@ -37,7 +37,7 @@
 
   {%- if bundle_products != blank -%}
     <div class="section__header page-width">
-      <h2 class="bundle-heading">Look of {{ bundle_count }} items</h2>
+      <h4 class="bundle-heading">Look of {{ bundle_count }} items</h4>
     </div>
 
     <div class="section__content page-width">
@@ -92,7 +92,7 @@
       "type": "checkbox",
       "id": "carousel_on_mobile",
       "label": "Carousel on mobile",
-      "default": true
+      "default": false
     },
     {
       "type": "range",
@@ -190,7 +190,10 @@
     display: block; /* Changed from flex to block for standard stacking */
   }
   .bundle-heading {
-    margin-bottom: 20px;
-    font-size: 1.5rem;
+    margin-bottom: 14px;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    font-weight: 400;
+    padding-bottom: 14px;
   }
 {% endstylesheet %}

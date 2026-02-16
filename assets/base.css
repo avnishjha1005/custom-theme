@@ -1224,7 +1224,6 @@ results-list[initialized] {
 /* Collection and product list cards have equal heights */
 :is(.product-grid__item, .resource-list__item) .product-card {
   display: grid;
-  height: 100%;
 }
 
 /* Video background */
