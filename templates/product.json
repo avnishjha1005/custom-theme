@@ -890,7 +890,7 @@
                         "font_size": "0.75rem",
                         "line_height": "normal",
                         "letter_spacing": "normal",
-                        "case": "uppercase",
+                        "case": "none",
                         "wrap": "pretty",
                         "color": "var(--color-foreground)",
                         "background": false,
@@ -935,6 +935,7 @@
                 },
                 "shiprocket_promise_promise_widget_MGQtPA": {
                   "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
+                  "disabled": true,
                   "settings": {}
                 }
               },
