@@ -1,6 +1,6 @@
 {%- style -%}
   .bundle-section-{{ section.id }} {
-    display: grid;
+    display: flex;
     justify-content: center;
     max-width: 1440px;
     margin: 0 auto;
@@ -12,6 +12,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 47px 32px;
     max-width: 700px;
+    width: 100%;
   }
   .bundle-list-item {
     display: flex;
@@ -26,10 +27,11 @@
     position: relative;
     width: 100%;
     aspect-ratio: 0.74;
-    overflow: hidden;
     background: #f4f4f4;
   }
   .bundle-visual img {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -91,12 +93,15 @@
   .hotspot-text {
     position: absolute;
     color: #fff;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 10px 12px;
+    border-radius: 4px;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
     pointer-events: none;
-    width: max-content;
-    max-width: 160px;
+    white-space: nowrap;
+    z-index: 20;
   }
 
   .hotspot-node.is-active .hotspot-text {
@@ -139,8 +144,8 @@
   
   .hotspot-node.is-active { z-index: 15; }
 
-  .hs-title { font-size: 18px; font-weight: 500; display: block; text-transform: uppercase; }
-  .hs-price { font-size: 16px; display: block; }
+  .hs-title { font-size: 14px; font-weight: 500; display: block; text-transform: uppercase; line-height: 1.3; }
+  .hs-price { font-size: 13px; display: block; margin-top: 4px; opacity: 0.85; }
 
   /* Hero Layout Styles - 2x2 span */
   .bundle-item--hero {
@@ -150,13 +155,20 @@
 
   .bundle-item--hero .bundle-visual {
     aspect-ratio: 0.74;
-    height: 100%;
   }
 
   .bundle-meta { padding-top: 20px; }
   .bundle-name { font-size: 16px; text-transform: uppercase; margin: 0 0 10px 0; }
 
-  @media (max-width: 750px) {
+  @media (max-width: 768px) {
+    .bundle-section-{{ section.id }} {
+    display: flex;
+    justify-content: center;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    box-sizing: border-box;
+  }
     .bundle-wrapper {
       grid-template-columns: repeat(2, 1fr);
       gap: 24px 16px;
@@ -166,8 +178,9 @@
       font-size:12px;
     }
 
-    .hs-title { font-size: 10px; font-weight: 500; display: block; text-transform: uppercase; }
-  .hs-price { font-size: 10px; display: block; }
+    .hs-title { font-size: 11px; font-weight: 500; display: block; text-transform: uppercase; line-height: 1.3; }
+    .hs-price { font-size: 10px; display: block; margin-top: 2px; }
+    .hotspot-text { padding: 8px 12px; }
   .hotspot-dot {
     width: 18px;
     height: 18px;
@@ -275,6 +288,32 @@
   document.addEventListener('DOMContentLoaded', function() {
     const nodes = document.querySelectorAll('.hotspot-node');
 
+    function positionHotspotText(node) {
+      const text = node.querySelector('.hotspot-text');
+      if (!text) return;
+
+      const visual = node.closest('.bundle-visual');
+      const visualRect = visual.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+
+      // Reset position classes
+      text.classList.remove('hotspot-text--left', 'hotspot-text--right', 'hotspot-text--bottom');
+
+      // Calculate available space in each direction
+      const spaceRight = visualRect.right - nodeRect.right;
+      const spaceLeft = nodeRect.left - visualRect.left;
+      const spaceBottom = visualRect.bottom - nodeRect.bottom;
+
+      // Pick best position based on available space
+      if (spaceBottom > 70) {
+        text.classList.add('hotspot-text--bottom');
+      } else if (spaceRight >= spaceLeft) {
+        text.classList.add('hotspot-text--right');
+      } else {
+        text.classList.add('hotspot-text--left');
+      }
+    }
+
     nodes.forEach(node => {
       node.addEventListener('click', function(e) {
         e.preventDefault();
@@ -288,6 +327,8 @@
         if (!isActive) {
           this.classList.add('is-active');
           parentVisual.classList.add('has-active-hotspot');
+          // Position text dynamically after activating
+          positionHotspotText(this);
         } else {
           const url = this.getAttribute('data-url');
           if (url) window.location.href = url;
