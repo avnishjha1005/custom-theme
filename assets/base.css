@@ -4699,7 +4699,7 @@ slideshow-component [ref="scroller"] {
 .flexi-product-title-block .flexi-text,
 .flexi-product-title-block .flexi-text a {
   font-size: 16px !important;
-  --font-size: 18px !important;
+  --font-size: 16px !important;
   font-weight: 600 !important;
 }
 
@@ -4710,7 +4710,7 @@ price-list sale-price,
 price-list compare-at-price,
 .flexi-product-price-block .flexi-price {
   font-size: 16px !important;
-  --font-size: 18px !important;
+  --font-size: 16px !important;
   font-weight: 400 !important;
 }
 
