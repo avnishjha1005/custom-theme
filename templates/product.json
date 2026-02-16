@@ -325,7 +325,7 @@
                     "horizontal_alignment": "flex-end",
                     "vertical_alignment": "flex-end",
                     "align_baseline": false,
-                    "horizontal_alignment_flex_direction_column": "flex-start",
+                    "horizontal_alignment_flex_direction_column": "flex-end",
                     "vertical_alignment_flex_direction_column": "center",
                     "gap": 0,
                     "width": "fill",
