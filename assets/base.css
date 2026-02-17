@@ -4600,7 +4600,7 @@ wishlist-button-collection .wk-floating {
 }
 wishlist-product-card .wk-meta {
   display:flex !important;
-  flex-direction:row !important;
+  flex-direction:column !important;
 
 }
 wk-button{
