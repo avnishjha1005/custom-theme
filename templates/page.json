@@ -34,6 +34,7 @@
       "block_order": [
         "custom_liquid_dJP8zg"
       ],
+      "disabled": true,
       "name": "t:names.custom_section",
       "settings": {
         "content_direction": "column",
@@ -65,15 +66,6 @@
     },
     "177095202455c59acc": {
       "type": "_blocks",
-      "blocks": {
-        "swish_wishlist_king_wishlist_page_block_wBibfA": {
-          "type": "shopify://apps/swish-wishlist-king/blocks/wishlist-page-block/194f5011-a43c-4b22-b12e-eaf20dc4506a",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "swish_wishlist_king_wishlist_page_block_wBibfA"
-      ],
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
