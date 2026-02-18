@@ -4610,14 +4610,18 @@ wishlist-product-card .wk-meta {
   align-items: flex-start;
 
 }
-wk-button{
+
+/* wk-button{
   left:unset !important;
   right: 0 !important;
-}
+} */
+
 .wk-selected{
   --icon-fill: #692C23;
   --icon-stroke: #692C23ed;
 }
+
+
 slideshow-slides slideshow-slide slideshow-slides:has(slideshow-slide .product-media) {
   gap: 0px;
 }
