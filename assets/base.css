@@ -4611,10 +4611,10 @@ wishlist-product-card .wk-meta {
 
 }
 
-/* wk-button{
+wishlist-button-collection wk-button, wishlist-button-collection .wk-button:hover {
   left:unset !important;
   right: 0 !important;
-} */
+}
 
 .wk-selected{
   --icon-fill: #692C23;
