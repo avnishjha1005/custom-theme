@@ -4760,3 +4760,19 @@ price-list compare-at-price,
 .predictive-search-form__header{
   padding-inline: 10px !important;
 }
+
+.sr-delivery-widget{
+  max-width: unset !important;
+  box-shadow: unset !important;
+}
+.sr-title{
+  font-family: unset !important;
+}
+.sr-pincode-input{
+  font-family: unset !important;
+}
+.sr-delivery-container{
+  padding: 0px !important;
+  border-radius: 0px !important;
+  border: 1px solid #D8d1c6;
+}
