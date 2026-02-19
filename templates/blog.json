@@ -377,6 +377,7 @@
         "expert-2": {
           "type": "expert",
           "settings": {
+            "image": "shopify://shop_images/NN6618-2.jpg",
             "name": "Expert Name",
             "designation": "Senior Stylist",
             "link": ""
@@ -385,6 +386,7 @@
         "expert-3": {
           "type": "expert",
           "settings": {
+            "image": "shopify://shop_images/MH_005-2.jpg",
             "name": "Expert Name",
             "designation": "Senior Stylist",
             "link": ""
