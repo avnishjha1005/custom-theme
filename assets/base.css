@@ -4598,19 +4598,30 @@ wishlist-button-collection .wk-floating {
   transform:none !important;
   translate:none !important;
 }
+
+wishlist-product-card .wk-product-title {
+  text-align: left;
+}
+
+
 wishlist-product-card .wk-meta {
   display:flex !important;
-  flex-direction:row !important;
+  flex-direction:column;
+  align-items: flex-start;
 
 }
-wk-button{
+
+wishlist-button-collection wk-button, wishlist-button-collection .wk-button:hover {
   left:unset !important;
   right: 0 !important;
 }
+
 .wk-selected{
   --icon-fill: #692C23;
   --icon-stroke: #692C23ed;
 }
+
+
 slideshow-slides slideshow-slide slideshow-slides:has(slideshow-slide .product-media) {
   gap: 0px;
 }
