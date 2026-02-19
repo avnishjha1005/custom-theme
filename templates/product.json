@@ -18,6 +18,7 @@
             "logo_type": "default",
             "inverse": false,
             "font": "heading",
+            "enable_sticky": false,
             "vertical_align": "top",
             "unit": "pixel",
             "percent_width": 10,

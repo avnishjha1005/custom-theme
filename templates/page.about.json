@@ -30,6 +30,7 @@
             "logo_type": "default",
             "inverse": false,
             "font": "heading",
+            "enable_sticky": false,
             "vertical_align": "center",
             "unit": "percent",
             "percent_width": 100,
@@ -280,7 +281,7 @@
           "name": "t:names.video",
           "settings": {
             "source": "uploaded",
-            "video": "shopify://files/videos/1118437_Pine_High_3840x2160.mp4",
+            "video": "shopify://files/videos/Edit 1 high res.mp4",
             "video_url": "https://www.youtube.com/watch?v=MtA1Xm3X1-w",
             "video_autoplay": false,
             "video_loop": true,
