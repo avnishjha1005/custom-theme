@@ -19,7 +19,7 @@
             "inverse": false,
             "font": "heading",
             "enable_sticky": true,
-            "vertical_align": "center",
+            "vertical_align": "bottom",
             "unit": "pixel",
             "percent_width": 100,
             "pixel_height": 24,
@@ -37,6 +37,9 @@
       },
       "block_order": [
         "logo_rEYLEW"
+      ],
+      "custom_css": [
+        ".custom-section-content{padding: 0px;}"
       ],
       "name": "t:names.large_logo",
       "settings": {
