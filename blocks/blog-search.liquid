@@ -29,6 +29,7 @@
 {% style %}
   .ai-blog-search-{{ ai_gen_id }} { display: block; width: 100%; font-family: inherit; }
   .ai-blog-search-bar-{{ ai_gen_id }} {
+    justify-self: center;
     display: flex; align-items: center; gap: {{ block.settings.gap }}px;
     padding: {{ block.settings.padding }}px;
     background-color: transparent;
@@ -36,7 +37,7 @@
   }
   .ai-blog-search-icon-{{ ai_gen_id }} {
     background: none; border: none; flex-shrink: 0;
-    width: {{ block.settings.icon_size }}px; height: {{ block.settings.icon_size }}px;
+    width: calc(2*{{ block.settings.icon_size }})px; height: calc(2*{{ block.settings.icon_size }})px;
     cursor: pointer; color: {{ block.settings.icon_color }}; transition: color 0.2s;
   }
   .ai-blog-search-tags-{{ ai_gen_id }} { flex: 1; overflow-x: auto; scrollbar-width: none; }
@@ -46,20 +47,18 @@
     display: inline-block;
     color: {{ block.settings.tag_text_color }};
     text-decoration: underline;
-    font-size: 14px;
+    font-size:  {{ block.settings.tag_font_size }}
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-  .ai-blog-search-view-all-{{ ai_gen_id }}:hover {
-    color: {{ block.settings.tag_hover_text_color | default: block.settings.tag_text_color }};
-  }
+
   .ai-blog-search-tag-link-{{ ai_gen_id }} {
     display: inline-block;
     background-color: transparent;
     color: {{ block.settings.tag_text_color }};
     text-decoration: none;
-    font-size: 14px;
+    font-size: {{ block.settings.tag_font_size }}
     font-weight: 400;
     text-transform: uppercase;
     letter-spacing: 0.5px;

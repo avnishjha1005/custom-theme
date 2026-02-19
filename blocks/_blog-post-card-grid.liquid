@@ -69,7 +69,7 @@
     position: relative;
     text-align: var(--text-align);
     overflow: hidden;
-    aspect-ratio: 1 / 1.1;
+    aspect-ratio: 1.511;
   }
 
   .blog-post-card-grid__media {
@@ -91,6 +91,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center !important;
     display: block;
   }
 
@@ -146,6 +147,9 @@
   }
 
   @media screen and (max-width: 749px) {
+    .blog-post-card-grid {
+    aspect-ratio: 0.72;
+  }
     .blog-post-card-grid__title {
       font-size: 1.5rem;
     }
