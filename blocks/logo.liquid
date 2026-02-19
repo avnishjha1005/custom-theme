@@ -33,7 +33,9 @@
     logo-block
     spacing-style
     logo-block--align-{{ block_settings.vertical_align }}
+    {% if block_settings.enable_sticky %}logo-block--sticky{% endif %}
   "
+  {% if block_settings.enable_sticky %}data-sticky-logo{% endif %}
   style="
     {% if block_settings.unit == 'percent' %}
       --logo-width: {{ block_settings.percent_width }}%;
@@ -73,6 +75,46 @@
 </a>
 
 {% stylesheet %}
+  /* Sticky logo functionality - mobile only */
+  @media screen and (max-width: 768px) {
+    body:has(.logo-block--sticky){
+      padding-top:60px;
+    }
+    .logo-block--sticky {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      width: 100%;
+      max-width: 100%;
+      justify-content: center;
+      background-color: white;
+      padding: 18px 0;
+      margin: 0;
+      
+    }
+
+    .logo-block--sticky.scrolled {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Override logo size on mobile for sticky header */
+    .logo-block--sticky .logo-block__image {
+      height: 24px !important;
+      width: auto !important;
+    }
+
+    /* Override padding/spacing on mobile when sticky */
+    .logo-block--sticky.spacing-style {
+      padding-block-start: 18px !important;
+      padding-block-end: 18px !important;
+      padding-inline-start: 0 !important;
+      padding-inline-end: 0 !important;
+    }
+  }
+
   .logo-block {
     width: calc(var(--logo-width) + var(--padding-inline-start) + var(--padding-inline-end));
     max-width: 100%;
@@ -115,6 +157,32 @@
     width: 100%;
   }
 {% endstylesheet %}
+
+<script>
+  // Sticky logo scroll behavior - mobile only
+  (function() {
+    const stickyLogo = document.querySelector('[data-sticky-logo]');
+    if (!stickyLogo) return;
+
+    // Only apply on mobile
+    if (window.innerWidth > 768) return;
+
+    const scrollThreshold = 50;
+
+    function handleScroll() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTop > scrollThreshold) {
+        stickyLogo.classList.add('scrolled');
+      } else {
+        stickyLogo.classList.remove('scrolled');
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check initial state
+  })();
+</script>
 
 {% schema %}
 {
@@ -172,6 +240,17 @@
     {
       "type": "paragraph",
       "content": "t:content.edit_logo_in_theme_settings"
+    },
+    {
+      "type": "header",
+      "content": "Mobile Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable sticky on mobile",
+      "info": "Makes the logo sticky at the top on mobile devices (24px) with transparent-to-white background transition",
+      "default": false
     },
     {
       "type": "header",
