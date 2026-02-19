@@ -395,6 +395,7 @@
         "expert-4": {
           "type": "expert",
           "settings": {
+            "image": "shopify://shop_images/93e883ad20d1c4e5df8a757aa05d47d1703d09fa.png",
             "name": "Expert Name",
             "designation": "Senior Stylist",
             "link": ""
