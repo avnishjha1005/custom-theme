@@ -933,11 +933,7 @@
     "custom_css": [
       "shopify-section-template--20837767905494__section {}",
       "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
-      "footer {margin-bottom: -1px;}",
-      ".sr-delivery-widget{max-width: unset !important; box-shadow: unset !important;}",
-      ".sr-title{font-family: unset !important;}",
-      ".sr-pincode-input{font-family: unset !important;}",
-      ".sr-delivery-container{padding: 0px !important; border-radius: 0px !important; border: 1px solid #D8d1c6 !important;}"
+      "footer {margin-bottom: -1px;}"
     ]
   }
 }
