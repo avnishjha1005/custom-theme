@@ -413,7 +413,7 @@
         "heading": "The Style Experts",
         "autoplay": false,
         "autoplay_speed": 5,
-        "controls_style": "dots",
+        "controls_style": "none",
         "slides_per_view": 4,
         "image_ratio": "3/4",
         "color_scheme": "scheme-bed0b474-fe0a-4965-8562-aa2adf1dc067",
