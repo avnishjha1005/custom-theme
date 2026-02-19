@@ -1,0 +1,176 @@
+{%- comment -%}
+  Blog Grid Section
+  Displays all blog articles in a uniform 2-column grid layout
+  Use this section instead of the editorial sections (hero, listings, discover)
+  for a simpler grid-based blog layout
+{%- endcomment -%}
+
+<script
+  src="{{ 'blog-posts-list.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+<blog-posts-list section-id="{{ section.id }}">
+  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+  <div
+    class="section color-{{ section.settings.color_scheme }} blog-grid-section"
+    style="
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    "
+  >
+    {%- paginate blog.articles by section.settings.articles_per_page -%}
+      <span ref="viewMorePrevious"></span>
+
+      <div
+        ref="grid"
+        class="blog-grid-container"
+        data-last-page="{{ paginate.pages }}"
+      >
+        {% for article in blog.articles %}
+          <div
+            class="blog-grid-item"
+            ref="cards[]"
+            data-page="{{ paginate.current_page }}"
+          >
+            {% content_for 'block', id: 'static-grid-card', type: '_blog-post-card-grid', article: article, card_index: forloop.index %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <span ref="viewMoreNext"></span>
+
+      {% if paginate.pages > 1 %}
+        <div class="blog-grid-pagination">
+          {{ paginate | default_pagination }}
+        </div>
+      {% endif %}
+    {%- endpaginate -%}
+  </div>
+</blog-posts-list>
+
+{% stylesheet %}
+  .blog-grid-section {
+    --page-content-width: var(--narrow-page-width);
+    --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+  }
+
+  .blog-grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-grid-container {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  .blog-grid-item {
+    --blog-post-card-scale: 0.6;
+    width: 100%;
+    height: auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-grid-item {
+      --blog-post-card-scale: 0.5;
+    }
+  }
+
+  .blog-grid-pagination {
+    margin-top: 3rem;
+    text-align: center;
+  }
+
+  .blog-grid-pagination .pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .blog-grid-pagination .pagination a,
+  .blog-grid-pagination .pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    text-decoration: none;
+    color: rgb(var(--color-foreground-rgb));
+    border: 1px solid rgb(var(--color-foreground-rgb) / 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .blog-grid-pagination .pagination a:hover {
+    background-color: rgb(var(--color-foreground-rgb));
+    color: rgb(var(--color-background-rgb));
+  }
+
+  .blog-grid-pagination .pagination span.current {
+    background-color: rgb(var(--color-foreground-rgb));
+    color: rgb(var(--color-background-rgb));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog Grid",
+  "tag": "section",
+  "class": "blog-grid-section-wrapper",
+  "settings": [
+    {
+      "type": "range",
+      "id": "articles_per_page",
+      "label": "Articles per page",
+      "min": 4,
+      "max": 24,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Blog Grid"
+    }
+  ]
+}
+{% endschema %}

@@ -20,7 +20,7 @@
 {% endcapture %}
 
 <div
-  class="blog-post-card"
+  class="blog-post-card-hero"
   style="--text-align: {{ block_settings.alignment }}"
 >
   {%- if slideshow_images.size > 0 -%}
@@ -261,5 +261,14 @@
 
   .blog-post-card-hero .slideshow-control[aria-selected="true"] {
     background-color: #fff;
+  }
+
+  /* Ensure details text is white in hero cards */
+  .blog-post-card-hero .blog-post-details {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .blog-post-card-hero .blog-post-details span {
+    color: rgba(255, 255, 255, 0.8);
   }
 {% endstylesheet %}

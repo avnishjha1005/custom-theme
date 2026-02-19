@@ -1,22 +1,14 @@
 
 
 {%- assign block_settings = block.settings -%}
+{%- assign card_index = card_index | default: 1 -%}
 
 {% capture title %}
   {% content_for 'block', id: 'heading', type: '_heading', text: article.title %}
 {% endcapture %}
 
-{% capture details %}
-  {% content_for 'block',
-    id: 'blog-post-details',
-    type: '_blog-post-info-text',
-    alignment: block_settings.alignment,
-    article: article
-  %}
-{% endcapture %}
-
 {% capture description %}
-  {% content_for 'block', id: 'content', type: '_blog-post-description', article: article, show_read_more: true %}
+  {% content_for 'block', id: 'content', type: '_blog-post-description', article: article, show_read_more: false %}
 {% endcapture %}
 
 <div
@@ -41,13 +33,15 @@
   <div class="blog-post-card-grid__overlay"></div>
 
   <a href="{{ article.url }}" class="blog-post-card-grid__content">
-    {%- if article.tags.size > 0 -%}
-      <span class="blog-post-card-grid__tag">{{ article.tags.first | upcase }}</span>
-    {%- endif -%}
+    <span class="blog-post-card-grid__tag">
+      {%- if article.tags.size > 0 -%}
+        {{ article.tags.first | upcase }}
+      {%- else -%}
+        TIP {% if card_index < 10 %}0{% endif %}{{ card_index }}
+      {%- endif -%}
+    </span>
 
     <div class="blog-post-card-grid__title">{{ title }}</div>
-
-    {{ details }}
 
     {{ description }}
 
@@ -133,22 +127,34 @@
 
   .blog-post-card-grid__tag {
     font-size: 0.6875rem;
-    font-weight: 600;
+    font-weight: 500;
     letter-spacing: 0.15em;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
     display: block;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
   }
 
   .blog-post-card-grid__title {
     display: block;
     color: #fff;
     font-weight: 400;
-    font-family: 'Marcellus';
-    font-size: 1.25rem;
+    font-family: var(--font-heading--family, 'Marcellus', serif);
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-post-card-grid__title {
+      font-size: 1.5rem;
+    }
   }
 
   .blog-post-card-grid__title * {
     color: #fff !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
   }
 
   .blog-post-card-grid__content:hover .blog-post-card-grid__title,
@@ -156,7 +162,15 @@
     opacity: 0.85;
   }
 
-  .blog-post-card-grid__content * {
+  .blog-post-card-grid__content .blog-post-card__content-text {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    padding: 0 !important;
+  }
+
+  .blog-post-card-grid__content .blog-post-card__content-text * {
     color: rgba(255, 255, 255, 0.85) !important;
   }
 
@@ -165,9 +179,10 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     color: #fff !important;
-    font-family: 'Inter';
+    font-family: var(--font-body--family, 'Inter', sans-serif);
     text-decoration: underline;
-    margin-top: 0.25rem;
+    text-underline-offset: 3px;
+    margin-top: 0.5rem;
     display: inline-block;
     transition: opacity 0.2s ease;
   }

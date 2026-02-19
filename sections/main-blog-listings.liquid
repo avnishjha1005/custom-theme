@@ -1,0 +1,89 @@
+{%- comment -%}
+  Blog Listings Section
+  Displays articles 4-6 as non-hero card listings
+{%- endcomment -%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<div
+  class="section color-{{ section.settings.color_scheme }} blog-listings-section"
+  style="
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="blog-listings-container">
+    {% for article in blog.articles offset: 3 limit: 3 %}
+      <div class="blog-listing-item">
+        {% content_for 'block', id: 'static-listing-card', type: '_blog-post-card', article: article %}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .blog-listings-section {
+    --page-content-width: var(--narrow-page-width);
+    --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+  }
+
+  .blog-listings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .blog-listing-item {
+    --blog-post-card-scale: 0.6;
+    width: 544px;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-listing-item {
+      --blog-post-card-scale: 0.5;
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Blog Listings",
+  "tag": "section",
+  "class": "blog-listings-section-wrapper",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    }
+  ]
+}
+{% endschema %}

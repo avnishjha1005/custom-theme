@@ -124,289 +124,6 @@
             "padding-block-end": 0
           },
           "blocks": {}
-        },
-        "static-grid-card": {
-          "type": "_blog-post-card-grid",
-          "disabled": true,
-          "static": true,
-          "settings": {
-            "alignment": "left"
-          },
-          "blocks": {
-            "heading": {
-              "type": "_heading",
-              "static": true,
-              "settings": {
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "text": "",
-                "read_only": false,
-                "alignment": "left",
-                "show_alignment": true,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "blog-post-details": {
-              "type": "_blog-post-info-text",
-              "static": true,
-              "settings": {
-                "show_date": true,
-                "show_author": true,
-                "type_preset": "",
-                "alignment": "left",
-                "show_alignment": true,
-                "padding-block-start": 24,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
-            "content": {
-              "type": "_blog-post-description",
-              "static": true,
-              "settings": {
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "padding-block-start": 16,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
-        },
-        "static-hero-card": {
-          "type": "_blog-post-card-hero",
-          "static": true,
-          "settings": {
-            "alignment": "left"
-          },
-          "blocks": {
-            "heading": {
-              "type": "_heading",
-              "static": true,
-              "settings": {
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "text": "",
-                "read_only": false,
-                "alignment": "left",
-                "show_alignment": true,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "blog-post-details": {
-              "type": "_blog-post-info-text",
-              "static": true,
-              "settings": {
-                "show_date": true,
-                "show_author": true,
-                "type_preset": "",
-                "alignment": "left",
-                "show_alignment": true,
-                "padding-block-start": 24,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
-            "content": {
-              "type": "_blog-post-description",
-              "static": true,
-              "settings": {
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "padding-block-start": 16,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
-        },
-        "static-regular-card": {
-          "type": "_blog-post-card",
-          "static": true,
-          "settings": {
-            "alignment": "left"
-          },
-          "blocks": {
-            "heading": {
-              "type": "_heading",
-              "static": true,
-              "settings": {
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "text": "",
-                "read_only": false,
-                "alignment": "left",
-                "show_alignment": true,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "blog-post-details": {
-              "type": "_blog-post-info-text",
-              "static": true,
-              "settings": {
-                "show_date": true,
-                "show_author": true,
-                "type_preset": "",
-                "alignment": "left",
-                "show_alignment": true,
-                "padding-block-start": 24,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
-            "content": {
-              "type": "_blog-post-description",
-              "static": true,
-              "settings": {
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "padding-block-start": 16,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
-            "image": {
-              "type": "_blog-post-image",
-              "static": true,
-              "settings": {
-                "height": "large",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
-        },
-        "static-blog-post-card": {
-          "type": "_blog-post-card",
-          "static": true,
-          "settings": {
-            "alignment": "center"
-          },
-          "blocks": {
-            "heading": {
-              "type": "_heading",
-              "name": "t:names.title",
-              "static": true,
-              "settings": {
-                "type_preset": "h4",
-                "font": "var(--font-primary--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "",
-                "text": "",
-                "read_only": true,
-                "alignment": "left",
-                "show_alignment": false,
-                "padding-block-start": 0,
-                "padding-block-end": 10,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "blog-post-details": {
-              "type": "_blog-post-info-text",
-              "name": "t:names.details",
-              "static": true,
-              "settings": {
-                "show_date": false,
-                "show_author": false,
-                "type_preset": "",
-                "alignment": "left",
-                "show_alignment": false,
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
-            "content": {
-              "type": "_blog-post-description",
-              "static": true,
-              "settings": {
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "padding-block-start": 16,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
-            "image": {
-              "type": "_blog-post-image",
-              "static": true,
-              "settings": {
-                "height": "large",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
         }
       },
       "block_order": [
@@ -416,14 +133,109 @@
         "divider_tCTP7z"
       ],
       "settings": {
-        "layout_style": "editorial",
         "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
         "padding-block-start": 0,
         "padding-block-end": 48
       }
+    },
+    "blog-hero": {
+      "type": "main-blog-hero",
+      "settings": {
+        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "blog-listings": {
+      "type": "main-blog-listings",
+      "settings": {
+        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "padding_top": 0,
+        "padding_bottom": 36
+      }
+    },
+    "meet-the-experts": {
+      "type": "meet-the-experts",
+      "blocks": {
+        "expert-1": {
+          "type": "expert",
+          "settings": {
+            "name": "Expert Name",
+            "designation": "Senior Stylist"
+          }
+        },
+        "expert-2": {
+          "type": "expert",
+          "settings": {
+            "name": "Expert Name",
+            "designation": "Senior Stylist"
+          }
+        },
+        "expert-3": {
+          "type": "expert",
+          "settings": {
+            "name": "Expert Name",
+            "designation": "Senior Stylist"
+          }
+        },
+        "expert-4": {
+          "type": "expert",
+          "settings": {
+            "name": "Expert Name",
+            "designation": "Senior Stylist"
+          }
+        }
+      },
+      "block_order": [
+        "expert-1",
+        "expert-2",
+        "expert-3",
+        "expert-4"
+      ],
+      "settings": {
+        "subheading": "Our Team",
+        "heading": "The Style Experts",
+        "autoplay": false,
+        "autoplay_speed": 5,
+        "controls_style": "dots",
+        "slides_per_view": 4,
+        "image_ratio": "3/4",
+        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "heading_color": "#1a1a1a",
+        "subheading_color": "#666666",
+        "text_color": "#ffffff",
+        "overlay_color": "#000000",
+        "overlay_opacity": 30,
+        "padding_top": 48,
+        "padding_bottom": 48
+      }
+    },
+    "blog-rich-text": {
+      "type": "blog-rich-text",
+      "settings": {
+        "content": "<p>Add your text content here.</p>",
+        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "blog-discover": {
+      "type": "main-blog-discover",
+      "settings": {
+        "heading": "Discover More",
+        "button_text": "Read More",
+        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "padding_top": 36,
+        "padding_bottom": 48
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "blog-hero",
+    "blog-listings",
+    "meet-the-experts",
+    "blog-rich-text",
+    "blog-discover"
   ]
 }

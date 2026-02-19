@@ -1,190 +1,35 @@
+{%- comment -%}
+  Main Blog Header Section
+  Displays blog title, subtitle, search functionality, and divider
+  Article rendering is handled by separate sections:
+  - main-blog-hero (articles 1-3)
+  - main-blog-listings (articles 4-6)
+  - meet-the-experts (expert profiles)
+  - blog-rich-text (rich text content)
+  - main-blog-discover (articles 7-10 + Read More)
+{%- endcomment -%}
 
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
 
-<script
-  src="{{ 'blog-posts-list.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
-
-<blog-posts-list section-id="{{ section.id }}">
-  <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-  <div
-    class="
-      section
-      color-{{ section.settings.color_scheme }}
-      blog-posts
-      spacing-style
-      size-style
-    "
-    style="{% render 'spacing-style', settings: section.settings %}"
-  >
-    {% content_for 'blocks' %}
-
-    {%- paginate blog.articles by 12 -%}
-      <span ref="viewMorePrevious"></span>
-      <div
-        ref="grid"
-        class="blog-posts-container {% if section.settings.layout_style == 'grid' %}blog-posts-container--grid{% endif %}"
-        data-last-page="{{ paginate.pages }}"
-      >
-        {% for article in blog.articles %}
-          {% if section.settings.layout_style == 'grid' %}
-            <div
-              class="blog-post-item blog-post-item--grid"
-              ref="cards[]"
-              data-page="{{ paginate.current_page }}"
-            >
-              {% content_for 'block', id: 'static-grid-card', type: '_blog-post-card-grid', article: article %}
-            </div>
-          {% else %}
-            <div
-              class="blog-post-item"
-              ref="cards[]"
-              data-page="{{ paginate.current_page }}"
-            >
-              {% if forloop.index <= 3 %}
-                <div class="blog-post-hero-wrapper">
-                  {% content_for 'block', id: 'static-hero-card', type: '_blog-post-card-hero', article: article %}
-                </div>
-                {% if forloop.index > 1 %}
-                  <div class="blog-post-regular-wrapper">
-                    {% content_for 'block', id: 'static-regular-card', type: '_blog-post-card', article: article %}
-                  </div>
-                {% endif %}
-              {% else %}
-                {% content_for 'block', id: 'static-blog-post-card', type: '_blog-post-card', article: article %}
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-      <span ref="viewMoreNext"></span>
-    {%- endpaginate -%}
-  </div>
-</blog-posts-list>
+<div
+  class="section color-{{ section.settings.color_scheme }} blog-header-section spacing-style size-style"
+  style="{% render 'spacing-style', settings: section.settings %}"
+>
+  {% content_for 'blocks' %}
+</div>
 
 {% stylesheet %}
-  /**
-   * Blog posts page layout
-   */
-  .blog-posts {
+  .blog-header-section {
     --page-content-width: var(--narrow-page-width);
     --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
-    --columns-gap: 36px;
-    --rows-gap: 36px;
-  }
-
-  .blog-posts-container {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 1rem;
-    width: 100%;
-    column-gap: var(--columns-gap);
-    row-gap: var(--rows-gap);
-  }
-
-  /**
-   * Show/hide hero vs regular cards based on screen size
-   */
-  .blog-post-hero-wrapper {
-    display: block;
-  }
-
-  .blog-post-regular-wrapper {
-    display: none;
-  }
-
-  @media screen and (max-width: 749px) {
-    .blog-post-item:nth-child(2) .blog-post-hero-wrapper,
-    .blog-post-item:nth-child(3) .blog-post-hero-wrapper {
-      display: none;
-    }
-
-    .blog-post-item:nth-child(2) .blog-post-regular-wrapper,
-    .blog-post-item:nth-child(3) .blog-post-regular-wrapper {
-      display: block;
-    }
-  }
-
-  /**
-   * First three hero cards have equal width in one row
-   * +------------+------------+-------------+
-   * |            |            |             |
-   * |  (span 2)  |  (span 2)  |  (span 2)   |
-   * |            |            |             |
-   * +------------+------------+-------------+
-   */
-  .blog-post-item:nth-child(1),
-  .blog-post-item:nth-child(2),
-  .blog-post-item:nth-child(3) {
-    --blog-post-card-scale: 0.7;
-
-    grid-column: span 2;
-
-    @media screen and (max-width: 749px) {
-      --blog-post-card-scale: 0.5;
-
-      grid-column: span 6;
-    }
-  }
-
-  /**
-   * Non-hero posts (4th onwards) in a single vertical column
-   * Card size: 544px x 316px, centered
-   */
-  .blog-post-item:nth-child(n+4) {
-    --blog-post-card-scale: 0.6;
-
-    grid-column: span 6;
-    justify-self: center;
-    width: 544px;
-    height: 316px;
-
-    @media screen and (max-width: 749px) {
-      --blog-post-card-scale: 0.5;
-      width: 100%;
-      height: auto;
-    }
-  }
-
-  /**
-   * When there's no image, the blog post item has a border.
-   */
-  .blog-post-item {
-    border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-20));
-    padding: 0 1rem 1rem;
-  }
-
-  .blog-post-item:has(.blog-post-card__image-container),
-  .blog-post-item:has(.blog-post-hero-wrapper) {
-    border: none;
-    padding: 0;
-  }
-
-  /**
-   * Grid layout: uniform 2-column card grid
-   */
-  .blog-posts-container--grid {
-    grid-template-columns: repeat(2, 1fr);
-
-    @media screen and (max-width: 749px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .blog-post-item--grid {
-    grid-column: span 1 !important;
-    width: 100% !important;
-    height: auto !important;
-    justify-self: stretch !important;
-    border: none;
-    padding: 0;
   }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:names.blog_posts",
+  "name": "Blog Header",
+  "tag": "section",
+  "class": "blog-header-section-wrapper",
   "blocks": [
     {
       "type": "@theme"
@@ -222,22 +67,6 @@
   },
   "settings": [
     {
-      "type": "select",
-      "id": "layout_style",
-      "label": "Layout style",
-      "options": [
-        {
-          "value": "editorial",
-          "label": "Editorial"
-        },
-        {
-          "value": "grid",
-          "label": "Grid"
-        }
-      ],
-      "default": "editorial"
-    },
-    {
       "type": "color_scheme",
       "id": "color_scheme",
       "label": "t:settings.color_scheme",
@@ -265,7 +94,7 @@
       "max": 100,
       "step": 1,
       "unit": "px",
-      "default": 0
+      "default": 48
     }
   ]
 }

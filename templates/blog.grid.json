@@ -1,0 +1,103 @@
+/*
+ * ------------------------------------------------------------
+ * Blog Grid Template
+ * Use this template for a simple 2-column grid layout
+ * Assign to a blog via: Online Store > Blogs > [Blog] > Theme template
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "blocks": {
+        "title": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<p>{{ closest.blog.title }}</p>",
+            "width": "100%",
+            "max_width": "narrow",
+            "alignment": "center",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 20,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "subtitle": {
+          "type": "text",
+          "name": "Subtitle",
+          "settings": {
+            "text": "<p>Explore our latest articles</p>",
+            "width": "100%",
+            "max_width": "narrow",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "divider": {
+          "type": "_divider",
+          "name": "Divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "subtitle",
+        "divider"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding-block-start": 0,
+        "padding-block-end": 48
+      }
+    },
+    "blog-grid": {
+      "type": "main-blog-grid",
+      "settings": {
+        "articles_per_page": 12,
+        "color_scheme": "scheme-1",
+        "padding_top": 0,
+        "padding_bottom": 48
+      }
+    }
+  },
+  "order": [
+    "main",
+    "blog-grid"
+  ]
+}

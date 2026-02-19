@@ -31,9 +31,8 @@
   .ai-blog-search-bar-{{ ai_gen_id }} {
     display: flex; align-items: center; gap: {{ block.settings.gap }}px;
     padding: {{ block.settings.padding }}px;
-    background-color: {{ block.settings.background_color }};
-    border: {{ block.settings.border_width }}px solid {{ block.settings.border_color }};
-    border-radius: {{ block.settings.border_radius }}px;
+    background-color: transparent;
+    border: none;
   }
   .ai-blog-search-icon-{{ ai_gen_id }} {
     background: none; border: none; flex-shrink: 0;
@@ -42,13 +41,33 @@
   }
   .ai-blog-search-tags-{{ ai_gen_id }} { flex: 1; overflow-x: auto; scrollbar-width: none; }
   .ai-blog-search-tags-{{ ai_gen_id }}::-webkit-scrollbar { display: none; }
-  .ai-blog-search-tags-list-{{ ai_gen_id }} { display: flex; gap: 8px; list-style: none; margin: 0; padding: 0; white-space: nowrap; }
-  .ai-blog-search-tag-link-{{ ai_gen_id }} {
-    display: inline-block; padding: 6px 12px;
-    background-color: {{ block.settings.tag_background }};
+  .ai-blog-search-tags-list-{{ ai_gen_id }} { display: flex; align-items: center; gap: 24px; list-style: none; margin: 0; padding: 0; white-space: nowrap; }
+  .ai-blog-search-view-all-{{ ai_gen_id }} {
+    display: inline-block;
     color: {{ block.settings.tag_text_color }};
-    text-decoration: none; border-radius: 20px; font-size: 13px;
-    border: 1px solid {{ block.settings.tag_border_color }};
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .ai-blog-search-view-all-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.tag_hover_text_color | default: block.settings.tag_text_color }};
+  }
+  .ai-blog-search-tag-link-{{ ai_gen_id }} {
+    display: inline-block;
+    background-color: transparent;
+    color: {{ block.settings.tag_text_color }};
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 0;
+  }
+  .ai-blog-search-tag-link-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
   }
 
   /* Overlay and Modals */
@@ -97,6 +116,7 @@
     </button>
     <div class="ai-blog-search-tags-{{ ai_gen_id }}">
       <ul class="ai-blog-search-tags-list-{{ ai_gen_id }}">
+        <li><a href="{{ current_blog.url }}" class="ai-blog-search-view-all-{{ ai_gen_id }}">View All</a></li>
         {% for tag in tag_array limit: 6 %}
           <li><a href="{{ current_blog.url }}/tagged/{{ tag | handle }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">{{ tag }}</a></li>
         {% endfor %}

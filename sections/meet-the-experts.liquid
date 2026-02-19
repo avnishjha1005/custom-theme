@@ -1,0 +1,457 @@
+{%- comment -%}
+  Meet the Experts Section
+  Displays expert profiles in a slider with centered text overlay
+{%- endcomment -%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<div
+  class="section section--page-width meet-the-experts color-{{ section.settings.color_scheme }}"
+  style="
+    --expert-columns: {{ section.settings.slides_per_view }};
+    --expert-image-ratio: {{ section.settings.image_ratio }};
+    --expert-text-color: {{ section.settings.text_color }};
+    --expert-overlay-color: {{ section.settings.overlay_color }};
+    --expert-overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --expert-heading-color: {{ section.settings.heading_color }};
+    --expert-subheading-color: {{ section.settings.subheading_color }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  {% if section.settings.heading != blank or section.settings.subheading != blank %}
+    <div class="meet-the-experts__header">
+      {% if section.settings.subheading != blank %}
+        <p class="meet-the-experts__subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class="meet-the-experts__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if section.blocks.size > 0 %}
+    {% capture slides %}
+      {% for block in section.blocks %}
+        {% if block.type == 'expert' %}
+          {% capture slide_content %}
+            <div class="expert-card" {{ block.shopify_attributes }}>
+              <div class="expert-card__image-wrapper">
+                {% if block.settings.image %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 800 }}"
+                    srcset="
+                      {{ block.settings.image | image_url: width: 400 }} 400w,
+                      {{ block.settings.image | image_url: width: 600 }} 600w,
+                      {{ block.settings.image | image_url: width: 800 }} 800w
+                    "
+                    sizes="(max-width: 749px) 80vw, calc(100vw / {{ section.settings.slides_per_view }})"
+                    alt="{{ block.settings.name | escape }}"
+                    loading="lazy"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
+                    class="expert-card__image"
+                  >
+                {% else %}
+                  {{ 'image' | placeholder_svg_tag: 'expert-card__placeholder' }}
+                {% endif %}
+
+                <div class="expert-card__overlay"></div>
+
+                <div class="expert-card__text">
+                  {% if block.settings.name != blank %}
+                    <h3 class="expert-card__name">{{ block.settings.name }}</h3>
+                  {% endif %}
+                  {% if block.settings.designation != blank %}
+                    <p class="expert-card__designation">{{ block.settings.designation }}</p>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if block.settings.link != blank %}
+                <a href="{{ block.settings.link }}" class="expert-card__link" aria-label="{{ block.settings.name }}"></a>
+              {% endif %}
+            </div>
+          {% endcapture %}
+          {% render 'slideshow-slide', index: forloop.index, children: slide_content, slide_id: block.id %}
+        {% endif %}
+      {% endfor %}
+    {% endcapture %}
+
+    {% liquid
+      assign show_dots = false
+      assign show_arrows = false
+
+      if section.settings.controls_style == 'dots' or section.settings.controls_style == 'both'
+        assign show_dots = true
+      endif
+
+      if section.settings.controls_style == 'arrows' or section.settings.controls_style == 'both'
+        assign show_arrows = true
+      endif
+    %}
+
+    {% capture controls %}
+      {% if show_dots %}
+        {% render 'slideshow-controls',
+          style: 'dots',
+          autoplay: section.settings.autoplay,
+          item_count: section.blocks.size,
+          show_arrows: false,
+          
+        %}
+      {% endif %}
+    {% endcapture %}
+
+    {% render 'slideshow',
+      ref: 'meetTheExperts',
+      class: 'meet-the-experts__slideshow',
+      slides: slides,
+      controls: controls,
+      show_arrows: show_arrows,
+      autoplay: section.settings.autoplay,
+      autoplay_speed: section.settings.autoplay_speed,
+      slide_count: section.blocks.size,
+      infinite: true
+    %}
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .meet-the-experts {
+    container-type: inline-size;
+  }
+
+  .meet-the-experts__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .meet-the-experts__subheading {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--expert-subheading-color);
+    margin: 0 0 0.5rem;
+  }
+
+  .meet-the-experts__heading {
+    font-family: var(--font-heading-family, 'Marcellus', serif);
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: var(--expert-heading-color);
+    margin: 0;
+  }
+
+  .meet-the-experts__slideshow {
+    --slide-width: calc((100% - (var(--expert-columns, 4) - 1) * 1rem) / var(--expert-columns, 4));
+  }
+
+  .meet-the-experts__slideshow slideshow-slides {
+    gap: 1rem;
+  }
+
+  .expert-card {
+    position: relative;
+    width: 100%;
+  }
+
+  .expert-card__image-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: var(--expert-image-ratio, 3/4);
+    overflow: hidden;
+    border-radius: 2px;
+  }
+
+  .expert-card__image,
+  .expert-card__placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .expert-card__placeholder {
+    background-color: #f0f0f0;
+  }
+
+  .expert-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--expert-overlay-color);
+    opacity: var(--expert-overlay-opacity);
+    pointer-events: none;
+  }
+
+  /* Centered text on image */
+  .expert-card__text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 90%;
+    z-index: 2;
+    color: var(--expert-text-color);
+  }
+
+  .expert-card__name {
+    font-family: var(--font-heading-family, 'Marcellus', serif);
+    font-size: 1.125rem;
+    font-weight: 400;
+    margin: 0 0 0.25rem;
+    color: inherit;
+  }
+
+  .expert-card__designation {
+    font-size: 0.75rem;
+    font-weight: 400;
+    margin: 0;
+    opacity: 0.9;
+    color: inherit;
+    letter-spacing: 0.05em;
+  }
+
+  .expert-card__link {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+  }
+
+  /* Navigation controls styling */
+  .meet-the-experts slideshow-controls {
+    margin-top: 1.5rem;
+  }
+
+  .meet-the-experts .slideshow-controls__dots {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .meet-the-experts .slideshow-control {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease;
+  }
+
+  .meet-the-experts .slideshow-control[aria-selected="true"] {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  /* Mobile adjustments */
+  @media screen and (max-width: 749px) {
+    .meet-the-experts__slideshow {
+      --slide-width: 80%;
+    }
+
+    .meet-the-experts__heading {
+      font-size: 1.5rem;
+    }
+
+    .expert-card__name {
+      font-size: 1rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Meet the Experts",
+  "tag": "section",
+  "class": "meet-the-experts-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Our Team"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The Style Experts"
+    },
+    {
+      "type": "header",
+      "content": "Slider Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed (seconds)",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "select",
+      "id": "controls_style",
+      "label": "Navigation style",
+      "options": [
+        { "value": "dots", "label": "Dots" },
+        { "value": "arrows", "label": "Arrows" },
+        { "value": "both", "label": "Both" },
+        { "value": "none", "label": "None" }
+      ],
+      "default": "dots"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "slides_per_view",
+      "label": "Experts per row (desktop)",
+      "min": 2,
+      "max": 6,
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "1/1", "label": "Square (1:1)" },
+        { "value": "3/4", "label": "Portrait (3:4)" },
+        { "value": "4/5", "label": "Portrait (4:5)" },
+        { "value": "2/3", "label": "Portrait (2:3)" }
+      ],
+      "default": "3/4"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading color",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Expert name/title color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Image overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 30
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "expert",
+      "name": "Expert",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Expert Image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Expert Name"
+        },
+        {
+          "type": "text",
+          "id": "designation",
+          "label": "Designation/Title",
+          "default": "Senior Stylist"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Meet the Experts",
+      "category": "Storytelling",
+      "blocks": [
+        { "type": "expert" },
+        { "type": "expert" },
+        { "type": "expert" },
+        { "type": "expert" }
+      ]
+    }
+  ]
+}
+{% endschema %}
