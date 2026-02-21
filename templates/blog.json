@@ -339,8 +339,12 @@
     },
     "blog-listings": {
       "type": "main-blog-listings",
+      "custom_css": [
+        ".blog-listing-card__title {color: black;}",
+        ".blog-listing-card__excerpt {color: black;}"
+      ],
       "settings": {
-        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "color_scheme": "scheme-2",
         "padding_top": 0,
         "padding_bottom": 36
       }
