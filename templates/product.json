@@ -18,7 +18,7 @@
             "logo_type": "default",
             "inverse": false,
             "font": "heading",
-            "enable_sticky": false,
+            "enable_sticky": true,
             "vertical_align": "top",
             "unit": "pixel",
             "percent_width": 10,
@@ -68,8 +68,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 18,
-        "padding-block-end": 16
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     },
     "main": {
