@@ -21,7 +21,39 @@
   <div class="blog-discover-container">
     {% for article in blog.articles offset: 6 limit: 4 %}
       <div class="blog-discover-item">
-        {% content_for 'block', id: 'static-discover-card', type: '_blog-post-card', article: article %}
+        <div class="blog-discover-card">
+          {%- if article.image -%}
+            <div class="blog-discover-card__image">
+              <a href="{{ article.url }}">
+                <img
+                  src="{{ article.image | image_url: width: 600 }}"
+                  alt="{{ article.image.alt | escape }}"
+                  loading="lazy"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                >
+              </a>
+            </div>
+          {%- endif -%}
+
+          <div class="blog-discover-card__content">
+            {%- if article.tags.size > 0 -%}
+              <span class="blog-discover-card__tag">{{ article.tags.first }}</span>
+            {%- endif -%}
+
+            <h3 class="blog-discover-card__title">
+              <a href="{{ article.url }}">{{ article.title }}</a>
+            </h3>
+
+            <p class="blog-discover-card__excerpt">
+              {{ article.excerpt | default: article.content | strip_html | truncatewords: 20 }}
+            </p>
+
+            <div class="blog-discover-card__actions">
+              <a href="{{ article.url }}" class="blog-discover-card__read-link">READ</a>
+            </div>
+          </div>
+        </div>
       </div>
     {% endfor %}
   </div>
@@ -49,7 +81,7 @@
   }
 
   .blog-discover-heading {
-    font-family: var(--font-heading-family, 'Marcellus', serif);
+    font-family: var(--font-heading--family);
     font-size: 1.75rem;
     font-weight: 400;
     color: rgb(var(--color-foreground-rgb));
@@ -64,23 +96,130 @@
 
   /* Articles Container */
   .blog-discover-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 36px;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
   }
 
   .blog-discover-item {
-    --blog-post-card-scale: 0.6;
-    justify-self: center;
-    width: 544px;
-    max-width: 100%;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
   }
 
+  /* Card Styling - matching blog-listings */
+  .blog-discover-card {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .blog-discover-card__image {
+    flex-shrink: 0;
+    width: 251px;
+    height: 360px;
+    overflow: hidden;
+  }
+
+  .blog-discover-card__image a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .blog-discover-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .blog-discover-card__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding-top: 8px;
+    max-width: 251px !important;
+  }
+
+  .blog-discover-card__tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+    margin-bottom: 12px;
+  }
+
+  .blog-discover-card__title {
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 16px 0;
+  }
+
+  .blog-discover-card__title a {
+    text-decoration: none;
+    color: var(--color-foreground-heading);
+  }
+
+  .blog-discover-card__title a:hover {
+    opacity: 0.7;
+  }
+
+  .blog-discover-card__excerpt {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+    margin: 0 0 20px 0;
+  }
+
+  .blog-discover-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+
+  .blog-discover-card__read-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: var(--color-foreground-heading);
+  }
+
+  .blog-discover-card__read-link:hover {
+    opacity: 0.7;
+  }
+
+  /* Mobile Styles */
   @media screen and (max-width: 749px) {
     .blog-discover-item {
-      --blog-post-card-scale: 0.5;
       width: 100%;
+    }
+
+    .blog-discover-card {
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .blog-discover-card__image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 5;
+    }
+
+    .blog-discover-card__content {
+      padding-top: 0;
+      max-width: 100% !important;
+    }
+
+    .blog-discover-card__title {
+      font-size: 1.5rem;
     }
   }
 
