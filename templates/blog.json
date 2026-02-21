@@ -437,7 +437,7 @@
         "vertical_alignment_flex_direction_column": "center",
         "gap": 25,
         "section_width": "page-width",
-        "section_height": "small",
+        "section_height": "",
         "section_height_custom": 50,
         "color_scheme": "scheme-bed0b474-fe0a-4965-8562-aa2adf1dc067",
         "background_media": "none",
