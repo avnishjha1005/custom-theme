@@ -121,12 +121,18 @@
 
   /* Mobile styles */
   @media screen and (max-width: 749px) {
+    /* Reset grid to single column layout on mobile */
+    .product-information__grid {
+      display: block;
+    }
+
     .product-information__media {
-      grid-column: 1 / -1;
+      width: 100%;
+      margin-bottom: var(--gap, 16px);
     }
 
     .product-details {
-      grid-column: 2 / 3;
+      width: 100%;
     }
   }
 

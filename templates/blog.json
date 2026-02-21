@@ -682,11 +682,7 @@
     }
   },
   "order": [
-<<<<<<< HEAD
     "section_HEb4Qn",
-=======
-    "section_4GNwhh",
->>>>>>> 13e803256aeb502faa2ceca865287ba54eb941ca
     "main",
     "blog-hero",
     "blog-listings",

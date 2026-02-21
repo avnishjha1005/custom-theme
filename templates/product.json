@@ -749,6 +749,41 @@
               "type": "shopify://apps/shiprocket-promise/blocks/promise_widget/c8f3f033-bec6-4084-8d6a-4d05e2a5ba32",
               "disabled": true,
               "settings": {}
+            },
+            "product_actions_mobile": {
+              "type": "_product-actions",
+              "name": "Mobile sticky bar",
+              "settings": {
+                "sticky_on_mobile": true,
+                "width": "fill",
+                "gap": 12,
+                "inherit_color_scheme": true
+              },
+              "blocks": {
+                "sticky_buy_buttons": {
+                  "type": "buy-buttons",
+                  "settings": {
+                    "stacking": false,
+                    "show_pickup_availability": false,
+                    "gift_card_form": false,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "add-to-cart": {
+                      "type": "add-to-cart-product",
+                      "static": true,
+                      "settings": {
+                        "style_class": "button"
+                      }
+                    }
+                  },
+                  "block_order": ["add-to-cart"]
+                }
+              },
+              "block_order": ["sticky_buy_buttons"]
             }
           },
           "block_order": [
@@ -756,7 +791,8 @@
             "group_PQchLN",
             "accordion_NKWPiW",
             "shiprocket_smart_edd_shiprocket_smart_edd_aTBb4F",
-            "shiprocket_promise_promise_widget_J4MFhC"
+            "shiprocket_promise_promise_widget_J4MFhC",
+            "product_actions_mobile"
           ]
         },
         "bundle": {

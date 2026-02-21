@@ -21,11 +21,11 @@
 >
   {% if section.settings.heading != blank or section.settings.subheading != blank %}
     <div class="meet-the-experts__header">
-      {% if section.settings.subheading != blank %}
-        <p class="meet-the-experts__subheading">{{ section.settings.subheading }}</p>
-      {% endif %}
       {% if section.settings.heading != blank %}
         <h2 class="meet-the-experts__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="meet-the-experts__subheading">{{ section.settings.subheading }}</p>
       {% endif %}
     </div>
   {% endif %}
@@ -98,7 +98,7 @@
           autoplay: section.settings.autoplay,
           item_count: section.blocks.size,
           show_arrows: false,
-          
+
         %}
       {% endif %}
     {% endcapture %}
@@ -128,17 +128,16 @@
   }
 
   .meet-the-experts__subheading {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-size: 0.875rem;
+    font-weight: 400;
     color: var(--expert-subheading-color);
     margin: 0 0 0.5rem;
+    padding-top: 16px;
   }
 
   .meet-the-experts__heading {
     font-family: var(--font-heading-family, 'Marcellus', serif);
-    font-size: 1.75rem;
+    font-size: 2.25rem;
     font-weight: 400;
     color: var(--expert-heading-color);
     margin: 0;

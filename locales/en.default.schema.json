@@ -119,6 +119,7 @@
     // Section header for navigation menu settings in theme editor
     "menu": "Menu",
     "mobile_column_optimization": "Columns will automatically optimize for mobile",
+    "mobile_behavior": "Mobile behavior",
     "mobile_layout": "Mobile layout",
     "mobile_size": "Mobile size",
     "mobile_width": "Mobile width",
@@ -243,7 +244,8 @@
     "video_autoplay": "Videos will be muted by default",
     "video_external": "Use a YouTube or Vimeo URL",
     "pills_usage": "Used for applied filters, discount codes, and search suggestions",
-    "media_type_info": "Features are populated from your menu links"
+    "media_type_info": "Features are populated from your menu links",
+    "sticky_on_mobile": "Sticks to the bottom of the screen on mobile, within the product section boundary"
   },
   "names": {
     "column": "Column",
@@ -380,6 +382,7 @@
     "product_grid": "Grid",
     "product_grid_main": "Product grid",
     "product_image": "Product image",
+    "product_actions": "Product actions",
     "product_information": "Product information",
     "product_list": "Featured collection",
     "product_list_button": "View all button",
@@ -944,6 +947,7 @@
     "logo_font": "Logo font",
     "loop": "Loop",
     "make_details_sticky_desktop": "Sticky on desktop",
+    "sticky_on_mobile": "Sticky on mobile",
     "make_section_full_width": "Make section full width",
     "max_width": "Max width",
     // Section header for product card media settings
