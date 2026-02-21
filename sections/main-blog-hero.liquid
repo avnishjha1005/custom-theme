@@ -44,20 +44,10 @@
       {% endfor %}
     {% endcapture %}
 
-    {% capture hero_controls %}
-      {% render 'slideshow-controls',
-        style: 'dots',
-        autoplay: false,
-        item_count: 3,
-        show_arrows: false
-      %}
-    {% endcapture %}
-
     {% render 'slideshow',
       ref: 'blogHeroSlideshow',
       class: 'blog-hero-slideshow',
       slides: hero_slides,
-      controls: hero_controls,
       show_arrows: false,
       autoplay: false,
       slide_count: 3,
@@ -104,27 +94,6 @@
   .blog-hero-slide-item {
     --blog-post-card-scale: 0.5;
     width: 100%;
-  }
-
-  .blog-hero-slideshow slideshow-controls {
-    margin-top: 1rem;
-  }
-
-  .blog-hero-slideshow .slideshow-controls__dots {
-    justify-content: center;
-    gap: 0.5rem;
-  }
-
-  .blog-hero-slideshow .slideshow-control {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.2);
-    transition: background-color 0.2s ease;
-  }
-
-  .blog-hero-slideshow .slideshow-control[aria-selected="true"] {
-    background-color: rgba(0, 0, 0, 0.8);
   }
 
   @media screen and (max-width: 749px) {
