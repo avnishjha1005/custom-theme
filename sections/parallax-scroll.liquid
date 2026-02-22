@@ -1,0 +1,308 @@
+{% assign container_id = section.id %}
+
+{% style %}
+  .parallax-scroll-{{ container_id }} {
+    display: block;
+    width: 100%;
+    position: relative;
+    background-color: {{ section.settings.background_color }};
+  }
+
+  .parallax-scroll-{{ container_id }} > * + * {
+    margin-top: {{ section.settings.section_gap }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .parallax-scroll-{{ container_id }} > * + * {
+      margin-top: {{ section.settings.section_gap | times: 0.5 }}px;
+    }
+  }
+{% endstyle %}
+
+<parallax-scroll-{{ container_id }}
+  class="parallax-scroll-{{ container_id }}"
+  data-parallax-intensity="{{ section.settings.parallax_intensity }}"
+>
+  {% for block in section.blocks %}
+    {% assign slide_id = block.id | replace: '_', '' | downcase %}
+
+    <div
+      class="parallax-slide-{{ slide_id }}"
+      data-parallax-slide
+      style="
+        position: sticky;
+        top: 0;
+        width: 100%;
+        min-height: {{ block.settings.min_height }}vh;
+        display: flex;
+        align-items: {{ block.settings.vertical_alignment }};
+        justify-content: {{ block.settings.horizontal_alignment }};
+        overflow: hidden;
+        background-color: {{ block.settings.background_color }};
+      "
+      {{ block.shopify_attributes }}
+    >
+      <div
+        class="parallax-slide-content-{{ slide_id }}"
+        style="
+          width: 100%;
+          {% if block.settings.content_width == 'page-width' %}
+            max-width: 1400px;
+            margin: 0 auto;
+          {% endif %}
+          padding: {{ block.settings.padding }}px;
+        "
+      >
+        {% content_for 'block', id: block.id %}
+      </div>
+    </div>
+
+    {% style %}
+      @media screen and (max-width: 749px) {
+        .parallax-slide-{{ slide_id }} {
+          min-height: {{ block.settings.min_height_mobile }}vh !important;
+        }
+        .parallax-slide-content-{{ slide_id }} {
+          padding: {{ block.settings.padding_mobile }}px !important;
+        }
+      }
+    {% endstyle %}
+  {% endfor %}
+</parallax-scroll-{{ container_id }}>
+
+<script>
+  (function() {
+    const elementName = 'parallax-scroll-{{ container_id }}';
+    if (customElements.get(elementName)) return;
+
+    class ParallaxScroll extends HTMLElement {
+      constructor() {
+        super();
+        this.slides = [];
+        this.ticking = false;
+        this.intensity = parseFloat(this.dataset.parallaxIntensity) || 0.5;
+        this.boundUpdateParallax = this.updateParallax.bind(this);
+      }
+
+      connectedCallback() {
+        this.initSlides();
+        this.setupScrollListener();
+      }
+
+      initSlides() {
+        const slides = this.querySelectorAll('[data-parallax-slide]');
+        slides.forEach((slide) => {
+          const images = slide.querySelectorAll('img');
+          images.forEach((image) => {
+            this.slides.push({
+              element: slide,
+              image: image,
+              speed: this.intensity
+            });
+          });
+        });
+      }
+
+      setupScrollListener() {
+        window.addEventListener('scroll', () => {
+          if (!this.ticking) {
+            window.requestAnimationFrame(() => {
+              this.boundUpdateParallax();
+              this.ticking = false;
+            });
+            this.ticking = true;
+          }
+        });
+
+        this.boundUpdateParallax();
+      }
+
+      updateParallax() {
+        const windowHeight = window.innerHeight;
+
+        this.slides.forEach((item) => {
+          const rect = item.element.getBoundingClientRect();
+
+          if (rect.top <= windowHeight && rect.bottom >= 0) {
+            const scrollProgress = (windowHeight - rect.top) / (windowHeight + rect.height);
+            const translateY = -(scrollProgress * item.speed * 100);
+            item.image.style.transform = 'translateY(' + translateY + 'px)';
+          }
+        });
+      }
+
+      disconnectedCallback() {
+        window.removeEventListener('scroll', this.boundUpdateParallax);
+      }
+    }
+
+    customElements.define(elementName, ParallaxScroll);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Parallax Scroll",
+  "tag": "section",
+  "class": "parallax-scroll-section",
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "blocks": [
+        { "type": "@theme" },
+        { "type": "@app" }
+      ],
+      "settings": [
+        {
+          "type": "header",
+          "content": "Dimensions"
+        },
+        {
+          "type": "range",
+          "id": "min_height",
+          "label": "Minimum height (desktop)",
+          "min": 50,
+          "max": 100,
+          "step": 5,
+          "unit": "vh",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "min_height_mobile",
+          "label": "Minimum height (mobile)",
+          "min": 30,
+          "max": 100,
+          "step": 5,
+          "unit": "vh",
+          "default": 60
+        },
+        {
+          "type": "range",
+          "id": "padding",
+          "label": "Padding (desktop)",
+          "min": 0,
+          "max": 100,
+          "step": 5,
+          "unit": "px",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "padding_mobile",
+          "label": "Padding (mobile)",
+          "min": 0,
+          "max": 60,
+          "step": 5,
+          "unit": "px",
+          "default": 20
+        },
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "select",
+          "id": "content_width",
+          "label": "Content width",
+          "options": [
+            { "value": "full-width", "label": "Full width" },
+            { "value": "page-width", "label": "Page width" }
+          ],
+          "default": "page-width"
+        },
+        {
+          "type": "select",
+          "id": "horizontal_alignment",
+          "label": "Horizontal alignment",
+          "options": [
+            { "value": "flex-start", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "flex-end", "label": "Right" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "vertical_alignment",
+          "label": "Vertical alignment",
+          "options": [
+            { "value": "flex-start", "label": "Top" },
+            { "value": "center", "label": "Center" },
+            { "value": "flex-end", "label": "Bottom" }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "header",
+          "content": "Appearance"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background color",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Parallax Effect"
+    },
+    {
+      "type": "range",
+      "id": "parallax_intensity",
+      "label": "Parallax intensity",
+      "info": "Higher values create stronger parallax effect",
+      "min": 0,
+      "max": 2,
+      "step": 0.1,
+      "default": 0.5
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "section_gap",
+      "label": "Gap between slides",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Parallax Scroll",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "min_height": 100,
+            "background_color": "#ffffff"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "min_height": 100,
+            "background_color": "#000000"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

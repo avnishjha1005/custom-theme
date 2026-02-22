@@ -1,0 +1,143 @@
+{% assign slide_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .parallax-slide-{{ slide_id }} {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    min-height: {{ block.settings.min_height }}vh;
+    display: flex;
+    align-items: {{ block.settings.vertical_alignment }};
+    justify-content: {{ block.settings.horizontal_alignment }};
+    overflow: hidden;
+    background-color: {{ block.settings.background_color }};
+  }
+
+  .parallax-slide-content-{{ slide_id }} {
+    width: 100%;
+    {% if block.settings.content_width == 'page-width' %}
+      max-width: 1400px;
+      margin: 0 auto;
+    {% endif %}
+    padding: {{ block.settings.padding }}px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .parallax-slide-{{ slide_id }} {
+      min-height: {{ block.settings.min_height_mobile }}vh;
+    }
+
+    .parallax-slide-content-{{ slide_id }} {
+      padding: {{ block.settings.padding_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<div class="parallax-slide-{{ slide_id }}" data-parallax-slide {{ block.shopify_attributes }}>
+  <div class="parallax-slide-content-{{ slide_id }}">
+    {% content_for 'blocks' %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Parallax Slide",
+  "tag": null,
+  "blocks": [
+    { "type": "@theme" },
+    { "type": "@app" }
+  ],
+  "settings": [
+    {
+      "type": "header",
+      "content": "Dimensions"
+    },
+    {
+      "type": "range",
+      "id": "min_height",
+      "label": "Minimum height (desktop)",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "min_height_mobile",
+      "label": "Minimum height (mobile)",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "vh",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Padding (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile",
+      "label": "Padding (mobile)",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "content_width",
+      "label": "Content width",
+      "options": [
+        { "value": "full-width", "label": "Full width" },
+        { "value": "page-width", "label": "Page width" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "select",
+      "id": "horizontal_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        { "value": "flex-start", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Vertical alignment",
+      "options": [
+        { "value": "flex-start", "label": "Top" },
+        { "value": "center", "label": "Center" },
+        { "value": "flex-end", "label": "Bottom" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    }
+  ]
+}
+{% endschema %}

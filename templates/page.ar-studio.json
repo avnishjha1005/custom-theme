@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
@@ -20,10 +11,10 @@
         "padding-block-end": 80
       }
     },
-    "1769565018f1634e2e": {
+    "header_section": {
       "type": "_blocks",
       "blocks": {
-        "ai_gen_block_2243247_VUGcLx": {
+        "header_overlay": {
           "type": "image-with-text-overlay",
           "settings": {
             "image": "shopify://shop_images/f03177fac9df929400f76a6c5af9e89b56596570.png",
@@ -38,12 +29,11 @@
             "heading_size_mobile": 28,
             "subtext_size_mobile": 14,
             "section_padding_mobile": 20
-          },
-          "blocks": {}
+          }
         }
       },
       "block_order": [
-        "ai_gen_block_2243247_VUGcLx"
+        "header_overlay"
       ],
       "custom_css": [
         ".custom-section-content {padding: 0px !important;}"
@@ -76,67 +66,98 @@
         "padding-block-end": 0
       }
     },
-    "parallax_section": {
-      "type": "_blocks",
+    "parallax_scroll": {
+      "type": "parallax-scroll",
       "blocks": {
-        "parallax_scroll_block": {
-          "type": "parallax-scroll",
+        "slide_1": {
+          "type": "slide",
           "settings": {
-            "large_image_1": "shopify://shop_images/d3ce7fafe14ccc8eef8844cd20b3c2e656413c47.jpg",
-            "large_image_2": "shopify://shop_images/41f7c4c48e32a3a716f420ea0a9aa5dc4f274342.png",
-            "large_image_height": 100,
-            "small_image_1": "shopify://shop_images/69d69906cfee086ba51f0c2d11282aea1dd7bf5a.png",
-            "small_image_2": "shopify://shop_images/a94f7a15c53bd0bf667277defcf6476ff8a7cf75_1.jpg",
-            "small_image_3": "shopify://shop_images/11b0b23b7457d0b462f0633b2d2482066e369989.png",
-            "small_image_4": "shopify://shop_images/82b7297e73ad5de46e8cfd96a98deae3dfcfb1e1.png",
-            "small_image_aspect_ratio": "1 / 1",
-            "small_image_gap": 35,
-            "parallax_speed_large": 0.5,
-            "parallax_speed_small": 0.3,
-            "section_padding": 65,
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
+            "min_height": 100,
+            "min_height_mobile": 60,
+            "padding": 65,
+            "padding_mobile": 20,
+            "content_width": "page-width",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "center",
+            "background_color": "#ffffff"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "min_height": 100,
+            "min_height_mobile": 60,
+            "padding": 0,
+            "padding_mobile": 0,
+            "content_width": "full-width",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "center",
+            "background_color": "#000000"
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "min_height": 100,
+            "min_height_mobile": 60,
+            "padding": 65,
+            "padding_mobile": 20,
+            "content_width": "page-width",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "center",
+            "background_color": "#ffffff"
+          }
+        },
+        "slide_4": {
+          "type": "slide",
+          "settings": {
+            "min_height": 100,
+            "min_height_mobile": 60,
+            "padding": 0,
+            "padding_mobile": 0,
+            "content_width": "full-width",
+            "horizontal_alignment": "center",
+            "vertical_alignment": "center",
+            "background_color": "#000000"
+          }
         }
       },
       "block_order": [
-        "parallax_scroll_block"
-      ],
-      "custom_css": [
-        ".custom-section-content {padding: 0px !important;}"
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4"
       ],
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 0,
-        "section_width": "full-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "parallax_intensity": 0.5,
+        "background_color": "#ffffff",
+        "section_gap": 0
+      }
+    },
+    "sticky_info_bar": {
+      "type": "sticky-info-bar",
+      "settings": {
+        "store_name": "The AR Studio",
+        "address_line_1": "Address line 1",
+        "address_line_2": "Address line 2",
+        "phone": "Phone",
+        "email": "Email",
+        "opening_hours": "<p><strong>Opening hours</strong></p><p>Monday - Friday<br>10am - 7:30pm</p><p>Saturday & Sunday<br>12pm - 7pm</p>",
+        "button_1_label": "GET DIRECTIONS",
+        "button_1_link": "",
+        "button_2_label": "BOOK AN APPOINTMENT",
+        "button_2_link": "",
+        "background_color": "#ffffff",
+        "text_color": "#000000",
+        "button_background": "#000000",
+        "button_text": "#ffffff"
       }
     }
   },
   "order": [
     "main",
-    "1769565018f1634e2e",
-    "parallax_section"
+    "header_section",
+    "parallax_scroll",
+    "sticky_info_bar"
   ]
 }
