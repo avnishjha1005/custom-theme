@@ -98,7 +98,7 @@
         "@media screen and(max-width:750px) {.header__column--left {display: none; } .header__column--right {}}",
         ".header-logo__image {width: 168px; height: 36px;}",
         ".header__column--left {font-size: 10px; padding-left: 0;}",
-        ".header__columns {margin: 0; max-width: 1440px; padding-inline: 20px;}",
+        ".header__columns {margin: 0; max-width: 1440px; }",
         ".mega-menu__link {font-size: 12px; text-transform: none;}",
         ".menu-list__submenu {border-top: 1px solid #e2ddd4;}",
         ".mega-menu__grid {margin-top: 44px;}",
