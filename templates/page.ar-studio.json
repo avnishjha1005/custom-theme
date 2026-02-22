@@ -50,7 +50,7 @@
         "logo_kTaatE"
       ],
       "custom_css": [
-        ".custom-section-content{padding: 0px;}"
+        ".custom-section-content {padding: 0px;}"
       ],
       "name": "t:names.large_logo",
       "settings": {
@@ -61,7 +61,7 @@
         "align_baseline": false,
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "space-between",
-        "gap": 16,
+        "gap": 0,
         "section_width": "page-width",
         "section_height": "",
         "section_height_custom": 50,
