@@ -25,6 +25,8 @@
     align-items: center;
     padding: 16px 24px;
     gap: 16px;
+    max-width: 1440px;
+    margin: auto;
   }
 
   .sticky-info-bar__summary-{{ bar_id }} {
@@ -48,7 +50,6 @@
     display: flex;
     gap: 16px;
     font-size: 12px;
-    opacity: 0.7;
     flex-wrap: wrap;
   }
 
@@ -60,8 +61,7 @@
     width: 32px;
     height: 32px;
     min-width: 32px;
-    border: 1px solid currentColor;
-    border-radius: 50%;
+    border: none;
     background: transparent;
     color: inherit;
     display: flex;
@@ -75,11 +75,15 @@
   .sticky-info-bar__toggle-{{ bar_id }} svg {
     width: 16px;
     height: 16px;
-    transition: transform 0.3s ease;
   }
 
-  .sticky-info-bar-{{ bar_id }}.is-expanded .sticky-info-bar__toggle-{{ bar_id }} svg {
-    transform: rotate(45deg);
+  .sticky-info-bar__toggle-{{ bar_id }} .icon-vertical {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .sticky-info-bar-{{ bar_id }}.is-expanded .sticky-info-bar__toggle-{{ bar_id }} .icon-vertical {
+    opacity: 0;
+    transform: scaleY(0);
   }
 
   /* Expanded State */
@@ -92,6 +96,8 @@
   .sticky-info-bar-{{ bar_id }}.is-expanded .sticky-info-bar__expanded-{{ bar_id }} {
     max-height: 80vh;
     overflow-y: auto;
+    max-width: 1440px;
+    margin: auto;
   }
 
   /* Images */
@@ -238,8 +244,8 @@
       aria-label="Toggle store information"
     >
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="8" y1="3" x2="8" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <line x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <line class="icon-vertical" x1="8" y1="3" x2="8" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <line class="icon-horizontal" x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       </svg>
     </button>
   </div>
@@ -277,7 +283,7 @@
     <!-- Two Column Content -->
     <div class="sticky-info-bar__content-{{ bar_id }}">
       <div class="sticky-info-bar__left-{{ bar_id }}">
-        <h3>{{ section.settings.store_name }}</h3>
+        {% comment %} <h3>{{ section.settings.store_name }}</h3> {% endcomment %}
         {% if section.settings.opening_hours != blank %}
           <div class="sticky-info-bar__hours-{{ bar_id }}">
             {{ section.settings.opening_hours }}
