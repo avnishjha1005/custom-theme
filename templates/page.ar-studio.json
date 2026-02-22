@@ -98,7 +98,7 @@
             "section_padding_desktop": 40,
             "heading_size_mobile": 28,
             "subtext_size_mobile": 14,
-            "section_padding_mobile": 20
+            "section_padding_mobile": 60
           },
           "blocks": {}
         }
