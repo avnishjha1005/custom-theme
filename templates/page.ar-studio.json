@@ -50,7 +50,7 @@
         "logo_kTaatE"
       ],
       "custom_css": [
-        ".custom-section-content {padding: 0px;}"
+        ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
       "settings": {
