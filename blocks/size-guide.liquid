@@ -55,17 +55,17 @@
 
 {%- if guides != blank -%}
   <div class="btn-wrapper">
-  <button type="button" class="sg-trigger-btn" onclick="toggleSizeDrawer(true)">
+  <button type="button" class="sg-trigger-btn" id="SizeGuideTrigger">
     Size Guide
   </button>
 </div>
 
-  <div id="SizeDrawerOverlay" class="sg-overlay" onclick="toggleSizeDrawer(false)"></div>
+  <div id="SizeDrawerOverlay" class="sg-overlay"></div>
 
   <div id="SizeDrawer" class="sg-drawer">
     <div class="sg-header">
       <h2 class="sg-title">Product Measurements</h2>
-      <button class="sg-close-icon" onclick="toggleSizeDrawer(false)" aria-label="Close">
+      <button class="sg-close-icon" aria-label="Close">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
@@ -74,16 +74,14 @@
       <div class="sg-vendor-tabs">
         {% comment %} How to Measure tab - always first if available {% endcomment %}
         {%- if how_to_measure -%}
-          <button class="sg-tab-link active"
-                  onclick="openVendorTab(event, 'how-to-measure')">
+          <button class="sg-tab-link active" data-tab="how-to-measure">
             HOW TO MEASURE
           </button>
         {%- endif -%}
 
         {% comment %} Vendor/Brand tabs {% endcomment %}
         {%- for guide in guides -%}
-          <button class="sg-tab-link {% if how_to_measure == nil and forloop.first %}active{% endif %}"
-                  onclick="openVendorTab(event, 'vendor-{{ forloop.index }}')">
+          <button class="sg-tab-link {% if how_to_measure == nil and forloop.first %}active{% endif %}" data-tab="vendor-{{ forloop.index }}">
             {{ guide.vendor_name | upcase }} SIZE GUIDE
           </button>
         {%- endfor -%}
@@ -122,8 +120,8 @@
 
           {%- if has_cm > 0 and has_in > 0 -%}
             <div class="sg-unit-toggle">
-              <button class="unit-btn active" onclick="switchSgUnit(this, 'cm', '{{ forloop.index }}')">CM</button>
-              <button class="unit-btn" onclick="switchSgUnit(this, 'in', '{{ forloop.index }}')">IN</button>
+              <button class="unit-btn active" data-unit="cm" data-index="{{ forloop.index }}">CM</button>
+              <button class="unit-btn" data-unit="in" data-index="{{ forloop.index }}">IN</button>
             </div>
           {%- endif -%}
 
@@ -175,6 +173,7 @@
         </div>
       {%- endfor -%}
     </div>
+    
   </div>
 
   <style>
@@ -211,18 +210,19 @@
     .sg-drawer {
       position: fixed;
       top: 0;
-      right: -100%;
+      right: 0;
       width: 450px;
       height: 100%;
       background: #fff;
       z-index: 9999;
-      transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       display: flex;
       flex-direction: column;
       box-shadow: -10px 0 20px rgba(0,0,0,0.05);
     }
-    .sg-drawer.is-open { right: 0; }
-    
+    .sg-drawer.is-open { transform: translateX(0) !important; }
+
     .sg-overlay {
       position: fixed;
       inset: 0;
@@ -235,7 +235,37 @@
     .sg-overlay.is-open { opacity: 1; visibility: visible; }
 
     @media (max-width: 768px) {
-      .sg-drawer { width: 100%; }
+      .sg-drawer {
+        width: 100%;
+        top: 60px;
+        height: calc(100% - 60px);
+      }
+    }
+
+    /* Mobile close button */
+    .sg-mobile-close-btn {
+      display: none;
+    }
+    @media (max-width: 768px) {
+      .sg-mobile-close-btn {
+        display: flex;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #000;
+        border: none;
+        cursor: pointer;
+        z-index: 10000;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      }
+      .sg-mobile-close-btn svg {
+        stroke: #fff;
+      }
     }
 
     /* Header & Tabs */
@@ -315,37 +345,90 @@
   </style>
 
   <script>
-    function toggleSizeDrawer(open) {
+    (function() {
+      // Move drawer and overlay to body to escape any parent overflow:hidden
       const drawer = document.getElementById('SizeDrawer');
       const overlay = document.getElementById('SizeDrawerOverlay');
-      if (open) {
-        drawer.classList.add('is-open');
-        overlay.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-      } else {
-        drawer.classList.remove('is-open');
-        overlay.classList.remove('is-open');
-        document.body.style.overflow = '';
+      if (drawer && overlay) {
+        document.body.appendChild(overlay);
+        document.body.appendChild(drawer);
+        console.log('Size Guide: Moved drawer and overlay to body');
       }
-    }
 
-    function openVendorTab(evt, tabId) {
-      const body = evt.currentTarget.closest('.sg-body');
-      body.querySelectorAll('.sg-vendor-content').forEach(c => c.classList.remove('active'));
-      body.querySelectorAll('.sg-tab-link').forEach(t => t.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      evt.currentTarget.classList.add('active');
-    }
+      function toggleSizeDrawer(open) {
+        const drawer = document.getElementById('SizeDrawer');
+        const overlay = document.getElementById('SizeDrawerOverlay');
+        if (!drawer || !overlay) return;
+        if (open) {
+          drawer.classList.add('is-open');
+          drawer.style.transform = 'translateX(0)';
+          overlay.classList.add('is-open');
+          overlay.style.opacity = '1';
+          overlay.style.visibility = 'visible';
+          document.body.style.overflow = 'hidden';
+        } else {
+          drawer.classList.remove('is-open');
+          drawer.style.transform = 'translateX(100%)';
+          overlay.classList.remove('is-open');
+          overlay.style.opacity = '0';
+          overlay.style.visibility = 'hidden';
+          document.body.style.overflow = '';
+        }
+      }
 
-    function switchSgUnit(btn, unit, index) {
-      const container = document.querySelector('.sg-table-container-' + index);
-      btn.parentElement.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      // Use event delegation on document - this always works
+      document.addEventListener('click', function(e) {
+        // Open drawer
+        if (e.target.closest('.sg-trigger-btn')) {
+          e.preventDefault();
+          toggleSizeDrawer(true);
+          return;
+        }
 
-      container.querySelector('.unit-cm').style.display = (unit === 'cm') ? 'block' : 'none';
-      container.querySelector('.unit-in').style.display = (unit === 'in') ? 'block' : 'none';
-    }
+        // Close via overlay
+        if (e.target.closest('.sg-overlay')) {
+          toggleSizeDrawer(false);
+          return;
+        }
 
+        // Close via close buttons
+        if (e.target.closest('.sg-close-icon') || e.target.closest('.sg-mobile-close-btn')) {
+          toggleSizeDrawer(false);
+          return;
+        }
+
+        // Tab switching
+        const tabBtn = e.target.closest('.sg-tab-link');
+        if (tabBtn) {
+          const tabId = tabBtn.getAttribute('data-tab');
+          const body = tabBtn.closest('.sg-body');
+          if (body && tabId) {
+            body.querySelectorAll('.sg-vendor-content').forEach(c => c.classList.remove('active'));
+            body.querySelectorAll('.sg-tab-link').forEach(t => t.classList.remove('active'));
+            const tabContent = document.getElementById(tabId);
+            if (tabContent) tabContent.classList.add('active');
+            tabBtn.classList.add('active');
+          }
+          return;
+        }
+
+        // Unit toggle
+        const unitBtn = e.target.closest('.unit-btn');
+        if (unitBtn) {
+          const unit = unitBtn.getAttribute('data-unit');
+          const index = unitBtn.getAttribute('data-index');
+          const container = document.querySelector('.sg-table-container-' + index);
+          if (container) {
+            unitBtn.parentElement.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+            unitBtn.classList.add('active');
+            const cmTable = container.querySelector('.unit-cm');
+            const inTable = container.querySelector('.unit-in');
+            if (cmTable) cmTable.style.display = (unit === 'cm') ? 'block' : 'none';
+            if (inTable) inTable.style.display = (unit === 'in') ? 'block' : 'none';
+          }
+        }
+      });
+    })();
   </script>
 {%- endif -%}
 
