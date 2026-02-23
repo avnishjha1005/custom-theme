@@ -118,6 +118,7 @@
             "logo_type": "symbol",
             "inverse": false,
             "font": "heading",
+            "enable_sticky": false,
             "vertical_align": "center",
             "unit": "pixel",
             "percent_width": 100,
@@ -877,7 +878,9 @@
           "modern-wardrobe-staples",
           "everyday-essentials",
           "the-silk-route",
-          "the-wedding-edit"
+          "the-wedding-edit",
+          "colllection-5",
+          "collection-6"
         ],
         "layout_type": "grid",
         "carousel_on_mobile": false,
