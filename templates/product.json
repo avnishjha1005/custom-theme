@@ -1274,6 +1274,7 @@
             },
             "shiprocket_smart_edd_shiprocket_smart_edd_aTBb4F": {
               "type": "shopify://apps/shiprocket-smart-edd/blocks/shiprocket-smart-edd/9b57fbd9-7bee-480b-839d-a538d163fbf0",
+              "disabled": true,
               "settings": {}
             },
             "shiprocket_promise_promise_widget_J4MFhC": {
