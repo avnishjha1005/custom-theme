@@ -1,199 +1,84 @@
 {% liquid
   assign product = closest.product
   assign bundle_products = product.metafields.custom.bundle_products.value
-  assign bundle_count = bundle_products.count | default: 0
-  
-  case block.settings.layout_type
-    when 'grid'
-      assign classes = 'resource-list--grid'
-    when 'carousel'
-      assign classes = 'resource-list__carousel'
-  endcase
-
-  capture styles
-    echo '--column-count-mobile: ' | append: block.settings.mobile_columns | append: ';'
-    echo '--resource-list-column-gap-desktop: ' | append: block.settings.columns_gap | append: 'px;'
-    echo '--resource-list-row-gap-desktop: ' | append: block.settings.rows_gap | append: 'px;'
-    echo '--resource-list-columns: repeat(' | append: block.settings.columns | append: ', 1fr);'
-    echo '--resource-list-columns-mobile: repeat(' | append: block.settings.mobile_columns | append: ', 1fr);'
-    echo '--column-count: ' | append: block.settings.columns | append: ';'
-  endcapture
-
-  # Capture the items once to use in both desktop and mobile layouts
-  capture list_items
-    for item in bundle_products limit: block.settings.max_products
-      echo '<div class="resource-list__item">'
-        content_for 'block', type: '_product-card', id: 'product-card', closest.product: item
-      echo '</div>'
-    endfor
-  endcapture
+  assign bundle_count = bundle_products.size | default: 0
 %}
 
-<div
-  class="bundle-products-section section section--{{ block.settings.section_width }} color-{{ block.settings.color_scheme }} section-resource-list spacing-style gap-style"
-  style="{% render 'spacing-style', settings: block.settings %}{% render 'gap-style', value: block.settings.gap-header %}{{ styles }}"
->
-  <div class="section-background color-{{ block.settings.color_scheme }}"></div>
+{%- if bundle_products != blank and bundle_count > 0 -%}
+  <div class="bundle-products-block">
+    <h4 class="bundle-products-block__heading">Look of {{ bundle_count }} items</h4>
 
-  {%- if bundle_products != blank -%}
-    <div class="section__header page-width">
-      <h4 class="bundle-heading">Look of {{ bundle_count }} items</h4>
-    </div>
-
-    <div class="section__content page-width">
-      <div
-        class="resource-list {% if block.settings.layout_type == 'carousel' %}force-full-width{% endif %} {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}hidden--mobile{% endif %} {{ classes }}"
-        {% if block.settings.layout_type == 'grid' %}data-testid="resource-list-grid"{% endif %}
-      >
-        {{ list_items }}
-      </div>
-
-      {% if block.settings.carousel_on_mobile and block.settings.layout_type != 'carousel' %}
-        {% liquid
-          # Split by the closing div tag to create an array for the carousel renderer
-          assign slides = list_items | split: '<!--@list/split-->'
-
-        %} 
-        <div
-          class="resource-list hidden--desktop force-full-width"
-          style="--resource-list-gap: {{ block.settings.columns_gap }}px; --column-count: {{ block.settings.columns }};"
-        >
-          {% render 'resource-list-carousel',
-            ref: 'bundleCarouselMobile',
-            slides: slides
-            slide_count: bundle_count,
-            settings: block.settings
-          %}
+    <div class="bundle-products-block__grid resource-list resource-list--grid">
+      {%- for item in bundle_products limit: 4 -%}
+        <div class="resource-list__item">
+          {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: item %}
         </div>
-      {% endif %}
+      {%- endfor -%}
     </div>
-  {%- endif -%}
-</div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .bundle-products-block {
+    margin-bottom: 16px;
+  }
+
+  .bundle-products-block__heading {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0 0 12px 0;
+  }
+
+  .bundle-products-block__grid {
+    --resource-list-columns: repeat(2, 1fr);
+    --resource-list-columns-mobile: repeat(2, 1fr);
+    --resource-list-column-gap-desktop: 8px;
+    --resource-list-row-gap-desktop: 8px;
+    gap: 8px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .bundle-products-block__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Bundle Products List",
-  "settings": [
-    {
-      "type": "header",
-      "content": "Bundle Layout"
-    },
-    {
-      "type": "select",
-      "id": "layout_type",
-      "label": "Layout Style",
-      "options": [
-        { "value": "grid", "label": "Grid" },
-        { "value": "carousel", "label": "Carousel" }
-      ],
-      "default": "grid"
-    },
-    {
-      "type": "checkbox",
-      "id": "carousel_on_mobile",
-      "label": "Carousel on mobile",
-      "default": false
-    },
-    {
-      "type": "range",
-      "id": "max_products",
-      "label": "Max products to show",
-      "min": 2,
-      "max": 12,
-      "step": 1,
-      "default": 4
-    },
-    {
-      "type": "range",
-      "id": "columns",
-      "label": "Columns on desktop",
-      "min": 1,
-      "max": 6,
-      "step": 1,
-      "default": 4
-    },
-    {
-      "type": "select",
-      "id": "mobile_columns",
-      "label": "Columns on mobile",
-      "options": [
-        { "value": "1", "label": "1" },
-        { "value": "2", "label": "2" }
-      ],
-      "default": "2"
-    },
-    {
-      "type": "range",
-      "id": "columns_gap",
-      "label": "Horizontal gap",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "rows_gap",
-      "label": "Vertical gap",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "header",
-      "content": "Section Styling"
-    },
-    {
-      "type": "select",
-      "id": "section_width",
-      "label": "Width",
-      "options": [
-        { "value": "page-width", "label": "Page width" },
-        { "value": "full-width", "label": "Full width" }
-      ],
-      "default": "page-width"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-1"
-    },
-    {
-      "type": "range",
-      "id": "gap-header",
-      "label": "Gap between header and list",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 12
-    }
-  ],
+  "name": "Bundle Products",
+  "settings": [],
   "blocks": [
-    { "type": "@theme" },
-    { "type": "@app" }
+    { "type": "_product-card" }
   ],
   "presets": [
     {
-      "name": "Bundle Products List"
+      "name": "Bundle Products",
+      "blocks": {
+        "product-card": {
+          "type": "_product-card",
+          "static": true,
+          "settings": {
+            "product_card_gap": 4
+          },
+          "blocks": {
+            "product-media-gallery": {
+              "type": "_product-media-gallery"
+            },
+            "product_title": {
+              "type": "product-title"
+            },
+            "product_vendor": {
+              "type": "product-vendor"
+            },
+            "price": {
+              "type": "price"
+            }
+          },
+          "block_order": ["product-media-gallery", "product_title", "product_vendor", "price"]
+        }
+      }
     }
   ]
 }
 {% endschema %}
-
-{% stylesheet %}
-  .bundle-products-section {
-    display: block; /* Changed from flex to block for standard stacking */
-  }
-  .bundle-heading {
-    margin-bottom: 14px;
-    font-size: 1rem;
-    line-height: 1.25rem;
-    font-weight: 400;
-    padding-bottom: 14px;
-  }
-{% endstylesheet %}

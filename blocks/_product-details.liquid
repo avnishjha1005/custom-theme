@@ -24,6 +24,7 @@
         {{- product.title }}
       </a>
     </div>
+
     {% content_for 'blocks' %}
   {% endcapture %}
 
@@ -35,6 +36,46 @@
   @media screen and (max-width: 749px) {
     .product-information.section--page-width .product-details > .group-block {
       padding-inline: 0;
+    }
+
+    /* Add padding to product-details container on mobile */
+    .product-details {
+      padding-inline: 16px;
+      padding-block-start: 0;
+    }
+
+    /* Hide title, price, variant picker, buy buttons, size guide, tax note, and vendor on mobile
+       since they are shown in the sticky product-actions bar */
+    .product-details product-price,
+    .product-details product-price > *,
+    .product-details product-price + *,
+    .product-details .tax-note,
+    .product-details .installments,
+    .product-details .variant-picker,
+    .product-details .buy-buttons-block,
+    .product-details .btn-wrapper,
+    .product-details .product-vendor-block,
+    .product-details .product-title-block {
+      display: none !important;
+    }
+
+    /* But keep them visible inside bundle-products and product-actions */
+    .product-details .bundle-products-block product-price,
+    .product-details .bundle-products-block product-price > *,
+    .product-details .bundle-products-block product-price + *,
+    .product-details .bundle-products-block .variant-picker,
+    .product-details .bundle-products-block .buy-buttons-block,
+    .product-details .product-actions product-price,
+    .product-details .product-actions product-price > *,
+    .product-details .product-actions product-price + *,
+    .product-details .product-actions .tax-note,
+    .product-details .product-actions .installments,
+    .product-details .product-actions .variant-picker,
+    .product-details .product-actions .buy-buttons-block,
+    .product-details .product-actions .btn-wrapper,
+    .product-details .product-actions .product-vendor-block,
+    .product-details .product-actions .product-title-block {
+      display: block !important;
     }
   }
 
@@ -135,6 +176,9 @@
     },
     {
       "type": "_product-actions"
+    },
+    {
+      "type": "_bundle-products"
     }
   ],
   "tag": null,
