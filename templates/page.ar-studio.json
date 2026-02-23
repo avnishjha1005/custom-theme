@@ -50,7 +50,8 @@
         "logo_kTaatE"
       ],
       "custom_css": [
-        ".custom-section-content {padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important;}",
+        ".logo-block__image {position: sticky; height: 42px; margin: auto; @media screen and (min-width: 769px) {display: none; height: 0; padding: 0; margin: 0; }}"
       ],
       "name": "t:names.large_logo",
       "settings": {
