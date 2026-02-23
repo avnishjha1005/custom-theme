@@ -759,7 +759,7 @@
                   "type": "add-to-cart-product",
                   "static": true,
                   "settings": {
-                    "style_class": "button"
+                    "style_class": "button-secondary"
                   },
                   "blocks": {}
                 },
