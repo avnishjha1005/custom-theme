@@ -280,22 +280,26 @@
       disconnectedCallback() {
         if (this.scrollHandler) {
           window.removeEventListener('scroll', this.scrollHandler);
+          window.removeEventListener('resize', this.scrollHandler);
         }
       }
 
       observeFooter() {
-        const footer = document.querySelector('footer')
+        // Find footer using multiple selectors for Shopify themes
+        const footer = document.querySelector('.shopify-section-group-footer-group')
+          || document.querySelector('[class*="footer-group"]')
+          || document.querySelector('footer')
           || document.querySelector('.footer')
-          || document.querySelector('[data-section-type="footer"]')
-          || document.querySelector('#shopify-section-footer')
-          || document.querySelector('[id*="footer"]:not([id*="sticky-info-bar"])')
-          || document.querySelector('.shopify-section-footer');
+          || document.querySelector('#shopify-section-footer');
 
-        if (!footer) return;
+        if (!footer) {
+          console.log('Sticky info bar: No footer found');
+          return;
+        }
 
         const self = this;
 
-        // Use scroll listener for more reliable mobile support
+        // Use scroll listener for reliable cross-device support
         const checkFooterVisibility = () => {
           const footerRect = footer.getBoundingClientRect();
           const windowHeight = window.innerHeight;
@@ -311,8 +315,11 @@
         // Initial check
         checkFooterVisibility();
 
-        // Listen to scroll events with passive flag for performance
+        // Listen to scroll events
         window.addEventListener('scroll', checkFooterVisibility, { passive: true });
+
+        // Also check on resize
+        window.addEventListener('resize', checkFooterVisibility, { passive: true });
 
         // Store reference for cleanup
         this.scrollHandler = checkFooterVisibility;
