@@ -716,7 +716,7 @@
         "address_line_2": "New Delhi 110024",
         "phone": "+91 9217364661",
         "email": "customercare@thealtarasa.com",
-        "opening_hours": "<p>Opening Hours</p><p>Monday - Sunday<br/>11am - 7pm</p><p>Saturday & Sunday<br/>12pm - 7pm</p>",
+        "opening_hours": "<p>Opening Hours</p><p>Monday - Sunday<br/>11am - 7pm</p>",
         "button_1_label": "GET DIRECTIONS",
         "button_1_link": "https://maps.app.goo.gl/H5KEeuGzL63mypuy6",
         "button_2_label": "BOOK AN APPOINTMENT",
