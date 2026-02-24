@@ -179,6 +179,7 @@
 <sticky-info-bar
   class="sticky-info-bar-{{ bar_id }}"
   id="sticky-info-bar-{{ bar_id }}"
+  data-footer-selector="{{ section.settings.footer_selector }}"
 >
   <div class="sticky-info-bar__inner-{{ bar_id }}">
     <!-- Header Row: Two columns + toggle -->
@@ -284,23 +285,31 @@
         }
       }
 
-      observeFooter() {
-        // Find footer using multiple selectors for Shopify themes
-        const footer = document.querySelector('.shopify-section-group-footer-group')
+      getFooter() {
+        // Try custom selector from settings first
+        const customSelector = this.dataset.footerSelector;
+        if (customSelector) {
+          const customFooter = document.querySelector(customSelector);
+          if (customFooter) return customFooter;
+        }
+
+        // Fallback selectors
+        return document.querySelector('.shopify-section-group-footer-group')
           || document.querySelector('[class*="footer-group"]')
           || document.querySelector('footer')
           || document.querySelector('.footer')
-          || document.querySelector('#shopify-section-footer');
+          || document.querySelector('#shopify-section-footer')
+          || document.querySelector('[id*="shopify-section-footer"]');
+      }
 
-        if (!footer) {
-          console.log('Sticky info bar: No footer found');
-          return;
-        }
-
+      observeFooter() {
         const self = this;
 
-        // Use scroll listener for reliable cross-device support
+        // Re-query footer on each check to handle DOM changes
         const checkFooterVisibility = () => {
+          const footer = self.getFooter();
+          if (!footer) return;
+
           const footerRect = footer.getBoundingClientRect();
           const windowHeight = window.innerHeight;
 
@@ -312,8 +321,8 @@
           }
         };
 
-        // Initial check
-        checkFooterVisibility();
+        // Initial check after a small delay to ensure DOM is ready
+        setTimeout(checkFooterVisibility, 100);
 
         // Listen to scroll events
         window.addEventListener('scroll', checkFooterVisibility, { passive: true });
@@ -451,6 +460,17 @@
       "id": "button_text",
       "label": "Button text color",
       "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "text",
+      "id": "footer_selector",
+      "label": "Footer CSS selector",
+      "default": ".shopify-section-group-footer-group",
+      "info": "CSS selector for the footer element. The bar will hide when this element is visible."
     }
   ],
   "presets": [
