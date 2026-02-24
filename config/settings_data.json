@@ -210,6 +210,11 @@
           "floating_reference_js": ""
         }
       },
+      "8183701962187534751": {
+        "type": "shopify://apps/wc-wishlist-club/blocks/wishlist-script/582a225b-bd58-49d0-b0b6-9479192e79c5",
+        "disabled": true,
+        "settings": {}
+      },
       "14197025361042770389": {
         "type": "shopify://apps/swish-wishlist-king/blocks/app-settings-main/194f5011-a43c-4b22-b12e-eaf20dc4506a",
         "disabled": false,
@@ -233,16 +238,11 @@
           "shadow_vertical_offset": 2,
           "shadow_blur": 4,
           "font_text_scale": 100,
-          "access_mode": "UNRESTRICTED",
+          "access_mode": "REQUIRE_LOGIN_BEFORE_USE",
           "wishlist_mode": "VARIANT",
           "wishlist_path": "/pages/wishlist",
           "money_show_currency_code": true
         }
-      },
-      "8183701962187534751": {
-        "type": "shopify://apps/wc-wishlist-club/blocks/wishlist-script/582a225b-bd58-49d0-b0b6-9479192e79c5",
-        "disabled": true,
-        "settings": {}
       }
     },
     "color_schemes": {
