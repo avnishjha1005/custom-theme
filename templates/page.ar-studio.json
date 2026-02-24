@@ -712,10 +712,10 @@
       "type": "sticky-info-bar",
       "settings": {
         "store_name": "The AR Studio",
-        "address_line_1": "Address line 1",
-        "address_line_2": "Address line 2",
-        "phone": "Phone",
-        "email": "Email",
+        "address_line_1": "B-25 Defence Colony, 3rd Floor Bhismaha Pitamah Marg,",
+        "address_line_2": "New Delhi 110024",
+        "phone": "+91 9217364661",
+        "email": "customercare@thealtarasa.com",
         "opening_hours": "<p><strong>Opening hours</strong></p><p>Monday - Friday<br/>10am - 7:30pm</p><p>Saturday & Sunday<br/>12pm - 7pm</p>",
         "button_1_label": "GET DIRECTIONS",
         "button_1_link": "https://maps.app.goo.gl/qPX5ExNkhdoeHhQN8",
@@ -724,7 +724,8 @@
         "background_color": "#ffffff",
         "text_color": "#000000",
         "button_background": "#000000",
-        "button_text": "#ffffff"
+        "button_text": "#ffffff",
+        "footer_selector": ".shopify-section-group-footer-group"
       }
     }
   },
