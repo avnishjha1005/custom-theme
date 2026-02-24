@@ -263,7 +263,7 @@
       constructor() {
         super();
         this.isExpanded = false;
-        this.footerObserver = null;
+        this.scrollHandler = null;
       }
 
       connectedCallback() {
@@ -278,30 +278,44 @@
       }
 
       disconnectedCallback() {
-        if (this.footerObserver) {
-          this.footerObserver.disconnect();
+        if (this.scrollHandler) {
+          window.removeEventListener('scroll', this.scrollHandler);
         }
       }
 
       observeFooter() {
-        const footer = document.querySelector('footer') || document.querySelector('.footer') || document.querySelector('[data-section-type="footer"]');
+        const footer = document.querySelector('footer')
+          || document.querySelector('.footer')
+          || document.querySelector('[data-section-type="footer"]')
+          || document.querySelector('#shopify-section-footer')
+          || document.querySelector('[id*="footer"]:not([id*="sticky-info-bar"])')
+          || document.querySelector('.shopify-section-footer');
 
         if (!footer) return;
 
-        this.footerObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              this.classList.add('is-hidden');
-            } else {
-              this.classList.remove('is-hidden');
-            }
-          });
-        }, {
-          threshold: 0,
-          rootMargin: '0px'
-        });
+        const self = this;
 
-        this.footerObserver.observe(footer);
+        // Use scroll listener for more reliable mobile support
+        const checkFooterVisibility = () => {
+          const footerRect = footer.getBoundingClientRect();
+          const windowHeight = window.innerHeight;
+
+          // Footer is visible if its top is within viewport
+          if (footerRect.top < windowHeight) {
+            self.classList.add('is-hidden');
+          } else {
+            self.classList.remove('is-hidden');
+          }
+        };
+
+        // Initial check
+        checkFooterVisibility();
+
+        // Listen to scroll events with passive flag for performance
+        window.addEventListener('scroll', checkFooterVisibility, { passive: true });
+
+        // Store reference for cleanup
+        this.scrollHandler = checkFooterVisibility;
       }
 
       toggle() {
