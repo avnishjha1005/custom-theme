@@ -8,59 +8,62 @@
     --btn-text: {{ section.settings.button_text }};
 
     position: fixed;
-    bottom: var(--tab-bar-height, 56);
+    bottom: 0;
     left: 0;
     width: 100%;
     z-index: 499;
     background: var(--bar-bg);
     color: var(--bar-text);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     padding-bottom: env(safe-area-inset-bottom);
+    transition: transform 0.3s ease, opacity 0.3s ease;
   }
 
-  /* Collapsed State */
-  .sticky-info-bar__collapsed-{{ bar_id }} {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 24px;
-    gap: 16px;
+  .sticky-info-bar-{{ bar_id }}.is-hidden {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Mobile - account for tab bar */
+  @media screen and (max-width: 768px) {
+    .sticky-info-bar-{{ bar_id }} {
+      bottom: var(--tab-bar-height, 56px);
+    }
+  }
+
+  .sticky-info-bar__inner-{{ bar_id }} {
     max-width: 1440px;
-    margin: auto;
+    margin: 0 auto;
   }
 
-  .sticky-info-bar__summary-{{ bar_id }} {
+  /* Two Column Grid Layout + Toggle */
+  .sticky-info-bar__row-{{ bar_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr 20px;
+    gap: 12px;
+    padding-block: 16px;
+    padding-inline: 60px;
+    align-items: start;
+  }
+
+  /* Left Column */
+  .sticky-info-bar__left-{{ bar_id }} {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-    min-width: 0;
+    align-items: flex-start;
   }
 
-  .sticky-info-bar__name-{{ bar_id }} {
+  .sticky-info-bar__label-{{ bar_id }} {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.4;
   }
 
-  .sticky-info-bar__quick-info-{{ bar_id }} {
-    display: flex;
-    gap: 16px;
-    font-size: 12px;
-    flex-wrap: wrap;
-  }
-
-  .sticky-info-bar__quick-info-{{ bar_id }} span {
-    white-space: nowrap;
-  }
-
+  /* Toggle button */
   .sticky-info-bar__toggle-{{ bar_id }} {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
     border: none;
     background: transparent;
     color: inherit;
@@ -68,13 +71,12 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: transform 0.3s ease;
     padding: 0;
   }
 
   .sticky-info-bar__toggle-{{ bar_id }} svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 
   .sticky-info-bar__toggle-{{ bar_id }} .icon-vertical {
@@ -86,7 +88,30 @@
     transform: scaleY(0);
   }
 
-  /* Expanded State */
+  /* Right Column - stacked content */
+  .sticky-info-bar__right-{{ bar_id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: start;
+  }
+
+  .sticky-info-bar__right-{{ bar_id }} span {
+    display: block;
+  }
+
+  .sticky-info-bar__right-{{ bar_id }} p {
+    margin: 0 0 8px 0;
+  }
+
+  .sticky-info-bar__right-{{ bar_id }} p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Expanded Content */
   .sticky-info-bar__expanded-{{ bar_id }} {
     max-height: 0;
     overflow: hidden;
@@ -94,125 +119,59 @@
   }
 
   .sticky-info-bar-{{ bar_id }}.is-expanded .sticky-info-bar__expanded-{{ bar_id }} {
-    max-height: 80vh;
-    overflow-y: auto;
-    max-width: 1440px;
-    margin: auto;
+    max-height: 400px;
   }
 
-  /* Images */
-  .sticky-info-bar__images-{{ bar_id }} {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding: 0 24px 24px;
-  }
-
-  .sticky-info-bar__image-{{ bar_id }} {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border-radius: 4px;
-  }
-
-  /* Two column content */
-  .sticky-info-bar__content-{{ bar_id }} {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-    padding: 0 24px 24px;
-  }
-
-  .sticky-info-bar__left-{{ bar_id }} h3 {
-    font-size: 16px;
-    font-weight: 600;
-    margin: 0 0 12px 0;
-  }
-
-  .sticky-info-bar__hours-{{ bar_id }} {
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  .sticky-info-bar__hours-{{ bar_id }} p {
-    margin: 0;
-  }
-
-  .sticky-info-bar__right-{{ bar_id }} {
-    font-size: 13px;
-    line-height: 1.8;
-  }
-
-  .sticky-info-bar__right-{{ bar_id }} p {
-    margin: 0;
-  }
-
-  /* Buttons */
-  .sticky-info-bar__buttons-{{ bar_id }} {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    padding: 0 24px 24px;
-  }
-
-  .sticky-info-bar__button-{{ bar_id }} {
+  /* CTA Buttons */
+  .sticky-info-bar__cta-{{ bar_id }} {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 14px 24px;
+    margin-inline: 65px;
     background: var(--btn-bg);
     color: var(--btn-text);
     text-decoration: none;
     text-transform: uppercase;
     letter-spacing: 1px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 400;
     border: none;
     cursor: pointer;
     transition: opacity 0.2s ease;
   }
 
-  .sticky-info-bar__button-{{ bar_id }}:hover {
+  .sticky-info-bar__cta-{{ bar_id }}:hover {
     opacity: 0.9;
   }
 
-  /* Divider */
-  .sticky-info-bar__divider-{{ bar_id }} {
-    height: 1px;
-    background: currentColor;
-    opacity: 0.1;
-    margin: 0 24px 24px;
+  .sticky-info-bar__directions-{{ bar_id }} {
+    margin-bottom: 8px;
+  }
+
+  .sticky-info-bar__book-{{ bar_id }} {
+    margin-top: 8px;
+    margin-bottom: 16px;
   }
 
   /* Mobile */
-  @media screen and (max-width: 749px) {
-    .sticky-info-bar__collapsed-{{ bar_id }} {
-      padding: 12px 16px;
+  @media screen and (max-width: 768px) {
+    .sticky-info-bar__row-{{ bar_id }} {
+      padding-inline: 20px;
     }
 
-    .sticky-info-bar__quick-info-{{ bar_id }} {
-      display: none;
+    .sticky-info-bar__label-{{ bar_id }} {
+      font-size: 13px;
     }
 
-    .sticky-info-bar__images-{{ bar_id }} {
-      padding: 0 16px 16px;
-      gap: 8px;
+    .sticky-info-bar__right-{{ bar_id }} {
+      font-size: 11px;
     }
 
-    .sticky-info-bar__content-{{ bar_id }} {
-      grid-template-columns: 1fr;
-      gap: 16px;
-      padding: 0 16px 16px;
-    }
-
-    .sticky-info-bar__buttons-{{ bar_id }} {
-      grid-template-columns: 1fr;
-      gap: 8px;
-      padding: 0 16px 16px;
-    }
-
-    .sticky-info-bar__divider-{{ bar_id }} {
-      margin: 0 16px 16px;
+    .sticky-info-bar__cta-{{ bar_id }} {
+      padding: 12px 20px;
+      font-size: 11px;
+      margin-inline: 20px;
     }
   }
 {% endstyle %}
@@ -221,13 +180,21 @@
   class="sticky-info-bar-{{ bar_id }}"
   id="sticky-info-bar-{{ bar_id }}"
 >
-  <!-- Collapsed State -->
-  <div class="sticky-info-bar__collapsed-{{ bar_id }}">
-    <div class="sticky-info-bar__summary-{{ bar_id }}">
-      <h3 class="sticky-info-bar__name-{{ bar_id }}">{{ section.settings.store_name }}</h3>
-      <div class="sticky-info-bar__quick-info-{{ bar_id }}">
+  <div class="sticky-info-bar__inner-{{ bar_id }}">
+    <!-- Header Row: Two columns + toggle -->
+    <div class="sticky-info-bar__row-{{ bar_id }}">
+      <!-- Left: Store name -->
+      <div class="sticky-info-bar__left-{{ bar_id }}">
+        <h5 class="sticky-info-bar__label-{{ bar_id }}">{{ section.settings.store_name }}</h5>
+      </div>
+
+      <!-- Right: Address info stacked -->
+      <div class="sticky-info-bar__right-{{ bar_id }}">
         {% if section.settings.address_line_1 != blank %}
           <span>{{ section.settings.address_line_1 }}</span>
+        {% endif %}
+        {% if section.settings.address_line_2 != blank %}
+          <span>{{ section.settings.address_line_2 }}</span>
         {% endif %}
         {% if section.settings.phone != blank %}
           <span>{{ section.settings.phone }}</span>
@@ -236,91 +203,55 @@
           <span>{{ section.settings.email }}</span>
         {% endif %}
       </div>
+
+      <!-- Toggle button -->
+      <button
+        class="sticky-info-bar__toggle-{{ bar_id }}"
+        data-toggle
+        aria-expanded="false"
+        aria-label="Toggle store information"
+      >
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line class="icon-vertical" x1="8" y1="3" x2="8" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <line class="icon-horizontal" x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
-    <button
-      class="sticky-info-bar__toggle-{{ bar_id }}"
-      data-toggle
-      aria-expanded="false"
-      aria-label="Toggle store information"
-    >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line class="icon-vertical" x1="8" y1="3" x2="8" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <line class="icon-horizontal" x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      </svg>
-    </button>
-  </div>
 
-  <!-- Expanded State -->
-  <div class="sticky-info-bar__expanded-{{ bar_id }}" data-expanded>
-    <!-- Images -->
-    {% if section.settings.image_1 != blank or section.settings.image_2 != blank %}
-      <div class="sticky-info-bar__images-{{ bar_id }}">
-        {% if section.settings.image_1 != blank %}
-          <img
-            src="{{ section.settings.image_1 | image_url: width: 400 }}"
-            srcset="{{ section.settings.image_1 | image_url: width: 200 }} 200w,
-                    {{ section.settings.image_1 | image_url: width: 400 }} 400w"
-            sizes="(min-width: 750px) 200px, 45vw"
-            alt="{{ section.settings.image_1.alt | escape }}"
-            loading="lazy"
-            class="sticky-info-bar__image-{{ bar_id }}"
-          >
-        {% endif %}
-        {% if section.settings.image_2 != blank %}
-          <img
-            src="{{ section.settings.image_2 | image_url: width: 400 }}"
-            srcset="{{ section.settings.image_2 | image_url: width: 200 }} 200w,
-                    {{ section.settings.image_2 | image_url: width: 400 }} 400w"
-            sizes="(min-width: 750px) 200px, 45vw"
-            alt="{{ section.settings.image_2.alt | escape }}"
-            loading="lazy"
-            class="sticky-info-bar__image-{{ bar_id }}"
-          >
-        {% endif %}
-      </div>
-    {% endif %}
+    <!-- Expanded Content -->
+    <div class="sticky-info-bar__expanded-{{ bar_id }}" data-expanded>
+      <!-- Opening Hours Row: Same grid as header -->
+      {% if section.settings.opening_hours != blank %}
+        <div class="sticky-info-bar__row-{{ bar_id }}">
+          <!-- Left: Opening hours label -->
+          <div class="sticky-info-bar__left-{{ bar_id }}">
+            <h5 class="sticky-info-bar__label-{{ bar_id }}">Opening hours</h5>
+          </div>
 
-    <!-- Two Column Content -->
-    <div class="sticky-info-bar__content-{{ bar_id }}">
-      <div class="sticky-info-bar__left-{{ bar_id }}">
-        {% comment %} <h3>{{ section.settings.store_name }}</h3> {% endcomment %}
-        {% if section.settings.opening_hours != blank %}
-          <div class="sticky-info-bar__hours-{{ bar_id }}">
+          <!-- Right: Hours content -->
+          <div class="sticky-info-bar__right-{{ bar_id }}">
             {{ section.settings.opening_hours }}
           </div>
-        {% endif %}
-      </div>
-      <div class="sticky-info-bar__right-{{ bar_id }}">
-        {% if section.settings.address_line_1 != blank %}
-          <p>{{ section.settings.address_line_1 }}</p>
-        {% endif %}
-        {% if section.settings.address_line_2 != blank %}
-          <p>{{ section.settings.address_line_2 }}</p>
-        {% endif %}
-        {% if section.settings.phone != blank %}
-          <p>{{ section.settings.phone }}</p>
-        {% endif %}
-        {% if section.settings.email != blank %}
-          <p>{{ section.settings.email }}</p>
-        {% endif %}
-      </div>
-    </div>
 
-    <div class="sticky-info-bar__divider-{{ bar_id }}"></div>
+          <!-- Empty placeholder for grid alignment -->
+          <div></div>
+        </div>
+      {% endif %}
 
-    <!-- CTA Buttons -->
-    <div class="sticky-info-bar__buttons-{{ bar_id }}">
+      <!-- Get Directions CTA -->
       {% if section.settings.button_1_link != blank and section.settings.button_1_label != blank %}
-        <a href="{{ section.settings.button_1_link }}" class="sticky-info-bar__button-{{ bar_id }}">
+        <a href="{{ section.settings.button_1_link }}" class="sticky-info-bar__cta-{{ bar_id }} sticky-info-bar__directions-{{ bar_id }}">
           {{ section.settings.button_1_label }}
         </a>
       {% endif %}
-      {% if section.settings.button_2_link != blank and section.settings.button_2_label != blank %}
-        <a href="{{ section.settings.button_2_link }}" class="sticky-info-bar__button-{{ bar_id }}">
-          {{ section.settings.button_2_label }}
-        </a>
-      {% endif %}
     </div>
+
+    <!-- Book Appointment CTA (always visible) -->
+    {% if section.settings.button_2_link != blank and section.settings.button_2_label != blank %}
+      <a href="{{ section.settings.button_2_link }}" class="sticky-info-bar__cta-{{ bar_id }} sticky-info-bar__book-{{ bar_id }}">
+        {{ section.settings.button_2_label }}
+      </a>
+    {% endif %}
   </div>
 </sticky-info-bar>
 
@@ -332,6 +263,7 @@
       constructor() {
         super();
         this.isExpanded = false;
+        this.footerObserver = null;
       }
 
       connectedCallback() {
@@ -341,6 +273,35 @@
         if (this.toggleBtn) {
           this.toggleBtn.addEventListener('click', () => this.toggle());
         }
+
+        this.observeFooter();
+      }
+
+      disconnectedCallback() {
+        if (this.footerObserver) {
+          this.footerObserver.disconnect();
+        }
+      }
+
+      observeFooter() {
+        const footer = document.querySelector('footer') || document.querySelector('.footer') || document.querySelector('[data-section-type="footer"]');
+
+        if (!footer) return;
+
+        this.footerObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              this.classList.add('is-hidden');
+            } else {
+              this.classList.remove('is-hidden');
+            }
+          });
+        }, {
+          threshold: 0,
+          rootMargin: '0px'
+        });
+
+        this.footerObserver.observe(footer);
       }
 
       toggle() {
@@ -411,20 +372,10 @@
       "content": "Expanded Content"
     },
     {
-      "type": "image_picker",
-      "id": "image_1",
-      "label": "Left image"
-    },
-    {
-      "type": "image_picker",
-      "id": "image_2",
-      "label": "Right image"
-    },
-    {
       "type": "richtext",
       "id": "opening_hours",
       "label": "Opening hours",
-      "default": "<p><strong>Opening hours</strong></p><p>Monday - Friday<br>10am - 7:30pm</p><p>Saturday & Sunday<br>12pm - 7pm</p>"
+      "default": "<p>Monday - Friday<br>10am - 7:30pm</p><p>Saturday & Sunday<br>12pm - 7pm</p>"
     },
     {
       "type": "header",
@@ -433,7 +384,7 @@
     {
       "type": "text",
       "id": "button_1_label",
-      "label": "Button 1 label",
+      "label": "Button 1 label (Get Directions)",
       "default": "GET DIRECTIONS"
     },
     {
@@ -444,7 +395,7 @@
     {
       "type": "text",
       "id": "button_2_label",
-      "label": "Button 2 label",
+      "label": "Button 2 label (Book Appointment)",
       "default": "BOOK AN APPOINTMENT"
     },
     {
