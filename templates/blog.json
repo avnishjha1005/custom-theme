@@ -519,8 +519,8 @@
       "custom_css": [
         "h2 {font-size: 36px;}",
         "p {font-size: 14px;}",
-        "expert-card__name {font-size: 24px;}",
-        "@media screen and (max-width: 768px) {h2 {font-size: 30px; } p {font-size: 14px; }}"
+        ".expert-card__name {font-size: 24px;}",
+        "@media screen and (max-width: 768px) {h2 {font-size: 30px; } p {font-size: 14px; } .expert-card__name {font-size: 24px; }}"
       ],
       "settings": {
         "subheading": "Lorem ipsum dolor sit amet consecutur",
