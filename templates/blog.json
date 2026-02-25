@@ -357,13 +357,13 @@
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "<h2>Fashion. Travel. Culture. Lifestyle.</h2>",
+            "text": "<h3>Fashion. Travel. Culture. Lifestyle.</h3>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "rte",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2.5rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
@@ -384,9 +384,9 @@
           "name": "t:names.text",
           "settings": {
             "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur.</p>",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
+            "width": "100%",
+            "max_width": "none",
+            "alignment": "center",
             "type_preset": "rte",
             "font": "var(--font-body--family)",
             "font_size": "1rem",
@@ -426,6 +426,11 @@
         "text_xcPU74",
         "button_eM8Qdr"
       ],
+      "custom_css": [
+        "h3 {font-size: 36px;}",
+        "@media screen and (max-width: 768px) {h3 {font-size: 30px; }}",
+        ".custom-section-content {padding: 0px !important;}"
+      ],
       "name": "t:names.rich_text_section",
       "settings": {
         "content_direction": "column",
@@ -436,7 +441,7 @@
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 16,
-        "section_width": "page-width",
+        "section_width": "full-width",
         "section_height": "",
         "section_height_custom": 50,
         "color_scheme": "scheme-bed0b474-fe0a-4965-8562-aa2adf1dc067",
@@ -451,13 +456,22 @@
         "overlay_color": "#132242",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 42,
+        "padding-block-start": 43,
         "padding-block-end": 43
       }
     },
     "meet-the-experts": {
       "type": "meet-the-experts",
       "blocks": {
+        "expert_pPKxfe": {
+          "type": "expert",
+          "settings": {
+            "image": "shopify://shop_images/1_14.jpg",
+            "name": "Expert Name",
+            "designation": "Senior Stylist",
+            "link": ""
+          }
+        },
         "expert-1": {
           "type": "expert",
           "settings": {
@@ -496,6 +510,7 @@
         }
       },
       "block_order": [
+        "expert_pPKxfe",
         "expert-1",
         "expert-2",
         "expert-3",
@@ -506,7 +521,7 @@
         "heading": "The Style Experts",
         "autoplay": false,
         "autoplay_speed": 5,
-        "controls_style": "none",
+        "controls_style": "arrows",
         "slides_per_view": 4,
         "image_ratio": "3/4",
         "color_scheme": "scheme-bed0b474-fe0a-4965-8562-aa2adf1dc067",
@@ -524,6 +539,7 @@
       "settings": {
         "heading": "Discover More",
         "button_text": "Read More",
+        "articles_per_load": 4,
         "color_scheme": "scheme-1",
         "padding_top": 36,
         "padding_bottom": 48
