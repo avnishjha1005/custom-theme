@@ -455,8 +455,8 @@
         "overlay_color": "#132242",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 42,
-        "padding-block-end": 43
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     },
     "meet-the-experts": {
