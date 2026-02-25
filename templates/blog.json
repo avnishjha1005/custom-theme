@@ -357,13 +357,13 @@
           "type": "text",
           "name": "t:names.heading",
           "settings": {
-            "text": "<h2>Fashion. Travel. Culture. Lifestyle.</h2>",
+            "text": "<h3>Fashion. Travel. Culture. Lifestyle.</h3>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
-            "type_preset": "rte",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2.5rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
@@ -425,6 +425,9 @@
         "text_gX3nFL",
         "text_xcPU74",
         "button_eM8Qdr"
+      ],
+      "custom_css": [
+        "h2{}"
       ],
       "name": "t:names.rich_text_section",
       "settings": {
@@ -524,6 +527,7 @@
       "settings": {
         "heading": "Discover More",
         "button_text": "Read More",
+        "articles_per_load": 4,
         "color_scheme": "scheme-1",
         "padding_top": 36,
         "padding_bottom": 48
