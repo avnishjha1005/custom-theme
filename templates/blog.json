@@ -427,7 +427,8 @@
         "button_eM8Qdr"
       ],
       "custom_css": [
-        "h2{}"
+        "h3 {font-size: 36px;}",
+        "@media screen and (max-width: 768px){h3 {font-size: 36px;}}"
       ],
       "name": "t:names.rich_text_section",
       "settings": {
