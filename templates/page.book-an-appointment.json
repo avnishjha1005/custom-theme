@@ -89,7 +89,7 @@
         "edge_to_edge_image_AqAf4w"
       ],
       "custom_css": [
-        ".custom-section-content{padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "Edge to edge image",
       "settings": {
@@ -133,8 +133,8 @@
             "custom_width_mobile": 100,
             "inherit_color_scheme": true,
             "color_scheme": "",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
+            "padding-block-start": 36,
+            "padding-block-end": 69,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
