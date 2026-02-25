@@ -1,5 +1,5 @@
 {%- doc -%}
-  Renders a contact form with name, email, phone, and comment fields.
+  Renders a stepped contact form with name, email, phone, date/time, and message fields.
 
   @param {object} settings - Block settings, required for the 'spacing-style' and 'size-style' snippets.
   @param {string} submit_button - HTML for the submit button, rendered via a `content_for` block.
@@ -30,7 +30,6 @@
         autofocus
       >
         {{- 'icon-error.svg' | inline_asset_content -}}
-
         {{- form.errors.translated_fields.email | capitalize }}
         {{ form.errors.messages.email -}}
       </div>
@@ -47,80 +46,88 @@
       </div>
     {%- endif -%}
 
-    <div class="contact-form__form-row">
-      <label
-        class="visually-hidden"
-        for="ContactForm-name"
-      >
-        {{- 'blocks.contact_form.name' | t -}}
-      </label>
+    <!-- Step 1: Full Name -->
+    <div class="contact-form__step">
+      <span class="contact-form__step-number">Step 1</span>
       <input
         type="text"
         id="ContactForm-name"
         class="contact-form__input"
         autocomplete="name"
         name="contact[name]"
+        placeholder="Full Name*"
         value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
-        placeholder="{{ 'blocks.contact_form.name' | t }}"
+        aria-required="true"
+        required
       >
+    </div>
 
-      <label
-        class="visually-hidden"
-        for="ContactForm-email"
-      >
-        {{- 'blocks.contact_form.email' | t -}}
-        <span aria-hidden="true">*</span></label
-      >
+    <!-- Step 2: Email -->
+    <div class="contact-form__step">
+      <span class="contact-form__step-number">Step 2</span>
       <input
         type="email"
         id="ContactForm-email"
         class="contact-form__input"
         autocomplete="email"
         name="contact[email]"
+        placeholder="Email*"
         spellcheck="false"
         autocapitalize="off"
         value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
         aria-required="true"
+        required
         {% if form.errors contains 'email' %}
           aria-invalid="true"
           aria-describedby="ContactForm-email-error"
         {% endif %}
-        placeholder="{{ 'blocks.contact_form.email' | t }}"
       >
     </div>
 
-    <label
-      class="visually-hidden"
-      for="ContactForm-phone"
-    >
-      {{- 'blocks.contact_form.phone' | t -}}
-    </label>
-    <input
-      type="tel"
-      id="ContactForm-phone"
-      class="contact-form__input"
-      autocomplete="tel"
-      name="contact[phone]"
-      pattern="[0-9\-]*"
-      value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
-      placeholder="{{ 'blocks.contact_form.phone' | t }}"
-    >
+    <!-- Step 3: Phone -->
+    <div class="contact-form__step">
+      <span class="contact-form__step-number">Step 3</span>
+      <input
+        type="tel"
+        id="ContactForm-phone"
+        class="contact-form__input"
+        autocomplete="tel"
+        name="contact[phone]"
+        placeholder="Phone*"
+        pattern="[0-9\-]*"
+        value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+        aria-required="true"
+        required
+      >
+    </div>
 
-    <label
-      class="visually-hidden"
-      for="ContactForm-body"
-    >
-      {{- 'blocks.contact_form.comment' | t -}}
-    </label>
-    <textarea
-      rows="10"
-      id="ContactForm-body"
-      class="contact-form__input contact-form__input--textarea"
-      name="contact[body]"
-      placeholder="{{ 'blocks.contact_form.comment' | t }}"
-    >
-      {{- form.body -}}
-    </textarea>
+    <!-- Step 4: Date and Time -->
+    <div class="contact-form__step">
+      <span class="contact-form__step-number">Step 4</span>
+      <input
+        type="datetime-local"
+        id="ContactForm-datetime"
+        class="contact-form__input"
+        name="contact[datetime]"
+        aria-required="true"
+        required
+      >
+    </div>
+
+    <!-- Step 5: Message -->
+    <div class="contact-form__step contact-form__step--textarea">
+      <span class="contact-form__step-number">Step 5</span>
+      <textarea
+        id="ContactForm-body"
+        class="contact-form__input contact-form__input--textarea"
+        name="contact[body]"
+        placeholder="A short message"
+        maxlength="200"
+        rows="3"
+        oninput="this.parentElement.querySelector('.contact-form__char-count').textContent = (200 - this.value.length) + ' characters remaining'"
+      >{{- form.body -}}</textarea>
+      <span class="contact-form__char-count">Maximum 200 characters</span>
+    </div>
 
     {{ submit_button }}
   {%- endform -%}
@@ -130,41 +137,72 @@
   .contact-form__form {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-md);
+    gap: 24px;
+    max-width: 500px;
+    margin: 0 auto;
   }
 
-  .contact-form__form-row {
+  .contact-form__step {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-md);
+    gap: 2px;
+  }
 
-    @media screen and (min-width: 750px) {
-      flex-direction: row;
-      align-items: center;
-    }
+  .contact-form__step-number {
+    font-size: 12px;
+    color: #999;
+    font-weight: 400;
   }
 
   .contact-form__input {
     width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: var(--color-input-text);
-    background-color: var(--color-input-background);
-    padding: var(--padding-lg) var(--padding-xl);
-    border-radius: var(--style-border-radius-inputs);
-    border: var(--style-border-width-inputs) solid var(--color-input-border);
+    color: var(--color-input-text, inherit);
+    background-color: transparent;
+    padding: 8px 0;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: 600;
     -webkit-font-smoothing: antialiased;
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-form__input::placeholder {
+    color: inherit;
+    font-weight: 600;
+    opacity: 1;
+  }
+
+  .contact-form__input:focus {
+    outline: none;
+    border-bottom-color: #000;
+  }
+
+  .contact-form__step--textarea {
+    position: relative;
   }
 
   .contact-form__input--textarea {
     resize: vertical;
-    min-height: var(--input-textarea-min-height);
+    min-height: 60px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .contact-form__char-count {
+    position: absolute;
+    bottom: 8px;
+    right: 0;
+    font-size: 12px;
+    color: #999;
+    pointer-events: none;
   }
 
   .contact-form__error,
   .contact-form__success {
     display: flex;
     align-items: center;
-    gap: var(--gap-xs);
+    gap: 8px;
+    font-size: 14px;
   }
 {% endstylesheet %}
