@@ -463,6 +463,15 @@
     "meet-the-experts": {
       "type": "meet-the-experts",
       "blocks": {
+        "expert_pPKxfe": {
+          "type": "expert",
+          "settings": {
+            "image": "shopify://shop_images/1_14.jpg",
+            "name": "Expert Name",
+            "designation": "Senior Stylist",
+            "link": ""
+          }
+        },
         "expert-1": {
           "type": "expert",
           "settings": {
@@ -501,6 +510,7 @@
         }
       },
       "block_order": [
+        "expert_pPKxfe",
         "expert-1",
         "expert-2",
         "expert-3",
