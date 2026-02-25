@@ -99,7 +99,8 @@
         "logo_mM7L6L"
       ],
       "custom_css": [
-        ".custom-section-content{padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important;}",
+        "@media screen and (min-width: 768px) {.logo-block__image {display: none; }}"
       ],
       "name": "t:names.large_logo",
       "settings": {
