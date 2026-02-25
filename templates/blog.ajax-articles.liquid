@@ -1,0 +1,47 @@
+{%- comment -%}
+  AJAX template for loading more blog articles
+  Returns article cards for the blog discover section
+{%- endcomment -%}
+
+{%- layout none -%}
+
+{% assign offset = request.params.offset | default: 0 | plus: 0 %}
+{% assign limit = request.params.limit | default: 4 | plus: 0 %}
+
+{% for article in blog.articles offset: offset limit: limit %}
+  <div class="blog-discover-item">
+    <div class="blog-discover-card">
+      {%- if article.image -%}
+        <div class="blog-discover-card__image">
+          <a href="{{ article.url }}">
+            <img
+              src="{{ article.image | image_url: width: 600 }}"
+              alt="{{ article.image.alt | escape }}"
+              loading="lazy"
+              width="{{ article.image.width }}"
+              height="{{ article.image.height }}"
+            >
+          </a>
+        </div>
+      {%- endif -%}
+
+      <div class="blog-discover-card__content">
+        {%- if article.tags.size > 0 -%}
+          <span class="blog-discover-card__tag">{{ article.tags.first }}</span>
+        {%- endif -%}
+
+        <h3 class="blog-discover-card__title">
+          <a href="{{ article.url }}">{{ article.title }}</a>
+        </h3>
+
+        <p class="blog-discover-card__excerpt">
+          {{ article.excerpt | default: article.content | strip_html | truncatewords: 20 }}
+        </p>
+
+        <div class="blog-discover-card__actions">
+          <a href="{{ article.url }}" class="blog-discover-card__read-link">READ</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}

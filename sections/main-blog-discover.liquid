@@ -1,16 +1,27 @@
 {%- comment -%}
   Blog Discover More Section
-  Displays "Discover More" heading + articles 7-10 + Read More button
+  Displays "Discover More" heading + articles 7-10 + Load More button
 {%- endcomment -%}
+
+{% assign initial_offset = 6 %}
+{% assign initial_limit = 4 %}
+{% assign articles_per_load = section.settings.articles_per_load | default: 4 %}
+{% assign total_articles = blog.articles.size %}
+{% assign initial_shown = initial_offset | plus: initial_limit %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 
-<div
+<blog-discover-loader
   class="section color-{{ section.settings.color_scheme }} blog-discover-section"
   style="
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
   "
+  data-blog-url="{{ blog.url }}"
+  data-total-articles="{{ total_articles }}"
+  data-current-offset="{{ initial_shown }}"
+  data-articles-per-load="{{ articles_per_load }}"
+  data-section-id="{{ section.id }}"
 >
   {%- comment -%} Discover More Heading {%- endcomment -%}
   <div class="blog-discover-header">
@@ -18,7 +29,7 @@
   </div>
 
   {%- comment -%} Articles 7-10 {%- endcomment -%}
-  <div class="blog-discover-container">
+  <div class="blog-discover-container" id="blog-discover-container-{{ section.id }}">
     {% for article in blog.articles offset: 6 limit: 4 %}
       <div class="blog-discover-item">
         <div class="blog-discover-card">
@@ -58,15 +69,95 @@
     {% endfor %}
   </div>
 
-  {%- comment -%} Read More Button {%- endcomment -%}
-  {% if blog.articles.size > 10 %}
-    <div class="blog-discover-read-more">
-      <a href="{{ blog.url }}?page=2" class="blog-read-more-button">
-        {{ section.settings.button_text | default: 'Read More' }}
-      </a>
+  {%- comment -%} Load More Button {%- endcomment -%}
+  {% if total_articles > initial_shown %}
+    <div class="blog-discover-load-more" id="blog-discover-load-more-{{ section.id }}">
+      <button type="button" class="blog-load-more-button" aria-label="{{ section.settings.button_text | default: 'Load More' }}">
+        <span class="button-text">{{ section.settings.button_text | default: 'Load More' }}</span>
+        <span class="button-loading" style="display: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" opacity="0.25"/>
+            <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round">
+              <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+            </path>
+          </svg>
+        </span>
+      </button>
     </div>
   {% endif %}
-</div>
+</blog-discover-loader>
+
+<script>
+  if (!customElements.get('blog-discover-loader')) {
+    customElements.define('blog-discover-loader', class extends HTMLElement {
+      constructor() {
+        super();
+        this.button = this.querySelector('.blog-load-more-button');
+        this.container = this.querySelector('.blog-discover-container');
+        this.loadMoreWrapper = this.querySelector('.blog-discover-load-more');
+
+        this.blogUrl = this.dataset.blogUrl;
+        this.totalArticles = parseInt(this.dataset.totalArticles);
+        this.articlesPerLoad = parseInt(this.dataset.articlesPerLoad);
+        this.currentOffset = parseInt(this.dataset.currentOffset);
+        this.sectionId = this.dataset.sectionId;
+        this.loading = false;
+
+        if (this.button) {
+          this.button.addEventListener('click', this.loadMore.bind(this));
+        }
+      }
+
+      async loadMore() {
+        if (this.loading) return;
+        this.loading = true;
+
+        const buttonText = this.button.querySelector('.button-text');
+        const buttonLoading = this.button.querySelector('.button-loading');
+        buttonText.style.display = 'none';
+        buttonLoading.style.display = 'inline-flex';
+        this.button.disabled = true;
+
+        try {
+          // Fetch articles using Shopify's paginate with page parameter
+          const page = Math.floor(this.currentOffset / this.articlesPerLoad) + 1;
+          const response = await fetch(
+            `${this.blogUrl}?view=ajax-articles&offset=${this.currentOffset}&limit=${this.articlesPerLoad}`,
+            { headers: { 'X-Requested-With': 'XMLHttpRequest' } }
+          );
+
+          if (!response.ok) throw new Error('Failed to load');
+
+          const html = await response.text();
+
+          // Parse the response and extract article items
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          const newItems = doc.querySelectorAll('.blog-discover-item');
+
+          if (newItems.length > 0) {
+            newItems.forEach(item => {
+              this.container.appendChild(item);
+            });
+            this.currentOffset += newItems.length;
+          }
+
+          // Hide button if no more articles
+          if (this.currentOffset >= this.totalArticles) {
+            this.loadMoreWrapper.style.display = 'none';
+          }
+        } catch (error) {
+          console.error('Error loading more articles:', error);
+        } finally {
+          this.loading = false;
+          buttonText.style.display = 'inline';
+          buttonLoading.style.display = 'none';
+          this.button.disabled = false;
+        }
+      }
+    });
+  }
+</script>
 
 {% stylesheet %}
   .blog-discover-section {
@@ -247,30 +338,58 @@
     }
   }
 
-  /* Read More Button */
-  .blog-discover-read-more {
-    text-align: center;
+  /* Load More Button */
+  .blog-discover-load-more {
+    display: flex;
+    justify-content: center;
     margin-top: 3rem;
   }
 
-  .blog-read-more-button {
-    display: inline-block;
+  .blog-load-more-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     padding: 1rem 2.5rem;
     font-family: var(--font-body-family);
     font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    text-decoration: none;
     color: rgb(var(--color-foreground-rgb));
     background-color: transparent;
-    border: 1px solid rgb(var(--color-foreground-rgb));
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
     transition: all 0.2s ease;
+    min-width: 160px;
   }
 
-  .blog-read-more-button:hover {
+  .blog-load-more-button:hover:not(:disabled) {
     background-color: rgb(var(--color-foreground-rgb));
     color: rgb(var(--color-background-rgb));
+  }
+
+  .blog-load-more-button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+
+  .blog-load-more-button .button-loading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-discover-load-more {
+      margin-top: 2rem;
+    }
+
+    .blog-load-more-button {
+      width: 100%;
+      max-width: 280px;
+    }
   }
 {% endstylesheet %}
 
@@ -287,10 +406,23 @@
       "default": "Discover More"
     },
     {
+      "type": "header",
+      "content": "Load More"
+    },
+    {
       "type": "text",
       "id": "button_text",
       "label": "Button text",
-      "default": "Read More"
+      "default": "Load More"
+    },
+    {
+      "type": "range",
+      "id": "articles_per_load",
+      "label": "Articles per load",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
     },
     {
       "type": "color_scheme",
