@@ -90,7 +90,9 @@
 
     <div class="blog-post-card-hero__title">{{ title }}</div>
 
-    {{ details }}
+    <p class="blog-listing-card__excerpt">
+              {{ article.excerpt | default: article.content | strip_html | truncatewords: 20 }}
+            </p>
 
     <span class="blog-post-card-hero__read-more">
       READ MORE

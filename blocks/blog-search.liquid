@@ -27,22 +27,42 @@
 {% assign tag_array = all_tags | split: ',' %}
 
 {% style %}
-  .ai-blog-search-{{ ai_gen_id }} { display: block; width: 100%; font-family: inherit; }
+  .ai-blog-search-{{ ai_gen_id }} { display: block; width: 100%; font-family: inherit; overflow: hidden; }
   .ai-blog-search-bar-{{ ai_gen_id }} {
     justify-self: center;
     display: flex; align-items: center; gap: {{ block.settings.gap }}px;
     padding: {{ block.settings.padding }}px;
     background-color: transparent;
     border: none;
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
   .ai-blog-search-icon-{{ ai_gen_id }} {
     background: none; border: none; flex-shrink: 0;
-    width: calc(2*{{ block.settings.icon_size }})px; height: calc(2*{{ block.settings.icon_size }})px;
+    width: {{ block.settings.icon_size }}px; height: {{ block.settings.icon_size }}px;
+    min-width: {{ block.settings.icon_size }}px;
     cursor: pointer; color: {{ block.settings.icon_color }}; transition: color 0.2s;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .ai-blog-search-tags-{{ ai_gen_id }} { flex: 1; overflow-x: auto; scrollbar-width: none; }
+  .ai-blog-search-tags-{{ ai_gen_id }} { flex: 1; overflow-x: auto; scrollbar-width: none; min-width: 0; }
   .ai-blog-search-tags-{{ ai_gen_id }}::-webkit-scrollbar { display: none; }
   .ai-blog-search-tags-list-{{ ai_gen_id }} { display: flex; align-items: center; gap: 24px; list-style: none; margin: 0; padding: 0; white-space: nowrap; }
+
+  /* Mobile specific fixes */
+  @media screen and (max-width: 749px) {
+    .ai-blog-search-bar-{{ ai_gen_id }} {
+      justify-self: start;
+      padding-left: 0;
+      gap: {{ block.settings.gap | divided_by: 2 }}px;
+    }
+    .ai-blog-search-icon-{{ ai_gen_id }} {
+      margin-left: 0;
+    }
+  }
   .ai-blog-search-view-all-{{ ai_gen_id }} {
     display: inline-block;
     color: {{ block.settings.tag_text_color }};
