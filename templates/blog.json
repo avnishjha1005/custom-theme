@@ -237,7 +237,7 @@
               "type": "_blog-post-info-text",
               "static": true,
               "settings": {
-                "show_date": true,
+                "show_date": false,
                 "show_author": false,
                 "type_preset": "",
                 "alignment": "left",
@@ -251,7 +251,7 @@
               "type": "_blog-post-description",
               "static": true,
               "settings": {
-                "type_preset": "rte",
+                "type_preset": "custom",
                 "font": "var(--font-body--family)",
                 "font_size": "1rem",
                 "line_height": "normal",
@@ -301,7 +301,7 @@
               "type": "_blog-post-info-text",
               "static": true,
               "settings": {
-                "show_date": true,
+                "show_date": false,
                 "show_author": false,
                 "type_preset": "",
                 "alignment": "left",
