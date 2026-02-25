@@ -544,7 +544,7 @@
       "type": "main-blog-discover",
       "settings": {
         "heading": "Discover More",
-        "button_text": "Read More",
+        "button_text": "Load More",
         "articles_per_load": 4,
         "color_scheme": "scheme-1",
         "padding_top": 36,
