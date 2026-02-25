@@ -428,7 +428,8 @@
       ],
       "custom_css": [
         "h3 {font-size: 36px;}",
-        "@media screen and (max-width: 768px) {h3 {font-size: 30px; }}"
+        "@media screen and (max-width: 768px) {h3 {font-size: 30px; }}",
+        ".custom-section-content{padding: 0px;}"
       ],
       "name": "t:names.rich_text_section",
       "settings": {
@@ -455,8 +456,8 @@
         "overlay_color": "#132242",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "padding-block-start": 43,
+        "padding-block-end": 43
       }
     },
     "meet-the-experts": {
