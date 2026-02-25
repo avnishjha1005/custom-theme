@@ -42,23 +42,9 @@
       {%- endfor -%}
     {% endcapture %}
 
-    {% if slideshow_images.size > 1 %}
-      {% capture controls %}
-        {%- render 'slideshow-controls',
-          style: 'dots',
-          autoplay: false,
-          item_count: slideshow_images.size,
-          show_arrows: false,
-          controls_on_media: true,
-          pagination_position: 'left'
-          
-        -%}
-      {% endcapture %}
-    {% endif %}
-
+    {%- comment -%} Render slideshow without controls - indicators are on the main hero slideshow {%- endcomment -%}
     {% render 'slideshow',
       class: 'blog-post-card-hero__slideshow',
-      controls: controls,
       show_arrows: false,
       autoplay: false,
       autoplay_speed: 3,

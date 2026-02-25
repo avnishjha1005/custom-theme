@@ -44,15 +44,78 @@
       {% endfor %}
     {% endcapture %}
 
-    {% render 'slideshow',
-      ref: 'blogHeroSlideshow',
-      class: 'blog-hero-slideshow',
-      slides: hero_slides,
-      show_arrows: false,
-      autoplay: false,
-      slide_count: 3,
-      infinite: true
-    %}
+    <div class="blog-hero-slideshow-wrapper">
+      {% render 'slideshow',
+        ref: 'blogHeroSlideshow',
+        class: 'blog-hero-slideshow',
+        slides: hero_slides,
+        show_arrows: false,
+        autoplay: false,
+        slide_count: 3,
+        infinite: true
+      %}
+
+      {%- comment -%} Custom indicators for mobile slideshow {%- endcomment -%}
+      <div class="blog-hero-indicators">
+        <button type="button" class="blog-hero-indicator active" data-slide="0" aria-label="Go to slide 1" onclick="document.querySelector('[ref=blogHeroSlideshow]').select(0, event)"></button>
+        <button type="button" class="blog-hero-indicator" data-slide="1" aria-label="Go to slide 2" onclick="document.querySelector('[ref=blogHeroSlideshow]').select(1, event)"></button>
+        <button type="button" class="blog-hero-indicator" data-slide="2" aria-label="Go to slide 3" onclick="document.querySelector('[ref=blogHeroSlideshow]').select(2, event)"></button>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        function initBlogHeroIndicators() {
+          const slideshow = document.querySelector('[ref="blogHeroSlideshow"]');
+          const indicators = document.querySelectorAll('.blog-hero-indicator');
+
+          if (!slideshow || !indicators.length) {
+            // Retry if not ready
+            setTimeout(initBlogHeroIndicators, 100);
+            return;
+          }
+
+          const scroller = slideshow.querySelector('slideshow-slides');
+          if (!scroller) {
+            setTimeout(initBlogHeroIndicators, 100);
+            return;
+          }
+
+          function updateIndicators() {
+            const slides = scroller.querySelectorAll('slideshow-slide');
+            if (!slides.length) return;
+
+            const scrollLeft = scroller.scrollLeft;
+            const slideWidth = slides[0].offsetWidth + parseFloat(getComputedStyle(scroller).gap || 0);
+            const currentIndex = Math.round(scrollLeft / slideWidth);
+
+            indicators.forEach((ind, i) => {
+              ind.classList.toggle('active', i === currentIndex);
+            });
+          }
+
+          // Listen for scroll with debounce
+          let scrollTimeout;
+          scroller.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(updateIndicators, 50);
+          }, { passive: true });
+
+          // Also update on scrollend if supported
+          scroller.addEventListener('scrollend', updateIndicators, { passive: true });
+
+          // Initial update
+          updateIndicators();
+        }
+
+        // Start initialization
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initBlogHeroIndicators);
+        } else {
+          initBlogHeroIndicators();
+        }
+      })();
+    </script>
   </div>
 </div>
 
@@ -83,7 +146,7 @@
   }
 
   .blog-hero-slideshow {
-    --slide-width: 85%;
+    --slide-width: 100%;
   }
 
   .blog-hero-slideshow slideshow-slides {
@@ -94,6 +157,11 @@
   .blog-hero-slide-item {
     --blog-post-card-scale: 0.5;
     width: 100%;
+    position: relative;
+  }
+
+  .blog-hero-slideshow slideshow-slide {
+    position: relative;
   }
 
   @media screen and (max-width: 749px) {
@@ -103,6 +171,46 @@
 
     .blog-hero-mobile {
       display: block;
+    }
+  }
+
+  /* Mobile slideshow wrapper and indicators */
+  .blog-hero-slideshow-wrapper {
+    position: relative;
+  }
+
+  .blog-hero-indicators {
+    position: absolute;
+    bottom: 1rem;
+    left: calc(1.5% + 1.5rem);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .blog-hero-indicator {
+    --size: 8px;
+    width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
+    min-height: var(--size);
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .blog-hero-indicator.active {
+    background-color: #fff;
+  }
+
+  /* Hide indicators on desktop */
+  @media screen and (min-width: 750px) {
+    .blog-hero-indicators {
+      display: none;
     }
   }
 {% endstylesheet %}
