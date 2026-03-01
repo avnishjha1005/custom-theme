@@ -1,0 +1,206 @@
+{% comment %}
+  Blog post content with embedded featured products banner
+  Splits content at midpoint and inserts product banner in between
+  Uses _product-card blocks for consistent styling (same as _bundle-products.liquid)
+{% endcomment %}
+
+{% liquid
+  # Split article content by paragraphs to insert banner in the middle
+  assign content_html = article.content
+
+  # Split by closing </p> tags to count paragraphs
+  assign paragraphs = content_html | split: '</p>'
+  assign total_paragraphs = paragraphs.size
+  assign midpoint = total_paragraphs | divided_by: 2
+
+  # Build first half and second half
+  assign content_before = ''
+  assign content_after = ''
+
+  for para in paragraphs
+    if para != blank
+      if forloop.index <= midpoint
+        assign content_before = content_before | append: para | append: '</p>'
+      else
+        assign content_after = content_after | append: para | append: '</p>'
+      endif
+    endif
+  endfor
+
+  # Get random products from store
+  assign random_seed = article.id | default: 1 | times: 7 | modulo: 10
+  assign all_products_count = collections.all.products_count | default: 10
+  assign random_offset = random_seed | modulo: all_products_count | at_most: all_products_count | minus: 2 | at_least: 0
+%}
+
+<div class="blog-post-content-with-products">
+  {% comment %} First half of blog content {% endcomment %}
+  <div class="blog-post-content rte">
+    <rte-formatter>
+      {{ content_before }}
+    </rte-formatter>
+  </div>
+
+  {% comment %} Featured Products Banner {% endcomment %}
+  <div class="blog-featured-products color-{{ block.settings.color_scheme }} gradient">
+    <div class="blog-featured-products__inner page-width">
+      {% if block.settings.heading != blank %}
+        <h4 class="blog-featured-products__heading">{{ block.settings.heading }}</h4>
+      {% endif %}
+
+      <ul class="blog-featured-products__grid">
+        {% for product in collections.all.products limit: 2 offset: random_offset %}
+          <li>
+            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+          </li>
+        {% else %}
+          {% comment %} Fallback if no products in store {% endcomment %}
+          {% for i in (1..2) %}
+            <li class="blog-product-placeholder">
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+              <p>No products available</p>
+            </li>
+          {% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  {% comment %} Second half of blog content {% endcomment %}
+  {% if content_after != blank %}
+    <div class="blog-post-content rte">
+      <rte-formatter>
+        {{ content_after }}
+      </rte-formatter>
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .blog-post-content-with-products {
+    width: 100%;
+  }
+
+  .blog-post-content {
+    max-width: inherit;
+    margin: 0 auto;
+  }
+
+  /* Full-width banner that breaks out of container */
+  .blog-featured-products {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 48px 0;
+    margin: 48px 0;
+  }
+  
+  .quick-add__button{
+    color: white !important;
+  }
+
+  .blog-featured-products__inner {
+    margin: 0 auto;
+  }
+
+  .blog-featured-products__heading {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0 auto 16px;
+    max-width: 700px;
+    text-align: left;
+  }
+
+  .blog-featured-products__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 700px;
+    margin: 0 auto;
+    list-style: none;
+    padding: 0;
+  }
+
+  .blog-featured-products__grid li {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .blog-featured-products__grid .product-card {
+    width: 100%;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-featured-products {
+      padding: 32px 0;
+      margin: 32px 0;
+    }
+
+    .blog-featured-products__heading {
+      padding: 0 16px;
+    }
+
+    .blog-featured-products__grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+      padding: 0 16px;
+    }
+  }
+
+  /* Placeholder */
+  .blog-product-placeholder {
+    background: rgba(var(--color-foreground-rgb), 0.05);
+    padding: 60px 20px;
+    text-align: center;
+    border-radius: var(--product-corner-radius, 0);
+    aspect-ratio: 4 / 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .blog-product-placeholder svg {
+    width: 40%;
+    max-width: 120px;
+    height: auto;
+    opacity: 0.3;
+  }
+
+  .blog-product-placeholder p {
+    margin-top: 16px;
+    color: rgba(var(--color-foreground-rgb), 0.5);
+    font-size: 14px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Content with Products",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Featured Products Banner"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop the Look"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Content with Products"
+    }
+  ]
+}
+{% endschema %}

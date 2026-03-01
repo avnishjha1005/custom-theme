@@ -67,80 +67,101 @@
   endunless
 %}
 
-{% unless product == blank or is_price_on_request %}
+{% unless product == blank %}
   <div
     class="product-card-quick-add-block spacing-style"
     style="{% render 'spacing-style', settings: block.settings %}"
     {{ block.shopify_attributes }}
   >
-    <quick-add-component
-      class="quick-add {% if settings.quick_add_color_scheme %}color-{{ settings.quick_add_color_scheme }}{% endif %} quick-add--inline"
-      ref="quickAdd"
-      data-product-title="{{ product.title }}"
-      style="width: 97%;"
-    >
-      <product-form-component
-        data-section-id="{{ section.id }}"
-        data-product-id="{{ product.id }}"
-        on:submit="/handleSubmit"
-        class="
-          quick-add__product-form-component
-          {% if product.options.size == 1 %} quick-add__product-form-component--single-option {% else %} quick-add__product-form-component--multi-option {% endif %}
-          {% if product.variants.size == 1 %} quick-add__product-form-component--single-variant {% else %} quick-add__product-form-component--multi-variant {% endif %}
-        "
+    {% if is_price_on_request %}
+      {%- comment -%} Show chat icon for "Price on Request" items - links to WhatsApp {%- endcomment -%}
+      {%- liquid
+        assign whatsapp_message = settings.whatsapp_price_request_message | default: "Hi! I'd like to request a price for {{product_name}}"
+        assign whatsapp_message = whatsapp_message | replace: '{{product_name}}', product.title
+        assign whatsapp_url = 'https://wa.me/' | append: settings.whatsapp_phone | append: '?text=' | append: whatsapp_message | url_encode
+      -%}
+      <a
+        href="{{ whatsapp_url }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="quick-add--inline quick-add__chat-button button"
+        aria-label="Contact us on WhatsApp about this product"
+        title="{{ product.title }} - Inquire about price on WhatsApp"
       >
-        <div
-          class="visually-hidden"
-          aria-live="assertive"
-          role="status"
-          aria-atomic="true"
-          ref="liveRegion"
-        ></div>
-        {%- form 'product', product, id: product_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-          <input
-            type="hidden"
-            name="id"
-            ref="variantId"
-            value="{{ variant_to_use.id }}"
-            {% if variant_to_use.available == false %}
-              disabled
-            {% endif %}
-          >
-          <input
-            type="hidden"
-            name="quantity"
-            value="{% if variant_to_use.quantity_rule.min %}{{ variant_to_use.quantity_rule.min }}{% else %}1{% endif %}"
-          >
-          {% comment %} If there is one variant option but it's swatches or if it's a single variant product, then use add to cart button {% endcomment %}
-          {%- if product.variants.size == 1 or product.options.size == 1 -%}
-            {% render 'add-to-cart-button',
-              add_to_cart_text: add_to_cart_text,
-              class: 'button quick-add__button quick-add__button--add',
-              can_add_to_cart: can_add_to_cart,
-              icon_only_on_mobile: true,
-              product: product
-            %}
-          {%- endif -%}
-          {%- if product.variants.size > 1 -%}
-            <button
-              class="button quick-add__button quick-add__button--choose"
-              {% comment %} type="submit" is the default, so we explicitly set it to "button" to prevent the ProductFormComponent.handleSubmit from being triggered {% endcomment %}
-              type="button"
-              name="add"
-              on:click="quick-add-component/handleClick"
-            >
-              <span
-                class="add-to-cart-text"
-              >
-                <span class="svg-wrapper add-to-cart-icon">
-          {{- 'icon-plus.svg' | inline_asset_content -}}
+        <span class="svg-wrapper quick-add__chat-icon">
+          {{- 'icon-chat.svg' | inline_asset_content -}}
         </span>
-              </span>
-            </button>
-          {%- endif -%}
-        {%- endform -%}
-      </product-form-component>
-    </quick-add-component>
+      </a>
+    {% else %}
+      <quick-add-component
+        class="quick-add {% if settings.quick_add_color_scheme %}color-{{ settings.quick_add_color_scheme }}{% endif %} quick-add--inline"
+        ref="quickAdd"
+        data-product-title="{{ product.title }}"
+        style="width: 97%;"
+      >
+        <product-form-component
+          data-section-id="{{ section.id }}"
+          data-product-id="{{ product.id }}"
+          on:submit="/handleSubmit"
+          class="
+            quick-add__product-form-component
+            {% if product.options.size == 1 %} quick-add__product-form-component--single-option {% else %} quick-add__product-form-component--multi-option {% endif %}
+            {% if product.variants.size == 1 %} quick-add__product-form-component--single-variant {% else %} quick-add__product-form-component--multi-variant {% endif %}
+          "
+        >
+          <div
+            class="visually-hidden"
+            aria-live="assertive"
+            role="status"
+            aria-atomic="true"
+            ref="liveRegion"
+          ></div>
+          {%- form 'product', product, id: product_form_id, novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+            <input
+              type="hidden"
+              name="id"
+              ref="variantId"
+              value="{{ variant_to_use.id }}"
+              {% if variant_to_use.available == false %}
+                disabled
+              {% endif %}
+            >
+            <input
+              type="hidden"
+              name="quantity"
+              value="{% if variant_to_use.quantity_rule.min %}{{ variant_to_use.quantity_rule.min }}{% else %}1{% endif %}"
+            >
+            {% comment %} If there is one variant option but it's swatches or if it's a single variant product, then use add to cart button {% endcomment %}
+            {%- if product.variants.size == 1 or product.options.size == 1 -%}
+              {% render 'add-to-cart-button',
+                add_to_cart_text: add_to_cart_text,
+                class: 'button quick-add__button quick-add__button--add',
+                can_add_to_cart: can_add_to_cart,
+                icon_only_on_mobile: true,
+                product: product
+              %}
+            {%- endif -%}
+            {%- if product.variants.size > 1 -%}
+              <button
+                class="button quick-add__button quick-add__button--choose"
+                {% comment %} type="submit" is the default, so we explicitly set it to "button" to prevent the ProductFormComponent.handleSubmit from being triggered {% endcomment %}
+                type="button"
+                name="add"
+                on:click="quick-add-component/handleClick"
+              >
+                <span
+                  class="add-to-cart-text"
+                >
+                  <span class="svg-wrapper add-to-cart-icon">
+            {{- 'icon-plus.svg' | inline_asset_content -}}
+          </span>
+                </span>
+              </button>
+            {%- endif -%}
+          {%- endform -%}
+        </product-form-component>
+      </quick-add-component>
+    {% endif %}
   </div>
 {% endunless %}
 
@@ -199,6 +220,37 @@
     margin-inline: 0 !important;
     padding-inline: 0 !important;
     gap: 0 !important;
+  }
+
+  .quick-add__chat-button {
+    display: grid;
+    background: none;
+    place-items: center;
+    position: relative;
+    pointer-events: all;
+    min-width: 4.4rem;
+    min-height: 4.4rem;
+    padding: 1rem;
+    text-decoration: none;
+    padding-right: 0px;
+    display: flex;
+    align-items: end;
+    padding-bottom: 0px;
+  }
+
+  .quick-add__chat-button:is(:hover, :focus) {
+    opacity: 0.8;
+  }
+
+  .quick-add__chat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .quick-add__chat-icon svg {
+    width: 2rem;
+    height: 2rem;
   }
 {% endstylesheet %}
 

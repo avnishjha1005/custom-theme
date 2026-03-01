@@ -22,6 +22,7 @@
       {%- content_for 'block', id: 'blog-post-image', type: '_blog-post-featured-image' %}
     {%- endif -%}
     {%- content_for 'block', id: 'blog-post-content', type: '_blog-post-content' %}
+    {%- content_for 'block', id: 'blog-post-content-with-products', type: '_blog-post-content-with-products' %}
 
     {% if blog.comments_enabled? %}
       <div class="blog-post-comments-container">
