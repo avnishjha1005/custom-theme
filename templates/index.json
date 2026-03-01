@@ -584,7 +584,8 @@
         "quick-add-component .svg-wrapper {justify-content: end; padding-right: 5px;}",
         ".wishlist-button {margin-top: 10px;}",
         "slideshow-controls {z-index: 1;}",
-        ".section--full-width {padding-inline: 16px;}"
+        ".section--full-width {padding-inline: 16px;}",
+        ".quick-add--inline .quick-add__button {color: black !important;}"
       ],
       "name": "Featured collection",
       "settings": {
