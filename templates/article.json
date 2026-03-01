@@ -111,9 +111,18 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
+    },
+    "article_extras": {
+      "type": "article-extras",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 40,
+        "padding_bottom": 80
+      }
     }
   },
   "order": [
-    "section"
+    "section",
+    "article_extras"
   ]
 }

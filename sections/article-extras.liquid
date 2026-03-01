@@ -1,0 +1,487 @@
+{%- comment -%}
+  Article Extras Section
+  Displays slideshow images, divider, and related articles
+{%- endcomment -%}
+
+{%- liquid
+  assign slideshow_images = article.metafields.custom.slideshow_images.value | default: empty
+  assign first_tag = article.tags.first
+-%}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<div
+  class="section color-{{ section.settings.color_scheme }} article-extras-section"
+  style="
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  {%- comment -%} Filmstrip Gallery Section {%- endcomment -%}
+  {%- if slideshow_images != empty and slideshow_images.size > 0 -%}
+    <div class="article-filmstrip-container">
+      <div class="article-filmstrip">
+        {%- for image in slideshow_images -%}
+          <div class="article-filmstrip-item">
+            <div class="article-filmstrip-image">
+              <img
+                src="{{ image | image_url: width: 600 }}"
+                alt="{{ image.alt | escape }}"
+                loading="lazy"
+                width="{{ image.width }}"
+                height="{{ image.height }}"
+              >
+            </div>
+            {%- if image.alt != blank -%}
+              <p class="article-filmstrip-caption">{{ image.alt }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Divider {%- endcomment -%}
+  <div class="article-extras-divider"></div>
+
+  {%- comment -%} Related Articles Section {%- endcomment -%}
+  {%- if first_tag != blank -%}
+    <div class="related-articles-section">
+      <h2 class="related-articles-heading">People also liked Reading</h2>
+
+      <div class="related-articles-container">
+        {%- assign related_count = 0 -%}
+        {%- for related_article in blog.articles -%}
+          {%- if related_article.id != article.id and related_article.tags contains first_tag and related_count < 3 -%}
+            {%- assign related_count = related_count | plus: 1 -%}
+            <div class="blog-listing-item">
+              <div class="blog-listing-card">
+                {%- if related_article.image -%}
+                  <div class="blog-listing-card__image">
+                    <a href="{{ related_article.url }}">
+                      <img
+                        src="{{ related_article.image | image_url: width: 600 }}"
+                        alt="{{ related_article.image.alt | escape }}"
+                        loading="lazy"
+                        width="{{ related_article.image.width }}"
+                        height="{{ related_article.image.height }}"
+                      >
+                    </a>
+                  </div>
+                {%- endif -%}
+
+                <div class="blog-listing-card__content">
+                  {%- if related_article.tags.size > 0 -%}
+                    <span class="blog-listing-card__tag">{{ related_article.tags.first }}</span>
+                  {%- endif -%}
+
+                  <h3 class="blog-listing-card__title">
+                    <a href="{{ related_article.url }}">{{ related_article.title }}</a>
+                  </h3>
+
+                  <p class="blog-listing-card__excerpt">
+                    {{ related_article.excerpt | default: related_article.content | strip_html | truncatewords: 20 }}
+                  </p>
+
+                  <div class="blog-listing-card__actions">
+                    <a href="{{ related_article.url }}" class="blog-listing-card__read-link">READ</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- comment -%} If not enough related articles by tag, show recent articles {%- endcomment -%}
+        {%- if related_count < 3 -%}
+          {%- assign remaining = 3 | minus: related_count -%}
+          {%- assign shown_count = 0 -%}
+          {%- for fallback_article in blog.articles -%}
+            {%- if fallback_article.id != article.id and shown_count < remaining -%}
+              {%- assign already_shown = false -%}
+              {%- if fallback_article.tags contains first_tag -%}
+                {%- assign already_shown = true -%}
+              {%- endif -%}
+              {%- unless already_shown -%}
+                {%- assign shown_count = shown_count | plus: 1 -%}
+                <div class="blog-listing-item">
+                  <div class="blog-listing-card">
+                    {%- if fallback_article.image -%}
+                      <div class="blog-listing-card__image">
+                        <a href="{{ fallback_article.url }}">
+                          <img
+                            src="{{ fallback_article.image | image_url: width: 600 }}"
+                            alt="{{ fallback_article.image.alt | escape }}"
+                            loading="lazy"
+                            width="{{ fallback_article.image.width }}"
+                            height="{{ fallback_article.image.height }}"
+                          >
+                        </a>
+                      </div>
+                    {%- endif -%}
+
+                    <div class="blog-listing-card__content">
+                      {%- if fallback_article.tags.size > 0 -%}
+                        <span class="blog-listing-card__tag">{{ fallback_article.tags.first }}</span>
+                      {%- endif -%}
+
+                      <h3 class="blog-listing-card__title">
+                        <a href="{{ fallback_article.url }}">{{ fallback_article.title }}</a>
+                      </h3>
+
+                      <p class="blog-listing-card__excerpt">
+                        {{ fallback_article.excerpt | default: fallback_article.content | strip_html | truncatewords: 20 }}
+                      </p>
+
+                      <div class="blog-listing-card__actions">
+                        <a href="{{ fallback_article.url }}" class="blog-listing-card__read-link">READ</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {%- endunless -%}
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+    </div>
+  {%- else -%}
+    {%- comment -%} No tags, show recent articles {%- endcomment -%}
+    <div class="related-articles-section">
+      <h2 class="related-articles-heading">People also liked Reading</h2>
+
+      <div class="related-articles-container">
+        {%- assign shown_count = 0 -%}
+        {%- for recent_article in blog.articles -%}
+          {%- if recent_article.id != article.id and shown_count < 3 -%}
+            {%- assign shown_count = shown_count | plus: 1 -%}
+            <div class="blog-listing-item">
+              <div class="blog-listing-card">
+                {%- if recent_article.image -%}
+                  <div class="blog-listing-card__image">
+                    <a href="{{ recent_article.url }}">
+                      <img
+                        src="{{ recent_article.image | image_url: width: 600 }}"
+                        alt="{{ recent_article.image.alt | escape }}"
+                        loading="lazy"
+                        width="{{ recent_article.image.width }}"
+                        height="{{ recent_article.image.height }}"
+                      >
+                    </a>
+                  </div>
+                {%- endif -%}
+
+                <div class="blog-listing-card__content">
+                  {%- if recent_article.tags.size > 0 -%}
+                    <span class="blog-listing-card__tag">{{ recent_article.tags.first }}</span>
+                  {%- endif -%}
+
+                  <h3 class="blog-listing-card__title">
+                    <a href="{{ recent_article.url }}">{{ recent_article.title }}</a>
+                  </h3>
+
+                  <p class="blog-listing-card__excerpt">
+                    {{ recent_article.excerpt | default: recent_article.content | strip_html | truncatewords: 20 }}
+                  </p>
+
+                  <div class="blog-listing-card__actions">
+                    <a href="{{ recent_article.url }}" class="blog-listing-card__read-link">READ</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .article-extras-section {
+    --page-content-width: var(--narrow-page-width);
+    --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
+  }
+
+  /* Filmstrip Gallery Styles */
+  .article-filmstrip-container {
+    width: 100%;
+    margin: 0 auto 48px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .article-filmstrip-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .article-filmstrip {
+    display: flex;
+    gap: 16px;
+    width: max-content;
+  }
+
+  .article-filmstrip-item {
+    flex-shrink: 0;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .article-filmstrip-image {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+  }
+
+  .article-filmstrip-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .article-filmstrip-caption {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: rgb(var(--color-foreground-rgb) / 0.7);
+    margin: 0;
+    text-align: center;
+  }
+
+  /* Divider Styles */
+  .article-extras-divider {
+    width: 100%;
+    max-width: 800px;
+    height: 1px;
+    background-color: rgb(var(--color-foreground-rgb) / 0.2);
+    margin: 48px auto;
+  }
+
+  /* Related Articles Styles */
+  .related-articles-section {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .related-articles-heading {
+    font-family: var(--font-heading--family);
+    font-size: 1.5rem;
+    font-weight: 400;
+    text-align: center;
+    margin: 0 0 48px;
+    color: var(--color-foreground-heading);
+    text-align: start;
+  }
+
+  .related-articles-container {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+
+  /* Reusing blog-listing styles */
+  .article-extras-section .blog-listing-item {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .article-extras-section .blog-listing-card {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .article-extras-section .blog-listing-card__image {
+    flex-shrink: 0;
+    width: 251px;
+    height: 360px;
+    overflow: hidden;
+  }
+
+  .article-extras-section .blog-listing-card__image a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .article-extras-section .blog-listing-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .article-extras-section .blog-listing-card__content {
+    gap: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    max-width: 251px !important;
+  }
+
+  .article-extras-section .blog-listing-card__tag {
+    font-size: 0.75rem;
+    line-height: 0.875;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb));
+  }
+
+  .article-extras-section .blog-listing-card__title {
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .article-extras-section .blog-listing-card__title a {
+    text-decoration: none;
+    color: var(--color-foreground-heading);
+  }
+
+  .article-extras-section .blog-listing-card__title a:hover {
+    opacity: 0.7;
+  }
+
+  .article-extras-section .blog-listing-card__excerpt {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+    margin: 0;
+  }
+
+  .article-extras-section .blog-listing-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    font-weight: 600;
+  }
+
+  .article-extras-section .blog-listing-card__read-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: var(--color-foreground-heading);
+  }
+
+  .article-extras-section .blog-listing-card__read-link:hover {
+    opacity: 0.7;
+  }
+
+  /* Mobile Styles */
+  @media screen and (max-width: 749px) {
+    .article-filmstrip-container {
+      margin-bottom: 32px;
+    }
+
+    .article-filmstrip {
+      gap: 12px;
+    }
+
+    .article-filmstrip-item {
+      width: 150px;
+    }
+
+    .article-extras-divider {
+      margin: 32px auto;
+    }
+
+    .related-articles-heading {
+      font-size: 1.25rem;
+      margin-bottom: 32px;
+    }
+
+    .related-articles-container {
+      gap: 32px;
+    }
+
+    .article-extras-section .blog-listing-card {
+      flex-direction: row;
+      gap: 16px;
+    }
+
+    .article-extras-section .blog-listing-card__image {
+      width: 140px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .article-extras-section .blog-listing-card__content {
+      padding-top: 0;
+      gap: 24px;
+      max-width: none !important;
+      flex: 1;
+    }
+
+    .article-extras-section .blog-listing-card__title {
+      font-size: 1.125rem;
+    }
+
+    .article-extras-section .blog-listing-card__tag {
+      font-size: 0.625rem;
+    }
+
+    .article-extras-section .blog-listing-card__excerpt {
+      font-size: 0.8rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .article-extras-section .blog-listing-card__read-link {
+      font-size: 0.75rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Article Extras",
+  "tag": "section",
+  "class": "article-extras-section-wrapper",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 80
+    }
+  ]
+}
+{% endschema %}

@@ -503,10 +503,19 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "article_extras": {
+      "type": "article-extras",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "padding_top": 40,
+        "padding_bottom": 80
+      }
     }
   },
   "order": [
     "section_KiiNqA",
-    "main"
+    "main",
+    "article_extras"
   ]
 }
