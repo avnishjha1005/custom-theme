@@ -30,11 +30,16 @@
   }
 
   .bundle-products-block__grid {
+    border-radius: 0;
     --resource-list-columns: repeat(2, 1fr);
     --resource-list-columns-mobile: repeat(2, 1fr);
     --resource-list-column-gap-desktop: 8px;
     --resource-list-row-gap-desktop: 8px;
     gap: 8px;
+  }
+
+  .bundle-products-block__grid img {
+    border-radius: 0 !important;
   }
 
   @media screen and (max-width: 749px) {

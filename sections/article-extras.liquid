@@ -205,14 +205,15 @@
 
   /* Filmstrip Gallery Styles */
   .article-filmstrip-container {
-    width: 100%;
-    margin: 0 auto 48px;
+    position: relative;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0 0 48px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    max-width: 800px;
-    margin: auto;
   }
 
   .article-filmstrip-container::-webkit-scrollbar {
@@ -223,6 +224,8 @@
     display: flex;
     gap: 16px;
     width: max-content;
+    padding-left: max(var(--page-margin, 1.5rem), calc((100vw - 800px) / 2));
+    padding-right: max(var(--page-margin, 1.5rem), calc((100vw - 800px) / 2));
   }
 
   .article-filmstrip-item {
@@ -354,7 +357,7 @@
   .article-extras-section .blog-listing-card__excerpt {
     font-size: 0.9rem;
     line-height: 1.6;
-    color: rgb(var(--color-foreground-rgb) / 0.8);
+    color: rgb(white / 0.8);
     margin: 0;
   }
 
@@ -387,6 +390,8 @@
 
     .article-filmstrip {
       gap: 12px;
+      padding-left: var(--page-margin, 1.5rem);
+      padding-right: var(--page-margin, 1.5rem);
     }
 
     .article-filmstrip-item {

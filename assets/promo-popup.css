@@ -47,7 +47,7 @@
 
 .promo-popup-text {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 0;
   max-width: 480px;
   width: 90%;
   padding: 48px 40px;
@@ -115,7 +115,7 @@
 
 .promo-popup-split {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 0;
   max-width: 800px;
   width: 90%;
   display: grid;

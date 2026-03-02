@@ -95,7 +95,7 @@
     color: #fff;
     background: rgba(0, 0, 0, 0.85);
     padding: 10px 12px;
-    border-radius: 4px;
+    border-radius: 0;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
@@ -332,6 +332,22 @@
         } else {
           const url = this.getAttribute('data-url');
           if (url) window.location.href = url;
+        }
+      });
+    });
+
+    // Handle clicks on the visual area - dismiss hotspots without navigating
+    document.querySelectorAll('.bundle-visual').forEach(visual => {
+      visual.addEventListener('click', function(e) {
+        // Don't interfere with hotspot clicks
+        if (e.target.closest('.hotspot-node')) return;
+
+        // If there's an active hotspot, just dismiss it and prevent navigation
+        if (this.classList.contains('has-active-hotspot')) {
+          e.preventDefault();
+          e.stopPropagation();
+          document.querySelectorAll('.hotspot-node').forEach(n => n.classList.remove('is-active'));
+          document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
         }
       });
     });

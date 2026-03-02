@@ -29,14 +29,16 @@
 {% style %}
   .ai-blog-search-{{ ai_gen_id }} { display: block; width: 100%; font-family: inherit; overflow: hidden; }
   .ai-blog-search-bar-{{ ai_gen_id }} {
-    justify-self: center;
     display: flex; align-items: center; gap: {{ block.settings.gap }}px;
     padding: {{ block.settings.padding }}px;
     background-color: transparent;
     border: none;
     width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
     box-sizing: border-box;
     overflow: hidden;
+    justify-content: center;
   }
   .ai-blog-search-icon-{{ ai_gen_id }} {
     background: none; border: none; flex-shrink: 0;
