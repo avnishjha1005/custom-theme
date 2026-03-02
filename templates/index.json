@@ -921,7 +921,7 @@
       "settings": {
         "show_homepage_only": true,
         "delay_seconds": 2,
-        "frequency_days": 7,
+        "frequency_days": 0,
         "popup_image": "shopify://shop_images/5615046c656907fb37658b9661370d9fc9a8f22d.jpg",
         "popup_title": "Special Offer!",
         "title_size": 28,
