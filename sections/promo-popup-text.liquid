@@ -1,0 +1,237 @@
+{{ 'promo-popup.css' | asset_url | stylesheet_tag }}
+
+<div id="promo-popup-text-{{ section.id }}" class="promo-popup-overlay" aria-hidden="true">
+  <div class="promo-popup-text" role="dialog" aria-modal="true" aria-labelledby="popup-heading-{{ section.id }}">
+    <button type="button" class="promo-popup__close" aria-label="Close" data-close-popup>
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+
+    {%- if section.settings.eyebrow_text != blank -%}
+      <p class="promo-popup-text__eyebrow">{{ section.settings.eyebrow_text }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.heading != blank -%}
+      <h2 id="popup-heading-{{ section.id }}" class="promo-popup-text__heading">
+        {{ section.settings.heading }}
+      </h2>
+    {%- endif -%}
+
+    {%- if section.settings.subheading != blank -%}
+      <p class="promo-popup-text__subheading">{{ section.settings.subheading }}</p>
+    {%- endif -%}
+
+    {%- if section.settings.button_text != blank -%}
+      <a href="{{ section.settings.button_link }}" class="promo-popup__cta">
+        {{ section.settings.button_text }}
+      </a>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const popupId = 'promo-popup-text-' + sectionId;
+    const storageKey = 'promo-popup-text-' + sectionId;
+    const showOnHomepageOnly = {{ section.settings.show_homepage_only | json }};
+    const delaySeconds = {{ section.settings.delay_seconds }};
+    const frequencyDays = {{ section.settings.frequency_days }};
+    const triggerType = '{{ section.settings.trigger_type }}';
+    const scrollPercent = {{ section.settings.scroll_percent }};
+
+    function shouldShowPopup() {
+      if (showOnHomepageOnly && window.location.pathname !== '/') {
+        return false;
+      }
+
+      const lastShown = localStorage.getItem(storageKey);
+      if (lastShown && frequencyDays > 0) {
+        const daysSinceShown = (Date.now() - parseInt(lastShown)) / (1000 * 60 * 60 * 24);
+        if (daysSinceShown < frequencyDays) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function showPopup() {
+      const popup = document.getElementById(popupId);
+      if (!popup || !shouldShowPopup()) return;
+
+      popup.classList.add('is-visible');
+      popup.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      localStorage.setItem(storageKey, Date.now().toString());
+
+      const firstFocusable = popup.querySelector('button, a');
+      if (firstFocusable) firstFocusable.focus();
+    }
+
+    function closePopup() {
+      const popup = document.getElementById(popupId);
+      if (!popup) return;
+
+      popup.classList.add('is-closing');
+
+      setTimeout(function() {
+        popup.classList.remove('is-visible', 'is-closing');
+        popup.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }, 300);
+    }
+
+    function initPopup() {
+      const popup = document.getElementById(popupId);
+      if (!popup) return;
+
+      popup.querySelectorAll('[data-close-popup]').forEach(function(btn) {
+        btn.addEventListener('click', closePopup);
+      });
+
+      popup.addEventListener('click', function(e) {
+        if (e.target === popup) closePopup();
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && popup.classList.contains('is-visible')) {
+          closePopup();
+        }
+      });
+
+      if (triggerType === 'delay') {
+        setTimeout(showPopup, delaySeconds * 1000);
+      } else if (triggerType === 'scroll') {
+        var triggered = false;
+        window.addEventListener('scroll', function() {
+          if (triggered) return;
+          var scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+          if (scrolled >= scrollPercent) {
+            triggered = true;
+            showPopup();
+          }
+        });
+      } else if (triggerType === 'exit') {
+        var triggered = false;
+        document.addEventListener('mouseout', function(e) {
+          if (triggered) return;
+          if (e.clientY < 10 && e.relatedTarget === null) {
+            triggered = true;
+            showPopup();
+          }
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initPopup);
+    } else {
+      initPopup();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Popup - Plain Text",
+  "tag": "section",
+  "class": "promo-popup-text-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Trigger Settings"
+    },
+    {
+      "type": "select",
+      "id": "trigger_type",
+      "label": "Trigger type",
+      "options": [
+        { "value": "delay", "label": "Time delay" },
+        { "value": "scroll", "label": "Scroll percentage" },
+        { "value": "exit", "label": "Exit intent" }
+      ],
+      "default": "delay"
+    },
+    {
+      "type": "range",
+      "id": "delay_seconds",
+      "min": 1,
+      "max": 15,
+      "step": 1,
+      "unit": "s",
+      "label": "Delay seconds",
+      "default": 3,
+      "info": "For time delay trigger"
+    },
+    {
+      "type": "range",
+      "id": "scroll_percent",
+      "min": 10,
+      "max": 90,
+      "step": 10,
+      "unit": "%",
+      "label": "Scroll percentage",
+      "default": 50,
+      "info": "For scroll trigger"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_homepage_only",
+      "label": "Show on homepage only",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "frequency_days",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "d",
+      "label": "Show again after",
+      "default": 7,
+      "info": "0 = show every visit"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text",
+      "default": "LIMITED TIME"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Sign up for exclusive access to new arrivals, sales, and special offers."
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "SEE MORE"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Popup - Plain Text"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,239 @@
+/* Promo Popup Shared Styles */
+
+.promo-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.promo-popup-overlay.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.promo-popup-overlay.is-closing {
+  opacity: 0;
+}
+
+/* Close Button */
+.promo-popup__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #666;
+  transition: color 0.2s ease;
+  z-index: 10;
+}
+
+.promo-popup__close:hover {
+  color: #000;
+}
+
+/* ===================
+   DESIGN 1: Plain Text
+   =================== */
+
+.promo-popup-text {
+  background: #fff;
+  border-radius: 8px;
+  max-width: 480px;
+  width: 90%;
+  padding: 48px 40px;
+  position: relative;
+  text-align: center;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.is-visible .promo-popup-text {
+  transform: translateY(0);
+}
+
+.is-closing .promo-popup-text {
+  transform: translateY(20px);
+}
+
+.promo-popup-text__eyebrow {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 16px;
+  font-weight: 500;
+}
+
+.promo-popup-text__heading {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0 0 12px;
+  color: #000;
+}
+
+.promo-popup-text__subheading {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+  margin: 0 0 28px;
+}
+
+.promo-popup__cta {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  padding: 14px 32px;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.promo-popup__cta:hover {
+  background: #333;
+}
+
+/* ===================
+   DESIGN 2: Image Split
+   =================== */
+
+.promo-popup-split {
+  background: #fff;
+  border-radius: 8px;
+  max-width: 800px;
+  width: 90%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  overflow: hidden;
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.is-visible .promo-popup-split {
+  transform: scale(1);
+}
+
+.is-closing .promo-popup-split {
+  transform: scale(0.95);
+}
+
+.promo-popup-split__image {
+  position: relative;
+  min-height: 350px;
+  overflow: hidden;
+}
+
+.promo-popup-split__image img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.promo-popup-split__image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  color: #fff;
+}
+
+.promo-popup-split__image-title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 8px;
+}
+
+.promo-popup-split__image-text {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.promo-popup-split__content {
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.promo-popup-split__eyebrow {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.promo-popup-split__heading {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0 0 12px;
+  color: #000;
+}
+
+.promo-popup-split__subheading {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+  margin: 0 0 24px;
+}
+
+.promo-popup-split .promo-popup__cta {
+  align-self: flex-start;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 749px) {
+  .promo-popup-text {
+    padding: 36px 24px;
+    max-width: 340px;
+  }
+
+  .promo-popup-text__heading {
+    font-size: 22px;
+  }
+
+  .promo-popup-split {
+    grid-template-columns: 1fr;
+    max-width: 360px;
+  }
+
+  .promo-popup-split__image {
+    min-height: 200px;
+  }
+
+  .promo-popup-split__content {
+    padding: 32px 24px;
+  }
+
+  .promo-popup-split__heading {
+    font-size: 20px;
+  }
+}
