@@ -75,28 +75,20 @@
       "type": "main-blog-post",
       "blocks": {
         "category": {
-          "type": "text",
+          "type": "blog-post-tag",
           "name": "Category",
           "settings": {
-            "text": "<p><strong>Category</strong></p>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "center",
             "type_preset": "custom",
             "font": "var(--font-body--family)",
             "font_size": "0.75rem",
             "line_height": "tight",
             "letter_spacing": "normal",
             "case": "uppercase",
-            "wrap": "pretty",
+            "font_weight": "600",
             "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
+            "alignment": "center",
             "padding-block-start": 48,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-block-end": 0
           },
           "blocks": {}
         },
