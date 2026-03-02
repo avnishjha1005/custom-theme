@@ -54,6 +54,19 @@
   .ai-blog-search-tags-{{ ai_gen_id }}::-webkit-scrollbar { display: none; }
   .ai-blog-search-tags-list-{{ ai_gen_id }} { display: flex; align-items: center; gap: 24px; list-style: none; margin: 0; padding: 0; white-space: nowrap; }
 
+  /* Desktop centering */
+  @media screen and (min-width: 750px) {
+    .ai-blog-search-bar-{{ ai_gen_id }} {
+      justify-content: center;
+    }
+    .ai-blog-search-tags-{{ ai_gen_id }} {
+      flex: none;
+    }
+    .ai-blog-search-tags-list-{{ ai_gen_id }} {
+      justify-content: center;
+    }
+  }
+
   /* Mobile specific fixes */
   @media screen and (max-width: 749px) {
     .ai-blog-search-bar-{{ ai_gen_id }} {
