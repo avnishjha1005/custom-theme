@@ -343,6 +343,126 @@
               "block_order": [
                 "text_rXy8TP"
               ]
+            },
+            "accordion_row_6Ui7hM": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Non-Returnable & Non-Exchangeable Products",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_LjxCTK": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>For hygiene, customization, and policy reasons, the following items cannot be returned or exchanged:</p><ul><li>All accessories: jewellery, clutches, wallets, bags, scarves, belts, footwear, etc.</li><li>Custom-made or made-to-order products</li><li>Orders purchased using store credit</li><li>Unstitched pieces such as dupattas or sarees with unstitched blouse fabric</li><li>Items altered to your personal measurements</li><li>Products bought during sales, promotions, or special offers</li><li>Products marked as “non-returnable/non-exchangeable” at the time of purchase</li></ul>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_LjxCTK"
+              ]
+            },
+            "accordion_row_MwdeGB": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Gift Cards",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_UUMmBi": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<ul><li>AltaRasa Gift Cards are valid for a period of 6 months once issued.</li><li>An account on the AltaRasa website is required to redeem a Gift Card.</li><li>Gift Cards can be used across all eligible AltaRasa platforms.</li><li>Gift Cards cannot be refunded, exchanged for cash, transferred, or used to buy another Gift Card.</li><li>If your order exceeds the Gift Card value, the balance must be paid at checkout (COD not permitted).</li><li>If you return an item purchased via Gift Card, the refund will follow AltaRasa’s return policy and be reissued as store credit.</li><li>AltaRasa is not responsible for lost, stolen, or unauthorized Gift Card use.</li><li>AltaRasa may cancel or reject a Gift Card if misuse or invalidity is suspected.</li></ul>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_UUMmBi"
+              ]
+            },
+            "accordion_row_NTXgp7": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Need Assistance?",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_nVGJjG": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>For any questions or support, you can reach us at:</p><p> +91-XXXXXXXXXX</p><p> <a href=\"mailto:---------------@altarasa.com\"><span style=\"text-decoration:underline\">---------------@altarasa.com</span></a></p><p> Weekdays: 10 AM – 6 PM (IST)</p><p> Weekends: 10 AM – 6 PM (IST), excluding Sunday’s and Public Holidays</p><p>AltaRasa Address: </p><p>3RD Floor, B-25 Defence Colony, </p><p>Bishmah Pitamah Marg,</p><p>New Delhi - 110024</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_nVGJjG"
+              ]
             }
           },
           "block_order": [
@@ -351,7 +471,10 @@
             "accordion_row_JCnVrx",
             "accordion_row_Ty3MV4",
             "accordion_row_UtQ9Vm",
-            "accordion_row_4T6yKw"
+            "accordion_row_4T6yKw",
+            "accordion_row_6Ui7hM",
+            "accordion_row_MwdeGB",
+            "accordion_row_NTXgp7"
           ]
         }
       },
