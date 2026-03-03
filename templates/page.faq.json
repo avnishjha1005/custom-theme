@@ -60,7 +60,7 @@
             "accordion_row_PppWBH": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Return policy",
+                "heading": "Products Damaged, Defective or Incorrectly Delivered",
                 "open_by_default": true,
                 "icon": "none",
                 "width": 20
@@ -69,7 +69,7 @@
                 "text_TNAetT": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Our goal is for every customer to be totally satisfied with their purchase. If this isn't the case, let us know and we'll do our best to work with you to make it right.</p>",
+                    "text": "<p>When receiving your order, please verify the items and quantities listed on the invoice before accepting the package from the courier.</p><p>If the parcel appears damaged or tampered with, kindly mention this to our customer care representative at the time of receipt.</p><p>If you believe you have received:</p><ul><li>A defective item</li><li>The wrong product</li><li>A product with a quality issue</li></ul><p>please notify us at <a href=\"mailto:------------@altarasa.com\"><span style=\"text-decoration:underline\">------------@altarasa.com</span></a> within 48 hours of delivery.</p><p>Your email should clearly include:</p><ul><li>Order number/ invoice</li><li>Description of the issue</li><li>Photographs showing the defect or mismatch</li></ul>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
