@@ -118,6 +118,8 @@
       "phone": "Phone",
       "comment": "Comment",
       "post_success": "Thanks for contacting us. We'll get back to you as soon as possible.",
+      "modal_success_heading": "Appointment Booked!",
+      "redirect_notice": "Redirecting to home page...",
       "error_heading": "Please adjust the following:"
     },
     "email_signup": {

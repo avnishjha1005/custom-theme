@@ -36,14 +36,42 @@
     {%- endif -%}
 
     {%- if form.posted_successfully? -%}
-      <div
-        class="contact-form__success"
-        tabindex="-1"
-        autofocus
-      >
-        {{- 'icon-checkmark.svg' | inline_asset_content -}}
-        {{- 'blocks.contact_form.post_success' | t -}}
-      </div>
+      <script src="{{ 'dialog.js' | asset_url }}" type="module"></script>
+
+      <dialog-component id="contact-success-modal-{{ form_id }}">
+        <dialog
+          ref="dialog"
+          class="contact-success-modal"
+          aria-labelledby="contact-success-heading-{{ form_id }}"
+        >
+          <div class="contact-success-modal__content">
+            <div class="contact-success-modal__icon">
+              {{- 'icon-checkmark.svg' | inline_asset_content -}}
+            </div>
+            <h2 id="contact-success-heading-{{ form_id }}" class="contact-success-modal__heading">
+              {{ 'blocks.contact_form.modal_success_heading' | t | default: 'Appointment Booked!' }}
+            </h2>
+            <p class="contact-success-modal__message">
+              {{- 'blocks.contact_form.post_success' | t -}}
+            </p>
+            <p class="contact-success-modal__redirect-notice">
+              {{ 'blocks.contact_form.redirect_notice' | t | default: 'Redirecting to home page...' }}
+            </p>
+          </div>
+        </dialog>
+      </dialog-component>
+
+      <script type="module">
+        customElements.whenDefined('dialog-component').then(() => {
+          const modal = document.getElementById('contact-success-modal-{{ form_id }}');
+          if (modal && typeof modal.showDialog === 'function') {
+            modal.showDialog();
+            setTimeout(() => {
+              window.location.href = '{{ routes.root_url }}';
+            }, 3000);
+          }
+        });
+      </script>
     {%- endif -%}
 
     <!-- Step 1: Full Name -->
@@ -205,5 +233,100 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
+  }
+
+  /* Success Modal - Full Page Overlay */
+  .contact-success-modal {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    background: white;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contact-success-modal::backdrop {
+    background: white;
+  }
+
+  .contact-success-modal[open] {
+    animation: modalFadeIn 0.3s ease-out forwards;
+  }
+
+  .contact-success-modal.dialog-closing {
+    animation: modalFadeOut 0.2s ease-in forwards;
+  }
+
+  @keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes modalFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+
+  .contact-success-modal__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+  }
+
+  .contact-success-modal__icon {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: iconPop 0.4s ease-out 0.1s forwards;
+    transform: scale(0);
+  }
+
+  .contact-success-modal__icon svg {
+    width: 48px;
+    height: 48px;
+    color: black;
+  }
+
+  @keyframes iconPop {
+    0% { transform: scale(0); }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .contact-success-modal__heading {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: black;
+  }
+
+  .contact-success-modal__message {
+    font-size: 16px;
+    color: black;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .contact-success-modal__redirect-notice {
+    font-size: 14px;
+    color: black;
+    margin: 8px 0 0;
+    animation: fadeIn 0.5s ease-out 0.5s forwards;
+    opacity: 0;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
   }
 {% endstylesheet %}
