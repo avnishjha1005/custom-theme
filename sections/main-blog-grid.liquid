@@ -43,9 +43,31 @@
       <span ref="viewMoreNext"></span>
 
       {% if paginate.pages > 1 %}
-        <div class="blog-grid-pagination">
-          {{ paginate | default_pagination }}
-        </div>
+        {% if section.settings.load_more_enabled %}
+          <div class="blog-grid-load-more" id="blog-grid-load-more-{{ section.id }}">
+            <button
+              type="button"
+              class="blog-grid-load-more-button"
+              aria-label="{{ section.settings.load_more_text | default: 'Read More' }}"
+              data-current-page="{{ paginate.current_page }}"
+              data-total-pages="{{ paginate.pages }}"
+            >
+              <span class="button-text">{{ section.settings.load_more_text | default: 'Read More' }}</span>
+              <span class="button-loading" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10" opacity="0.25"/>
+                  <path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round">
+                    <animateTransform attributeName="transform" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                  </path>
+                </svg>
+              </span>
+            </button>
+          </div>
+        {% else %}
+          <div class="blog-grid-pagination">
+            {{ paginate | default_pagination }}
+          </div>
+        {% endif %}
       {% endif %}
     {%- endpaginate -%}
   </div>
@@ -119,7 +141,136 @@
     background-color: rgb(var(--color-foreground-rgb));
     color: rgb(var(--color-background-rgb));
   }
+
+  /* Load More Button Styles */
+  .blog-grid-load-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+  }
+
+  .blog-grid-load-more-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-body-family);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb));
+    background-color: transparent;
+    border: 1px solid rgb(var(--color-foreground-rgb));
+    padding: 12px 32px;
+    cursor: pointer;
+    min-width: 160px;
+    transition: all 0.2s ease;
+  }
+
+  .blog-grid-load-more-button:hover:not(:disabled) {
+    background-color: rgb(var(--color-foreground-rgb));
+    color: rgb(var(--color-background-rgb));
+  }
+
+  .blog-grid-load-more-button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+  }
+
+  .blog-grid-load-more-button .button-loading {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media screen and (max-width: 749px) {
+    .blog-grid-load-more {
+      margin-top: 2rem;
+    }
+
+    .blog-grid-load-more-button {
+      width: 100%;
+      max-width: 280px;
+    }
+  }
 {% endstylesheet %}
+
+<script>
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const loadMoreWrapper = document.getElementById('blog-grid-load-more-' + sectionId);
+
+    if (!loadMoreWrapper) return;
+
+    const button = loadMoreWrapper.querySelector('.blog-grid-load-more-button');
+    if (!button) return;
+
+    const blogPostsList = document.querySelector('blog-posts-list[section-id="' + sectionId + '"]');
+    const grid = blogPostsList?.querySelector('[ref="grid"]');
+    const viewMoreNext = blogPostsList?.querySelector('[ref="viewMoreNext"]');
+
+    if (!grid || !viewMoreNext) return;
+
+    let currentPage = parseInt(button.dataset.currentPage);
+    const totalPages = parseInt(button.dataset.totalPages);
+    let loading = false;
+
+    button.addEventListener('click', async function() {
+      if (loading || currentPage >= totalPages) return;
+
+      loading = true;
+      const buttonText = button.querySelector('.button-text');
+      const buttonLoading = button.querySelector('.button-loading');
+
+      buttonText.style.display = 'none';
+      buttonLoading.style.display = 'inline-flex';
+      button.disabled = true;
+
+      try {
+        const nextPage = currentPage + 1;
+        const url = new URL(window.location.href);
+        url.searchParams.set('page', nextPage.toString());
+
+        const response = await fetch(url.toString(), {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+        if (!response.ok) throw new Error('Failed to load');
+
+        const html = await response.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        const newSection = doc.querySelector('blog-posts-list[section-id="' + sectionId + '"]');
+        const newGrid = newSection?.querySelector('[ref="grid"]');
+
+        if (newGrid) {
+          const newItems = newGrid.querySelectorAll('[ref="cards[]"]');
+          newItems.forEach(item => {
+            grid.appendChild(item.cloneNode(true));
+          });
+
+          currentPage = nextPage;
+          history.pushState('', '', url.toString());
+
+          if (currentPage >= totalPages) {
+            loadMoreWrapper.style.display = 'none';
+          }
+        }
+      } catch (error) {
+        console.error('Error loading more articles:', error);
+      } finally {
+        loading = false;
+        const buttonText = button.querySelector('.button-text');
+        const buttonLoading = button.querySelector('.button-loading');
+        buttonText.style.display = 'inline';
+        buttonLoading.style.display = 'none';
+        button.disabled = false;
+      }
+    });
+  })();
+</script>
 
 {% schema %}
 {
@@ -135,6 +286,22 @@
       "max": 24,
       "step": 2,
       "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Load More"
+    },
+    {
+      "type": "checkbox",
+      "id": "load_more_enabled",
+      "label": "Enable Load More button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "load_more_text",
+      "label": "Button text",
+      "default": "Read More"
     },
     {
       "type": "color_scheme",

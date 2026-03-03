@@ -259,6 +259,8 @@
       "name": "Blog Grid",
       "settings": {
         "articles_per_page": 12,
+        "load_more_enabled": true,
+        "load_more_text": "Read More",
         "color_scheme": "",
         "padding_top": 0,
         "padding_bottom": 48
