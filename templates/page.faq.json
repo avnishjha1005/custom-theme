@@ -149,7 +149,7 @@
             "accordion_row_VKqMR6": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Shipping",
+                "heading": "Eligibility for Return or Exchange",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -158,7 +158,7 @@
                 "text_Din7MH": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "text": "<p>Your order qualifies for a return/exchange only under the following circumstances:</p><ul><li>The item delivered does not match the product ordered.</li><li>The product has a genuine manufacturing defect.</li></ul><p>Our team will review the request and guide you on the next steps after completing a quality assessment.</p><p><span style=\"text-decoration:underline\">Please note:</span></p><p>The returned product must reach us within 3 days (within India) and 7 days (for international orders) from the date our team advises you to send it. The item must be unused, unworn, unwashed, and returned with all original tags and packaging.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -188,7 +188,7 @@
             "accordion_row_JCnVrx": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Manufacturing",
+                "heading": "Incorrect or Incomplete Shipping Address",
                 "open_by_default": false,
                 "icon": "none",
                 "width": 20
@@ -197,7 +197,7 @@
                 "text_YTj4p4": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.</p>",
+                    "text": "<p>Refunds cannot be issued if:</p><ul><li>The shipping address provided by the customer is incomplete or incorrect</li><li>Delivery attempts fail thrice</li><li>The package is refused by the recipient</li></ul>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -223,12 +223,94 @@
               "block_order": [
                 "text_YTj4p4"
               ]
+            },
+            "accordion_row_Ty3MV4": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Colour Disclaimer",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_jLWit4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We make every effort to ensure that product colours displayed on AltaRasa are accurate. However, actual colours may vary depending on your device’s display settings. We do not guarantee a perfect colour match.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_jLWit4"
+              ]
+            },
+            "accordion_row_UtQ9Vm": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Refunds & Store Credit",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_8VVwCU": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_8VVwCU"
+              ]
             }
           },
           "block_order": [
             "accordion_row_PppWBH",
             "accordion_row_VKqMR6",
-            "accordion_row_JCnVrx"
+            "accordion_row_JCnVrx",
+            "accordion_row_Ty3MV4",
+            "accordion_row_UtQ9Vm"
           ]
         }
       },
