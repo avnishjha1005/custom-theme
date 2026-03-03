@@ -485,10 +485,10 @@
       ],
       "settings": {
         "content_direction": "column",
-        "gap": 32,
+        "gap": 16,
         "color_scheme": "scheme-9279c1cb-9d8e-4383-af64-cd9f6d70d124",
-        "padding-block-start": 40,
-        "padding-block-end": 80
+        "padding-block-start": 16,
+        "padding-block-end": 16
       }
     },
     "section_EfGNGi": {
