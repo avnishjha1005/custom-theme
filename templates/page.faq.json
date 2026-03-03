@@ -277,7 +277,7 @@
                 "text_8VVwCU": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.</p>",
+                    "text": "<p>Depending on the nature of the return, the following options are available:</p><p><strong>A. Store Credit</strong></p><p>Once the returned product passes our quality check, the approved refund amount will be added to your AltaRasa account as store credit. Store credit can be used on future purchases at checkout.</p><p><strong>B. Bank Refund</strong></p><p>For eligible orders:</p><ul><li>Refunds will be processed to the same payment method used during purchase.</li><li>Cancellations requested within 24 hours of placing the order qualify for a full refund.</li></ul><p>Refund processing may take 7–10 business days after the returned product is received and approved.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -303,6 +303,46 @@
               "block_order": [
                 "text_8VVwCU"
               ]
+            },
+            "accordion_row_4T6yKw": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Order Cancellation",
+                "open_by_default": false,
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_rXy8TP": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<ul><li>Orders can be cancelled within 24 hours of placing the order.</li><li>After 24 hours, cancellation requests cannot be accepted as the order may already be in processing.</li></ul><p>AltaRasa reserves the right to cancel any order at its discretion and issue a full refund if the order cannot be processed.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_rXy8TP"
+              ]
             }
           },
           "block_order": [
@@ -310,7 +350,8 @@
             "accordion_row_VKqMR6",
             "accordion_row_JCnVrx",
             "accordion_row_Ty3MV4",
-            "accordion_row_UtQ9Vm"
+            "accordion_row_UtQ9Vm",
+            "accordion_row_4T6yKw"
           ]
         }
       },
