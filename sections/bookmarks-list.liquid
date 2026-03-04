@@ -19,7 +19,12 @@
     {%- endunless -%}
 
     {%- comment -%} Bookmarks grid - rendered via JavaScript {%- endcomment -%}
-    <div class="bookmarks-grid js-bookmarks-grid" data-blogs-url="{{ blogs | map: 'url' | join: ',' }}">
+    {%- capture blog_handles -%}
+      {%- for blog in blogs -%}
+        {{ blog.handle }}{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    <div class="bookmarks-grid js-bookmarks-grid" data-blog-handles="{{ blog_handles | strip }}">
       <div class="bookmarks-loading">
         <span class="visually-hidden">Loading saved articles...</span>
         <svg class="spinner" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -216,7 +221,7 @@
 
     function removeBookmark(articleHandle) {
       let bookmarks = getBookmarks();
-      bookmarks = bookmarks.filter(h => h !== articleHandle);
+      bookmarks = bookmarks.filter(b => (typeof b === 'string' ? b : b.handle) !== articleHandle);
       saveBookmarks(bookmarks);
 
       // Dispatch event for other components
@@ -227,17 +232,40 @@
       renderBookmarks();
     }
 
-    async function fetchArticleData(handle) {
-      // Try to find article by searching all blogs
-      const blogs = ['news', 'journal', 'blog', 'articles', 'stories'];
+    async function fetchArticleData(handle, blogHandle) {
+      // If we have a blog handle, try that first
+      if (blogHandle) {
+        try {
+          const response = await fetch(`/blogs/${blogHandle}/${handle}.json`);
+          if (response.ok) {
+            const data = await response.json();
+            return {
+              ...data.article,
+              handle: handle,
+              blogHandle: blogHandle,
+              url: `/blogs/${blogHandle}/${handle}`
+            };
+          }
+        } catch (e) {
+          // Fall through to search
+        }
+      }
+
+      // Get blog handles from data attribute, fallback to common names
+      const blogHandlesAttr = grid.getAttribute('data-blog-handles');
+      const blogs = blogHandlesAttr
+        ? blogHandlesAttr.split(',').map(b => b.trim()).filter(Boolean)
+        : ['editorial', 'news', 'journal', 'blog', 'articles'];
 
       for (const blog of blogs) {
+        if (blog === blogHandle) continue; // Already tried this one
         try {
           const response = await fetch(`/blogs/${blog}/${handle}.json`);
           if (response.ok) {
             const data = await response.json();
             return {
               ...data.article,
+              handle: handle,
               blogHandle: blog,
               url: `/blogs/${blog}/${handle}`
             };
@@ -247,13 +275,8 @@
         }
       }
 
-      // If not found, return minimal data
-      return {
-        handle,
-        title: handle.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        url: null,
-        image: null
-      };
+      // If not found, return null
+      return null;
     }
 
     function createArticleCard(article) {
@@ -261,7 +284,7 @@
       const card = clone.querySelector('.bookmark-card');
 
       // Set article URL
-      const url = article.url || '#';
+      const url = article.url || `#`;
       card.querySelectorAll('a').forEach(link => {
         link.href = url;
       });
@@ -285,8 +308,9 @@
 
       // Set meta (date if available)
       const meta = card.querySelector('.bookmark-card__meta');
-      if (article.published_at) {
-        const date = new Date(article.published_at);
+      if (article.published_at || article.savedAt) {
+        const dateStr = article.published_at || article.savedAt;
+        const date = new Date(dateStr);
         meta.textContent = date.toLocaleDateString(undefined, {
           year: 'numeric',
           month: 'long',
@@ -313,18 +337,44 @@
       // Show loading state
       grid.innerHTML = '<div class="bookmarks-loading"><span class="visually-hidden">Loading...</span></div>';
 
-      // Fetch article data for all bookmarks
+      // Process bookmarks - use stored data when available, fetch for legacy items
       const articles = await Promise.all(
-        bookmarks.map(handle => fetchArticleData(handle))
+        bookmarks.map(async (bookmark) => {
+          // Handle legacy format (just a string handle)
+          if (typeof bookmark === 'string') {
+            return await fetchArticleData(bookmark, null);
+          }
+
+          // New format - use stored data if complete, otherwise fetch
+          if (bookmark.title && bookmark.blogHandle) {
+            return {
+              handle: bookmark.handle,
+              title: bookmark.title,
+              image: bookmark.image,
+              blogHandle: bookmark.blogHandle,
+              url: `/blogs/${bookmark.blogHandle}/${bookmark.handle}`,
+              savedAt: bookmark.savedAt
+            };
+          }
+
+          // Incomplete data, fetch from API
+          return await fetchArticleData(bookmark.handle, bookmark.blogHandle);
+        })
       );
 
       // Filter out articles that couldn't be found
-      const validArticles = articles.filter(a => a.url);
+      const validArticles = articles.filter(a => a && a.url);
 
-      // Remove invalid bookmarks from storage
-      if (validArticles.length !== bookmarks.length) {
-        const validHandles = validArticles.map(a => a.handle);
-        saveBookmarks(validHandles);
+      // Update storage to remove invalid and migrate legacy bookmarks
+      if (validArticles.length !== bookmarks.length || bookmarks.some(b => typeof b === 'string')) {
+        const updatedBookmarks = validArticles.map(a => ({
+          handle: a.handle,
+          blogHandle: a.blogHandle,
+          title: a.title,
+          image: a.image,
+          savedAt: a.savedAt || new Date().toISOString()
+        }));
+        saveBookmarks(updatedBookmarks);
       }
 
       // Render cards

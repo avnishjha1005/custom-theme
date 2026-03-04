@@ -34,6 +34,8 @@
     data-article-id="{{ article.id }}"
     data-article-handle="{{ article.handle }}"
     data-blog-handle="{{ blog.handle }}"
+    data-article-title="{{ article.title | escape }}"
+    data-article-image="{{ article.image | image_url: width: 600 }}"
   {% endif %}
   {{ block.shopify_attributes }}
 >
@@ -384,7 +386,13 @@
 
     function getBookmarks() {
       try {
-        return JSON.parse(localStorage.getItem(BOOKMARK_STORAGE_KEY)) || [];
+        const data = JSON.parse(localStorage.getItem(BOOKMARK_STORAGE_KEY)) || [];
+        // Handle legacy format (array of strings) vs new format (array of objects)
+        if (data.length > 0 && typeof data[0] === 'string') {
+          // Migrate to new format
+          return data.map(handle => ({ handle, blogHandle: null, title: null, image: null }));
+        }
+        return data;
       } catch {
         return [];
       }
@@ -392,6 +400,11 @@
 
     function saveBookmarks(bookmarks) {
       localStorage.setItem(BOOKMARK_STORAGE_KEY, JSON.stringify(bookmarks));
+    }
+
+    function isArticleBookmarked(articleHandle) {
+      const bookmarks = getBookmarks();
+      return bookmarks.some(b => (typeof b === 'string' ? b : b.handle) === articleHandle);
     }
 
     function showNotification(message) {
@@ -417,8 +430,7 @@
         const articleHandle = root?.getAttribute('data-article-handle');
         if (!articleHandle) return;
 
-        const bookmarks = getBookmarks();
-        const isBookmarked = bookmarks.includes(articleHandle);
+        const isBookmarked = isArticleBookmarked(articleHandle);
 
         btn.setAttribute('aria-pressed', String(isBookmarked));
         btn.classList.toggle('social-share__button--active', isBookmarked);
@@ -452,6 +464,8 @@
 
             const articleHandle = root.getAttribute('data-article-handle');
             const blogHandle = root.getAttribute('data-blog-handle');
+            const articleTitle = root.getAttribute('data-article-title');
+            const articleImage = root.getAttribute('data-article-image');
             if (!articleHandle) return;
 
             const isActive = btn.getAttribute('aria-pressed') === 'true';
@@ -459,12 +473,19 @@
 
             if (isActive) {
               // Remove bookmark
-              bookmarks = bookmarks.filter(h => h !== articleHandle);
+              bookmarks = bookmarks.filter(b => (typeof b === 'string' ? b : b.handle) !== articleHandle);
               showNotification('Article removed from saved');
             } else {
-              // Add bookmark (store handle and blog info)
-              if (!bookmarks.includes(articleHandle)) {
-                bookmarks.push(articleHandle);
+              // Add bookmark with full article data
+              const alreadyExists = bookmarks.some(b => (typeof b === 'string' ? b : b.handle) === articleHandle);
+              if (!alreadyExists) {
+                bookmarks.push({
+                  handle: articleHandle,
+                  blogHandle: blogHandle,
+                  title: articleTitle,
+                  image: articleImage,
+                  savedAt: new Date().toISOString()
+                });
               }
               showNotification('Article saved');
             }
