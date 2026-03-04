@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "main": {
+      "type": "bookmarks-list",
+      "settings": {
+        "title": "My Saved Articles",
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

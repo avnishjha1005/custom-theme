@@ -150,6 +150,16 @@
       "post": "Post comment",
       "success_moderated": "Comment posted, awaiting moderation",
       "success": "Comment posted"
+    },
+    "bookmarks": {
+      "save": "Save article",
+      "saved": "Article saved",
+      "removed": "Article removed from saved",
+      "title": "My Saved Articles",
+      "empty": "No saved articles yet.",
+      "browse": "Browse Articles",
+      "remove": "Remove",
+      "login_message": "Sign in to save articles across your devices"
     }
   },
   "content": {

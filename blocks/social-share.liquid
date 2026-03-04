@@ -9,6 +9,20 @@
   elsif collection
     assign share_title = collection.title
   endif
+
+  # Bookmark: Check if current article is bookmarked (for initial state)
+  assign is_bookmarked = false
+  if customer and article
+    assign saved_articles = customer.metafields.custom.saved_articles.value
+    if saved_articles
+      for saved_handle in saved_articles
+        if saved_handle == article.handle
+          assign is_bookmarked = true
+          break
+        endif
+      endfor
+    endif
+  endif
 -%}
 
 <div
@@ -16,6 +30,11 @@
   data-social-share
   data-social-share-link="{{ share_url }}"
   data-social-share-title="{{ share_title | escape }}"
+  {% if article %}
+    data-article-id="{{ article.id }}"
+    data-article-handle="{{ article.handle }}"
+    data-blog-handle="{{ blog.handle }}"
+  {% endif %}
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.show_clipboard -%}
@@ -182,6 +201,28 @@
       </span>
     </button>
   {%- endif -%}
+
+  {%- if block.settings.show_bookmark and article -%}
+    <button
+      type="button"
+      data-social-share-type="bookmark"
+      {% unless customer %}data-require-login="true"{% endunless %}
+      aria-label="{{ 'blogs.bookmarks.save' | t | default: 'Save article' }}"
+      aria-pressed="{{ is_bookmarked }}"
+      class="social-share__button social-share__button--bookmark{% if is_bookmarked %} social-share__button--active{% endif %}"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="none">
+          <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17.5L5 21V5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="social-share__icon social-share__icon--filled">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17.5L5 21V5Z"/>
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
 </div>
 
 {% stylesheet %}
@@ -287,10 +328,103 @@
   [data-social-share-type="instagram"][data-social-share-success] .social-share__icon--success {
     transform: translateY(0%) rotate(0.001deg);
   }
+
+  /* Bookmark button */
+  .social-share__button--bookmark {
+    color: var(--color-foreground);
+  }
+
+  .social-share__button--bookmark .social-share__icon--filled {
+    position: absolute;
+    color: #ff6b35;
+    transform: scale(0) rotate(0.001deg);
+  }
+
+  .social-share__button--bookmark.social-share__button--active .social-share__icon:not(.social-share__icon--filled) {
+    transform: scale(0) rotate(0.001deg);
+  }
+
+  .social-share__button--bookmark.social-share__button--active .social-share__icon--filled {
+    transform: scale(1) rotate(0.001deg);
+  }
+
+  /* Bookmark notification toast */
+  .bookmark-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-foreground);
+    color: var(--color-background);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    z-index: 9999;
+    font-size: 0.875rem;
+    animation: bookmarkSlideUp 0.3s ease;
+  }
+
+  .bookmark-notification--hiding {
+    animation: bookmarkSlideDown 0.3s ease forwards;
+  }
+
+  @keyframes bookmarkSlideUp {
+    from { transform: translateX(-50%) translateY(100%); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+  }
+
+  @keyframes bookmarkSlideDown {
+    from { transform: translateX(-50%) translateY(0); opacity: 1; }
+    to { transform: translateX(-50%) translateY(100%); opacity: 0; }
+  }
 {% endstylesheet %}
 
 {% javascript %}
   (function() {
+    const BOOKMARK_STORAGE_KEY = 'saved_articles';
+
+    function getBookmarks() {
+      try {
+        return JSON.parse(localStorage.getItem(BOOKMARK_STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveBookmarks(bookmarks) {
+      localStorage.setItem(BOOKMARK_STORAGE_KEY, JSON.stringify(bookmarks));
+    }
+
+    function showNotification(message) {
+      // Remove existing notification
+      const existing = document.querySelector('.bookmark-notification');
+      if (existing) existing.remove();
+
+      const notification = document.createElement('div');
+      notification.className = 'bookmark-notification';
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.classList.add('bookmark-notification--hiding');
+        setTimeout(() => notification.remove(), 300);
+      }, 2500);
+    }
+
+    function initBookmarkState() {
+      // On page load, sync bookmark button states with localStorage
+      document.querySelectorAll('[data-social-share-type="bookmark"]').forEach(btn => {
+        const root = btn.closest('[data-social-share]');
+        const articleHandle = root?.getAttribute('data-article-handle');
+        if (!articleHandle) return;
+
+        const bookmarks = getBookmarks();
+        const isBookmarked = bookmarks.includes(articleHandle);
+
+        btn.setAttribute('aria-pressed', String(isBookmarked));
+        btn.classList.toggle('social-share__button--active', isBookmarked);
+      });
+    }
+
     function initSocialShare() {
       document.querySelectorAll('[data-social-share]').forEach(root => {
         if (root._socialShareBound) return;
@@ -307,6 +441,47 @@
           const type = btn.getAttribute('data-social-share-type');
           const u = encodeURIComponent(link);
           const t = encodeURIComponent(title);
+
+          // Handle bookmark
+          if (type === 'bookmark') {
+            // Check if login required
+            if (btn.hasAttribute('data-require-login')) {
+              window.location.href = '/account/login';
+              return;
+            }
+
+            const articleHandle = root.getAttribute('data-article-handle');
+            const blogHandle = root.getAttribute('data-blog-handle');
+            if (!articleHandle) return;
+
+            const isActive = btn.getAttribute('aria-pressed') === 'true';
+            let bookmarks = getBookmarks();
+
+            if (isActive) {
+              // Remove bookmark
+              bookmarks = bookmarks.filter(h => h !== articleHandle);
+              showNotification('Article removed from saved');
+            } else {
+              // Add bookmark (store handle and blog info)
+              if (!bookmarks.includes(articleHandle)) {
+                bookmarks.push(articleHandle);
+              }
+              showNotification('Article saved');
+            }
+
+            saveBookmarks(bookmarks);
+
+            // Update UI
+            btn.setAttribute('aria-pressed', String(!isActive));
+            btn.classList.toggle('social-share__button--active', !isActive);
+
+            // Dispatch custom event for other components
+            window.dispatchEvent(new CustomEvent('bookmarks:updated', {
+              detail: { bookmarks, articleHandle, action: isActive ? 'removed' : 'added' }
+            }));
+
+            return;
+          }
 
           const map = {
             x: `https://twitter.com/intent/tweet?text=${t}&url=${u}`,
@@ -331,6 +506,8 @@
           if (url) window.open(url, '_blank', 'noopener,noreferrer');
         });
       });
+
+      initBookmarkState();
     }
 
     if (document.readyState === 'loading') {
@@ -341,6 +518,13 @@
 
     // Re-initialize when Shopify sections are loaded/updated
     document.addEventListener('shopify:section:load', initSocialShare);
+
+    // Sync bookmark state across tabs
+    window.addEventListener('storage', (e) => {
+      if (e.key === BOOKMARK_STORAGE_KEY) {
+        initBookmarkState();
+      }
+    });
   })();
 {% endjavascript %}
 
@@ -413,6 +597,17 @@
       "label": "Instagram",
       "info": "Copies link to clipboard (Instagram doesn't support direct sharing)",
       "default": false
+    },
+    {
+      "type": "header",
+      "content": "Bookmark"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bookmark",
+      "label": "Show bookmark button",
+      "info": "Allow logged-in users to save articles. Only visible on article pages.",
+      "default": true
     }
   ],
   "presets": [
