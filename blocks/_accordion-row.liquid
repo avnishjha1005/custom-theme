@@ -1,7 +1,20 @@
 
 {% assign block_settings = block.settings %}
 
+{%- assign keywords = block.settings.keywords | strip | downcase -%}
+{%- assign heading_text = block.settings.heading | strip_html | downcase -%}
+{%- assign content_text = '' -%}
+{%- for child_block in block.blocks -%}
+  {%- if child_block.type == 'text' -%}
+    {%- assign content_text = content_text | append: child_block.settings.text | strip_html | downcase -%}
+  {%- endif -%}
+{%- endfor -%}
+
 <accordion-custom
+  ref="accordionRows[]"
+  data-keywords="{{ keywords }}"
+  data-heading="{{ heading_text }}"
+  data-content="{{ content_text }}"
   {% if block_settings.open_by_default %}
     open-by-default-on-desktop
     open-by-default-on-mobile
@@ -68,6 +81,12 @@
       "id": "open_by_default",
       "label": "t:settings.open_row_by_default",
       "default": false
+    },
+    {
+      "type": "text",
+      "id": "keywords",
+      "label": "Keywords (comma-separated)",
+      "info": "Add keywords for filtering (e.g., returns, shipping, refunds)"
     },
     {
       "type": "header",

@@ -1,0 +1,425 @@
+{%- liquid
+  assign share_url = request.origin | append: request.path
+  assign share_title = page_title | default: shop.name
+
+  if article
+    assign share_title = article.title
+  elsif product
+    assign share_title = product.title
+  elsif collection
+    assign share_title = collection.title
+  endif
+-%}
+
+<div
+  class="social-share"
+  data-social-share
+  data-social-share-link="{{ share_url }}"
+  data-social-share-title="{{ share_title | escape }}"
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.show_clipboard -%}
+    <button
+      type="button"
+      data-social-share-type="clipboard"
+      aria-label="{{ 'general.social.copy_link' | t | default: 'Copy link' }}"
+      class="social-share__button"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="none">
+          <path d="M14.1256 17.262L12.6686 18.719C12.1697 19.2183 11.5773 19.6143 10.9253 19.8846C10.2733 20.1548 9.57437 20.2939 8.86857 20.2939C8.16277 20.2939 7.46389 20.1548 6.81187 19.8846C6.15984 19.6143 5.56746 19.2183 5.06857 18.719C4.56943 18.2201 4.17347 17.6277 3.90333 16.9756C3.63318 16.3236 3.49414 15.6248 3.49414 14.919C3.49414 14.2133 3.63318 13.5144 3.90333 12.8624C4.17347 12.2104 4.56943 11.618 5.06857 11.119L6.52957 9.66602" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8.89453 14.897L15.1045 8.68701" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9.87402 6.32198L11.331 4.86498C11.8298 4.36548 12.4221 3.96921 13.0742 3.69884C13.7262 3.42847 14.4251 3.28931 15.131 3.28931C15.8369 3.28931 16.5358 3.42847 17.1879 3.69884C17.8399 3.96921 18.4323 4.36548 18.931 4.86498C19.4303 5.36387 19.8263 5.95625 20.0966 6.60828C20.3668 7.2603 20.5059 7.95918 20.5059 8.66498C20.5059 9.37078 20.3668 10.0697 20.0966 10.7217C19.8263 11.3737 19.4303 11.9661 18.931 12.465L17.47 13.918" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+      <span class="social-share__icon social-share__icon--success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="none">
+          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 12L11 15L16 10" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5"/>
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_email -%}
+    <button
+      type="button"
+      data-social-share-type="mail"
+      aria-label="{{ 'general.social.share_email' | t | default: 'Share via email' }}"
+      class="social-share__button"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="none">
+          <path d="M7.5 9.75L10.4255 11.5536C10.8988 11.8455 11.4439 12 12 12C12.5561 12 13.1012 11.8455 13.5745 11.5536L16.5 9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 5H6C4.34315 5 3 6.34315 3 8V16C3 17.6569 4.34315 19 6 19H18C19.6569 19 21 17.6569 21 16V8C21 6.34315 19.6569 5 18 5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_facebook -%}
+    <button
+      type="button"
+      data-social-share-type="facebook"
+      aria-label="{{ 'general.social.share_facebook' | t | default: 'Share on Facebook' }}"
+      class="social-share__button social-share__button--facebook"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          {%- render 'icon', icon: 'facebook' -%}
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_x -%}
+    <button
+      type="button"
+      data-social-share-type="x"
+      aria-label="{{ 'general.social.share_x' | t | default: 'Share on X' }}"
+      class="social-share__button social-share__button--x"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          {%- render 'icon', icon: 'x' -%}
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_pinterest -%}
+    <button
+      type="button"
+      data-social-share-type="pinterest"
+      aria-label="{{ 'general.social.share_pinterest' | t | default: 'Share on Pinterest' }}"
+      class="social-share__button social-share__button--pinterest"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          {%- render 'icon', icon: 'pinterest' -%}
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_linkedin -%}
+    <button
+      type="button"
+      data-social-share-type="linkedin"
+      aria-label="{{ 'general.social.share_linkedin' | t | default: 'Share on LinkedIn' }}"
+      class="social-share__button social-share__button--linkedin"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          {%- render 'icon', icon: 'linkedin' -%}
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_whatsapp -%}
+    <button
+      type="button"
+      data-social-share-type="whatsapp"
+      aria-label="{{ 'general.social.share_whatsapp' | t | default: 'Share on WhatsApp' }}"
+      class="social-share__button social-share__button--whatsapp"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="currentColor">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M19.049 4.90701C17.3493 3.20721 15.0898 2.18312 12.6912 2.02547C10.2926 1.86782 7.91847 2.58735 6.01096 4.05007C4.10345 5.51278 2.7926 7.61896 2.32257 9.97633C1.85254 12.3337 2.14566 14.7901 3.27315 16.8268C4.40063 18.8636 6.20411 20.4426 8.372 21.291C8.2405 20.3393 8.2523 19.3732 8.407 18.425C8.589 17.644 9.578 13.461 9.578 13.461C9.3744 12.993 9.27216 12.4873 9.278 11.977C9.278 10.591 10.084 9.551 11.085 9.551C11.2642 9.54841 11.4419 9.58421 11.6061 9.65598C11.7703 9.72776 11.9173 9.83385 12.0371 9.96713C12.157 10.1004 12.2469 10.2578 12.3008 10.4287C12.3548 10.5996 12.3716 10.7801 12.35 10.958C12.1702 12.0883 11.8935 13.2011 11.523 14.284C11.4671 14.5038 11.4637 14.7337 11.5129 14.9551C11.5621 15.1765 11.6625 15.3833 11.8062 15.5588C11.9499 15.7342 12.1328 15.8736 12.3401 15.9655C12.5475 16.0574 12.7735 16.0994 13 16.088C14.774 16.088 16.14 14.218 16.14 11.516C16.1569 10.9689 16.0597 10.4243 15.8546 9.9169C15.6495 9.40945 15.341 8.95025 14.9488 8.56854C14.5565 8.18683 14.0891 7.89095 13.5763 7.69976C13.0634 7.50856 12.5164 7.42623 11.97 7.458C11.3861 7.43299 10.8031 7.52664 10.2564 7.73329C9.70974 7.93994 9.21062 8.25531 8.78925 8.66032C8.36788 9.06533 8.03301 9.55158 7.80488 10.0897C7.57676 10.6278 7.46011 11.2065 7.462 11.791C7.46123 12.6111 7.71952 13.4104 8.2 14.075C8.23578 14.1127 8.26114 14.1591 8.27358 14.2096C8.28603 14.2601 8.28514 14.313 8.271 14.363C8.196 14.675 8.027 15.363 7.993 15.498C7.949 15.686 7.849 15.724 7.659 15.636C6.413 15.061 5.631 13.236 5.631 11.764C5.631 8.618 7.921 5.721 12.231 5.721C13.0176 5.68129 13.8042 5.80044 14.5438 6.07134C15.2834 6.34223 15.9609 6.75932 16.5358 7.29773C17.1107 7.83613 17.5712 8.48482 17.89 9.20509C18.2087 9.92535 18.3791 10.7024 18.391 11.49C18.391 14.936 16.219 17.708 13.197 17.708C12.7483 17.7228 12.303 17.6255 11.9015 17.4248C11.4999 17.2242 11.1546 16.9266 10.897 16.559L10.272 18.933C9.97516 19.8586 9.55541 20.7401 9.024 21.554C10.3977 21.9798 11.8471 22.1041 13.2732 21.9182C14.6993 21.7323 16.0685 21.2408 17.2871 20.4771C18.5057 19.7133 19.5451 18.6955 20.3342 17.4932C21.1232 16.2908 21.6434 14.9322 21.8591 13.5103C22.0748 12.0884 21.9809 10.6367 21.584 9.25445C21.187 7.87216 20.4962 6.59188 19.5589 5.50111C18.6216 4.41035 17.4599 3.53482 16.153 2.93437C14.8462 2.33392 13.4252 2.02271 11.987 2.022L12.014 2Z"/>
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_reddit -%}
+    <button
+      type="button"
+      data-social-share-type="reddit"
+      aria-label="{{ 'general.social.share_reddit' | t | default: 'Share on Reddit' }}"
+      class="social-share__button social-share__button--reddit"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C10.0222 2 8.08879 2.58649 6.44429 3.6853C4.7998 4.78412 3.51808 6.3459 2.7612 8.17317C2.00433 10.0004 1.80629 12.0111 2.19214 13.9509C2.578 15.8907 3.5304 17.6725 4.92893 19.0711C6.32745 20.4696 8.10928 21.422 10.0491 21.8079C11.9889 22.1937 13.9996 21.9957 15.8268 21.2388C17.6541 20.4819 19.2159 19.2002 20.3147 17.5557C21.4135 15.9112 22 13.9778 22 12C22 10.6868 21.7413 9.38642 21.2388 8.17317C20.7362 6.95991 19.9996 5.85752 19.0711 4.92893C18.1425 4.00035 17.0401 3.26375 15.8268 2.7612C14.6136 2.25866 13.3132 2 12 2ZM16.175 5.953C16.3775 5.95404 16.5752 6.01437 16.7437 6.12655C16.9123 6.23873 17.0442 6.39783 17.1233 6.5842C17.2024 6.77057 17.2252 6.97603 17.1888 7.17519C17.1524 7.37435 17.0585 7.55849 16.9186 7.70484C16.7787 7.8512 16.599 7.95335 16.4017 7.99868C16.2043 8.04402 15.9981 8.03054 15.8083 7.95992C15.6186 7.88929 15.4537 7.76462 15.334 7.60131C15.2144 7.438 15.1452 7.2432 15.135 7.041L12.971 6.585L12.3 9.708C13.6923 9.73694 15.0466 10.1675 16.2 10.948C16.3319 10.8161 16.4889 10.7119 16.6616 10.6414C16.8344 10.571 17.0195 10.5359 17.206 10.538C17.5935 10.5385 17.9649 10.6928 18.2388 10.9669C18.5128 11.2409 18.6667 11.6125 18.667 12C18.6648 12.2801 18.585 12.5542 18.4363 12.7916C18.2877 13.0291 18.076 13.2207 17.825 13.345C17.8486 13.4881 17.8604 13.6329 17.86 13.778C17.86 16.023 15.252 17.837 12.023 17.837C8.794 17.837 6.187 16.023 6.187 13.778C6.18674 13.629 6.19845 13.4802 6.222 13.333C5.91617 13.1964 5.66655 12.9589 5.51496 12.6602C5.36337 12.3615 5.31901 12.0198 5.38932 11.6923C5.45962 11.3649 5.64031 11.0715 5.90113 10.8613C6.16195 10.6512 6.48705 10.537 6.822 10.538C7.19708 10.5417 7.55671 10.6879 7.828 10.947C8.99304 10.1499 10.3694 9.7185 11.781 9.708L12.519 6.223C12.5365 6.15554 12.5781 6.09684 12.636 6.058C12.6963 6.02278 12.7673 6.01037 12.836 6.023L15.258 6.538C15.3392 6.36323 15.4687 6.21532 15.6311 6.11167C15.7936 6.00803 15.9823 5.95297 16.175 5.953ZM9.708 12C9.50206 11.9998 9.3007 12.0607 9.12938 12.175C8.95805 12.2892 8.82447 12.4517 8.74553 12.6419C8.66658 12.8321 8.64582 13.0415 8.68588 13.2435C8.72593 13.4455 8.825 13.6311 8.97055 13.7767C9.11609 13.9224 9.30158 14.0217 9.50354 14.0619C9.7055 14.1022 9.91486 14.0816 10.1051 14.0029C10.2954 13.9241 10.4581 13.7907 10.5725 13.6195C10.6869 13.4482 10.748 13.2469 10.748 13.041C10.7475 12.7652 10.6378 12.5009 10.4429 12.3058C10.248 12.1108 9.98375 12.0008 9.708 12ZM14.292 12C14.0861 12 13.8848 12.0611 13.7136 12.1754C13.5425 12.2898 13.409 12.4524 13.3302 12.6426C13.2514 12.8328 13.2308 13.0422 13.271 13.2441C13.3112 13.446 13.4103 13.6315 13.5559 13.7771C13.7015 13.9227 13.887 14.0218 14.0889 14.062C14.2908 14.1022 14.5002 14.0815 14.6904 14.0028C14.8806 13.924 15.0432 13.7905 15.1576 13.6193C15.2719 13.4482 15.333 13.2469 15.333 13.041C15.3327 12.765 15.223 12.5004 15.0278 12.3052C14.8326 12.11 14.568 12.0003 14.292 12ZM9.737 15.325C9.683 15.3244 9.63006 15.34 9.58499 15.3698C9.53991 15.3995 9.50475 15.442 9.48401 15.4919C9.46327 15.5418 9.4579 15.5967 9.46859 15.6496C9.47927 15.7026 9.50553 15.7511 9.544 15.789C10.2548 16.3186 11.1263 16.5873 12.012 16.55C12.8979 16.592 13.7707 16.3228 14.479 15.789C14.5282 15.7373 14.5574 15.6697 14.5612 15.5984C14.5651 15.5271 14.5434 15.4567 14.5 15.4C14.4487 15.3491 14.3793 15.3205 14.307 15.3205C14.2347 15.3205 14.1653 15.3491 14.114 15.4C13.5049 15.8339 12.7668 16.0486 12.02 16.009C11.2743 16.0497 10.5371 15.8349 9.93 15.4C9.87865 15.3492 9.80925 15.3208 9.737 15.321V15.325Z"/>
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_telegram -%}
+    <button
+      type="button"
+      data-social-share-type="telegram"
+      aria-label="{{ 'general.social.share_telegram' | t | default: 'Share on Telegram' }}"
+      class="social-share__button social-share__button--telegram"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M2.37 11.14C7.74 8.8 11.32 7.26 13.11 6.51C18.23 4.38 19.29 4.01 19.98 4C20.13 4 20.47 4.04 20.69 4.21C20.87 4.36 20.93 4.57 20.95 4.71C20.97 4.85 21 5.18 20.98 5.43C20.7 8.34 19.5 15.41 18.89 18.67C18.63 20.05 18.12 20.51 17.63 20.56C16.56 20.66 15.75 19.85 14.71 19.17C13.09 18.11 12.17 17.45 10.6 16.41C8.78 15.21 9.96 14.55 11 13.48C11.27 13.2 15.98 8.91 16.07 8.52C16.08 8.47 16.09 8.29 15.98 8.19C15.87 8.09 15.72 8.13 15.6 8.15C15.44 8.19 12.85 9.9 7.83 13.28C7.1 13.78 6.43 14.03 5.83 14.02C5.17 14.01 3.91 13.65 2.97 13.34C1.82 12.97 0.9 12.77 0.98 12.13C1.02 11.8 1.48 11.46 2.35 11.11L2.37 11.14Z"/>
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+
+  {%- if block.settings.show_instagram -%}
+    <button
+      type="button"
+      data-social-share-type="instagram"
+      aria-label="{{ 'general.social.share_instagram' | t | default: 'Share on Instagram' }}"
+      class="social-share__button social-share__button--instagram"
+    >
+      <span class="social-share__icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          {%- render 'icon', icon: 'instagram' -%}
+        </svg>
+      </span>
+      <span class="social-share__icon social-share__icon--success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24" fill="none">
+          <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 12L11 15L16 10" stroke="currentColor" stroke-miterlimit="10" stroke-width="1.5"/>
+        </svg>
+      </span>
+    </button>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .social-share {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .social-share__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3em;
+    height: 3em;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.625, 0.05, 0, 1);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .social-share__button:hover {
+    transform: scale(1.1) rotate(0.001deg);
+  }
+
+  .social-share:has(.social-share__button:hover) .social-share__button:not(:hover) {
+    transform: scale(0.9) rotate(0.001deg);
+  }
+
+  .social-share__icon {
+    display: flex;
+    width: 1.5em;
+    transition: transform 0.4s cubic-bezier(0.625, 0.05, 0, 1);
+  }
+
+  .social-share__icon svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .social-share__icon--success {
+    position: absolute;
+    color: #009E3B;
+    transform: translateY(200%) rotate(0.001deg);
+  }
+
+  /* Clipboard success state */
+  [data-social-share-type="clipboard"][data-social-share-success] .social-share__icon:not(.social-share__icon--success) {
+    transform: translateY(-200%) rotate(0.001deg);
+  }
+
+  [data-social-share-type="clipboard"][data-social-share-success] .social-share__icon--success {
+    transform: translateY(0%) rotate(0.001deg);
+  }
+
+  /* Platform-specific colors */
+  .social-share__button--linkedin {
+    color: #0A66C2;
+  }
+
+  .social-share__button--x {
+    color: #000000;
+  }
+
+  .social-share__button--facebook {
+    color: #1877F2;
+  }
+
+  .social-share__button--pinterest {
+    color: #E60023;
+  }
+
+  .social-share__button--whatsapp {
+    color: #25D366;
+  }
+
+  .social-share__button--reddit {
+    color: #FF4500;
+  }
+
+  .social-share__button--telegram {
+    color: #0088CC;
+  }
+
+  .social-share__button--instagram {
+    color: #E4405F;
+  }
+
+  /* Instagram success state (same as clipboard) */
+  [data-social-share-type="instagram"][data-social-share-success] .social-share__icon:not(.social-share__icon--success) {
+    transform: translateY(-200%) rotate(0.001deg);
+  }
+
+  [data-social-share-type="instagram"][data-social-share-success] .social-share__icon--success {
+    transform: translateY(0%) rotate(0.001deg);
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function() {
+    function initSocialShare() {
+      document.querySelectorAll('[data-social-share]').forEach(root => {
+        if (root._socialShareBound) return;
+        root._socialShareBound = true;
+
+        const link = root.getAttribute('data-social-share-link') || location.href;
+        const title = root.getAttribute('data-social-share-title') || document.title;
+
+        root.addEventListener('click', e => {
+          const btn = e.target.closest('[data-social-share-type]');
+          if (!btn) return;
+          e.preventDefault();
+
+          const type = btn.getAttribute('data-social-share-type');
+          const u = encodeURIComponent(link);
+          const t = encodeURIComponent(title);
+
+          const map = {
+            x: `https://twitter.com/intent/tweet?text=${t}&url=${u}`,
+            linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${u}`,
+            reddit: `https://www.reddit.com/submit?url=${u}&title=${t}`,
+            telegram: `https://t.me/share/url?url=${u}&text=${t}`,
+            whatsapp: `https://api.whatsapp.com/send?text=${t}%20${u}`,
+            mail: `mailto:?subject=${t}&body=${t}%0A%0A${u}`,
+            facebook: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+            pinterest: `https://www.pinterest.com/pin/create/button/?url=${u}&description=${t}`,
+          };
+
+          if (type === 'clipboard' || type === 'instagram') {
+            navigator.clipboard.writeText(link).then(() => {
+              btn.setAttribute('data-social-share-success', '');
+              setTimeout(() => btn.removeAttribute('data-social-share-success'), 2000);
+            });
+            return;
+          }
+
+          const url = map[type];
+          if (url) window.open(url, '_blank', 'noopener,noreferrer');
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSocialShare);
+    } else {
+      initSocialShare();
+    }
+
+    // Re-initialize when Shopify sections are loaded/updated
+    document.addEventListener('shopify:section:load', initSocialShare);
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Social Share",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Sharing Options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_clipboard",
+      "label": "Copy link",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email",
+      "label": "Email",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_facebook",
+      "label": "Facebook",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_x",
+      "label": "X (Twitter)",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pinterest",
+      "label": "Pinterest",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_linkedin",
+      "label": "LinkedIn",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_whatsapp",
+      "label": "WhatsApp",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_reddit",
+      "label": "Reddit",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_telegram",
+      "label": "Telegram",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_instagram",
+      "label": "Instagram",
+      "info": "Copies link to clipboard (Instagram doesn't support direct sharing)",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Social Share",
+      "category": "Social"
+    }
+  ]
+}
+{% endschema %}

@@ -54,6 +54,21 @@
           },
           "blocks": {}
         },
+        "social-share": {
+          "type": "social-share",
+          "name": "Social Share",
+          "settings": {
+            "show_clipboard": true,
+            "show_email": true,
+            "show_facebook": true,
+            "show_x": true,
+            "show_pinterest": true,
+            "show_linkedin": false,
+            "show_whatsapp": false,
+            "show_reddit": false,
+            "show_telegram": false
+          }
+        },
         "blog-post-image": {
           "type": "_blog-post-featured-image",
           "static": true,

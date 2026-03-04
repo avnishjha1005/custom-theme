@@ -38,53 +38,24 @@
           },
           "blocks": {}
         },
-        "blog_search_zCtDDP": {
-          "type": "blog-search",
-          "name": "Blog search",
+        "accordion_filter_NEW": {
+          "type": "accordion-filter",
+          "name": "Accordion Filter",
           "settings": {
             "padding": 16,
             "gap": 16,
-            "background_color": "#ffffff",
-            "border_width": 1,
-            "border_color": "#e6e6e6",
-            "border_radius": 8,
             "icon_size": 24,
             "icon_color": "#000000",
             "icon_hover_color": "#666666",
-            "tag_gap": 8,
-            "tag_padding_vertical": 8,
-            "tag_padding_horizontal": 16,
+            "keywords": "PRODUCTS, Return",
+            "view_all_text": "View All",
             "tag_font_size": 14,
-            "tag_border_radius": 16,
-            "tag_background": "#f5f5f5",
             "tag_text_color": "#000000",
-            "tag_border_color": "#e6e6e6",
-            "tag_hover_background": "#000000",
-            "tag_hover_text_color": "#ffffff",
-            "tag_hover_border_color": "#000000",
-            "fallback_blog": "",
-            "search_placeholder": "Search blog posts...",
+            "tag_hover_text_color": "#666666",
+            "search_placeholder": "Search FAQs...",
             "modal_background": "#ffffff",
-            "modal_border_radius": 16,
-            "input_background": "#f5f5f5",
-            "input_text_color": "#000000",
-            "input_border_color": "#e6e6e6",
-            "input_focus_border_color": "#000000",
-            "input_border_radius": 8,
-            "show_tags": true,
-            "result_title_size": 18,
-            "result_title_color": "#000000",
-            "result_excerpt_size": 14,
-            "result_excerpt_color": "#666666",
-            "result_hover_background": "#f5f5f5",
-            "highlight_color": "#ffeb3b",
-            "result_tag_font_size": 12,
-            "result_tag_border_radius": 12,
-            "result_tag_background": "#e6e6e6",
-            "result_tag_color": "#000000",
-            "empty_message": "Start typing to search blog posts",
-            "no_results_message": "No blog posts found",
-            "error_message": "Unable to search. Please try again."
+            "empty_message": "Start typing to search",
+            "no_results_message": "No items found"
           },
           "blocks": {}
         },
@@ -112,6 +83,7 @@
               "settings": {
                 "heading": "Products Damaged, Defective or Incorrectly Delivered",
                 "open_by_default": true,
+                "keywords": "Products, Damaged, Defective, Tampered",
                 "icon": "none",
                 "width": 20
               },
@@ -151,6 +123,7 @@
               "settings": {
                 "heading": "Eligibility for Return or Exchange",
                 "open_by_default": false,
+                "keywords": "Return, Exchange",
                 "icon": "none",
                 "width": 20
               },
@@ -190,6 +163,7 @@
               "settings": {
                 "heading": "Incorrect or Incomplete Shipping Address",
                 "open_by_default": false,
+                "keywords": "Shipping, Address",
                 "icon": "none",
                 "width": 20
               },
@@ -230,6 +204,7 @@
               "settings": {
                 "heading": "Colour Disclaimer",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -270,6 +245,7 @@
               "settings": {
                 "heading": "Refunds & Store Credit",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -310,6 +286,7 @@
               "settings": {
                 "heading": "Order Cancellation",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -350,6 +327,7 @@
               "settings": {
                 "heading": "Non-Returnable & Non-Exchangeable Products",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -390,6 +368,7 @@
               "settings": {
                 "heading": "Gift Cards",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -430,6 +409,7 @@
               "settings": {
                 "heading": "Need Assistance?",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -480,7 +460,7 @@
       },
       "block_order": [
         "text_BXTgp3",
-        "blog_search_zCtDDP",
+        "accordion_filter_NEW",
         "accordion_xyJEfa"
       ],
       "settings": {

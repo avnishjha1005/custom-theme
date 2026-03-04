@@ -1,0 +1,466 @@
+{% doc %}
+  @prompt
+    Create an accordion filter component with keyword tabs and search functionality. Visually identical to blog-search component.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% comment %} Parse keywords from settings {% endcomment %}
+{% assign keywords_string = block.settings.keywords | default: '' %}
+{% assign keyword_array = keywords_string | split: ',' %}
+
+{% style %}
+  .ai-accordion-filter-{{ ai_gen_id }} { display: block; width: 100%; font-family: inherit; overflow: hidden; }
+  .ai-accordion-filter-bar-{{ ai_gen_id }} {
+    display: flex; align-items: center; gap: {{ block.settings.gap }}px;
+    padding: {{ block.settings.padding }}px;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden;
+    justify-content: center;
+  }
+  .ai-accordion-filter-icon-{{ ai_gen_id }} {
+    background: none; border: none; flex-shrink: 0;
+    width: {{ block.settings.icon_size }}px; height: {{ block.settings.icon_size }}px;
+    min-width: {{ block.settings.icon_size }}px;
+    cursor: pointer; color: {{ block.settings.icon_color }}; transition: color 0.2s;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ai-accordion-filter-icon-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.icon_hover_color }};
+  }
+  .ai-accordion-filter-keywords-{{ ai_gen_id }} { flex: 1; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+  .ai-accordion-filter-keywords-{{ ai_gen_id }}::-webkit-scrollbar { display: none; }
+  .ai-accordion-filter-keywords-list-{{ ai_gen_id }} { display: flex; align-items: center; gap: 24px; list-style: none; margin: 0; padding: 0; white-space: nowrap; }
+
+  /* Desktop centering */
+  @media screen and (min-width: 750px) {
+    .ai-accordion-filter-bar-{{ ai_gen_id }} {
+      justify-content: center;
+    }
+    .ai-accordion-filter-keywords-{{ ai_gen_id }} {
+      flex: none;
+    }
+    .ai-accordion-filter-keywords-list-{{ ai_gen_id }} {
+      justify-content: center;
+    }
+  }
+
+  /* Mobile specific fixes */
+  @media screen and (max-width: 749px) {
+    .ai-accordion-filter-bar-{{ ai_gen_id }} {
+      justify-self: start;
+      padding-left: 0;
+      gap: {{ block.settings.gap | divided_by: 2 }}px;
+    }
+    .ai-accordion-filter-icon-{{ ai_gen_id }} {
+      margin-left: 0;
+    }
+  }
+  .ai-accordion-filter-view-all-{{ ai_gen_id }} {
+    display: inline-block;
+    color: {{ block.settings.tag_text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.tag_font_size }}px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+  .ai-accordion-filter-view-all-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
+  }
+
+  .ai-accordion-filter-keyword-link-{{ ai_gen_id }} {
+    display: inline-block;
+    background-color: transparent;
+    color: {{ block.settings.tag_text_color }};
+    text-decoration: none;
+    font-size: {{ block.settings.tag_font_size }}px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .ai-accordion-filter-keyword-link-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
+  }
+  .ai-accordion-filter-keyword-link-{{ ai_gen_id }}.active {
+    text-decoration: underline;
+  }
+
+  /* Overlay and Modals */
+  .ai-accordion-filter-overlay-{{ ai_gen_id }} {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    z-index: 9998; opacity: 0; visibility: hidden; transition: 0.3s;
+  }
+  .ai-accordion-filter-overlay-{{ ai_gen_id }}.active { opacity: 1; visibility: visible; }
+
+  .ai-accordion-filter-modal-{{ ai_gen_id }}, .ai-accordion-filter-drawer-{{ ai_gen_id }} {
+    position: fixed; background: {{ block.settings.modal_background }};
+    z-index: 9999; visibility: hidden; transition: 0.3s; display: flex; flex-direction: column;
+  }
+
+  /* Desktop Modal */
+  @media screen and (min-width: 750px) {
+    .ai-accordion-filter-modal-{{ ai_gen_id }} {
+      top: 20%; left: 50%; transform: translateX(-50%) translateY(-20px);
+      width: 600px; max-height: 400px; border-radius: 12px; opacity: 0;
+    }
+    .ai-accordion-filter-modal-{{ ai_gen_id }}.active { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+    .ai-accordion-filter-drawer-{{ ai_gen_id }} { display: none; }
+  }
+
+  /* Mobile Drawer */
+  @media screen and (max-width: 749px) {
+    .ai-accordion-filter-drawer-{{ ai_gen_id }} {
+      bottom: 0; left: 0; width: 100%; height: 80vh;
+      transform: translateY(100%); border-radius: 20px 20px 0 0;
+    }
+    .ai-accordion-filter-drawer-{{ ai_gen_id }}.active { visibility: visible; transform: translateY(0); }
+    .ai-accordion-filter-modal-{{ ai_gen_id }} { display: none; }
+  }
+
+  .ai-accordion-filter-header-{{ ai_gen_id }} { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #eee; }
+  .ai-accordion-filter-input-{{ ai_gen_id }} { flex: 1; border: none; padding: 10px; font-size: 16px; outline: none; background: transparent; }
+  .ai-accordion-filter-results-{{ ai_gen_id }} { flex: 1; overflow-y: auto; padding: 20px; text-align: center; color: #666; }
+{% endstyle %}
+
+<accordion-filter-{{ ai_gen_id }}>
+  <div class="ai-accordion-filter-bar-{{ ai_gen_id }}">
+    <button class="ai-accordion-filter-icon-{{ ai_gen_id }}" aria-label="Open Search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <div class="ai-accordion-filter-keywords-{{ ai_gen_id }}">
+      <ul class="ai-accordion-filter-keywords-list-{{ ai_gen_id }}">
+        <li><button type="button" class="ai-accordion-filter-view-all-{{ ai_gen_id }}">{{ block.settings.view_all_text }}</button></li>
+        {% for keyword in keyword_array %}
+          {% assign trimmed_keyword = keyword | strip %}
+          {% if trimmed_keyword != '' %}
+            <li><button type="button" class="ai-accordion-filter-keyword-link-{{ ai_gen_id }}" data-keyword="{{ trimmed_keyword | downcase }}">{{ trimmed_keyword }}</button></li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="ai-accordion-filter-overlay-{{ ai_gen_id }}"></div>
+
+  {% capture search_ui %}
+    <div class="ai-accordion-filter-header-{{ ai_gen_id }}">
+      <button class="ai-accordion-filter-icon-{{ ai_gen_id }} back-btn" style="transform: rotate(180deg)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+      <input type="text" class="ai-accordion-filter-input-{{ ai_gen_id }}" placeholder="{{ block.settings.search_placeholder }}">
+    </div>
+    <div class="ai-accordion-filter-results-{{ ai_gen_id }}">{{ block.settings.empty_message }}</div>
+  {% endcapture %}
+
+  <div class="ai-accordion-filter-modal-{{ ai_gen_id }}">{{ search_ui }}</div>
+  <div class="ai-accordion-filter-drawer-{{ ai_gen_id }}">{{ search_ui }}</div>
+</accordion-filter-{{ ai_gen_id }}>
+
+<script>
+  if (!customElements.get('accordion-filter-{{ ai_gen_id }}')) {
+    customElements.define('accordion-filter-{{ ai_gen_id }}', class extends HTMLElement {
+      constructor() {
+        super();
+        this.selectedKeywords = new Set();
+        this.searchQuery = '';
+      }
+
+      connectedCallback() {
+        // Wait for DOM to be fully ready
+        setTimeout(() => this.init(), 0);
+      }
+
+      init() {
+        this.overlay = this.querySelector('.ai-accordion-filter-overlay-{{ ai_gen_id }}');
+        this.container = window.innerWidth > 749
+          ? this.querySelector('.ai-accordion-filter-modal-{{ ai_gen_id }}')
+          : this.querySelector('.ai-accordion-filter-drawer-{{ ai_gen_id }}');
+
+        this.input = this.container.querySelector('input');
+        this.resultsDiv = this.container.querySelector('.ai-accordion-filter-results-{{ ai_gen_id }}');
+
+        // Get all accordion rows from the page
+        this.accordionRows = Array.from(document.querySelectorAll('accordion-custom[data-keywords]'));
+
+        // Search icon opens modal (use the first one, not the back button)
+        const searchIcon = this.querySelector('.ai-accordion-filter-bar-{{ ai_gen_id }} .ai-accordion-filter-icon-{{ ai_gen_id }}');
+        if (searchIcon) {
+          searchIcon.onclick = () => this.toggleModal(true);
+        }
+
+        if (this.overlay) {
+          this.overlay.onclick = () => this.toggleModal(false);
+        }
+
+        const backBtn = this.container.querySelector('.back-btn');
+        if (backBtn) {
+          backBtn.onclick = () => this.toggleModal(false);
+        }
+
+        // View All button
+        const viewAllBtn = this.querySelector('.ai-accordion-filter-view-all-{{ ai_gen_id }}');
+        if (viewAllBtn) {
+          viewAllBtn.onclick = () => this.clearFilters();
+        }
+
+        // Keyword buttons
+        this.querySelectorAll('.ai-accordion-filter-keyword-link-{{ ai_gen_id }}').forEach(btn => {
+          btn.onclick = () => this.toggleKeyword(btn);
+        });
+
+        // Search input
+        if (this.input) {
+          this.input.oninput = (e) => this.debounceSearch(e.target.value);
+        }
+      }
+
+      toggleModal(open) {
+        this.overlay.classList.toggle('active', open);
+        this.container.classList.toggle('active', open);
+        if (open) setTimeout(() => this.input.focus(), 100);
+      }
+
+      toggleKeyword(btn) {
+        const keyword = btn.dataset.keyword;
+        const isCurrentlyActive = this.selectedKeywords.has(keyword);
+
+        // Deactivate all keywords first
+        this.selectedKeywords.clear();
+        this.querySelectorAll('.ai-accordion-filter-keyword-link-{{ ai_gen_id }}').forEach(b => {
+          b.classList.remove('active');
+        });
+
+        // If this keyword wasn't active, activate it
+        if (!isCurrentlyActive) {
+          this.selectedKeywords.add(keyword);
+          btn.classList.add('active');
+        }
+
+        this.filterAccordions();
+      }
+
+      clearFilters() {
+        // Clear all keyword selections
+        this.selectedKeywords.clear();
+        this.querySelectorAll('.ai-accordion-filter-keyword-link-{{ ai_gen_id }}').forEach(btn => {
+          btn.classList.remove('active');
+        });
+
+        // Clear search
+        this.searchQuery = '';
+        this.input.value = '';
+
+        // Close modal
+        this.toggleModal(false);
+
+        // Show all accordions
+        this.filterAccordions();
+      }
+
+      debounceSearch(query) {
+        clearTimeout(this.timer);
+        this.searchQuery = query.toLowerCase().trim();
+        this.timer = setTimeout(() => this.filterAccordions(), 300);
+      }
+
+      filterAccordions() {
+        const hasKeywordFilter = this.selectedKeywords.size > 0;
+        const hasSearchFilter = this.searchQuery.length > 0;
+        let visibleCount = 0;
+
+        this.accordionRows.forEach(row => {
+          const keywords = (row.dataset.keywords || '').split(',').map(k => k.trim().toLowerCase()).filter(k => k);
+          const heading = (row.dataset.heading || '').toLowerCase();
+          const content = (row.dataset.content || '').toLowerCase();
+
+          // Keyword filter (OR logic - match ANY selected keyword)
+          const matchesKeyword = !hasKeywordFilter ||
+            Array.from(this.selectedKeywords).some(k => keywords.includes(k));
+
+          // Search filter (match heading OR content)
+          const matchesSearch = !hasSearchFilter ||
+            heading.includes(this.searchQuery) ||
+            content.includes(this.searchQuery);
+
+          // Show if matches both filters (AND logic between keyword and search)
+          const shouldShow = matchesKeyword && matchesSearch;
+
+          row.style.display = shouldShow ? '' : 'none';
+
+          // Auto-expand matching search results
+          if (hasSearchFilter && matchesSearch && shouldShow) {
+            const details = row.querySelector('details');
+            if (details) details.open = true;
+          }
+
+          if (shouldShow) visibleCount++;
+        });
+
+        // Update results message
+        if (hasSearchFilter) {
+          if (visibleCount === 0) {
+            this.resultsDiv.textContent = '{{ block.settings.no_results_message }}';
+          } else {
+            this.resultsDiv.textContent = `Found ${visibleCount} result${visibleCount !== 1 ? 's' : ''}`;
+          }
+        } else {
+          this.resultsDiv.textContent = '{{ block.settings.empty_message }}';
+        }
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Accordion Filter",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Filter bar"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Padding",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 8,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Search icon"
+    },
+    {
+      "type": "range",
+      "id": "icon_size",
+      "label": "Size",
+      "min": 16,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "icon_hover_color",
+      "label": "Hover color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Keywords"
+    },
+    {
+      "type": "paragraph",
+      "content": "Keywords are used to filter accordion items. Make sure accordion rows have matching keywords assigned."
+    },
+    {
+      "type": "text",
+      "id": "keywords",
+      "label": "Keywords (comma-separated)",
+      "default": "Returns, Shipping, Refunds, Products, Orders, Gift Cards, Support",
+      "info": "Enter keywords separated by commas"
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All text",
+      "default": "View All"
+    },
+    {
+      "type": "range",
+      "id": "tag_font_size",
+      "label": "Font size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "tag_text_color",
+      "label": "Text color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "tag_hover_text_color",
+      "label": "Active/Hover text color",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Search modal"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search FAQs..."
+    },
+    {
+      "type": "color",
+      "id": "modal_background",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "text",
+      "id": "empty_message",
+      "label": "Empty state message",
+      "default": "Start typing to search"
+    },
+    {
+      "type": "text",
+      "id": "no_results_message",
+      "label": "No results message",
+      "default": "No items found"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordion Filter"
+    }
+  ]
+}
+{% endschema %}
