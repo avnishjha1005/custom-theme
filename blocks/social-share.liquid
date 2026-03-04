@@ -37,6 +37,12 @@
     data-article-title="{{ article.title | escape }}"
     data-article-image="{{ article.image | image_url: width: 600 }}"
   {% endif %}
+  {% if settings.storefront_api_token != blank %}
+    data-storefront-token="{{ settings.storefront_api_token }}"
+  {% endif %}
+  {% if customer %}
+    data-customer-id="{{ customer.id }}"
+  {% endif %}
   {{ block.shopify_attributes }}
 >
   {%- if block.settings.show_clipboard -%}
@@ -383,6 +389,7 @@
 {% javascript %}
   (function() {
     const BOOKMARK_STORAGE_KEY = 'saved_articles';
+    const METAFIELD_SYNC_KEY = 'bookmarks_last_sync';
 
     function getBookmarks() {
       try {
@@ -407,6 +414,62 @@
       return bookmarks.some(b => (typeof b === 'string' ? b : b.handle) === articleHandle);
     }
 
+    // Sync bookmarks to customer metafield
+    async function syncToMetafield(bookmarks) {
+      const root = document.querySelector('[data-social-share]');
+      const storefrontToken = root?.getAttribute('data-storefront-token');
+      const customerId = root?.getAttribute('data-customer-id');
+
+      if (!storefrontToken || !customerId) return;
+
+      // Extract just the handles for metafield storage
+      const handles = bookmarks.map(b => typeof b === 'string' ? b : b.handle);
+
+      const mutation = `
+        mutation customerUpdate($input: CustomerUpdateInput!) {
+          customerUpdate(input: $input) {
+            customer {
+              id
+            }
+            customerUserErrors {
+              field
+              message
+            }
+          }
+        }
+      `;
+
+      try {
+        const response = await fetch('/api/2024-01/graphql.json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': storefrontToken
+          },
+          body: JSON.stringify({
+            query: mutation,
+            variables: {
+              input: {
+                id: `gid://shopify/Customer/${customerId}`,
+                metafields: [{
+                  namespace: 'custom',
+                  key: 'saved_articles',
+                  type: 'list.single_line_text_field',
+                  value: JSON.stringify(handles)
+                }]
+              }
+            }
+          })
+        });
+
+        if (response.ok) {
+          localStorage.setItem(METAFIELD_SYNC_KEY, Date.now().toString());
+        }
+      } catch (error) {
+        console.error('Bookmark sync failed:', error);
+      }
+    }
+
     function showNotification(message) {
       // Remove existing notification
       const existing = document.querySelector('.bookmark-notification');
@@ -421,6 +484,75 @@
         notification.classList.add('bookmark-notification--hiding');
         setTimeout(() => notification.remove(), 300);
       }, 2500);
+    }
+
+    // Fetch bookmarks from customer metafield and merge with localStorage
+    async function syncFromMetafield() {
+      const root = document.querySelector('[data-social-share]');
+      const storefrontToken = root?.getAttribute('data-storefront-token');
+      const customerId = root?.getAttribute('data-customer-id');
+
+      if (!storefrontToken || !customerId) return;
+
+      const query = `
+        query getCustomerMetafield($customerId: ID!) {
+          customer(id: $customerId) {
+            metafield(namespace: "custom", key: "saved_articles") {
+              value
+            }
+          }
+        }
+      `;
+
+      try {
+        const response = await fetch('/api/2024-01/graphql.json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': storefrontToken
+          },
+          body: JSON.stringify({
+            query,
+            variables: {
+              customerId: `gid://shopify/Customer/${customerId}`
+            }
+          })
+        });
+
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const metafieldValue = data?.data?.customer?.metafield?.value;
+
+        if (metafieldValue) {
+          const metafieldHandles = JSON.parse(metafieldValue);
+          const localBookmarks = getBookmarks();
+
+          // Merge: add any metafield bookmarks not in localStorage
+          const localHandles = new Set(localBookmarks.map(b => typeof b === 'string' ? b : b.handle));
+          let hasNew = false;
+
+          metafieldHandles.forEach(handle => {
+            if (!localHandles.has(handle)) {
+              localBookmarks.push({
+                handle,
+                blogHandle: null,
+                title: null,
+                image: null,
+                savedAt: new Date().toISOString()
+              });
+              hasNew = true;
+            }
+          });
+
+          if (hasNew) {
+            saveBookmarks(localBookmarks);
+            initBookmarkState();
+          }
+        }
+      } catch (error) {
+        console.error('Bookmark fetch from metafield failed:', error);
+      }
     }
 
     function initBookmarkState() {
@@ -492,6 +624,9 @@
 
             saveBookmarks(bookmarks);
 
+            // Sync to customer metafield
+            syncToMetafield(bookmarks);
+
             // Update UI
             btn.setAttribute('aria-pressed', String(!isActive));
             btn.classList.toggle('social-share__button--active', !isActive);
@@ -532,9 +667,13 @@
     }
 
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initSocialShare);
+      document.addEventListener('DOMContentLoaded', () => {
+        initSocialShare();
+        syncFromMetafield(); // Fetch bookmarks from metafield for logged-in users
+      });
     } else {
       initSocialShare();
+      syncFromMetafield();
     }
 
     // Re-initialize when Shopify sections are loaded/updated

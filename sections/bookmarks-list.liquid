@@ -24,7 +24,12 @@
         {{ blog.handle }}{%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}
     {%- endcapture -%}
-    <div class="bookmarks-grid js-bookmarks-grid" data-blog-handles="{{ blog_handles | strip }}">
+    <div
+      class="bookmarks-grid js-bookmarks-grid"
+      data-blog-handles="{{ blog_handles | strip }}"
+      {% if settings.storefront_api_token != blank %}data-storefront-token="{{ settings.storefront_api_token }}"{% endif %}
+      {% if customer %}data-customer-id="{{ customer.id }}"{% endif %}
+    >
       <div class="bookmarks-loading">
         <span class="visually-hidden">Loading saved articles...</span>
         <svg class="spinner" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -365,8 +370,13 @@
       // Filter out articles that couldn't be found
       const validArticles = articles.filter(a => a && a.url);
 
-      // Update storage to remove invalid and migrate legacy bookmarks
-      if (validArticles.length !== bookmarks.length || bookmarks.some(b => typeof b === 'string')) {
+      // Only update storage if we successfully found some articles
+      // Don't clear bookmarks just because fetch failed
+      const hasLegacyBookmarks = bookmarks.some(b => typeof b === 'string');
+      const hasIncompleteBookmarks = bookmarks.some(b => typeof b === 'object' && (!b.title || !b.blogHandle));
+
+      if (validArticles.length > 0 && (hasLegacyBookmarks || hasIncompleteBookmarks)) {
+        // Migrate legacy bookmarks to new format
         const updatedBookmarks = validArticles.map(a => ({
           handle: a.handle,
           blogHandle: a.blogHandle,
@@ -391,8 +401,81 @@
       });
     }
 
-    // Initial render
-    renderBookmarks();
+    // Fetch bookmarks from customer metafield and merge with localStorage
+    async function syncFromMetafield() {
+      const storefrontToken = grid.getAttribute('data-storefront-token');
+      const customerId = grid.getAttribute('data-customer-id');
+
+      if (!storefrontToken || !customerId) return false;
+
+      const query = `
+        query getCustomerMetafield($customerId: ID!) {
+          customer(id: $customerId) {
+            metafield(namespace: "custom", key: "saved_articles") {
+              value
+            }
+          }
+        }
+      `;
+
+      try {
+        const response = await fetch('/api/2024-01/graphql.json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': storefrontToken
+          },
+          body: JSON.stringify({
+            query,
+            variables: {
+              customerId: `gid://shopify/Customer/${customerId}`
+            }
+          })
+        });
+
+        if (!response.ok) return false;
+
+        const data = await response.json();
+        const metafieldValue = data?.data?.customer?.metafield?.value;
+
+        if (metafieldValue) {
+          const metafieldHandles = JSON.parse(metafieldValue);
+          const localBookmarks = getBookmarks();
+
+          // Merge: add any metafield bookmarks not in localStorage
+          const localHandles = new Set(localBookmarks.map(b => typeof b === 'string' ? b : b.handle));
+          let hasNew = false;
+
+          metafieldHandles.forEach(handle => {
+            if (!localHandles.has(handle)) {
+              localBookmarks.push({
+                handle,
+                blogHandle: null,
+                title: null,
+                image: null,
+                savedAt: new Date().toISOString()
+              });
+              hasNew = true;
+            }
+          });
+
+          if (hasNew) {
+            saveBookmarks(localBookmarks);
+          }
+          return true;
+        }
+      } catch (error) {
+        console.error('Bookmark fetch from metafield failed:', error);
+      }
+      return false;
+    }
+
+    // Initial render - sync from metafield first, then render
+    async function init() {
+      await syncFromMetafield();
+      renderBookmarks();
+    }
+    init();
 
     // Listen for bookmark updates from other pages/tabs
     window.addEventListener('bookmarks:updated', renderBookmarks);

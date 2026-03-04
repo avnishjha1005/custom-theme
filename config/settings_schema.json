@@ -78,6 +78,21 @@
         ]
       },
   {
+    "name": "Article Bookmarks",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Allow logged-in customers to save articles. Bookmarks are stored in customer metafields for cross-device sync."
+      },
+      {
+        "type": "text",
+        "id": "storefront_api_token",
+        "label": "Storefront API Access Token",
+        "info": "Required for saving bookmarks to customer metafields. Create a Headless app in Settings > Apps > Develop apps."
+      }
+    ]
+  },
+  {
     "name": "t:names.logo_and_favicon",
     "settings": [
       {
