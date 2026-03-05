@@ -369,7 +369,7 @@
       return [];
     }
 
-    // Save bookmarks to customer metafield
+    // Save bookmarks to customer metafield using metafieldsSet mutation
     async function saveBookmarksToMetafield(handles) {
       const storefrontToken = container.getAttribute('data-storefront-token');
       const customerId = container.getAttribute('data-customer-id');
@@ -377,10 +377,16 @@
       if (!storefrontToken || !customerId) return false;
 
       const mutation = `
-        mutation customerUpdate($input: CustomerUpdateInput!) {
-          customerUpdate(input: $input) {
-            customer { id }
-            customerUserErrors { field message }
+        mutation metafieldsSet($metafields: [MetafieldsSetInput!]!) {
+          metafieldsSet(metafields: $metafields) {
+            metafields {
+              key
+              value
+            }
+            userErrors {
+              field
+              message
+            }
           }
         }
       `;
@@ -395,22 +401,20 @@
           body: JSON.stringify({
             query: mutation,
             variables: {
-              input: {
-                id: `gid://shopify/Customer/${customerId}`,
-                metafields: [{
-                  namespace: 'custom',
-                  key: 'saved_articles',
-                  type: 'list.single_line_text_field',
-                  value: JSON.stringify(handles)
-                }]
-              }
+              metafields: [{
+                ownerId: `gid://shopify/Customer/${customerId}`,
+                namespace: 'custom',
+                key: 'saved_articles',
+                type: 'list.single_line_text_field',
+                value: JSON.stringify(handles)
+              }]
             }
           })
         });
 
         const data = await response.json();
         console.log('Metafield save response:', data);
-        return !data.errors && !data.data?.customerUpdate?.customerUserErrors?.length;
+        return !data.errors && !data.data?.metafieldsSet?.userErrors?.length;
       } catch (error) {
         console.error('Bookmark save failed:', error);
         return false;

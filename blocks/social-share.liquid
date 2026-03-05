@@ -406,7 +406,7 @@
       }, 2500);
     }
 
-    // Save bookmarks to customer metafield
+    // Save bookmarks to customer metafield using metafieldsSet mutation
     async function saveToMetafield(root, handles) {
       const storefrontToken = root.getAttribute('data-storefront-token');
       const customerId = root.getAttribute('data-customer-id');
@@ -417,10 +417,16 @@
       }
 
       const mutation = `
-        mutation customerUpdate($input: CustomerUpdateInput!) {
-          customerUpdate(input: $input) {
-            customer { id }
-            customerUserErrors { field message }
+        mutation metafieldsSet($metafields: [MetafieldsSetInput!]!) {
+          metafieldsSet(metafields: $metafields) {
+            metafields {
+              key
+              value
+            }
+            userErrors {
+              field
+              message
+            }
           }
         }
       `;
@@ -435,15 +441,13 @@
           body: JSON.stringify({
             query: mutation,
             variables: {
-              input: {
-                id: `gid://shopify/Customer/${customerId}`,
-                metafields: [{
-                  namespace: 'custom',
-                  key: 'saved_articles',
-                  type: 'list.single_line_text_field',
-                  value: JSON.stringify(handles)
-                }]
-              }
+              metafields: [{
+                ownerId: `gid://shopify/Customer/${customerId}`,
+                namespace: 'custom',
+                key: 'saved_articles',
+                type: 'list.single_line_text_field',
+                value: JSON.stringify(handles)
+              }]
             }
           })
         });
@@ -451,8 +455,8 @@
         const data = await response.json();
         console.log('Metafield save response:', data);
 
-        if (data.errors || data.data?.customerUpdate?.customerUserErrors?.length > 0) {
-          console.error('Metafield save errors:', data.errors || data.data.customerUpdate.customerUserErrors);
+        if (data.errors || data.data?.metafieldsSet?.userErrors?.length > 0) {
+          console.error('Metafield save errors:', data.errors || data.data.metafieldsSet.userErrors);
           return false;
         }
         return true;
