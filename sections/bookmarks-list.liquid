@@ -4,7 +4,15 @@
   Create a page with template "bookmarks" to use this section
 {%- endcomment -%}
 
-<div class="bookmarks-section color-{{ section.settings.color_scheme }}">
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<div
+  class="section color-{{ section.settings.color_scheme }} bookmarks-section"
+  style="
+    padding-top: {{ section.settings.padding_top | default: 40 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | default: 80 }}px;
+  "
+>
   <div class="page-width">
     <h1 class="bookmarks-title h2">{{ section.settings.title | default: 'My Saved Articles' }}</h1>
 
@@ -18,14 +26,14 @@
       </div>
     {%- endunless -%}
 
-    {%- comment -%} Bookmarks grid - rendered via JavaScript {%- endcomment -%}
+    {%- comment -%} Bookmarks container - rendered via JavaScript {%- endcomment -%}
     {%- capture blog_handles -%}
       {%- for blog in blogs -%}
         {{ blog.handle }}{%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}
     {%- endcapture -%}
     <div
-      class="bookmarks-grid js-bookmarks-grid"
+      class="bookmarks-container js-bookmarks-grid"
       data-blog-handles="{{ blog_handles | strip }}"
       {% if settings.storefront_api_token != blank %}data-storefront-token="{{ settings.storefront_api_token }}"{% endif %}
       {% if customer %}data-customer-id="{{ customer.id }}"{% endif %}
@@ -53,31 +61,40 @@
       </div>
     </template>
 
-    {%- comment -%} Article card template (hidden, used by JS) {%- endcomment -%}
+    {%- comment -%} Article card template (hidden, used by JS) - matches main-blog-listings.liquid styling {%- endcomment -%}
     <template id="bookmark-card-template">
-      <article class="bookmark-card">
-        <a href="" class="bookmark-card__image-link">
-          <div class="bookmark-card__image media media--portrait">
-            <img src="" alt="" loading="lazy" class="motion-reduce">
+      <div class="bookmark-item">
+        <article class="bookmark-card">
+          <div class="bookmark-card__image">
+            <a href="">
+              <img src="" alt="" loading="lazy" width="251" height="360">
+            </a>
           </div>
-        </a>
-        <div class="bookmark-card__content">
-          <h3 class="bookmark-card__title h4">
-            <a href=""></a>
-          </h3>
-          <div class="bookmark-card__meta"></div>
-          <button type="button" class="bookmark-card__remove link" aria-label="{{ 'blogs.bookmarks.remove' | t | default: 'Remove' }}">
-            {{ 'blogs.bookmarks.remove' | t | default: 'Remove' }}
-          </button>
-        </div>
-      </article>
+          <div class="bookmark-card__content">
+            <span class="bookmark-card__tag"></span>
+            <h3 class="bookmark-card__title">
+              <a href=""></a>
+            </h3>
+            <p class="bookmark-card__excerpt"></p>
+            <div class="bookmark-card__actions">
+              <a href="" class="bookmark-card__read-link">READ</a>
+              <button type="button" class="bookmark-card__remove" aria-label="{{ 'blogs.bookmarks.remove' | t | default: 'Remove' }}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                  <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17.5L5 21V5Z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
     </template>
   </div>
 </div>
 
 {% stylesheet %}
   .bookmarks-section {
-    padding: 40px 0 80px;
+    --page-content-width: var(--narrow-page-width);
+    --page-width: calc(var(--page-content-width) + (var(--page-margin) * 2));
   }
 
   .bookmarks-title {
@@ -97,14 +114,13 @@
     margin-bottom: 16px;
   }
 
-  .bookmarks-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
+  .bookmarks-container {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
   }
 
   .bookmarks-loading {
-    grid-column: 1 / -1;
     display: flex;
     justify-content: center;
     padding: 60px 20px;
@@ -116,24 +132,31 @@
     color: rgb(var(--color-foreground-rgb) / 0.4);
   }
 
+  .bookmark-item {
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
   .bookmark-card {
-    border-radius: 8px;
-    overflow: hidden;
-    background: rgb(var(--color-background-rgb));
-    border: 1px solid rgb(var(--color-foreground-rgb) / 0.1);
-    transition: box-shadow 0.2s ease;
-  }
-
-  .bookmark-card:hover {
-    box-shadow: 0 4px 12px rgb(var(--color-foreground-rgb) / 0.1);
-  }
-
-  .bookmark-card__image-link {
-    display: block;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-start;
+    justify-content: center;
   }
 
   .bookmark-card__image {
-    aspect-ratio: 3/2;
+    flex-shrink: 0;
+    width: 251px;
+    height: 360px;
+    overflow: hidden;
+  }
+
+  .bookmark-card__image a {
+    display: block;
+    width: 100%;
+    height: 100%;
   }
 
   .bookmark-card__image img {
@@ -143,47 +166,84 @@
   }
 
   .bookmark-card__content {
-    padding: 16px;
+    gap: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    max-width: 251px !important;
+  }
+
+  .bookmark-card__tag {
+    font-size: 0.75rem;
+    line-height: 0.875;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb));
   }
 
   .bookmark-card__title {
-    margin: 0 0 8px;
-    line-height: 1.3;
+    font-family: var(--font-heading--family);
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0;
   }
 
   .bookmark-card__title a {
     text-decoration: none;
-    color: inherit;
+    color: var(--color-foreground-heading);
   }
 
   .bookmark-card__title a:hover {
-    text-decoration: underline;
+    opacity: 0.7;
   }
 
-  .bookmark-card__meta {
+  .bookmark-card__excerpt {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
+    margin: 0;
+  }
+
+  .bookmark-card__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    font-weight: 600;
+  }
+
+  .bookmark-card__read-link {
     font-size: 0.875rem;
-    color: rgb(var(--color-foreground-rgb) / 0.6);
-    margin-bottom: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: var(--color-foreground-heading);
+  }
+
+  .bookmark-card__read-link:hover {
+    opacity: 0.7;
   }
 
   .bookmark-card__remove {
-    font-size: 0.875rem;
-    color: rgb(var(--color-foreground-rgb) / 0.6);
-    text-decoration: underline;
-    cursor: pointer;
     background: none;
     border: none;
     padding: 0;
+    cursor: pointer;
+    color: var(--color-foreground-heading);
+    transition: opacity 0.2s ease;
   }
 
   .bookmark-card__remove:hover {
-    color: var(--color-foreground);
+    opacity: 0.7;
   }
 
   .bookmarks-empty-state {
-    grid-column: 1 / -1;
     text-align: center;
     padding: 60px 20px;
+    max-width: 640px;
+    margin: 0 auto;
   }
 
   .bookmarks-empty-state svg {
@@ -196,9 +256,52 @@
     color: rgb(var(--color-foreground-rgb) / 0.6);
   }
 
+  /* Mobile Styles - maintain side-by-side layout */
   @media screen and (max-width: 749px) {
-    .bookmarks-grid {
-      grid-template-columns: 1fr;
+    .bookmarks-container {
+      gap: 32px;
+    }
+
+    .bookmark-item {
+      width: 100%;
+    }
+
+    .bookmark-card {
+      flex-direction: row;
+      gap: 16px;
+    }
+
+    .bookmark-card__image {
+      width: 140px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .bookmark-card__content {
+      padding-top: 0;
+      gap: 24px;
+      max-width: none !important;
+      flex: 1;
+    }
+
+    .bookmark-card__title {
+      font-size: 1.125rem;
+    }
+
+    .bookmark-card__tag {
+      font-size: 0.625rem;
+    }
+
+    .bookmark-card__excerpt {
+      font-size: 0.8rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .bookmark-card__read-link {
+      font-size: 0.75rem;
     }
   }
 {% endstylesheet %}
@@ -206,8 +309,8 @@
 {% javascript %}
   (function() {
     const STORAGE_KEY = 'saved_articles';
-    const grid = document.querySelector('.js-bookmarks-grid');
-    if (!grid) return;
+    const container = document.querySelector('.js-bookmarks-grid');
+    if (!container) return;
 
     const emptyTemplate = document.getElementById('bookmarks-empty-template');
     const cardTemplate = document.getElementById('bookmark-card-template');
@@ -224,31 +327,44 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
     }
 
+    // Extract just the article slug from a handle (fixes URL duplication bug)
+    function getArticleSlug(handle) {
+      if (!handle) return '';
+      // If handle contains slashes, get the last part (the actual article slug)
+      return handle.split('/').pop();
+    }
+
     function removeBookmark(articleHandle) {
+      const slug = getArticleSlug(articleHandle);
       let bookmarks = getBookmarks();
-      bookmarks = bookmarks.filter(b => (typeof b === 'string' ? b : b.handle) !== articleHandle);
+      bookmarks = bookmarks.filter(b => {
+        const bHandle = typeof b === 'string' ? b : b.handle;
+        return getArticleSlug(bHandle) !== slug;
+      });
       saveBookmarks(bookmarks);
 
       // Dispatch event for other components
       window.dispatchEvent(new CustomEvent('bookmarks:updated', {
-        detail: { bookmarks, articleHandle, action: 'removed' }
+        detail: { bookmarks, articleHandle: slug, action: 'removed' }
       }));
 
       renderBookmarks();
     }
 
     async function fetchArticleData(handle, blogHandle) {
+      const slug = getArticleSlug(handle);
+
       // If we have a blog handle, try that first
       if (blogHandle) {
         try {
-          const response = await fetch(`/blogs/${blogHandle}/${handle}.json`);
+          const response = await fetch(`/blogs/${blogHandle}/${slug}.json`);
           if (response.ok) {
             const data = await response.json();
             return {
               ...data.article,
-              handle: handle,
+              handle: slug,
               blogHandle: blogHandle,
-              url: `/blogs/${blogHandle}/${handle}`
+              url: `/blogs/${blogHandle}/${slug}`
             };
           }
         } catch (e) {
@@ -257,7 +373,7 @@
       }
 
       // Get blog handles from data attribute, fallback to common names
-      const blogHandlesAttr = grid.getAttribute('data-blog-handles');
+      const blogHandlesAttr = container.getAttribute('data-blog-handles');
       const blogs = blogHandlesAttr
         ? blogHandlesAttr.split(',').map(b => b.trim()).filter(Boolean)
         : ['editorial', 'news', 'journal', 'blog', 'articles'];
@@ -265,14 +381,14 @@
       for (const blog of blogs) {
         if (blog === blogHandle) continue; // Already tried this one
         try {
-          const response = await fetch(`/blogs/${blog}/${handle}.json`);
+          const response = await fetch(`/blogs/${blog}/${slug}.json`);
           if (response.ok) {
             const data = await response.json();
             return {
               ...data.article,
-              handle: handle,
+              handle: slug,
               blogHandle: blog,
-              url: `/blogs/${blog}/${handle}`
+              url: `/blogs/${blog}/${slug}`
             };
           }
         } catch (e) {
@@ -284,63 +400,93 @@
       return null;
     }
 
+    function truncateText(text, wordLimit) {
+      if (!text) return '';
+      const words = text.split(/\s+/);
+      if (words.length <= wordLimit) return text;
+      return words.slice(0, wordLimit).join(' ') + '...';
+    }
+
+    function stripHtml(html) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = html;
+      return tmp.textContent || tmp.innerText || '';
+    }
+
     function createArticleCard(article) {
       const clone = cardTemplate.content.cloneNode(true);
+      const item = clone.querySelector('.bookmark-item');
       const card = clone.querySelector('.bookmark-card');
 
-      // Set article URL
-      const url = article.url || `#`;
+      // Build clean URL using slug
+      const slug = getArticleSlug(article.handle);
+      const url = `/blogs/${article.blogHandle}/${slug}`;
+
+      // Set article URLs on all links
       card.querySelectorAll('a').forEach(link => {
         link.href = url;
       });
 
       // Set title
       const titleLink = card.querySelector('.bookmark-card__title a');
-      titleLink.textContent = article.title || article.handle;
+      titleLink.textContent = article.title || slug;
+
+      // Set tag (first tag if available)
+      const tagEl = card.querySelector('.bookmark-card__tag');
+      if (article.tags && article.tags.length > 0) {
+        const firstTag = Array.isArray(article.tags) ? article.tags[0] : article.tags.split(',')[0];
+        tagEl.textContent = firstTag.trim();
+      } else {
+        tagEl.style.display = 'none';
+      }
+
+      // Set excerpt
+      const excerptEl = card.querySelector('.bookmark-card__excerpt');
+      if (article.summary_html || article.body_html || article.excerpt) {
+        const rawText = stripHtml(article.summary_html || article.excerpt || article.body_html || '');
+        excerptEl.textContent = truncateText(rawText, 20);
+      } else {
+        excerptEl.style.display = 'none';
+      }
 
       // Set image
+      const imgContainer = card.querySelector('.bookmark-card__image');
       const img = card.querySelector('.bookmark-card__image img');
       if (article.image) {
         const imgSrc = typeof article.image === 'string'
           ? article.image
           : article.image.src;
-        img.src = imgSrc;
+        // Add width parameter for optimization
+        img.src = imgSrc.includes('?') ? imgSrc + '&width=600' : imgSrc + '?width=600';
         img.alt = article.title || '';
+        img.width = 251;
+        img.height = 360;
       } else {
         // Hide image container if no image
-        card.querySelector('.bookmark-card__image-link').style.display = 'none';
-      }
-
-      // Set meta (date if available)
-      const meta = card.querySelector('.bookmark-card__meta');
-      if (article.published_at || article.savedAt) {
-        const dateStr = article.published_at || article.savedAt;
-        const date = new Date(dateStr);
-        meta.textContent = date.toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
+        imgContainer.style.display = 'none';
       }
 
       // Set up remove button
       const removeBtn = card.querySelector('.bookmark-card__remove');
-      removeBtn.addEventListener('click', () => removeBookmark(article.handle));
+      removeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        removeBookmark(article.handle);
+      });
 
-      return card;
+      return item;
     }
 
     async function renderBookmarks() {
       const bookmarks = getBookmarks();
 
       if (bookmarks.length === 0) {
-        grid.innerHTML = '';
-        grid.appendChild(emptyTemplate.content.cloneNode(true));
+        container.innerHTML = '';
+        container.appendChild(emptyTemplate.content.cloneNode(true));
         return;
       }
 
       // Show loading state
-      grid.innerHTML = '<div class="bookmarks-loading"><span class="visually-hidden">Loading...</span></div>';
+      container.innerHTML = '<div class="bookmarks-loading"><span class="visually-hidden">Loading...</span></div>';
 
       // Process bookmarks - use stored data when available, fetch for legacy items
       const articles = await Promise.all(
@@ -350,20 +496,26 @@
             return await fetchArticleData(bookmark, null);
           }
 
-          // New format - use stored data if complete, otherwise fetch
+          // Always fetch to get full article data (tags, excerpt, etc.)
+          const fetched = await fetchArticleData(bookmark.handle, bookmark.blogHandle);
+          if (fetched) {
+            return fetched;
+          }
+
+          // Fallback to stored data if fetch fails
           if (bookmark.title && bookmark.blogHandle) {
+            const slug = getArticleSlug(bookmark.handle);
             return {
-              handle: bookmark.handle,
+              handle: slug,
               title: bookmark.title,
               image: bookmark.image,
               blogHandle: bookmark.blogHandle,
-              url: `/blogs/${bookmark.blogHandle}/${bookmark.handle}`,
+              url: `/blogs/${bookmark.blogHandle}/${slug}`,
               savedAt: bookmark.savedAt
             };
           }
 
-          // Incomplete data, fetch from API
-          return await fetchArticleData(bookmark.handle, bookmark.blogHandle);
+          return null;
         })
       );
 
@@ -371,14 +523,13 @@
       const validArticles = articles.filter(a => a && a.url);
 
       // Only update storage if we successfully found some articles
-      // Don't clear bookmarks just because fetch failed
       const hasLegacyBookmarks = bookmarks.some(b => typeof b === 'string');
       const hasIncompleteBookmarks = bookmarks.some(b => typeof b === 'object' && (!b.title || !b.blogHandle));
 
       if (validArticles.length > 0 && (hasLegacyBookmarks || hasIncompleteBookmarks)) {
-        // Migrate legacy bookmarks to new format
+        // Migrate legacy bookmarks to new format with clean slugs
         const updatedBookmarks = validArticles.map(a => ({
-          handle: a.handle,
+          handle: getArticleSlug(a.handle),
           blogHandle: a.blogHandle,
           title: a.title,
           image: a.image,
@@ -388,23 +539,23 @@
       }
 
       // Render cards
-      grid.innerHTML = '';
+      container.innerHTML = '';
 
       if (validArticles.length === 0) {
-        grid.appendChild(emptyTemplate.content.cloneNode(true));
+        container.appendChild(emptyTemplate.content.cloneNode(true));
         return;
       }
 
       validArticles.forEach(article => {
         const card = createArticleCard(article);
-        grid.appendChild(card);
+        container.appendChild(card);
       });
     }
 
     // Fetch bookmarks from customer metafield and merge with localStorage
     async function syncFromMetafield() {
-      const storefrontToken = grid.getAttribute('data-storefront-token');
-      const customerId = grid.getAttribute('data-customer-id');
+      const storefrontToken = container.getAttribute('data-storefront-token');
+      const customerId = container.getAttribute('data-customer-id');
 
       if (!storefrontToken || !customerId) return false;
 
@@ -443,13 +594,17 @@
           const localBookmarks = getBookmarks();
 
           // Merge: add any metafield bookmarks not in localStorage
-          const localHandles = new Set(localBookmarks.map(b => typeof b === 'string' ? b : b.handle));
+          const localHandles = new Set(localBookmarks.map(b => {
+            const h = typeof b === 'string' ? b : b.handle;
+            return getArticleSlug(h);
+          }));
           let hasNew = false;
 
           metafieldHandles.forEach(handle => {
-            if (!localHandles.has(handle)) {
+            const slug = getArticleSlug(handle);
+            if (!localHandles.has(slug)) {
               localBookmarks.push({
-                handle,
+                handle: slug,
                 blogHandle: null,
                 title: null,
                 image: null,
@@ -491,7 +646,7 @@
 {
   "name": "Bookmarks List",
   "tag": "section",
-  "class": "section",
+  "class": "bookmarks-section-wrapper",
   "settings": [
     {
       "type": "text",
@@ -504,6 +659,30 @@
       "id": "color_scheme",
       "label": "Color scheme",
       "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 80
     }
   ],
   "presets": [
