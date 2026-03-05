@@ -12,7 +12,7 @@
     "main": {
       "type": "bookmarks-list",
       "settings": {
-        "title": "My Saved Articles",
+        "title": "Bookmarks",
         "color_scheme": "scheme-2"
       }
     }
