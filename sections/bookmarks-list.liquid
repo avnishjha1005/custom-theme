@@ -431,19 +431,27 @@
       const titleLink = card.querySelector('.bookmark-card__title a');
       titleLink.textContent = article.title || slug;
 
-      // Set tag (first tag if available)
+      // Set tag (first tag if available) - Shopify returns tags as comma-separated string
       const tagEl = card.querySelector('.bookmark-card__tag');
-      if (article.tags && article.tags.length > 0) {
-        const firstTag = Array.isArray(article.tags) ? article.tags[0] : article.tags.split(',')[0];
+      let firstTag = null;
+      if (article.tags) {
+        if (Array.isArray(article.tags)) {
+          firstTag = article.tags[0];
+        } else if (typeof article.tags === 'string' && article.tags.trim()) {
+          firstTag = article.tags.split(',')[0];
+        }
+      }
+      if (firstTag && firstTag.trim()) {
         tagEl.textContent = firstTag.trim();
       } else {
         tagEl.style.display = 'none';
       }
 
-      // Set excerpt
+      // Set excerpt - check multiple possible field names from Shopify API
       const excerptEl = card.querySelector('.bookmark-card__excerpt');
-      if (article.summary_html || article.body_html || article.excerpt) {
-        const rawText = stripHtml(article.summary_html || article.excerpt || article.body_html || '');
+      const excerptSource = article.summary_html || article.excerpt || article.body_html || article.content || '';
+      const rawText = stripHtml(excerptSource).trim();
+      if (rawText) {
         excerptEl.textContent = truncateText(rawText, 20);
       } else {
         excerptEl.style.display = 'none';
