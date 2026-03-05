@@ -354,36 +354,28 @@
     async function fetchArticleData(handle, blogHandle) {
       const slug = getArticleSlug(handle);
 
-      // If we have a blog handle, try that first
-      if (blogHandle) {
-        try {
-          const response = await fetch(`/blogs/${blogHandle}/${slug}.json`);
-          if (response.ok) {
-            const data = await response.json();
-            return {
-              ...data.article,
-              handle: slug,
-              blogHandle: blogHandle,
-              url: `/blogs/${blogHandle}/${slug}`
-            };
-          }
-        } catch (e) {
-          // Fall through to search
-        }
-      }
-
-      // Get blog handles from data attribute, fallback to common names
+      // Get all available blog handles from Liquid
       const blogHandlesAttr = container.getAttribute('data-blog-handles');
-      const blogs = blogHandlesAttr
+      const allBlogs = blogHandlesAttr
         ? blogHandlesAttr.split(',').map(b => b.trim()).filter(Boolean)
-        : ['editorial', 'news', 'journal', 'blog', 'articles'];
+        : [];
 
-      for (const blog of blogs) {
-        if (blog === blogHandle) continue; // Already tried this one
+      // Build ordered list: stored blogHandle first (if valid), then all others
+      const blogsToTry = [];
+      if (blogHandle && allBlogs.includes(blogHandle)) {
+        blogsToTry.push(blogHandle);
+      }
+      allBlogs.forEach(b => {
+        if (!blogsToTry.includes(b)) blogsToTry.push(b);
+      });
+
+      // Try each blog until we find the article
+      for (const blog of blogsToTry) {
         try {
           const response = await fetch(`/blogs/${blog}/${slug}.json`);
           if (response.ok) {
             const data = await response.json();
+            console.log('Article API response:', data.article); // Debug
             return {
               ...data.article,
               handle: slug,
