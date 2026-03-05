@@ -308,50 +308,130 @@
 
 {% javascript %}
   (function() {
-    const STORAGE_KEY = 'saved_articles';
+    // Bookmarks stored ONLY in customer metafields (requires login)
     const container = document.querySelector('.js-bookmarks-grid');
     if (!container) return;
 
     const emptyTemplate = document.getElementById('bookmarks-empty-template');
     const cardTemplate = document.getElementById('bookmark-card-template');
 
-    function getBookmarks() {
-      try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-      } catch {
-        return [];
-      }
-    }
-
-    function saveBookmarks(bookmarks) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(bookmarks));
-    }
-
-    // Extract just the article slug from a handle (fixes URL duplication bug)
+    // Extract just the article slug from a handle
     function getArticleSlug(handle) {
       if (!handle) return '';
-      // If handle contains slashes, get the last part (the actual article slug)
       return handle.split('/').pop();
     }
 
-    function removeBookmark(articleHandle) {
-      const slug = getArticleSlug(articleHandle);
-      let bookmarks = getBookmarks();
-      bookmarks = bookmarks.filter(b => {
-        const bHandle = typeof b === 'string' ? b : b.handle;
-        return getArticleSlug(bHandle) !== slug;
-      });
-      saveBookmarks(bookmarks);
+    // Fetch bookmarks from customer metafield
+    async function getBookmarksFromMetafield() {
+      const storefrontToken = container.getAttribute('data-storefront-token');
+      const customerId = container.getAttribute('data-customer-id');
 
-      // Dispatch event for other components
-      window.dispatchEvent(new CustomEvent('bookmarks:updated', {
-        detail: { bookmarks, articleHandle: slug, action: 'removed' }
-      }));
+      if (!storefrontToken || !customerId) {
+        console.log('No storefront token or customer ID - user not logged in');
+        return [];
+      }
 
-      renderBookmarks();
+      const query = `
+        query getCustomerMetafield($customerId: ID!) {
+          customer(id: $customerId) {
+            metafield(namespace: "custom", key: "saved_articles") {
+              value
+            }
+          }
+        }
+      `;
+
+      try {
+        const response = await fetch('/api/2024-01/graphql.json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': storefrontToken
+          },
+          body: JSON.stringify({
+            query,
+            variables: {
+              customerId: `gid://shopify/Customer/${customerId}`
+            }
+          })
+        });
+
+        const data = await response.json();
+        console.log('Metafield response:', data);
+
+        const metafieldValue = data?.data?.customer?.metafield?.value;
+        if (metafieldValue) {
+          return JSON.parse(metafieldValue);
+        }
+      } catch (error) {
+        console.error('Bookmark fetch failed:', error);
+      }
+      return [];
     }
 
-    async function fetchArticleData(handle, blogHandle) {
+    // Save bookmarks to customer metafield
+    async function saveBookmarksToMetafield(handles) {
+      const storefrontToken = container.getAttribute('data-storefront-token');
+      const customerId = container.getAttribute('data-customer-id');
+
+      if (!storefrontToken || !customerId) return false;
+
+      const mutation = `
+        mutation customerUpdate($input: CustomerUpdateInput!) {
+          customerUpdate(input: $input) {
+            customer { id }
+            customerUserErrors { field message }
+          }
+        }
+      `;
+
+      try {
+        const response = await fetch('/api/2024-01/graphql.json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': storefrontToken
+          },
+          body: JSON.stringify({
+            query: mutation,
+            variables: {
+              input: {
+                id: `gid://shopify/Customer/${customerId}`,
+                metafields: [{
+                  namespace: 'custom',
+                  key: 'saved_articles',
+                  type: 'list.single_line_text_field',
+                  value: JSON.stringify(handles)
+                }]
+              }
+            }
+          })
+        });
+
+        const data = await response.json();
+        console.log('Metafield save response:', data);
+        return !data.errors && !data.data?.customerUpdate?.customerUserErrors?.length;
+      } catch (error) {
+        console.error('Bookmark save failed:', error);
+        return false;
+      }
+    }
+
+    async function removeBookmark(articleHandle) {
+      const slug = getArticleSlug(articleHandle);
+      let bookmarks = await getBookmarksFromMetafield();
+      bookmarks = bookmarks.filter(h => getArticleSlug(h) !== slug);
+
+      const success = await saveBookmarksToMetafield(bookmarks);
+      if (success) {
+        window.dispatchEvent(new CustomEvent('bookmarks:updated', {
+          detail: { bookmarks, articleHandle: slug, action: 'removed' }
+        }));
+        renderBookmarks();
+      }
+    }
+
+    async function fetchArticleData(handle) {
       const slug = getArticleSlug(handle);
 
       // Get all available blog handles from Liquid
@@ -360,22 +440,18 @@
         ? blogHandlesAttr.split(',').map(b => b.trim()).filter(Boolean)
         : [];
 
-      // Build ordered list: stored blogHandle first (if valid), then all others
-      const blogsToTry = [];
-      if (blogHandle && allBlogs.includes(blogHandle)) {
-        blogsToTry.push(blogHandle);
-      }
-      allBlogs.forEach(b => {
-        if (!blogsToTry.includes(b)) blogsToTry.push(b);
-      });
+      console.log('Blogs to search:', allBlogs);
+      console.log('Looking for article:', slug);
 
       // Try each blog until we find the article
-      for (const blog of blogsToTry) {
+      for (const blog of allBlogs) {
         try {
-          const response = await fetch(`/blogs/${blog}/${slug}.json`);
+          const url = `/blogs/${blog}/${slug}.json`;
+          console.log('Trying:', url);
+          const response = await fetch(url);
           if (response.ok) {
             const data = await response.json();
-            console.log('Article API response:', data.article); // Debug
+            console.log('Found article:', data.article);
             return {
               ...data.article,
               handle: slug,
@@ -384,11 +460,11 @@
             };
           }
         } catch (e) {
-          // Continue to next blog
+          console.log('Error fetching from', blog, e);
         }
       }
 
-      // If not found, return null
+      console.log('Article not found in any blog');
       return null;
     }
 
@@ -477,9 +553,9 @@
     }
 
     async function renderBookmarks() {
-      const bookmarks = getBookmarks();
-
-      if (bookmarks.length === 0) {
+      // Check if user is logged in
+      const customerId = container.getAttribute('data-customer-id');
+      if (!customerId) {
         container.innerHTML = '';
         container.appendChild(emptyTemplate.content.cloneNode(true));
         return;
@@ -488,55 +564,24 @@
       // Show loading state
       container.innerHTML = '<div class="bookmarks-loading"><span class="visually-hidden">Loading...</span></div>';
 
-      // Process bookmarks - use stored data when available, fetch for legacy items
+      // Fetch bookmarks from metafield
+      const bookmarkHandles = await getBookmarksFromMetafield();
+      console.log('Bookmark handles from metafield:', bookmarkHandles);
+
+      if (bookmarkHandles.length === 0) {
+        container.innerHTML = '';
+        container.appendChild(emptyTemplate.content.cloneNode(true));
+        return;
+      }
+
+      // Fetch article data for each bookmark
       const articles = await Promise.all(
-        bookmarks.map(async (bookmark) => {
-          // Handle legacy format (just a string handle)
-          if (typeof bookmark === 'string') {
-            return await fetchArticleData(bookmark, null);
-          }
-
-          // Always fetch to get full article data (tags, excerpt, etc.)
-          const fetched = await fetchArticleData(bookmark.handle, bookmark.blogHandle);
-          if (fetched) {
-            return fetched;
-          }
-
-          // Fallback to stored data if fetch fails
-          if (bookmark.title && bookmark.blogHandle) {
-            const slug = getArticleSlug(bookmark.handle);
-            return {
-              handle: slug,
-              title: bookmark.title,
-              image: bookmark.image,
-              blogHandle: bookmark.blogHandle,
-              url: `/blogs/${bookmark.blogHandle}/${slug}`,
-              savedAt: bookmark.savedAt
-            };
-          }
-
-          return null;
-        })
+        bookmarkHandles.map(handle => fetchArticleData(handle))
       );
 
       // Filter out articles that couldn't be found
       const validArticles = articles.filter(a => a && a.url);
-
-      // Only update storage if we successfully found some articles
-      const hasLegacyBookmarks = bookmarks.some(b => typeof b === 'string');
-      const hasIncompleteBookmarks = bookmarks.some(b => typeof b === 'object' && (!b.title || !b.blogHandle));
-
-      if (validArticles.length > 0 && (hasLegacyBookmarks || hasIncompleteBookmarks)) {
-        // Migrate legacy bookmarks to new format with clean slugs
-        const updatedBookmarks = validArticles.map(a => ({
-          handle: getArticleSlug(a.handle),
-          blogHandle: a.blogHandle,
-          title: a.title,
-          image: a.image,
-          savedAt: a.savedAt || new Date().toISOString()
-        }));
-        saveBookmarks(updatedBookmarks);
-      }
+      console.log('Valid articles:', validArticles);
 
       // Render cards
       container.innerHTML = '';
@@ -552,93 +597,11 @@
       });
     }
 
-    // Fetch bookmarks from customer metafield and merge with localStorage
-    async function syncFromMetafield() {
-      const storefrontToken = container.getAttribute('data-storefront-token');
-      const customerId = container.getAttribute('data-customer-id');
+    // Initial render
+    renderBookmarks();
 
-      if (!storefrontToken || !customerId) return false;
-
-      const query = `
-        query getCustomerMetafield($customerId: ID!) {
-          customer(id: $customerId) {
-            metafield(namespace: "custom", key: "saved_articles") {
-              value
-            }
-          }
-        }
-      `;
-
-      try {
-        const response = await fetch('/api/2024-01/graphql.json', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Shopify-Storefront-Access-Token': storefrontToken
-          },
-          body: JSON.stringify({
-            query,
-            variables: {
-              customerId: `gid://shopify/Customer/${customerId}`
-            }
-          })
-        });
-
-        if (!response.ok) return false;
-
-        const data = await response.json();
-        const metafieldValue = data?.data?.customer?.metafield?.value;
-
-        if (metafieldValue) {
-          const metafieldHandles = JSON.parse(metafieldValue);
-          const localBookmarks = getBookmarks();
-
-          // Merge: add any metafield bookmarks not in localStorage
-          const localHandles = new Set(localBookmarks.map(b => {
-            const h = typeof b === 'string' ? b : b.handle;
-            return getArticleSlug(h);
-          }));
-          let hasNew = false;
-
-          metafieldHandles.forEach(handle => {
-            const slug = getArticleSlug(handle);
-            if (!localHandles.has(slug)) {
-              localBookmarks.push({
-                handle: slug,
-                blogHandle: null,
-                title: null,
-                image: null,
-                savedAt: new Date().toISOString()
-              });
-              hasNew = true;
-            }
-          });
-
-          if (hasNew) {
-            saveBookmarks(localBookmarks);
-          }
-          return true;
-        }
-      } catch (error) {
-        console.error('Bookmark fetch from metafield failed:', error);
-      }
-      return false;
-    }
-
-    // Initial render - sync from metafield first, then render
-    async function init() {
-      await syncFromMetafield();
-      renderBookmarks();
-    }
-    init();
-
-    // Listen for bookmark updates from other pages/tabs
+    // Listen for bookmark updates from other components
     window.addEventListener('bookmarks:updated', renderBookmarks);
-    window.addEventListener('storage', (e) => {
-      if (e.key === STORAGE_KEY) {
-        renderBookmarks();
-      }
-    });
   })();
 {% endjavascript %}
 
