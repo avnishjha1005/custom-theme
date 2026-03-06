@@ -352,76 +352,51 @@
     }
 
     async function removeBookmark(articleHandle) {
-      const slug = getArticleSlug(articleHandle);
       let bookmarks = await getBookmarks();
-      bookmarks = bookmarks.filter(h => getArticleSlug(h) !== slug);
+      bookmarks = bookmarks.filter(b => {
+        const handle = typeof b === 'string' ? b.split('/').pop() : b.handle;
+        return handle !== articleHandle;
+      });
 
       const success = await saveBookmarks(bookmarks);
       if (success) {
         window.dispatchEvent(new CustomEvent('bookmarks:updated', {
-          detail: { bookmarks, articleHandle: slug, action: 'removed' }
+          detail: { bookmarks, articleHandle, action: 'removed' }
         }));
         renderBookmarks();
       }
     }
 
-    async function fetchArticleData(handle) {
-      // Handle format: "blog-handle/article-slug" or just "article-slug"
-      const parts = handle.split('/');
-      let blogHandle, articleSlug;
-
-      if (parts.length >= 2) {
-        // Format: "editorial/lorem-ipsum" or "blog/editorial/lorem-ipsum"
-        blogHandle = parts[parts.length - 2];
-        articleSlug = parts[parts.length - 1];
-      } else {
-        articleSlug = handle;
-        blogHandle = null;
-      }
-
-      console.log('Looking for article:', articleSlug, 'in blog:', blogHandle);
-
-      // If we have the blog handle from the bookmark, use it directly
-      if (blogHandle) {
-        try {
-          const url = `/blogs/${blogHandle}/${articleSlug}.json`;
-          console.log('Fetching:', url);
-          const response = await fetch(url);
-          if (response.ok) {
-            const data = await response.json();
-            console.log('Found article:', data.article);
-            return {
-              ...data.article,
-              handle: articleSlug,
-              blogHandle: blogHandle,
-              url: `/blogs/${blogHandle}/${articleSlug}`
-            };
-          }
-        } catch (e) {
-          console.log('Error fetching article:', e);
+    // Normalize bookmark data (handles both old string format and new object format)
+    function normalizeBookmark(bookmark) {
+      if (typeof bookmark === 'string') {
+        // Old format: "blog/article-slug" or just "article-slug"
+        const parts = bookmark.split('/');
+        if (parts.length >= 2) {
+          return {
+            handle: parts[parts.length - 1],
+            blogHandle: parts[parts.length - 2],
+            title: parts[parts.length - 1].replace(/-/g, ' '),
+            image: '',
+            url: `/blogs/${parts[parts.length - 2]}/${parts[parts.length - 1]}`
+          };
         }
+        return {
+          handle: bookmark,
+          blogHandle: '',
+          title: bookmark.replace(/-/g, ' '),
+          image: '',
+          url: ''
+        };
       }
-
-      // Fallback: try common blog names if no blog in handle
-      const commonBlogs = ['news', 'blog', 'articles', 'editorial', 'journal'];
-      for (const blog of commonBlogs) {
-        try {
-          const url = `/blogs/${blog}/${articleSlug}.json`;
-          const response = await fetch(url);
-          if (response.ok) {
-            const data = await response.json();
-            return {
-              ...data.article,
-              handle: articleSlug,
-              blogHandle: blog,
-              url: `/blogs/${blog}/${articleSlug}`
-            };
-          }
-        } catch (e) {}
-      }
-
-      console.log('Article not found');
-      return null;
+      // New format: object with all data
+      return {
+        handle: bookmark.handle || '',
+        blogHandle: bookmark.blogHandle || '',
+        title: bookmark.title || bookmark.handle?.replace(/-/g, ' ') || '',
+        image: bookmark.image || '',
+        url: bookmark.url || `/blogs/${bookmark.blogHandle}/${bookmark.handle}`
+      };
     }
 
     function truncateText(text, wordLimit) {
@@ -442,9 +417,7 @@
       const item = clone.querySelector('.bookmark-item');
       const card = clone.querySelector('.bookmark-card');
 
-      // Build clean URL using slug
-      const slug = getArticleSlug(article.handle);
-      const url = `/blogs/${article.blogHandle}/${slug}`;
+      const url = article.url || `/blogs/${article.blogHandle}/${article.handle}`;
 
       // Set article URLs on all links
       card.querySelectorAll('a').forEach(link => {
@@ -453,49 +426,24 @@
 
       // Set title
       const titleLink = card.querySelector('.bookmark-card__title a');
-      titleLink.textContent = article.title || slug;
+      titleLink.textContent = article.title || article.handle;
 
-      // Set tag (first tag if available) - Shopify returns tags as comma-separated string
+      // Hide tag (not stored in bookmark data)
       const tagEl = card.querySelector('.bookmark-card__tag');
-      let firstTag = null;
-      if (article.tags) {
-        if (Array.isArray(article.tags)) {
-          firstTag = article.tags[0];
-        } else if (typeof article.tags === 'string' && article.tags.trim()) {
-          firstTag = article.tags.split(',')[0];
-        }
-      }
-      if (firstTag && firstTag.trim()) {
-        tagEl.textContent = firstTag.trim();
-      } else {
-        tagEl.style.display = 'none';
-      }
+      if (tagEl) tagEl.style.display = 'none';
 
-      // Set excerpt - check multiple possible field names from Shopify API
+      // Hide excerpt (not stored in bookmark data)
       const excerptEl = card.querySelector('.bookmark-card__excerpt');
-      const excerptSource = article.summary_html || article.excerpt || article.body_html || article.content || '';
-      const rawText = stripHtml(excerptSource).trim();
-      if (rawText) {
-        excerptEl.textContent = truncateText(rawText, 20);
-      } else {
-        excerptEl.style.display = 'none';
-      }
+      if (excerptEl) excerptEl.style.display = 'none';
 
       // Set image
       const imgContainer = card.querySelector('.bookmark-card__image');
       const img = card.querySelector('.bookmark-card__image img');
       if (article.image) {
-        const imgSrc = typeof article.image === 'string'
-          ? article.image
-          : article.image.src;
-        // Add width parameter for optimization
-        img.src = imgSrc.includes('?') ? imgSrc + '&width=600' : imgSrc + '?width=600';
+        img.src = article.image;
         img.alt = article.title || '';
-        img.width = 251;
-        img.height = 360;
       } else {
-        // Hide image container if no image
-        imgContainer.style.display = 'none';
+        if (imgContainer) imgContainer.style.display = 'none';
       }
 
       // Set up remove button
@@ -520,33 +468,28 @@
       container.innerHTML = '<div class="bookmarks-loading"><span class="visually-hidden">Loading...</span></div>';
 
       // Fetch bookmarks via App Proxy
-      const bookmarkHandles = await getBookmarks();
-      console.log('Bookmark handles:', bookmarkHandles);
+      const bookmarks = await getBookmarks();
+      console.log('Bookmarks:', bookmarks);
 
-      if (bookmarkHandles.length === 0) {
+      if (bookmarks.length === 0) {
         container.innerHTML = '';
         container.appendChild(emptyTemplate.content.cloneNode(true));
         return;
       }
 
-      // Fetch article data for each bookmark
-      const articles = await Promise.all(
-        bookmarkHandles.map(handle => fetchArticleData(handle))
-      );
-
-      // Filter out articles that couldn't be found
-      const validArticles = articles.filter(a => a && a.url);
-      console.log('Valid articles:', validArticles);
+      // Normalize bookmark data (handles both old string format and new object format)
+      const articles = bookmarks.map(b => normalizeBookmark(b)).filter(a => a.handle);
+      console.log('Normalized articles:', articles);
 
       // Render cards
       container.innerHTML = '';
 
-      if (validArticles.length === 0) {
+      if (articles.length === 0) {
         container.appendChild(emptyTemplate.content.cloneNode(true));
         return;
       }
 
-      validArticles.forEach(article => {
+      articles.forEach(article => {
         const card = createArticleCard(article);
         container.appendChild(card);
       });

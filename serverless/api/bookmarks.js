@@ -81,7 +81,7 @@ async function saveBookmarks(customerId, bookmarks) {
           namespace: 'custom',
           key: 'saved_articles',
           value: JSON.stringify(bookmarks),
-          type: 'list.single_line_text_field',
+          type: 'json',
         }],
       },
     }

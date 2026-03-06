@@ -461,8 +461,18 @@
               return;
             }
 
+            const blogHandle = root.getAttribute('data-blog-handle');
             const articleHandle = root.getAttribute('data-article-handle');
-            if (!articleHandle) return;
+            if (!articleHandle || !blogHandle) return;
+
+            // Build article object with all data
+            const articleData = {
+              handle: articleHandle,
+              blogHandle: blogHandle,
+              title: root.getAttribute('data-article-title') || '',
+              image: root.getAttribute('data-article-image') || '',
+              url: `/blogs/${blogHandle}/${articleHandle}`
+            };
 
             btn.disabled = true;
             const isActive = btn.getAttribute('aria-pressed') === 'true';
@@ -471,11 +481,20 @@
             let bookmarks = await getBookmarks();
 
             if (isActive) {
-              bookmarks = bookmarks.filter(h => h !== articleHandle);
+              // Remove by handle
+              bookmarks = bookmarks.filter(b => {
+                const h = typeof b === 'string' ? b : b.handle;
+                return h !== articleHandle;
+              });
               showNotification('Article removed from saved');
             } else {
-              if (!bookmarks.includes(articleHandle)) {
-                bookmarks.push(articleHandle);
+              // Add full article data
+              const exists = bookmarks.some(b => {
+                const h = typeof b === 'string' ? b : b.handle;
+                return h === articleHandle;
+              });
+              if (!exists) {
+                bookmarks.push(articleData);
               }
               showNotification('Article saved');
             }
