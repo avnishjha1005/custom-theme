@@ -11,6 +11,9 @@
   "sections": {
     "main": {
       "type": "bookmarks-list",
+      "custom_css": [
+        ".bookmarks-title {color: rgb(105 44 35 / 1.0);}"
+      ],
       "settings": {
         "title": "Bookmarks",
         "empty_state_blog": "editorial",
