@@ -14,7 +14,7 @@
   "
 >
   <div class="page-width">
-    <h1 class="bookmarks-title h2">{{ section.settings.title | default: 'My Saved Articles' }}</h1>
+    <h1 class="bookmarks-title h3">{{ section.settings.title | default: 'My Saved Articles' }}</h1>
 
     {%- comment -%} Login prompt for non-logged-in users {%- endcomment -%}
     {%- unless customer -%}
@@ -55,7 +55,7 @@
           <path d="M5 5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21L12 17.5L5 21V5Z"/>
         </svg>
         <p>{{ 'blogs.bookmarks.empty' | t | default: 'No saved articles yet.' }}</p>
-        <a href="/blogs" class="button button--secondary">
+        <a href="{{ section.settings.empty_state_blog.url | default: '/blogs' }}" class="button button--secondary">
           {{ 'blogs.bookmarks.browse' | t | default: 'Browse Articles' }}
         </a>
       </div>
@@ -105,11 +105,15 @@
   }
 
   .bookmarks-title {
+    color: rgb(105 44 35 / 1.0);
     text-align: center;
     margin-bottom: 40px;
   }
 
   .bookmarks-login-prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     padding: 24px;
     margin-bottom: 32px;
@@ -513,10 +517,9 @@
     }
 
     async function renderBookmarks() {
-      // Check if user is logged in
+      // Check if user is logged in - if not, just clear container (login prompt handles the CTA)
       if (!isLoggedIn) {
         container.innerHTML = '';
-        container.appendChild(emptyTemplate.content.cloneNode(true));
         return;
       }
 
@@ -570,6 +573,12 @@
       "id": "title",
       "label": "Title",
       "default": "My Saved Articles"
+    },
+    {
+      "type": "blog",
+      "id": "empty_state_blog",
+      "label": "Empty state blog link",
+      "info": "Select the blog to link to when no bookmarks are saved"
     },
     {
       "type": "color_scheme",
