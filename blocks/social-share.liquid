@@ -388,8 +388,8 @@
 
 {% javascript %}
   (function() {
-    // Bookmarks are stored ONLY in customer metafields (requires login)
-    // No localStorage - metafield is the single source of truth
+    // Bookmarks stored in customer metafields via App Proxy
+    // Proxy endpoint: /apps/bookmarks (uses Admin API on backend)
 
     function showNotification(message) {
       const existing = document.querySelector('.bookmark-notification');
@@ -406,109 +406,34 @@
       }, 2500);
     }
 
-    // Save bookmarks to customer metafield using metafieldsSet mutation
-    async function saveToMetafield(root, handles) {
-      const storefrontToken = root.getAttribute('data-storefront-token');
-      const customerId = root.getAttribute('data-customer-id');
-
-      if (!storefrontToken || !customerId) {
-        console.error('Missing storefront token or customer ID');
-        return false;
-      }
-
-      const mutation = `
-        mutation metafieldsSet($metafields: [MetafieldsSetInput!]!) {
-          metafieldsSet(metafields: $metafields) {
-            metafields {
-              key
-              value
-            }
-            userErrors {
-              field
-              message
-            }
-          }
-        }
-      `;
-
+    // Fetch bookmarks via App Proxy
+    async function getBookmarks() {
       try {
-        const response = await fetch('/api/2024-01/graphql.json', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Shopify-Storefront-Access-Token': storefrontToken
-          },
-          body: JSON.stringify({
-            query: mutation,
-            variables: {
-              metafields: [{
-                ownerId: `gid://shopify/Customer/${customerId}`,
-                namespace: 'custom',
-                key: 'saved_articles',
-                type: 'list.single_line_text_field',
-                value: JSON.stringify(handles)
-              }]
-            }
-          })
-        });
-
+        const response = await fetch('/apps/bookmarks');
+        if (!response.ok) return [];
         const data = await response.json();
-        console.log('Metafield save response:', data);
+        return data.bookmarks || [];
+      } catch (error) {
+        console.error('Bookmark fetch failed:', error);
+        return [];
+      }
+    }
 
-        if (data.errors || data.data?.metafieldsSet?.userErrors?.length > 0) {
-          console.error('Metafield save errors:', data.errors || data.data.metafieldsSet.userErrors);
-          return false;
-        }
-        return true;
+    // Save bookmarks via App Proxy
+    async function saveBookmarks(bookmarks) {
+      try {
+        const response = await fetch('/apps/bookmarks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookmarks })
+        });
+        if (!response.ok) return false;
+        const data = await response.json();
+        return data.success === true;
       } catch (error) {
         console.error('Bookmark save failed:', error);
         return false;
       }
-    }
-
-    // Fetch current bookmarks from metafield
-    async function getBookmarksFromMetafield(root) {
-      const storefrontToken = root.getAttribute('data-storefront-token');
-      const customerId = root.getAttribute('data-customer-id');
-
-      if (!storefrontToken || !customerId) return [];
-
-      const query = `
-        query getCustomerMetafield($customerId: ID!) {
-          customer(id: $customerId) {
-            metafield(namespace: "custom", key: "saved_articles") {
-              value
-            }
-          }
-        }
-      `;
-
-      try {
-        const response = await fetch('/api/2024-01/graphql.json', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Shopify-Storefront-Access-Token': storefrontToken
-          },
-          body: JSON.stringify({
-            query,
-            variables: {
-              customerId: `gid://shopify/Customer/${customerId}`
-            }
-          })
-        });
-
-        const data = await response.json();
-        console.log('Metafield fetch response:', data);
-
-        const metafieldValue = data?.data?.customer?.metafield?.value;
-        if (metafieldValue) {
-          return JSON.parse(metafieldValue);
-        }
-      } catch (error) {
-        console.error('Bookmark fetch failed:', error);
-      }
-      return [];
     }
 
     function initSocialShare() {
@@ -528,7 +453,7 @@
           const u = encodeURIComponent(link);
           const t = encodeURIComponent(title);
 
-          // Handle bookmark (requires login - metafield only)
+          // Handle bookmark (requires login via App Proxy)
           if (type === 'bookmark') {
             // Redirect to login if not logged in
             if (btn.hasAttribute('data-require-login')) {
@@ -539,41 +464,32 @@
             const articleHandle = root.getAttribute('data-article-handle');
             if (!articleHandle) return;
 
-            // Disable button while processing
             btn.disabled = true;
-
             const isActive = btn.getAttribute('aria-pressed') === 'true';
 
-            // Fetch current bookmarks from metafield
-            let bookmarks = await getBookmarksFromMetafield(root);
-            console.log('Current bookmarks:', bookmarks);
+            // Fetch current bookmarks
+            let bookmarks = await getBookmarks();
 
             if (isActive) {
-              // Remove bookmark
               bookmarks = bookmarks.filter(h => h !== articleHandle);
               showNotification('Article removed from saved');
             } else {
-              // Add bookmark
               if (!bookmarks.includes(articleHandle)) {
                 bookmarks.push(articleHandle);
               }
               showNotification('Article saved');
             }
 
-            // Save to metafield
-            const success = await saveToMetafield(root, bookmarks);
+            const success = await saveBookmarks(bookmarks);
 
             if (success) {
-              // Update UI
               btn.setAttribute('aria-pressed', String(!isActive));
               btn.classList.toggle('social-share__button--active', !isActive);
-
-              // Dispatch custom event for other components
               window.dispatchEvent(new CustomEvent('bookmarks:updated', {
                 detail: { bookmarks, articleHandle, action: isActive ? 'removed' : 'added' }
               }));
             } else {
-              showNotification('Failed to save bookmark');
+              showNotification('Failed to save. Please try again.');
             }
 
             btn.disabled = false;
@@ -611,7 +527,6 @@
       initSocialShare();
     }
 
-    // Re-initialize when Shopify sections are loaded/updated
     document.addEventListener('shopify:section:load', initSocialShare);
   })();
 {% endjavascript %}
