@@ -424,6 +424,7 @@
             handle: parts[parts.length - 1],
             blogHandle: parts[parts.length - 2],
             title: parts[parts.length - 1].replace(/-/g, ' '),
+            excerpt: '',
             image: '',
             url: `/blogs/${parts[parts.length - 2]}/${parts[parts.length - 1]}`
           };
@@ -432,6 +433,7 @@
           handle: bookmark,
           blogHandle: '',
           title: bookmark.replace(/-/g, ' '),
+          excerpt: '',
           image: '',
           url: ''
         };
@@ -441,6 +443,7 @@
         handle: bookmark.handle || '',
         blogHandle: bookmark.blogHandle || '',
         title: bookmark.title || bookmark.handle?.replace(/-/g, ' ') || '',
+        excerpt: bookmark.excerpt || '',
         image: bookmark.image || '',
         url: bookmark.url || `/blogs/${bookmark.blogHandle}/${bookmark.handle}`
       };
@@ -479,9 +482,15 @@
       const tagEl = card.querySelector('.bookmark-card__tag');
       if (tagEl) tagEl.style.display = 'none';
 
-      // Hide excerpt (not stored in bookmark data)
+      // Set excerpt
       const excerptEl = card.querySelector('.bookmark-card__excerpt');
-      if (excerptEl) excerptEl.style.display = 'none';
+      if (excerptEl) {
+        if (article.excerpt) {
+          excerptEl.textContent = article.excerpt;
+        } else {
+          excerptEl.style.display = 'none';
+        }
+      }
 
       // Set image
       const imgContainer = card.querySelector('.bookmark-card__image');

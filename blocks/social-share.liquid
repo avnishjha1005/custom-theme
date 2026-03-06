@@ -35,6 +35,7 @@
     data-article-handle="{{ article.handle }}"
     data-blog-handle="{{ blog.handle }}"
     data-article-title="{{ article.title | escape }}"
+    data-article-excerpt="{{ article.excerpt_or_content | strip_html | truncate: 150 | escape }}"
     {%- liquid
       assign article_img = nil
       if article.image
@@ -499,6 +500,7 @@
               handle: articleHandle,
               blogHandle: blogHandle,
               title: root.getAttribute('data-article-title') || '',
+              excerpt: root.getAttribute('data-article-excerpt') || '',
               image: root.getAttribute('data-article-image') || '',
               url: `/blogs/${blogHandle}/${articleHandle}`
             };
