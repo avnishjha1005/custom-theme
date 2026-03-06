@@ -352,10 +352,16 @@
 
     // Fetch bookmarks via App Proxy
     async function getBookmarks() {
+      console.log('Fetching bookmarks from App Proxy...');
       try {
         const response = await fetch('/apps/bookmarks');
-        if (!response.ok) return [];
+        console.log('Fetch response status:', response.status);
+        if (!response.ok) {
+          console.error('Fetch failed with status:', response.status);
+          return [];
+        }
         const data = await response.json();
+        console.log('Fetched bookmarks:', data);
         return data.bookmarks || [];
       } catch (error) {
         console.error('Bookmark fetch failed:', error);

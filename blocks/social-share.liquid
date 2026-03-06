@@ -416,10 +416,16 @@
 
     // Fetch bookmarks via App Proxy
     async function getBookmarks() {
+      console.log('Fetching bookmarks from App Proxy...');
       try {
         const response = await fetch('/apps/bookmarks');
-        if (!response.ok) return [];
+        console.log('Fetch response status:', response.status);
+        if (!response.ok) {
+          console.error('Fetch failed with status:', response.status);
+          return [];
+        }
         const data = await response.json();
+        console.log('Fetched bookmarks:', data);
         return data.bookmarks || [];
       } catch (error) {
         console.error('Bookmark fetch failed:', error);
@@ -429,14 +435,28 @@
 
     // Save bookmarks via App Proxy
     async function saveBookmarks(bookmarks) {
+      console.log('Saving bookmarks via App Proxy:', bookmarks);
       try {
         const response = await fetch('/apps/bookmarks', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ bookmarks })
         });
-        if (!response.ok) return false;
-        const data = await response.json();
+        console.log('Save response status:', response.status);
+        const text = await response.text();
+        console.log('Save response raw:', text);
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch (e) {
+          console.error('Failed to parse response as JSON:', e);
+          return false;
+        }
+        console.log('Save response data:', data);
+        if (!response.ok) {
+          console.error('Save failed:', response.status, data);
+          return false;
+        }
         return data.success === true;
       } catch (error) {
         console.error('Bookmark save failed:', error);
