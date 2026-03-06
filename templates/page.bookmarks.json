@@ -48,7 +48,8 @@
         "logo_J9kJKp"
       ],
       "custom_css": [
-        "@media screen and (min-width: 768px){.logo-block__image{display: none; }}"
+        "@media screen and (min-width: 768px) {.logo-block__image {display: none; }}",
+        ".custom-section-content{padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
       "settings": {
@@ -75,8 +76,8 @@
         "overlay_color": "#00000026",
         "overlay_style": "solid",
         "gradient_direction": "to top",
-        "padding-block-start": 40,
-        "padding-block-end": 40
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     }
   },
