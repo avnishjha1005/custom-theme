@@ -13,7 +13,9 @@
       "type": "bookmarks-list",
       "settings": {
         "title": "Bookmarks",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "padding_top": 40,
+        "padding_bottom": 80
       }
     }
   },
