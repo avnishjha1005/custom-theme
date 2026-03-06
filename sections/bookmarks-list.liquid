@@ -366,39 +366,61 @@
     }
 
     async function fetchArticleData(handle) {
-      const slug = getArticleSlug(handle);
+      // Handle format: "blog-handle/article-slug" or just "article-slug"
+      const parts = handle.split('/');
+      let blogHandle, articleSlug;
 
-      // Get all available blog handles from Liquid
-      const blogHandlesAttr = container.getAttribute('data-blog-handles');
-      const allBlogs = blogHandlesAttr
-        ? blogHandlesAttr.split(',').map(b => b.trim()).filter(Boolean)
-        : [];
+      if (parts.length >= 2) {
+        // Format: "editorial/lorem-ipsum" or "blog/editorial/lorem-ipsum"
+        blogHandle = parts[parts.length - 2];
+        articleSlug = parts[parts.length - 1];
+      } else {
+        articleSlug = handle;
+        blogHandle = null;
+      }
 
-      console.log('Blogs to search:', allBlogs);
-      console.log('Looking for article:', slug);
+      console.log('Looking for article:', articleSlug, 'in blog:', blogHandle);
 
-      // Try each blog until we find the article
-      for (const blog of allBlogs) {
+      // If we have the blog handle from the bookmark, use it directly
+      if (blogHandle) {
         try {
-          const url = `/blogs/${blog}/${slug}.json`;
-          console.log('Trying:', url);
+          const url = `/blogs/${blogHandle}/${articleSlug}.json`;
+          console.log('Fetching:', url);
           const response = await fetch(url);
           if (response.ok) {
             const data = await response.json();
             console.log('Found article:', data.article);
             return {
               ...data.article,
-              handle: slug,
-              blogHandle: blog,
-              url: `/blogs/${blog}/${slug}`
+              handle: articleSlug,
+              blogHandle: blogHandle,
+              url: `/blogs/${blogHandle}/${articleSlug}`
             };
           }
         } catch (e) {
-          console.log('Error fetching from', blog, e);
+          console.log('Error fetching article:', e);
         }
       }
 
-      console.log('Article not found in any blog');
+      // Fallback: try common blog names if no blog in handle
+      const commonBlogs = ['news', 'blog', 'articles', 'editorial', 'journal'];
+      for (const blog of commonBlogs) {
+        try {
+          const url = `/blogs/${blog}/${articleSlug}.json`;
+          const response = await fetch(url);
+          if (response.ok) {
+            const data = await response.json();
+            return {
+              ...data.article,
+              handle: articleSlug,
+              blogHandle: blog,
+              url: `/blogs/${blog}/${articleSlug}`
+            };
+          }
+        } catch (e) {}
+      }
+
+      console.log('Article not found');
       return null;
     }
 
