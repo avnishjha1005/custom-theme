@@ -17,9 +17,71 @@
         "padding_top": 40,
         "padding_bottom": 80
       }
+    },
+    "section_NapXeg": {
+      "type": "section",
+      "blocks": {
+        "logo_J9kJKp": {
+          "type": "logo",
+          "settings": {
+            "logo_type": "default",
+            "inverse": false,
+            "font": "heading",
+            "enable_sticky": true,
+            "vertical_align": "center",
+            "unit": "pixel",
+            "percent_width": 100,
+            "pixel_height": 24,
+            "custom_mobile_size": false,
+            "unit_mobile": "percent",
+            "percent_width_mobile": 100,
+            "pixel_height_mobile": 120,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "logo_J9kJKp"
+      ],
+      "custom_css": [
+        "@media screen and (min-width: 768px){.logo-block__image{display: none; }}"
+      ],
+      "name": "t:names.large_logo",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "space-between",
+        "gap": 0,
+        "section_width": "page-width",
+        "section_height": "medium",
+        "section_height_custom": 50,
+        "color_scheme": "scheme-3",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "section_NapXeg"
   ]
 }
