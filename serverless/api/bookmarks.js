@@ -67,26 +67,30 @@ async function getBookmarks(customerId) {
 }
 
 async function saveBookmarks(customerId, bookmarks) {
-  const { data } = await adminGraphQL(
-    `mutation($input: CustomerInput!) {
-      customerUpdate(input: $input) {
-        customer { id }
-        userErrors { message }
+  const result = await adminGraphQL(
+    `mutation($metafields: [MetafieldsSetInput!]!) {
+      metafieldsSet(metafields: $metafields) {
+        metafields { id }
+        userErrors { field message code }
       }
     }`,
     {
-      input: {
-        id: `gid://shopify/Customer/${customerId}`,
-        metafields: [{
-          namespace: 'custom',
-          key: 'saved_articles',
-          value: JSON.stringify(bookmarks),
-          type: 'json',
-        }],
-      },
+      metafields: [{
+        ownerId: `gid://shopify/Customer/${customerId}`,
+        namespace: 'custom',
+        key: 'saved_articles',
+        value: JSON.stringify(bookmarks),
+        type: 'json',
+      }],
     }
   );
-  return !data?.customerUpdate?.userErrors?.length;
+  console.log('GraphQL result:', JSON.stringify(result, null, 2));
+  const errors = result.data?.metafieldsSet?.userErrors;
+  if (errors?.length) {
+    console.error('Metafield save errors:', errors);
+    return { success: false, errors };
+  }
+  return { success: true };
 }
 
 export default async function handler(req, res) {
@@ -116,8 +120,12 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-      const success = await saveBookmarks(customerId, body.bookmarks || []);
-      return res.json({ success, bookmarks: body.bookmarks });
+      const result = await saveBookmarks(customerId, body.bookmarks || []);
+      return res.json({
+        success: result.success,
+        bookmarks: body.bookmarks,
+        errors: result.errors || null
+      });
     }
 
     return res.status(405).json({ error: 'Method not allowed' });
