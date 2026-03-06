@@ -365,14 +365,20 @@
 
     // Save bookmarks via App Proxy
     async function saveBookmarks(bookmarks) {
+      console.log('Saving bookmarks:', bookmarks);
       try {
         const response = await fetch('/apps/bookmarks', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ bookmarks })
         });
-        if (!response.ok) return false;
+        console.log('Save response status:', response.status);
         const data = await response.json();
+        console.log('Save response data:', data);
+        if (!response.ok) {
+          console.error('Save failed with status:', response.status, data);
+          return false;
+        }
         return data.success === true;
       } catch (error) {
         console.error('Bookmark save failed:', error);
@@ -381,18 +387,24 @@
     }
 
     async function removeBookmark(articleHandle) {
+      console.log('Removing bookmark:', articleHandle);
       let bookmarks = await getBookmarks();
+      console.log('Current bookmarks before filter:', bookmarks);
       bookmarks = bookmarks.filter(b => {
         const handle = typeof b === 'string' ? b.split('/').pop() : b.handle;
         return handle !== articleHandle;
       });
+      console.log('Bookmarks after filter:', bookmarks);
 
       const success = await saveBookmarks(bookmarks);
+      console.log('Remove success:', success);
       if (success) {
         window.dispatchEvent(new CustomEvent('bookmarks:updated', {
           detail: { bookmarks, articleHandle, action: 'removed' }
         }));
         renderBookmarks();
+      } else {
+        console.error('Failed to remove bookmark');
       }
     }
 
