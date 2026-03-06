@@ -78,6 +78,19 @@
     z-index: 11;
   }
 
+  /* Larger invisible hit area for easier clicking */
+  .hotspot-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
   .hotspot-dot::after {
     content: '';
     position: absolute;
@@ -102,11 +115,13 @@
     pointer-events: none;
     white-space: nowrap;
     z-index: 20;
+    cursor: pointer;
   }
 
   .hotspot-node.is-active .hotspot-text {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
   }
 
   /* Text below dot (middle 50%: x 25–75) */
@@ -192,6 +207,12 @@
     color: transparent;
     flex-shrink: 0;
     z-index: 11;
+  }
+
+  /* Larger hit area on mobile */
+  .hotspot-dot::before {
+    width: 40px;
+    height: 40px;
   }
 
   .hotspot-dot::after {
@@ -314,40 +335,66 @@
       }
     }
 
+    function clearAllHotspots() {
+      document.querySelectorAll('.hotspot-node').forEach(n => n.classList.remove('is-active'));
+      document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
+    }
+
     nodes.forEach(node => {
-      node.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const parentVisual = this.closest('.bundle-visual');
-        const isActive = this.classList.contains('is-active');
+      // Handle click on the hotspot dot (not the tooltip)
+      const dot = node.querySelector('.hotspot-dot');
+      if (dot) {
+        dot.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const parentNode = this.closest('.hotspot-node');
+          const parentVisual = parentNode.closest('.bundle-visual');
+          const isActive = parentNode.classList.contains('is-active');
 
-        document.querySelectorAll('.hotspot-node').forEach(n => n.classList.remove('is-active'));
-        document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
+          clearAllHotspots();
 
-        if (!isActive) {
-          this.classList.add('is-active');
-          parentVisual.classList.add('has-active-hotspot');
-          // Position text dynamically after activating
-          positionHotspotText(this);
-        } else {
-          const url = this.getAttribute('data-url');
+          // If wasn't active, activate it. If was active, just close it.
+          if (!isActive) {
+            parentNode.classList.add('is-active');
+            parentVisual.classList.add('has-active-hotspot');
+            positionHotspotText(parentNode);
+          }
+        });
+      }
+
+      // Handle click on the tooltip - navigate to product
+      const tooltip = node.querySelector('.hotspot-text');
+      if (tooltip) {
+        tooltip.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const url = node.getAttribute('data-url');
           if (url) window.location.href = url;
-        }
-      });
+        });
+      }
     });
 
     // Handle clicks on the visual area - dismiss hotspots without navigating
     document.querySelectorAll('.bundle-visual').forEach(visual => {
       visual.addEventListener('click', function(e) {
-        // Don't interfere with hotspot clicks
+        // Don't interfere with hotspot node clicks
         if (e.target.closest('.hotspot-node')) return;
 
         // If there's an active hotspot, just dismiss it and prevent navigation
         if (this.classList.contains('has-active-hotspot')) {
           e.preventDefault();
           e.stopPropagation();
-          document.querySelectorAll('.hotspot-node').forEach(n => n.classList.remove('is-active'));
-          document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
+          clearAllHotspots();
+        }
+      });
+    });
+
+    // Handle clicks on the bundle-list-item link to prevent navigation when overlay active
+    document.querySelectorAll('.bundle-list-item').forEach(item => {
+      item.addEventListener('click', function(e) {
+        const visual = this.querySelector('.bundle-visual');
+        if (visual && visual.classList.contains('has-active-hotspot')) {
+          e.preventDefault();
         }
       });
     });
@@ -355,8 +402,7 @@
     document.addEventListener('click', function(e) {
       // Don't clear hotspots if clicking on one
       if (e.target.closest('.hotspot-node')) return;
-      document.querySelectorAll('.hotspot-node').forEach(n => n.classList.remove('is-active'));
-      document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
+      clearAllHotspots();
     });
   });
 </script>
