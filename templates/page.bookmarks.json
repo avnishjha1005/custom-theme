@@ -49,7 +49,7 @@
       ],
       "custom_css": [
         "@media screen and (min-width: 768px) {.logo-block__image {display: none; }}",
-        ".custom-section-content{padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important;}"
       ],
       "name": "t:names.large_logo",
       "settings": {
@@ -62,7 +62,7 @@
         "vertical_alignment_flex_direction_column": "space-between",
         "gap": 0,
         "section_width": "page-width",
-        "section_height": "medium",
+        "section_height": "",
         "section_height_custom": 50,
         "color_scheme": "scheme-3",
         "background_media": "none",
