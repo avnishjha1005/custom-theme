@@ -18,6 +18,7 @@
             "logo_type": "default",
             "inverse": false,
             "font": "heading",
+            "enable_sticky": false,
             "vertical_align": "center",
             "unit": "pixel",
             "percent_width": 100,
@@ -38,7 +39,8 @@
         "logo_iKbqPx"
       ],
       "custom_css": [
-        ".custom-section-content {padding: 0px !important;}"
+        ".custom-section-content {padding: 0px !important;}",
+        "@media screen and (min-width: 768px){.logo-block__image{display: none; }}"
       ],
       "name": "t:names.large_logo",
       "settings": {
