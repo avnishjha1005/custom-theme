@@ -35,7 +35,15 @@
     data-article-handle="{{ article.handle }}"
     data-blog-handle="{{ blog.handle }}"
     data-article-title="{{ article.title | escape }}"
-    data-article-image="{{ article.image | image_url: width: 600 }}"
+    {%- liquid
+      assign article_img = nil
+      if article.image
+        assign article_img = article.image | image_url: width: 600
+      elsif article.content contains '<img'
+        assign article_img = article.content | split: 'src="' | last | split: '"' | first
+      endif
+    -%}
+    {% if article_img %}data-article-image="{{ article_img }}"{% endif %}
   {% endif %}
   {% if settings.storefront_api_token != blank %}
     data-storefront-token="{{ settings.storefront_api_token }}"

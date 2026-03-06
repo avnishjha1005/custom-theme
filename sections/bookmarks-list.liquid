@@ -68,6 +68,13 @@
           <div class="bookmark-card__image">
             <a href="">
               <img src="" alt="" loading="lazy" width="251" height="360">
+              <div class="bookmark-card__placeholder" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </div>
             </a>
           </div>
           <div class="bookmark-card__content">
@@ -151,6 +158,7 @@
     width: 251px;
     height: 360px;
     overflow: hidden;
+    position: relative;
   }
 
   .bookmark-card__image a {
@@ -163,6 +171,27 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .bookmark-card__placeholder {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(var(--color-foreground-rgb) / 0.05);
+    align-items: center;
+    justify-content: center;
+    color: rgb(var(--color-foreground-rgb) / 0.2);
+  }
+
+  .bookmark-card__image--no-image .bookmark-card__placeholder {
+    display: flex;
+  }
+
+  .bookmark-card__image--no-image img {
+    display: none;
   }
 
   .bookmark-card__content {
@@ -443,7 +472,7 @@
         img.src = article.image;
         img.alt = article.title || '';
       } else {
-        if (imgContainer) imgContainer.style.display = 'none';
+        imgContainer.classList.add('bookmark-card__image--no-image');
       }
 
       // Set up remove button
