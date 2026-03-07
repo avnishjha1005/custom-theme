@@ -23,18 +23,16 @@
       }
     },
     "events-past": {
-      "type": "events-location-grid",
+      "type": "events-past-filmstrip",
       "settings": {
         "blog": "",
         "filter_tag": "past-events",
         "tab_id": "past-events",
-        "location_label": "PAST EVENTS",
-        "description": "",
-        "empty_message": "No events found",
-        "post_limit": 8,
-        "columns": 4,
-        "grid_gap": 16,
-        "show_title": true,
+        "default_location_label": "EVENT LOCATION",
+        "show_captions": true,
+        "empty_message": "No past events found",
+        "post_limit": 5,
+        "image_gap": 16,
         "section_width": "page-width",
         "color_scheme": "scheme-1",
         "padding-block-start": 32,
@@ -59,7 +57,7 @@
       "type": "events-upcoming-list",
       "settings": {
         "blog": "",
-        "filter_tag": "",
+        "filter_tag": "upcoming",
         "tab_id": "upcoming",
         "heading": "Upcoming events",
         "post_limit": 5,
