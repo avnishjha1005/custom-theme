@@ -137,7 +137,7 @@
         "edge_to_edge_image_AqAf4w": {
           "type": "edge-to-edge-image",
           "settings": {
-            "image": "shopify://shop_images/a94f7a15c53bd0bf667277defcf6476ff8a7cf75_1.jpg",
+            "image": "shopify://shop_images/32_extended.jpg",
             "image_fit": "cover",
             "desktop_height": 400,
             "desktop_position": "center center",
