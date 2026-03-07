@@ -1,0 +1,69 @@
+{
+  "sections": {
+    "events-header": {
+      "type": "events-header",
+      "settings": {
+        "heading": "Events",
+        "tabs": "PAST EVENTS, UPCOMING, LOCATIONS",
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 48,
+        "padding-block-end": 24
+      }
+    },
+    "events-location-1": {
+      "type": "events-location-grid",
+      "settings": {
+        "location_label": "EVENT LOCATION",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing",
+        "tab_id": "locations",
+        "post_limit": 4,
+        "columns": 4,
+        "grid_gap": 16,
+        "show_title": false,
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 32,
+        "padding-block-end": 32
+      }
+    },
+    "events-location-2": {
+      "type": "events-location-grid",
+      "settings": {
+        "location_label": "EVENT LOCATION",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing",
+        "tab_id": "locations",
+        "post_limit": 4,
+        "columns": 4,
+        "grid_gap": 16,
+        "show_title": false,
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 0,
+        "padding-block-end": 48
+      }
+    },
+    "events-upcoming": {
+      "type": "events-upcoming-list",
+      "settings": {
+        "heading": "Upcoming events",
+        "tab_id": "upcoming",
+        "post_limit": 5,
+        "show_date": true,
+        "date_format": "%B %d, %Y",
+        "cta_text": "SEE MORE",
+        "mobile_layout": "scroll",
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
+    }
+  },
+  "order": [
+    "events-header",
+    "events-location-1",
+    "events-location-2",
+    "events-upcoming"
+  ]
+}

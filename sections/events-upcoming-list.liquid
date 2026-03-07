@@ -1,0 +1,461 @@
+{% comment %}
+  Events Upcoming List Section
+  Displays upcoming events in a horizontal list format with image and details
+{% endcomment %}
+
+{% liquid
+  assign blog = section.settings.blog
+  assign max_items = section.settings.post_limit
+  assign filter_tag = section.settings.filter_tag
+  assign mobile_layout = section.settings.mobile_layout | default: 'list'
+%}
+
+<div
+  class="
+    events-upcoming-list
+    events-upcoming-list--mobile-{{ mobile_layout }}
+    section
+    section--{{ section.settings.section_width }}
+    color-{{ section.settings.color_scheme }}
+    spacing-style
+  "
+  style="
+    {%- render 'spacing-style', settings: section.settings -%}
+  "
+  {% if section.settings.tab_id != blank %}
+    data-events-section="{{ section.settings.tab_id }}"
+  {% endif %}
+>
+  {% if section.settings.heading != blank %}
+    <h2 class="events-upcoming-list__heading">{{ section.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="events-upcoming-list__container">
+    {% if blog != blank and blog.articles_count > 0 %}
+      {% assign article_count = 0 %}
+      {% for article in blog.articles %}
+        {% if article_count >= max_items %}
+          {% break %}
+        {% endif %}
+
+        {% assign show_article = true %}
+        {% if filter_tag != blank %}
+          {% assign show_article = false %}
+          {% for tag in article.tags %}
+            {% if tag == filter_tag %}
+              {% assign show_article = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if show_article %}
+          {% assign article_count = article_count | plus: 1 %}
+
+          <article class="events-upcoming-list__item">
+            <a href="{{ article.url }}" class="events-upcoming-list__link">
+              <div class="events-upcoming-list__image-wrapper">
+                {% if article.image %}
+                  <img
+                    src="{{ article.image | image_url: width: 400 }}"
+                    srcset="{{ article.image | image_url: width: 200 }} 200w,
+                            {{ article.image | image_url: width: 400 }} 400w,
+                            {{ article.image | image_url: width: 600 }} 600w"
+                    sizes="(max-width: 768px) 120px, 200px"
+                    alt="{{ article.image.alt | escape | default: article.title }}"
+                    width="{{ article.image.width }}"
+                    height="{{ article.image.height }}"
+                    loading="lazy"
+                    class="events-upcoming-list__image"
+                  >
+                {% else %}
+                  <div class="events-upcoming-list__placeholder">
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="events-upcoming-list__content">
+                <span class="events-upcoming-list__date">
+                  {% if section.settings.show_date %}
+                    {{ article.published_at | date: section.settings.date_format }}
+                  {% else %}
+                    DATE
+                  {% endif %}
+                </span>
+
+                <h3 class="events-upcoming-list__title">{{ article.title }}</h3>
+
+                {% if article.excerpt != blank or article.content != blank %}
+                  <p class="events-upcoming-list__description">
+                    {% if article.excerpt != blank %}
+                      {{ article.excerpt | strip_html | truncate: 150 }}
+                    {% else %}
+                      {{ article.content | strip_html | truncate: 150 }}
+                    {% endif %}
+                  </p>
+                {% endif %}
+
+                <span class="events-upcoming-list__cta">
+                  {{ section.settings.cta_text }}
+                </span>
+              </div>
+            </a>
+          </article>
+        {% endif %}
+      {% endfor %}
+
+      {% comment %} Show placeholder if no matching articles {% endcomment %}
+      {% if article_count == 0 %}
+        {% for i in (1..3) %}
+          <article class="events-upcoming-list__item events-upcoming-list__item--placeholder">
+            <div class="events-upcoming-list__link">
+              <div class="events-upcoming-list__image-wrapper">
+                <div class="events-upcoming-list__placeholder">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              </div>
+              <div class="events-upcoming-list__content">
+                <span class="events-upcoming-list__date">DATE</span>
+                <h3 class="events-upcoming-list__title">Lorem ipsum dolor sit amet, consectetur adipiscing</h3>
+                <p class="events-upcoming-list__description">Sed quis consequuntur magni dolores eos qui ratione voluptatem.</p>
+                <span class="events-upcoming-list__cta">SEE MORE</span>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      {% endif %}
+    {% else %}
+      {% comment %} Placeholder items when no blog selected {% endcomment %}
+      {% for i in (1..3) %}
+        <article class="events-upcoming-list__item events-upcoming-list__item--placeholder">
+          <div class="events-upcoming-list__link">
+            <div class="events-upcoming-list__image-wrapper">
+              <div class="events-upcoming-list__placeholder">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            </div>
+            <div class="events-upcoming-list__content">
+              <span class="events-upcoming-list__date">DATE</span>
+              <h3 class="events-upcoming-list__title">Lorem ipsum dolor sit amet, consectetur adipiscing</h3>
+              <p class="events-upcoming-list__description">Sed quis consequuntur magni dolores eos qui ratione voluptatem.</p>
+              <span class="events-upcoming-list__cta">SEE MORE</span>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .events-upcoming-list {
+    width: 100%;
+  }
+
+  .events-upcoming-list__heading {
+    font-size: 12px;
+    font-weight: normal;
+    letter-spacing: 0.05em;
+    text-transform: capitalize;
+    color: var(--color-foreground);
+    margin: 0 0 32px 0;
+    opacity: 0.7;
+  }
+
+  .events-upcoming-list__container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .events-upcoming-list__item {
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.1);
+    padding-bottom: 32px;
+  }
+
+  .events-upcoming-list__item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .events-upcoming-list__link {
+    display: flex;
+    gap: 24px;
+    text-decoration: none;
+    color: inherit;
+    align-items: flex-start;
+  }
+
+  .events-upcoming-list__image-wrapper {
+    flex-shrink: 0;
+    width: 140px;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: var(--color-background-secondary, #f5f5f5);
+  }
+
+  .events-upcoming-list__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .events-upcoming-list__link:hover .events-upcoming-list__image {
+    transform: scale(1.05);
+  }
+
+  .events-upcoming-list__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background-secondary, #f5f5f5);
+  }
+
+  .events-upcoming-list__placeholder svg {
+    width: 40%;
+    height: auto;
+    opacity: 0.3;
+  }
+
+  .events-upcoming-list__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .events-upcoming-list__date {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    opacity: 0.6;
+  }
+
+  .events-upcoming-list__title {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0;
+    color: var(--color-foreground);
+  }
+
+  .events-upcoming-list__description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-foreground);
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  .events-upcoming-list__cta {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    margin-top: 8px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .events-upcoming-list__link:hover .events-upcoming-list__cta {
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    .events-upcoming-list__image-wrapper {
+      width: 100px;
+    }
+
+    .events-upcoming-list__link {
+      gap: 16px;
+    }
+
+    .events-upcoming-list__title {
+      font-size: 14px;
+    }
+
+    .events-upcoming-list__description {
+      font-size: 12px;
+    }
+
+    /* Mobile Side Scroll Layout */
+    .events-upcoming-list--mobile-scroll .events-upcoming-list__container {
+      flex-direction: row;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      gap: 16px;
+      padding-bottom: 16px;
+      margin: 0 -16px;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .events-upcoming-list--mobile-scroll .events-upcoming-list__container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .events-upcoming-list--mobile-scroll .events-upcoming-list__item {
+      flex-shrink: 0;
+      width: 280px;
+      scroll-snap-align: start;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .events-upcoming-list--mobile-scroll .events-upcoming-list__link {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .events-upcoming-list--mobile-scroll .events-upcoming-list__image-wrapper {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Events Upcoming List",
+  "tag": "section",
+  "class": "events-upcoming-list-section",
+  "settings": [
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog",
+      "info": "Select the events blog"
+    },
+    {
+      "type": "text",
+      "id": "filter_tag",
+      "label": "Filter by Tag",
+      "info": "Show only events with this tag (leave blank for all)"
+    },
+    {
+      "type": "text",
+      "id": "tab_id",
+      "label": "Tab ID",
+      "info": "Link this section to a tab in the Events Header (e.g., 'upcoming')"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Upcoming events"
+    },
+    {
+      "type": "range",
+      "id": "post_limit",
+      "label": "Maximum events",
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show published date",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "date_format",
+      "label": "Date format",
+      "default": "%B %d, %Y",
+      "info": "Example: %B %d, %Y = January 01, 2024"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "SEE MORE"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile layout",
+      "options": [
+        {
+          "value": "list",
+          "label": "List (vertical)"
+        },
+        {
+          "value": "scroll",
+          "label": "Side scroll (horizontal)"
+        }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page"
+        },
+        {
+          "value": "full-width",
+          "label": "Full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "presets": [
+    {
+      "name": "Events Upcoming List",
+      "category": "Events"
+    }
+  ]
+}
+{% endschema %}

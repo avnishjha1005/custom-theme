@@ -1,0 +1,335 @@
+{% comment %}
+  Events Location Grid Section
+  Displays events from a blog filtered by location tag in a grid layout
+{% endcomment %}
+
+{% liquid
+  assign blog = section.settings.blog
+  assign location_tag = section.settings.location_tag
+  assign max_items = section.settings.post_limit
+  assign filtered_articles = ''
+%}
+
+<div
+  class="
+    events-location-grid
+    section
+    section--{{ section.settings.section_width }}
+    color-{{ section.settings.color_scheme }}
+    spacing-style
+  "
+  style="
+    {%- render 'spacing-style', settings: section.settings -%}
+    --grid-columns: {{ section.settings.columns }};
+    --grid-gap: {{ section.settings.grid_gap }}px;
+  "
+  {% if section.settings.tab_id != blank %}
+    data-events-section="{{ section.settings.tab_id }}"
+  {% endif %}
+>
+  <div class="events-location-grid__header">
+    {% if section.settings.location_label != blank %}
+      <span class="events-location-grid__label">{{ section.settings.location_label }}</span>
+    {% endif %}
+    {% if section.settings.description != blank %}
+      <p class="events-location-grid__description">{{ section.settings.description }}</p>
+    {% endif %}
+  </div>
+
+  <div class="events-location-grid__grid">
+    {% if blog != blank and blog.articles_count > 0 %}
+      {% assign article_count = 0 %}
+      {% for article in blog.articles %}
+        {% if article_count >= max_items %}
+          {% break %}
+        {% endif %}
+
+        {% assign show_article = true %}
+        {% if location_tag != blank %}
+          {% assign show_article = false %}
+          {% for tag in article.tags %}
+            {% if tag == location_tag %}
+              {% assign show_article = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if show_article %}
+          {% assign article_count = article_count | plus: 1 %}
+          <a href="{{ article.url }}" class="events-location-grid__item">
+            <div class="events-location-grid__image-wrapper">
+              {% if article.image %}
+                <img
+                  src="{{ article.image | image_url: width: 600 }}"
+                  alt="{{ article.image.alt | escape | default: article.title }}"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                  loading="lazy"
+                  class="events-location-grid__image"
+                >
+              {% else %}
+                <div class="events-location-grid__placeholder">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                </div>
+              {% endif %}
+            </div>
+            {% if section.settings.show_title %}
+              <span class="events-location-grid__item-title">{{ article.title }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+
+      {% comment %} Show placeholders if not enough articles {% endcomment %}
+      {% assign remaining = max_items | minus: article_count %}
+      {% if remaining > 0 and article_count == 0 %}
+        {% for i in (1..max_items) %}
+          <div class="events-location-grid__item">
+            <div class="events-location-grid__image-wrapper">
+              <div class="events-location-grid__placeholder">
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% else %}
+      {% comment %} Placeholder items when no blog selected {% endcomment %}
+      {% for i in (1..max_items) %}
+        <div class="events-location-grid__item">
+          <div class="events-location-grid__image-wrapper">
+            <div class="events-location-grid__placeholder">
+              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .events-location-grid {
+    width: 100%;
+  }
+
+  .events-location-grid__header {
+    margin-bottom: 24px;
+  }
+
+  .events-location-grid__label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    margin-bottom: 8px;
+    opacity: 0.7;
+  }
+
+  .events-location-grid__description {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--color-foreground);
+    margin: 0;
+    max-width: 600px;
+  }
+
+  .events-location-grid__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns, 4), 1fr);
+    gap: var(--grid-gap, 16px);
+  }
+
+  .events-location-grid__item {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .events-location-grid__image-wrapper {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: var(--color-background-secondary, #f5f5f5);
+  }
+
+  .events-location-grid__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .events-location-grid__item:hover .events-location-grid__image {
+    transform: scale(1.05);
+  }
+
+  .events-location-grid__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background-secondary, #f5f5f5);
+  }
+
+  .events-location-grid__placeholder svg {
+    width: 50%;
+    height: auto;
+    opacity: 0.3;
+  }
+
+  .events-location-grid__item-title {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    text-align: center;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 768px) {
+    .events-location-grid__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Events Location Grid",
+  "tag": "section",
+  "class": "events-location-grid-section",
+  "settings": [
+    {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog",
+      "info": "Select the events blog"
+    },
+    {
+      "type": "text",
+      "id": "location_tag",
+      "label": "Location Tag",
+      "info": "Filter events by this tag (leave blank to show all)"
+    },
+    {
+      "type": "text",
+      "id": "tab_id",
+      "label": "Tab ID",
+      "info": "Link this section to a tab in the Events Header (e.g., 'locations')"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "location_label",
+      "label": "Location Label",
+      "default": "EVENT LOCATION"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing"
+    },
+    {
+      "type": "header",
+      "content": "Grid Layout"
+    },
+    {
+      "type": "range",
+      "id": "post_limit",
+      "label": "Maximum events",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 48,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show event titles",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page"
+        },
+        {
+          "value": "full-width",
+          "label": "Full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    }
+  ],
+  "presets": [
+    {
+      "name": "Events Location Grid",
+      "category": "Events"
+    }
+  ]
+}
+{% endschema %}

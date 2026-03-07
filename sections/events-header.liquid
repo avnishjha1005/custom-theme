@@ -1,0 +1,223 @@
+{% comment %}
+  Events Header Section
+  Displays page title with horizontal navigation tabs for filtering events
+{% endcomment %}
+
+{% liquid
+  assign tabs = section.settings.tabs | split: ','
+%}
+
+<div
+  class="
+    events-header
+    section
+    section--{{ section.settings.section_width }}
+    color-{{ section.settings.color_scheme }}
+    spacing-style
+  "
+  style="
+    {%- render 'spacing-style', settings: section.settings -%}
+  "
+>
+  <div class="events-header__content">
+    {% if section.settings.heading != blank %}
+      <h1 class="events-header__title">{{ section.settings.heading }}</h1>
+    {% endif %}
+
+    {% if tabs.size > 0 %}
+      <nav class="events-header__nav" aria-label="Event filters">
+        <ul class="events-header__tabs">
+          {% for tab in tabs %}
+            {% assign tab_text = tab | strip %}
+            {% assign tab_handle = tab_text | handleize %}
+            <li class="events-header__tab-item">
+              <a
+                href="#{{ tab_handle }}"
+                class="events-header__tab-link {% if forloop.first %}is-active{% endif %}"
+                data-tab-target="{{ tab_handle }}"
+              >
+                {{ tab_text }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.events-header__tab-link');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function(e) {
+        e.preventDefault();
+        tabs.forEach(t => t.classList.remove('is-active'));
+        this.classList.add('is-active');
+
+        // Optional: Dispatch custom event for filtering
+        const targetId = this.dataset.tabTarget;
+        document.dispatchEvent(new CustomEvent('events:filter', {
+          detail: { filter: targetId }
+        }));
+      });
+    });
+  });
+</script>
+
+{% stylesheet %}
+  .events-header {
+    width: 100%;
+  }
+
+  .events-header__content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .events-header__title {
+    font-size: var(--font-heading-size, 48px);
+    font-family: var(--font-heading-family);
+    font-weight: var(--font-heading-weight);
+    text-transform: none;
+    margin: 0;
+    text-align: center;
+  }
+
+  .events-header__nav {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .events-header__nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .events-header__tabs {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .events-header__tab-item {
+    flex-shrink: 0;
+  }
+
+  .events-header__tab-link {
+    display: inline-block;
+    padding: 8px 0;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-foreground);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    opacity: 0.6;
+  }
+
+  .events-header__tab-link:hover,
+  .events-header__tab-link.is-active {
+    opacity: 1;
+    border-bottom-color: var(--color-foreground);
+  }
+
+  @media (max-width: 768px) {
+    .events-header__tabs {
+      justify-content: flex-start;
+      padding: 0 16px;
+    }
+
+    .events-header__title {
+      font-size: 32px;
+      padding: 0 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Events Header",
+  "tag": "section",
+  "class": "events-header-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Events"
+    },
+    {
+      "type": "textarea",
+      "id": "tabs",
+      "label": "Navigation Tabs",
+      "info": "Enter tab names separated by commas (e.g., PAST EVENTS, UPCOMING, LOCATIONS)",
+      "default": "PAST EVENTS, UPCOMING, LOCATIONS"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page"
+        },
+        {
+          "value": "full-width",
+          "label": "Full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Events Header",
+      "category": "Events"
+    }
+  ]
+}
+{% endschema %}

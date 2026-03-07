@@ -1,0 +1,351 @@
+{% comment %}
+  Event Card Block
+  A reusable card for displaying event information from blog articles
+{% endcomment %}
+
+{% assign block_settings = block.settings %}
+
+{% liquid
+  assign onboarding = false
+
+  if article == blank
+    assign onboarding = true
+    assign display_title = 'Event Title'
+    assign display_date = 'January 1, 2024'
+    assign display_description = 'Event description will appear here when you select a blog.'
+  else
+    assign display_title = article.title
+    assign display_date = article.published_at | date: block_settings.date_format | default: '%B %d, %Y'
+    assign display_description = article.excerpt | default: article.content | strip_html | truncate: 120
+  endif
+%}
+
+<div
+  class="
+    event-card
+    event-card--{{ block_settings.layout }}
+    spacing-style
+    {% if block_settings.inherit_color_scheme == false %}color-{{ block_settings.color_scheme }}{% endif %}
+  "
+  data-block-id="{{ block.id }}"
+  {% if onboarding %}
+    data-placeholder="true"
+  {% endif %}
+  style="
+    {%- render 'spacing-style', settings: block_settings -%}
+    --text-align: {{ block_settings.alignment }};
+    --gap: {{ block_settings.gap }}px;
+  "
+  {{ block.shopify_attributes }}
+>
+  <a
+    class="event-card__link"
+    {% unless onboarding %}
+      href="{{ article.url }}"
+    {% endunless %}
+  >
+    <span class="visually-hidden">{{ display_title }}</span>
+  </a>
+
+  <div class="event-card__inner">
+    {% if onboarding or article.image %}
+      <div class="event-card__image-wrapper">
+        {% if article.image %}
+          <img
+            src="{{ article.image | image_url: width: 600 }}"
+            srcset="{{ article.image | image_url: width: 300 }} 300w,
+                    {{ article.image | image_url: width: 600 }} 600w,
+                    {{ article.image | image_url: width: 900 }} 900w"
+            sizes="(max-width: 768px) 50vw, 300px"
+            alt="{{ article.image.alt | escape | default: article.title }}"
+            width="{{ article.image.width }}"
+            height="{{ article.image.height }}"
+            loading="lazy"
+            class="event-card__image"
+          >
+        {% else %}
+          <div class="event-card__placeholder">
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="event-card__content">
+      {% if block_settings.show_date %}
+        <span class="event-card__date">{{ display_date }}</span>
+      {% endif %}
+
+      <h3 class="event-card__title">{{ display_title }}</h3>
+
+      {% if block_settings.show_description %}
+        <p class="event-card__description">{{ display_description }}</p>
+      {% endif %}
+
+      {% if block_settings.show_cta %}
+        <span class="event-card__cta">{{ block_settings.cta_text }}</span>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .event-card {
+    width: 100%;
+    position: relative;
+    text-align: var(--text-align, left);
+  }
+
+  .event-card__link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .event-card__inner {
+    width: 100%;
+    display: flex;
+    gap: var(--gap, 16px);
+    position: relative;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Vertical Layout */
+  .event-card--vertical .event-card__inner {
+    flex-direction: column;
+  }
+
+  /* Horizontal Layout */
+  .event-card--horizontal .event-card__inner {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .event-card--horizontal .event-card__image-wrapper {
+    flex-shrink: 0;
+    width: 140px;
+  }
+
+  .event-card__image-wrapper {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: var(--color-background-secondary, #f5f5f5);
+  }
+
+  .event-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .event-card:hover .event-card__image {
+    transform: scale(1.05);
+  }
+
+  .event-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-background-secondary, #f5f5f5);
+  }
+
+  .event-card__placeholder svg {
+    width: 40%;
+    height: auto;
+    opacity: 0.3;
+  }
+
+  .event-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .event-card__date {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    opacity: 0.6;
+  }
+
+  .event-card__title {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0;
+    color: var(--color-foreground);
+  }
+
+  .event-card__description {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-foreground);
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  .event-card__cta {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    margin-top: 8px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    pointer-events: auto;
+  }
+
+  .event-card:hover .event-card__cta {
+    opacity: 0.7;
+  }
+
+  @media (max-width: 768px) {
+    .event-card--horizontal .event-card__image-wrapper {
+      width: 100px;
+    }
+
+    .event-card__title {
+      font-size: 14px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Event Card",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "vertical",
+          "label": "Vertical"
+        },
+        {
+          "value": "horizontal",
+          "label": "Horizontal"
+        }
+      ],
+      "default": "vertical"
+    },
+    {
+      "type": "select",
+      "id": "alignment",
+      "label": "Text alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "label": "Show date",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "date_format",
+      "label": "Date format",
+      "default": "%B %d, %Y",
+      "info": "Example: %B %d, %Y = January 01, 2024"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show CTA link",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "SEE MORE"
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "checkbox",
+      "id": "inherit_color_scheme",
+      "label": "Inherit color scheme",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1",
+      "visible_if": "{{ block.settings.inherit_color_scheme == false }}"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ]
+}
+{% endschema %}
