@@ -25,7 +25,7 @@
     "events-past": {
       "type": "events-location-grid",
       "settings": {
-        "blog": "",
+        "blog": "events",
         "filter_tag": "past-events",
         "tab_id": "past-events",
         "location_label": "PAST EVENTS",
