@@ -1,0 +1,43 @@
+{
+  "sections": {
+    "single_event": {
+      "type": "single-event",
+      "settings": {
+        "default_location": "Event Location",
+        "show_author": true,
+        "show_social": true,
+        "show_facebook": true,
+        "show_instagram": true,
+        "show_email": true,
+        "show_rsvp_button": true,
+        "rsvp_button_text": "RSVP/JOIN THE WAITLIST",
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 60,
+        "padding-block-end": 60
+      }
+    },
+    "upcoming_events": {
+      "type": "events-upcoming-list",
+      "settings": {
+        "heading": "Upcoming events",
+        "post_limit": 4,
+        "filter_tag": "upcoming",
+        "show_date": true,
+        "show_time": false,
+        "date_format": "%B %d, %Y",
+        "cta_text": "SEE MORE",
+        "empty_message": "No upcoming events",
+        "mobile_layout": "list",
+        "section_width": "page-width",
+        "color_scheme": "scheme-1",
+        "padding-block-start": 48,
+        "padding-block-end": 80
+      }
+    }
+  },
+  "order": [
+    "single_event",
+    "upcoming_events"
+  ]
+}

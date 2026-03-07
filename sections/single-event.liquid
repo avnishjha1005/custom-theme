@@ -1,0 +1,427 @@
+{% comment %}
+  Single Event Section
+  Hero layout for individual event pages matching the Figma design
+{% endcomment %}
+
+{% liquid
+  assign section_id = section.id | replace: '_', '' | downcase
+
+  # Get event metafields
+  assign event_location = article.metafields.event.location | default: section.settings.default_location
+  assign event_rsvp_url = article.metafields.event.rsvp_url | default: section.settings.default_rsvp_url
+%}
+
+<div
+  class="
+    single-event
+    section
+    section--{{ section.settings.section_width }}
+    color-{{ section.settings.color_scheme }}
+    spacing-style
+  "
+  style="
+    {%- render 'spacing-style', settings: section.settings -%}
+  "
+  data-section-id="{{ section_id }}"
+>
+  <div class="single-event__container">
+    {% comment %} Header Section {% endcomment %}
+    <div class="single-event__header">
+      {% if event_location != blank %}
+        <span class="single-event__location">{{ event_location }}</span>
+      {% endif %}
+
+      <h1 class="single-event__title">{{ article.title }}</h1>
+
+      {% if article.excerpt != blank %}
+        <p class="single-event__description">{{ article.excerpt }}</p>
+      {% endif %}
+
+      {% if section.settings.show_author and article.author != blank %}
+        <p class="single-event__author">Written by {{ article.author }}</p>
+      {% endif %}
+
+      {% comment %} Social Share Icons {% endcomment %}
+      {% if section.settings.show_social %}
+        <div class="single-event__social">
+          {% if section.settings.show_facebook %}
+            <a
+              href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url | append: article.url | url_encode }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="single-event__social-link"
+              aria-label="Share on Facebook"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+              </svg>
+            </a>
+          {% endif %}
+
+          {% if section.settings.show_instagram %}
+            <a
+              href="{{ shop.metafields.social.instagram.value | default: '#' }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="single-event__social-link"
+              aria-label="Visit Instagram"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+              </svg>
+            </a>
+          {% endif %}
+
+          {% if section.settings.show_email %}
+            <a
+              href="mailto:?subject={{ article.title | url_encode }}&body={{ shop.url | append: article.url | url_encode }}"
+              class="single-event__social-link"
+              aria-label="Share via Email"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 6-10 7L2 6"/>
+              </svg>
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+
+    {% comment %} Featured Image {% endcomment %}
+    {% if article.image %}
+      <div class="single-event__image-wrapper">
+        <img
+          src="{{ article.image | image_url: width: 1200 }}"
+          srcset="{{ article.image | image_url: width: 600 }} 600w,
+                  {{ article.image | image_url: width: 900 }} 900w,
+                  {{ article.image | image_url: width: 1200 }} 1200w,
+                  {{ article.image | image_url: width: 1600 }} 1600w"
+          sizes="(max-width: 768px) 100vw, 800px"
+          alt="{{ article.image.alt | escape | default: article.title }}"
+          width="{{ article.image.width }}"
+          height="{{ article.image.height }}"
+          loading="eager"
+          class="single-event__image"
+        >
+      </div>
+    {% endif %}
+
+    {% comment %} Content Section {% endcomment %}
+    <div class="single-event__content">
+      {% if article.content != blank %}
+        <div class="single-event__body rte">
+          {{ article.content }}
+        </div>
+      {% endif %}
+
+      {% comment %} RSVP Button {% endcomment %}
+      {% if section.settings.show_rsvp_button %}
+        {% if event_rsvp_url != blank %}
+          <a href="{{ event_rsvp_url }}" class="single-event__rsvp-btn" target="_blank" rel="noopener noreferrer">
+            {{ section.settings.rsvp_button_text }}
+          </a>
+        {% else %}
+          <button type="button" class="single-event__rsvp-btn" disabled>
+            {{ section.settings.rsvp_button_text }}
+          </button>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .single-event {
+    width: 100%;
+  }
+
+  .single-event__container {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .single-event__header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .single-event__location {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    opacity: 0.7;
+  }
+
+  .single-event__title {
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0;
+    color: var(--color-foreground);
+    max-width: 600px;
+  }
+
+  .single-event__description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-foreground);
+    opacity: 0.8;
+    margin: 0;
+    max-width: 500px;
+  }
+
+  .single-event__author {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    opacity: 0.6;
+    margin: 0;
+  }
+
+  .single-event__social {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .single-event__social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-foreground);
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+
+  .single-event__social-link:hover {
+    opacity: 1;
+  }
+
+  .single-event__image-wrapper {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .single-event__image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .single-event__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    text-align: center;
+  }
+
+  .single-event__body {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--color-foreground);
+    opacity: 0.85;
+    max-width: 600px;
+  }
+
+  .single-event__body p {
+    margin: 0 0 16px 0;
+  }
+
+  .single-event__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .single-event__rsvp-btn {
+    display: inline-block;
+    padding: 14px 48px;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-background);
+    background-color: var(--color-foreground);
+    border: 1px solid var(--color-foreground);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .single-event__rsvp-btn:hover {
+    color: var(--color-foreground);
+    background-color: transparent;
+  }
+
+  .single-event__rsvp-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  @media (max-width: 768px) {
+    .single-event__container {
+      gap: 32px;
+    }
+
+    .single-event__title {
+      font-size: 28px;
+    }
+
+    .single-event__description {
+      font-size: 13px;
+    }
+
+    .single-event__body {
+      font-size: 13px;
+    }
+
+    .single-event__rsvp-btn {
+      padding: 12px 36px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Single Event",
+  "tag": "section",
+  "class": "single-event-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "default_location",
+      "label": "Default location",
+      "info": "Used if event.location metafield is not set",
+      "default": "Event Location"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "label": "Show author",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Social Sharing"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_facebook",
+      "label": "Show Facebook",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_instagram",
+      "label": "Show Instagram",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email",
+      "label": "Show Email",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "RSVP Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rsvp_button",
+      "label": "Show RSVP button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rsvp_button_text",
+      "label": "Button text",
+      "default": "RSVP/JOIN THE WAITLIST"
+    },
+    {
+      "type": "url",
+      "id": "default_rsvp_url",
+      "label": "Default RSVP URL",
+      "info": "Used if event.rsvp_url metafield is not set"
+    },
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        {
+          "value": "page-width",
+          "label": "Page"
+        },
+        {
+          "value": "full-width",
+          "label": "Full"
+        }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Single Event",
+      "category": "Events"
+    }
+  ]
+}
+{% endschema %}
