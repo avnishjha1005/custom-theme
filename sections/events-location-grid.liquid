@@ -37,8 +37,6 @@
   endif
 %}
 
-{% comment %} Only render section if there are matching events {% endcomment %}
-{% if matching_count > 0 %}
 <div
   class="
     events-location-grid
@@ -83,7 +81,17 @@
 
         {% if show_article %}
           {% assign article_count = article_count | plus: 1 %}
-          <a href="{{ article.url }}" class="events-location-grid__item">
+          {% comment %} Build tag handles for filtering {% endcomment %}
+          {% assign tag_handles = '' %}
+          {% for tag in article.tags %}
+            {% assign tag_handle = tag | handleize %}
+            {% if tag_handles == '' %}
+              {% assign tag_handles = tag_handle %}
+            {% else %}
+              {% assign tag_handles = tag_handles | append: ' ' | append: tag_handle %}
+            {% endif %}
+          {% endfor %}
+          <a href="{{ article.url }}" class="events-location-grid__item" data-event-tags="{{ tag_handles }}">
             <div class="events-location-grid__image-wrapper">
               {% if article.image %}
                 <img
@@ -107,9 +115,14 @@
         {% endif %}
       {% endfor %}
     {% endif %}
+
+    {% if matching_count == 0 %}
+      <div class="events-location-grid__empty">
+        <p>{{ section.settings.empty_message }}</p>
+      </div>
+    {% endif %}
   </div>
 </div>
-{% endif %}
 
 {% stylesheet %}
   .events-location-grid {
@@ -150,6 +163,10 @@
     display: block;
   }
 
+  .events-location-grid__item.is-hidden {
+    display: none;
+  }
+
   .events-location-grid__image-wrapper {
     aspect-ratio: 3 / 4;
     overflow: hidden;
@@ -188,6 +205,18 @@
     font-size: 12px;
     text-align: center;
     opacity: 0.8;
+  }
+
+  .events-location-grid__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 48px 24px;
+    opacity: 0.6;
+  }
+
+  .events-location-grid__empty p {
+    margin: 0;
+    font-size: 14px;
   }
 
   @media (max-width: 768px) {
@@ -236,8 +265,13 @@
     {
       "type": "textarea",
       "id": "description",
-      "label": "Description",
-      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing"
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "empty_message",
+      "label": "Empty state message",
+      "default": "No events found"
     },
     {
       "type": "header",

@@ -13,7 +13,6 @@
       "type": "events-header",
       "settings": {
         "heading": "{{ blog.title }}",
-        "tabs": "PAST EVENTS, UPCOMING, LOCATIONS",
         "show_view_all": true,
         "show_search": true,
         "search_placeholder": "Search events...",

@@ -4,29 +4,46 @@
 {% endcomment %}
 
 {% liquid
-  assign tabs = section.settings.tabs | split: ','
   assign section_id = section.id | replace: '_', '' | downcase
+
+  # Get current blog
+  if blog
+    assign current_blog = blog
+  else
+    assign current_blog = blogs['events']
+  endif
+
+  # System tags to exclude from location tabs
+  assign system_tags = 'past-events,upcoming' | split: ','
+
+  # Extract unique location tags from articles (excluding system tags)
+  assign location_tags = ''
+  if current_blog
+    for article in current_blog.articles limit: 50
+      for tag in article.tags
+        assign is_system_tag = false
+        for sys_tag in system_tags
+          if tag == sys_tag
+            assign is_system_tag = true
+            break
+          endif
+        endfor
+        unless is_system_tag
+          unless location_tags contains tag
+            capture location_tags
+              echo location_tags
+              if location_tags != ''
+                echo ','
+              endif
+              echo tag
+            endcapture
+          endunless
+        endunless
+      endfor
+    endfor
+  endif
+  assign location_tag_array = location_tags | split: ','
 %}
-
-{% comment %} Get current blog for search {% endcomment %}
-{% if blog %}
-  {% assign current_blog = blog %}
-{% else %}
-  {% assign current_blog = blogs['events'] %}
-{% endif %}
-
-{% comment %} Extract unique tags from articles {% endcomment %}
-{% assign all_tags = '' %}
-{% if current_blog %}
-  {% for article in current_blog.articles limit: 50 %}
-    {% for tag in article.tags %}
-      {% unless all_tags contains tag %}
-        {% capture all_tags %}{{ all_tags }}{% if all_tags != '' %},{% endif %}{{ tag }}{% endcapture %}
-      {% endunless %}
-    {% endfor %}
-  {% endfor %}
-{% endif %}
-{% assign tag_array = all_tags | split: ',' %}
 
 <div
   class="
@@ -60,23 +77,58 @@
         <ul class="events-header__tabs">
           {% if section.settings.show_view_all %}
             <li class="events-header__tab-item">
-              <a href="{{ current_blog.url }}" class="events-header__tab-link events-header__tab-link--view-all is-active">
+              <button
+                type="button"
+                class="events-header__tab-link events-header__tab-link--view-all is-active"
+                data-tab-filter="all"
+              >
                 View All
-              </a>
+              </button>
             </li>
           {% endif %}
-          {% for tab in tabs %}
-            {% assign tab_text = tab | strip %}
-            {% assign tab_handle = tab_text | handleize %}
-            <li class="events-header__tab-item">
-              <a
-                href="{{ current_blog.url }}/tagged/{{ tab_handle }}"
-                class="events-header__tab-link"
-                data-tab-target="{{ tab_handle }}"
-              >
-                {{ tab_text }}
-              </a>
-            </li>
+
+          {% comment %} Static tabs: Past Events and Upcoming {% endcomment %}
+          <li class="events-header__tab-item">
+            <button
+              type="button"
+              class="events-header__tab-link"
+              data-tab-filter="past-events"
+            >
+              Past Events
+            </button>
+          </li>
+          <li class="events-header__tab-item">
+            <button
+              type="button"
+              class="events-header__tab-link"
+              data-tab-filter="upcoming"
+            >
+              Upcoming
+            </button>
+          </li>
+
+          {% comment %} Dynamic location tabs from article tags {% endcomment %}
+          {% for tag in location_tag_array %}
+            {% assign tag_text = tag | strip %}
+            {% if tag_text != blank %}
+              {% assign tag_handle = tag_text | handleize %}
+              {% comment %} Strip "Location-" prefix for display {% endcomment %}
+              {% assign display_text = tag_text %}
+              {% if tag_text contains 'Location-' %}
+                {% assign display_text = tag_text | remove: 'Location-' %}
+              {% elsif tag_text contains 'location-' %}
+                {% assign display_text = tag_text | remove: 'location-' %}
+              {% endif %}
+              <li class="events-header__tab-item">
+                <button
+                  type="button"
+                  class="events-header__tab-link"
+                  data-tab-filter="{{ tag_handle }}"
+                >
+                  {{ display_text }}
+                </button>
+              </li>
+            {% endif %}
           {% endfor %}
         </ul>
       </nav>
@@ -135,83 +187,122 @@
     const modal = section.querySelector('[data-search-modal]');
     const drawer = section.querySelector('[data-search-drawer]');
     const closeButtons = section.querySelectorAll('[data-search-close]');
-
-    if (!searchTrigger) return;
+    const tabButtons = section.querySelectorAll('[data-tab-filter]');
 
     const blogHandle = '{{ current_blog.handle | default: "events" }}';
     let searchTimer;
 
-    function getContainer() {
-      return window.innerWidth > 749 ? modal : drawer;
-    }
+    // System tabs that show/hide entire sections
+    const systemFilters = ['all', 'past-events', 'upcoming'];
 
-    function toggleSearch(open) {
-      if (overlay) overlay.classList.toggle('is-active', open);
-      const container = getContainer();
-      if (container) {
-        container.classList.toggle('is-active', open);
-        if (open) {
-          setTimeout(() => container.querySelector('[data-search-input]').focus(), 100);
+    // Tab filtering functionality
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.tabFilter;
+
+        // Update active state
+        tabButtons.forEach(b => b.classList.remove('is-active'));
+        btn.classList.add('is-active');
+
+        // Get all event sections and items
+        const eventSections = document.querySelectorAll('[data-events-section]');
+        const eventItems = document.querySelectorAll('[data-event-tags]');
+
+        if (systemFilters.includes(filter)) {
+          // System filter: show/hide sections, show all items
+          eventSections.forEach(sec => {
+            const sectionId = sec.dataset.eventsSection;
+            if (filter === 'all') {
+              sec.style.display = '';
+            } else if (sectionId === filter) {
+              sec.style.display = '';
+            } else {
+              sec.style.display = 'none';
+            }
+          });
+
+          // Show all items
+          eventItems.forEach(item => item.classList.remove('is-hidden'));
+        } else {
+          // Location filter: show all sections, filter items by tag
+          eventSections.forEach(sec => sec.style.display = '');
+
+          eventItems.forEach(item => {
+            const tagsRaw = item.dataset.eventTags || '';
+            const tags = tagsRaw.split(' ').map(t => t.trim()).filter(t => t);
+            if (tags.includes(filter)) {
+              item.classList.remove('is-hidden');
+            } else {
+              item.classList.add('is-hidden');
+            }
+          });
         }
-      }
-      document.body.style.overflow = open ? 'hidden' : '';
-    }
-
-    searchTrigger.addEventListener('click', () => toggleSearch(true));
-    if (overlay) overlay.addEventListener('click', () => toggleSearch(false));
-    closeButtons.forEach(btn => btn.addEventListener('click', () => toggleSearch(false)));
-
-    // Search functionality
-    section.querySelectorAll('[data-search-input]').forEach(input => {
-      input.addEventListener('input', (e) => {
-        clearTimeout(searchTimer);
-        const query = e.target.value;
-        if (query.length < 2) {
-          section.querySelectorAll('[data-search-results]').forEach(r => r.innerHTML = '');
-          return;
-        }
-        searchTimer = setTimeout(() => performSearch(query), 300);
       });
     });
 
-    async function performSearch(query) {
-      const searchUrl = `/search/suggest.json?q=${encodeURIComponent(query)}*&resources[type]=article&resources[options][fields]=title,body,tag,author`;
+    // Search functionality
+    if (searchTrigger) {
+      function getContainer() {
+        return window.innerWidth > 749 ? modal : drawer;
+      }
 
-      try {
-        const response = await fetch(searchUrl);
-        const data = await response.json();
-        const articles = data.resources?.results?.articles || [];
-        const filtered = articles.filter(a => a.url.includes(`/blogs/${blogHandle}`));
+      function toggleSearch(open) {
+        if (overlay) overlay.classList.toggle('is-active', open);
+        const container = getContainer();
+        if (container) {
+          container.classList.toggle('is-active', open);
+          if (open) {
+            setTimeout(() => container.querySelector('[data-search-input]').focus(), 100);
+          }
+        }
+        document.body.style.overflow = open ? 'hidden' : '';
+      }
 
-        const resultsHtml = filtered.length === 0
-          ? '<p class="events-search__no-results">No events found.</p>'
-          : filtered.map(a => `
-              <a href="${a.url}" class="events-search__result-item">
-                <div class="events-search__result-title">${highlight(a.title, query)}</div>
-                ${a.summary ? `<div class="events-search__result-summary">${highlight(a.summary, query)}</div>` : ''}
-              </a>
-            `).join('');
+      searchTrigger.addEventListener('click', () => toggleSearch(true));
+      if (overlay) overlay.addEventListener('click', () => toggleSearch(false));
+      closeButtons.forEach(btn => btn.addEventListener('click', () => toggleSearch(false)));
 
-        section.querySelectorAll('[data-search-results]').forEach(r => r.innerHTML = resultsHtml);
-      } catch (e) {
-        console.error('Search error:', e);
+      section.querySelectorAll('[data-search-input]').forEach(input => {
+        input.addEventListener('input', (e) => {
+          clearTimeout(searchTimer);
+          const query = e.target.value;
+          if (query.length < 2) {
+            section.querySelectorAll('[data-search-results]').forEach(r => r.innerHTML = '');
+            return;
+          }
+          searchTimer = setTimeout(() => performSearch(query), 300);
+        });
+      });
+
+      async function performSearch(query) {
+        const searchUrl = `/search/suggest.json?q=${encodeURIComponent(query)}*&resources[type]=article&resources[options][fields]=title,body,tag,author`;
+
+        try {
+          const response = await fetch(searchUrl);
+          const data = await response.json();
+          const articles = data.resources?.results?.articles || [];
+          const filtered = articles.filter(a => a.url.includes(`/blogs/${blogHandle}`));
+
+          const resultsHtml = filtered.length === 0
+            ? '<p class="events-search__no-results">No events found.</p>'
+            : filtered.map(a => `
+                <a href="${a.url}" class="events-search__result-item">
+                  <div class="events-search__result-title">${highlight(a.title, query)}</div>
+                  ${a.summary ? `<div class="events-search__result-summary">${highlight(a.summary, query)}</div>` : ''}
+                </a>
+              `).join('');
+
+          section.querySelectorAll('[data-search-results]').forEach(r => r.innerHTML = resultsHtml);
+        } catch (e) {
+          console.error('Search error:', e);
+        }
+      }
+
+      function highlight(text, query) {
+        const regex = new RegExp(`(${query})`, 'gi');
+        return text.replace(regex, '<mark class="events-search__highlight">$1</mark>');
       }
     }
-
-    function highlight(text, query) {
-      const regex = new RegExp(`(${query})`, 'gi');
-      return text.replace(regex, '<mark class="events-search__highlight">$1</mark>');
-    }
-
-    // Tab active state based on current URL
-    const currentPath = window.location.pathname;
-    section.querySelectorAll('.events-header__tab-link').forEach(link => {
-      if (currentPath === link.getAttribute('href') ||
-          (currentPath.includes('/tagged/') && link.getAttribute('href').includes(currentPath.split('/tagged/')[1]))) {
-        section.querySelectorAll('.events-header__tab-link').forEach(l => l.classList.remove('is-active'));
-        link.classList.add('is-active');
-      }
-    });
   })();
 </script>
 
@@ -287,9 +378,13 @@
     text-transform: uppercase;
     text-decoration: none;
     color: var(--color-foreground);
+    border: none;
     border-bottom: 2px solid transparent;
+    background: none;
+    cursor: pointer;
     transition: all 0.2s ease;
     opacity: 0.6;
+    font-family: inherit;
   }
 
   .events-header__tab-link--view-all {
@@ -468,13 +563,6 @@
       "id": "heading",
       "label": "Heading",
       "default": "Events"
-    },
-    {
-      "type": "textarea",
-      "id": "tabs",
-      "label": "Navigation Tabs",
-      "info": "Enter tab names separated by commas. These will link to blog tags.",
-      "default": "PAST EVENTS, UPCOMING, LOCATIONS"
     },
     {
       "type": "checkbox",
