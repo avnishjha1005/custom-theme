@@ -11,6 +11,29 @@
   "sections": {
     "single_event": {
       "type": "single-event",
+      "blocks": {
+        "social_share_Byyz3f": {
+          "type": "social-share",
+          "name": "Social Share",
+          "settings": {
+            "show_clipboard": true,
+            "show_email": true,
+            "show_facebook": false,
+            "show_x": false,
+            "show_pinterest": false,
+            "show_linkedin": false,
+            "show_whatsapp": false,
+            "show_reddit": false,
+            "show_telegram": false,
+            "show_instagram": true,
+            "show_bookmark": false
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "social_share_Byyz3f"
+      ],
       "settings": {
         "default_location": "Event Location",
         "show_author": true,
