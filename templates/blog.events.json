@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "events-header": {
@@ -9,7 +18,7 @@
         "show_search": true,
         "search_placeholder": "Search events...",
         "section_width": "page-width",
-        "color_scheme": "scheme-1",
+        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
         "padding-block-start": 48,
         "padding-block-end": 24
       }
@@ -34,8 +43,10 @@
     "events-upcoming": {
       "type": "events-upcoming-list",
       "settings": {
-        "heading": "Upcoming events",
+        "blog": "",
+        "filter_tag": "",
         "tab_id": "upcoming",
+        "heading": "Upcoming events",
         "post_limit": 5,
         "show_date": true,
         "show_time": true,
