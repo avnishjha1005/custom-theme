@@ -12,7 +12,7 @@
     "events-header": {
       "type": "events-header",
       "settings": {
-        "heading": "Events",
+        "heading": "{{ blog.title }}",
         "tabs": "PAST EVENTS, UPCOMING, LOCATIONS",
         "show_view_all": true,
         "show_search": true,
@@ -26,10 +26,11 @@
     "events-past": {
       "type": "events-location-grid",
       "settings": {
+        "blog": "",
         "filter_tag": "past-events",
+        "tab_id": "past-events",
         "location_label": "PAST EVENTS",
         "description": "",
-        "tab_id": "past-events",
         "post_limit": 8,
         "columns": 4,
         "grid_gap": 16,
