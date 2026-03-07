@@ -1,31 +1,22 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "single_event": {
       "type": "single-event",
-      "blocks": {
-        "social_share": {
-          "type": "social-share",
-          "settings": {
-            "show_clipboard": false,
-            "show_email": true,
-            "show_facebook": true,
-            "show_x": false,
-            "show_pinterest": false,
-            "show_linkedin": false,
-            "show_whatsapp": false,
-            "show_reddit": false,
-            "show_telegram": false,
-            "show_instagram": true,
-            "show_bookmark": false
-          }
-        }
-      },
-      "block_order": ["social_share"],
       "settings": {
         "default_location": "Event Location",
         "show_author": true,
         "show_rsvp_button": true,
         "rsvp_button_text": "RSVP/JOIN THE WAITLIST",
+        "default_rsvp_url": "",
         "section_width": "page-width",
         "color_scheme": "scheme-1",
         "padding-block-start": 60,
@@ -35,9 +26,11 @@
     "upcoming_events": {
       "type": "events-upcoming-list",
       "settings": {
+        "blog": "",
+        "filter_tag": "upcoming",
+        "tab_id": "",
         "heading": "Upcoming events",
         "post_limit": 4,
-        "filter_tag": "upcoming",
         "show_date": true,
         "show_time": false,
         "date_format": "%B %d, %Y",

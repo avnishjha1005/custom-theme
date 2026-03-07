@@ -30,6 +30,7 @@
         "tab_id": "past-events",
         "location_label": "PAST EVENTS",
         "description": "",
+        "empty_message": "No events found",
         "post_limit": 8,
         "columns": 4,
         "grid_gap": 16,
@@ -38,6 +39,20 @@
         "color_scheme": "scheme-1",
         "padding-block-start": 32,
         "padding-block-end": 48
+      }
+    },
+    "divider_CxNrcf": {
+      "type": "divider",
+      "name": "t:names.divider_section",
+      "settings": {
+        "color_scheme": "",
+        "section_width": "page-width",
+        "thickness": 1,
+        "corner_radius": "square",
+        "width_percent": 100,
+        "alignment_horizontal": "center",
+        "padding-block-start": 16,
+        "padding-block-end": 16
       }
     },
     "events-upcoming": {
@@ -52,6 +67,7 @@
         "show_time": true,
         "date_format": "%B %d, %Y",
         "cta_text": "SEE MORE",
+        "empty_message": "No upcoming events",
         "mobile_layout": "scroll",
         "section_width": "page-width",
         "color_scheme": "scheme-1",
@@ -63,6 +79,7 @@
   "order": [
     "events-header",
     "events-past",
+    "divider_CxNrcf",
     "events-upcoming"
   ]
 }
