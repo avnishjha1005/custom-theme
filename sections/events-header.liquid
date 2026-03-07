@@ -584,13 +584,20 @@
     }
 
     .events-header__nav-bar {
-      justify-content: flex-start;
-      padding-left: 0;
-      gap: 8px;
+      justify-content: center;
+      padding: 16px;
+      gap: 16px;
+      overflow: visible;
     }
 
-    .events-header__search-btn {
-      margin-left: 0;
+    .events-header__nav {
+      flex: 1;
+      overflow-x: auto;
+      min-width: 0;
+    }
+
+    .events-header__tabs {
+      justify-content: flex-start;
     }
 
     .events-header__title {
