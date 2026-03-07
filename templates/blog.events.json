@@ -25,7 +25,7 @@
     "events-past": {
       "type": "events-past-filmstrip",
       "settings": {
-        "blog": "",
+        "blog": "events",
         "filter_tag": "past-events",
         "tab_id": "past-events",
         "default_location_label": "EVENT LOCATION",
