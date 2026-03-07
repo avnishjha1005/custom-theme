@@ -167,47 +167,46 @@
   }
 
   .events-upcoming-list__heading {
-    font-size: 12px;
+    font-size: 20px;
     font-weight: normal;
     letter-spacing: 0.05em;
     text-transform: capitalize;
     color: var(--color-foreground);
     margin: 0 0 32px 0;
+    text-align: center;
     opacity: 0.7;
   }
 
   .events-upcoming-list__container {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 48px;
   }
 
   .events-upcoming-list__item {
-    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.1);
-    padding-bottom: 32px;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
   }
 
   .events-upcoming-list__item.is-hidden {
     display: none;
   }
 
-  .events-upcoming-list__item:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
-
   .events-upcoming-list__link {
     display: flex;
+    flex-direction: row;
     gap: 24px;
     text-decoration: none;
     color: inherit;
     align-items: flex-start;
+    justify-content: center;
   }
 
   .events-upcoming-list__image-wrapper {
     flex-shrink: 0;
-    width: 140px;
-    aspect-ratio: 3 / 4;
+    width: 251px;
+    height: 360px;
     overflow: hidden;
     background-color: var(--color-background-secondary, #f5f5f5);
   }
@@ -242,16 +241,17 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-top: 4px;
+    gap: 24px;
+    text-align: left;
+    max-width: 251px;
   }
 
   .events-upcoming-list__date {
-    font-size: 10px;
-    letter-spacing: 0.12em;
+    font-size: 0.75rem;
+    line-height: 0.875;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--color-foreground);
-    opacity: 0.6;
+    color: rgb(var(--color-foreground-rgb));
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -268,29 +268,34 @@
   }
 
   .events-upcoming-list__title {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.4;
+    font-family: var(--font-heading--family);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.2;
     margin: 0;
-    color: var(--color-foreground);
+    color: var(--color-foreground-heading, var(--color-foreground));
+  }
+
+  .events-upcoming-list__link:hover .events-upcoming-list__title {
+    opacity: 0.7;
   }
 
   .events-upcoming-list__description {
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--color-foreground);
-    opacity: 0.7;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground-rgb) / 0.8);
     margin: 0;
   }
 
   .events-upcoming-list__cta {
-    font-size: 10px;
-    letter-spacing: 0.12em;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--color-foreground);
-    margin-top: 8px;
+    color: var(--color-foreground-heading, var(--color-foreground));
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
+    margin-top: auto;
   }
 
   .events-upcoming-list__link:hover .events-upcoming-list__cta {
@@ -309,20 +314,51 @@
   }
 
   @media (max-width: 768px) {
-    .events-upcoming-list__image-wrapper {
-      width: 100px;
+    .events-upcoming-list__container {
+      gap: 32px;
+    }
+
+    .events-upcoming-list__item {
+      width: 100%;
     }
 
     .events-upcoming-list__link {
+      flex-direction: row;
       gap: 16px;
     }
 
+    .events-upcoming-list__image-wrapper {
+      width: 140px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+
+    .events-upcoming-list__content {
+      padding-top: 0;
+      gap: 24px;
+      max-width: none;
+      flex: 1;
+    }
+
     .events-upcoming-list__title {
-      font-size: 14px;
+      font-size: 1.125rem;
+    }
+
+    .events-upcoming-list__date {
+      font-size: 0.625rem;
     }
 
     .events-upcoming-list__description {
-      font-size: 12px;
+      font-size: 0.8rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .events-upcoming-list__cta {
+      font-size: 0.75rem;
     }
 
     /* Mobile Side Scroll Layout */
@@ -347,8 +383,6 @@
       flex-shrink: 0;
       width: 280px;
       scroll-snap-align: start;
-      border-bottom: none;
-      padding-bottom: 0;
     }
 
     .events-upcoming-list--mobile-scroll .events-upcoming-list__link {
@@ -358,6 +392,7 @@
 
     .events-upcoming-list--mobile-scroll .events-upcoming-list__image-wrapper {
       width: 100%;
+      height: auto;
       aspect-ratio: 3 / 4;
     }
   }
