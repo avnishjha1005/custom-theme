@@ -8,7 +8,7 @@
 
   # Get event metafields
   assign event_location = article.metafields.event.location | default: section.settings.default_location
-  assign event_rsvp_url = article.metafields.event.rsvp_url | default: section.settings.default_rsvp_url
+  assign event_rsvp_url = article.metafields.event.registration_url | default: section.settings.default_rsvp_url
 %}
 
 <div
@@ -41,53 +41,10 @@
         <p class="single-event__author">Written by {{ article.author }}</p>
       {% endif %}
 
-      {% comment %} Social Share Icons {% endcomment %}
-      {% if section.settings.show_social %}
-        <div class="single-event__social">
-          {% if section.settings.show_facebook %}
-            <a
-              href="https://www.facebook.com/sharer/sharer.php?u={{ shop.url | append: article.url | url_encode }}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="single-event__social-link"
-              aria-label="Share on Facebook"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-              </svg>
-            </a>
-          {% endif %}
-
-          {% if section.settings.show_instagram %}
-            <a
-              href="{{ shop.metafields.social.instagram.value | default: '#' }}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="single-event__social-link"
-              aria-label="Visit Instagram"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-              </svg>
-            </a>
-          {% endif %}
-
-          {% if section.settings.show_email %}
-            <a
-              href="mailto:?subject={{ article.title | url_encode }}&body={{ shop.url | append: article.url | url_encode }}"
-              class="single-event__social-link"
-              aria-label="Share via Email"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="2" y="4" width="20" height="16" rx="2"/>
-                <path d="m22 6-10 7L2 6"/>
-              </svg>
-            </a>
-          {% endif %}
-        </div>
-      {% endif %}
+      {% comment %} Social Share Block {% endcomment %}
+      <div class="single-event__social">
+        {% content_for 'blocks' %}
+      </div>
     </div>
 
     {% comment %} Featured Image {% endcomment %}
@@ -190,23 +147,7 @@
   }
 
   .single-event__social {
-    display: flex;
-    gap: 16px;
-    align-items: center;
     margin-top: 8px;
-  }
-
-  .single-event__social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-foreground);
-    opacity: 0.6;
-    transition: opacity 0.2s ease;
-  }
-
-  .single-event__social-link:hover {
-    opacity: 1;
   }
 
   .single-event__image-wrapper {
@@ -298,6 +239,11 @@
   "name": "Single Event",
   "tag": "section",
   "class": "single-event-section",
+  "blocks": [
+    {
+      "type": "social-share"
+    }
+  ],
   "settings": [
     {
       "type": "header",
@@ -314,34 +260,6 @@
       "type": "checkbox",
       "id": "show_author",
       "label": "Show author",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Social Sharing"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_social",
-      "label": "Show social links",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_facebook",
-      "label": "Show Facebook",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_instagram",
-      "label": "Show Instagram",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_email",
-      "label": "Show Email",
       "default": true
     },
     {
@@ -420,7 +338,21 @@
   "presets": [
     {
       "name": "Single Event",
-      "category": "Events"
+      "category": "Events",
+      "blocks": [
+        {
+          "type": "social-share",
+          "settings": {
+            "show_clipboard": false,
+            "show_facebook": true,
+            "show_instagram": true,
+            "show_email": true,
+            "show_x": false,
+            "show_pinterest": false,
+            "show_bookmark": false
+          }
+        }
+      ]
     }
   ]
 }

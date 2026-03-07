@@ -2,13 +2,28 @@
   "sections": {
     "single_event": {
       "type": "single-event",
+      "blocks": {
+        "social_share": {
+          "type": "social-share",
+          "settings": {
+            "show_clipboard": false,
+            "show_email": true,
+            "show_facebook": true,
+            "show_x": false,
+            "show_pinterest": false,
+            "show_linkedin": false,
+            "show_whatsapp": false,
+            "show_reddit": false,
+            "show_telegram": false,
+            "show_instagram": true,
+            "show_bookmark": false
+          }
+        }
+      },
+      "block_order": ["social_share"],
       "settings": {
         "default_location": "Event Location",
         "show_author": true,
-        "show_social": true,
-        "show_facebook": true,
-        "show_instagram": true,
-        "show_email": true,
         "show_rsvp_button": true,
         "rsvp_button_text": "RSVP/JOIN THE WAITLIST",
         "section_width": "page-width",
