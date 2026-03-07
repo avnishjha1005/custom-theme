@@ -40,7 +40,7 @@
       ],
       "custom_css": [
         ".custom-section-content {padding: 0px !important;}",
-        "@media screen and (min-width: 768px){.logo-block__image{display:none; }}"
+        "@media screen and (min-width: 768px) {.logo-block__image {display: none; }}"
       ],
       "name": "t:names.large_logo",
       "settings": {
@@ -73,6 +73,9 @@
     },
     "events-header": {
       "type": "events-header",
+      "custom_css": [
+        ".events-header__tab-link {font-weight: 700 !important; line-height: 16px;}"
+      ],
       "settings": {
         "heading": "{{ blog.title }}",
         "show_view_all": true,
