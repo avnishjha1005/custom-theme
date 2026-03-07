@@ -221,8 +221,9 @@
             }
           });
 
-          // Show all items
+          // Show all items and hide filtered empty messages
           eventItems.forEach(item => item.classList.remove('is-hidden'));
+          document.querySelectorAll('[data-filtered-empty]').forEach(el => el.style.display = 'none');
         } else {
           // Location filter: show all sections, filter items by tag
           eventSections.forEach(sec => sec.style.display = '');
@@ -234,6 +235,16 @@
               item.classList.remove('is-hidden');
             } else {
               item.classList.add('is-hidden');
+            }
+          });
+
+          // Show filtered empty message if all items in a section are hidden
+          eventSections.forEach(sec => {
+            const items = sec.querySelectorAll('[data-event-tags]');
+            const filteredEmpty = sec.querySelector('[data-filtered-empty]');
+            if (filteredEmpty) {
+              const visibleItems = Array.from(items).filter(item => !item.classList.contains('is-hidden'));
+              filteredEmpty.style.display = visibleItems.length === 0 ? '' : 'none';
             }
           });
         }

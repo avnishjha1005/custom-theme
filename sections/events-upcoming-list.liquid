@@ -5,9 +5,10 @@
 
 {% liquid
   # Use section.settings.blog if set, otherwise fallback to global blog object (available in blog templates)
-  if section.settings.blog != blank
+  assign current_blog = nil
+  if section.settings.blog != blank and section.settings.blog.articles != nil
     assign current_blog = section.settings.blog
-  elsif blog != blank
+  elsif blog != blank and blog.articles != nil
     assign current_blog = blog
   else
     assign current_blog = blogs['events']
@@ -155,6 +156,10 @@
 
     {% if matching_count == 0 %}
       <div class="events-upcoming-list__empty">
+        <p>{{ section.settings.empty_message }}</p>
+      </div>
+    {% else %}
+      <div class="events-upcoming-list__empty events-upcoming-list__empty--filtered" style="display: none;" data-filtered-empty>
         <p>{{ section.settings.empty_message }}</p>
       </div>
     {% endif %}

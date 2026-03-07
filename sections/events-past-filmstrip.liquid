@@ -161,6 +161,10 @@
     <div class="events-past-filmstrip__empty">
       <p>{{ section.settings.empty_message }}</p>
     </div>
+  {% else %}
+    <div class="events-past-filmstrip__empty" style="display: none;" data-filtered-empty>
+      <p>{{ section.settings.empty_message }}</p>
+    </div>
   {% endif %}
 </div>
 
