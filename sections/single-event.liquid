@@ -7,8 +7,21 @@
   assign section_id = section.id | replace: '_', '' | downcase
 
   # Get event metafields
-  assign event_location = article.metafields.event.location | default: section.settings.default_location
   assign event_rsvp_url = article.metafields.event.registration_url | default: section.settings.default_rsvp_url
+
+  # Get location: try metafield first, then location tag, then default
+  assign event_location = article.metafields.event.location
+  if event_location == blank
+    for tag in article.tags
+      if tag contains 'Location-' or tag contains 'location-'
+        assign event_location = tag | remove: 'Location-' | remove: 'location-'
+        break
+      endif
+    endfor
+  endif
+  if event_location == blank
+    assign event_location = section.settings.default_location
+  endif
 %}
 
 <div
