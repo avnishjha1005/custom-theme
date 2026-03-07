@@ -66,7 +66,7 @@
         "date_format": "%B %d, %Y",
         "cta_text": "SEE MORE",
         "empty_message": "No upcoming events",
-        "mobile_layout": "scroll",
+        "mobile_layout": "list",
         "section_width": "page-width",
         "color_scheme": "scheme-1",
         "padding-block-start": 48,
