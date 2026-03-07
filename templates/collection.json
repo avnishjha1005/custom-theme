@@ -514,7 +514,7 @@
         ".facets-type-bar__meta .svg-wrapper {height: unset;}",
         "@media screen and (max-width: 768px) {.facets-type-bar {padding: 8px; }}",
         ".facets-toggle {display: none;}",
-        "add-to-cart-component path {stroke: black;}"
+        ".svg-wrapper path {stroke: black;}"
       ],
       "settings": {
         "layout_type": "grid",
