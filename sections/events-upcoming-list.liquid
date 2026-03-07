@@ -4,11 +4,45 @@
 {% endcomment %}
 
 {% liquid
-  assign blog = section.settings.blog
+  # Use section.settings.blog if set, otherwise fallback to global blog object (available in blog templates)
+  if section.settings.blog != blank
+    assign current_blog = section.settings.blog
+  elsif blog != blank
+    assign current_blog = blog
+  else
+    assign current_blog = blogs['events']
+  endif
+
   assign max_items = section.settings.post_limit
   assign filter_tag = section.settings.filter_tag
   assign mobile_layout = section.settings.mobile_layout | default: 'list'
+
+  # Pre-count matching articles to determine if section should render
+  assign matching_count = 0
+  if current_blog != blank and current_blog.articles_count > 0
+    for article in current_blog.articles
+      if matching_count >= max_items
+        break
+      endif
+      assign matches = true
+      if filter_tag != blank
+        assign matches = false
+        for tag in article.tags
+          if tag == filter_tag
+            assign matches = true
+            break
+          endif
+        endfor
+      endif
+      if matches
+        assign matching_count = matching_count | plus: 1
+      endif
+    endfor
+  endif
 %}
+
+{% comment %} Only render section if there are matching events {% endcomment %}
+{% if matching_count > 0 %}
 
 <div
   class="
@@ -31,9 +65,9 @@
   {% endif %}
 
   <div class="events-upcoming-list__container">
-    {% if blog != blank and blog.articles_count > 0 %}
+    {% if current_blog != blank and current_blog.articles_count > 0 %}
       {% assign article_count = 0 %}
-      {% for article in blog.articles %}
+      {% for article in current_blog.articles %}
         {% if article_count >= max_items %}
           {% break %}
         {% endif %}
@@ -76,13 +110,19 @@
               </div>
 
               <div class="events-upcoming-list__content">
-                <span class="events-upcoming-list__date">
-                  {% if section.settings.show_date %}
-                    {{ article.published_at | date: section.settings.date_format }}
-                  {% else %}
-                    DATE
-                  {% endif %}
-                </span>
+                {% if section.settings.show_date %}
+                  <span class="events-upcoming-list__date">
+                    {% if article.metafields.event.date %}
+                      {% assign event_date = article.metafields.event.date %}
+                      {{ event_date | date: section.settings.date_format }}
+                      {% if section.settings.show_time %}
+                        <span class="events-upcoming-list__time">{{ event_date | date: "%I:%M %p" }}</span>
+                      {% endif %}
+                    {% else %}
+                      {{ article.published_at | date: section.settings.date_format }}
+                    {% endif %}
+                  </span>
+                {% endif %}
 
                 <h3 class="events-upcoming-list__title">{{ article.title }}</h3>
 
@@ -104,49 +144,10 @@
           </article>
         {% endif %}
       {% endfor %}
-
-      {% comment %} Show placeholder if no matching articles {% endcomment %}
-      {% if article_count == 0 %}
-        {% for i in (1..3) %}
-          <article class="events-upcoming-list__item events-upcoming-list__item--placeholder">
-            <div class="events-upcoming-list__link">
-              <div class="events-upcoming-list__image-wrapper">
-                <div class="events-upcoming-list__placeholder">
-                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                </div>
-              </div>
-              <div class="events-upcoming-list__content">
-                <span class="events-upcoming-list__date">DATE</span>
-                <h3 class="events-upcoming-list__title">Lorem ipsum dolor sit amet, consectetur adipiscing</h3>
-                <p class="events-upcoming-list__description">Sed quis consequuntur magni dolores eos qui ratione voluptatem.</p>
-                <span class="events-upcoming-list__cta">SEE MORE</span>
-              </div>
-            </div>
-          </article>
-        {% endfor %}
-      {% endif %}
-    {% else %}
-      {% comment %} Placeholder items when no blog selected {% endcomment %}
-      {% for i in (1..3) %}
-        <article class="events-upcoming-list__item events-upcoming-list__item--placeholder">
-          <div class="events-upcoming-list__link">
-            <div class="events-upcoming-list__image-wrapper">
-              <div class="events-upcoming-list__placeholder">
-                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-              </div>
-            </div>
-            <div class="events-upcoming-list__content">
-              <span class="events-upcoming-list__date">DATE</span>
-              <h3 class="events-upcoming-list__title">Lorem ipsum dolor sit amet, consectetur adipiscing</h3>
-              <p class="events-upcoming-list__description">Sed quis consequuntur magni dolores eos qui ratione voluptatem.</p>
-              <span class="events-upcoming-list__cta">SEE MORE</span>
-            </div>
-          </div>
-        </article>
-      {% endfor %}
     {% endif %}
   </div>
 </div>
+{% endif %}
 
 {% stylesheet %}
   .events-upcoming-list {
@@ -235,6 +236,19 @@
     text-transform: uppercase;
     color: var(--color-foreground);
     opacity: 0.6;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .events-upcoming-list__time {
+    opacity: 0.8;
+  }
+
+  .events-upcoming-list__time::before {
+    content: "•";
+    margin-right: 8px;
   }
 
   .events-upcoming-list__title {
@@ -368,8 +382,16 @@
     {
       "type": "checkbox",
       "id": "show_date",
-      "label": "Show published date",
-      "default": true
+      "label": "Show event date",
+      "default": true,
+      "info": "Uses event.date metafield if available, falls back to published date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_time",
+      "label": "Show event time",
+      "default": true,
+      "info": "Displays time from the event.date metafield"
     },
     {
       "type": "text",

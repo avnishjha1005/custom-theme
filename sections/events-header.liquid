@@ -1,11 +1,32 @@
 {% comment %}
   Events Header Section
-  Displays page title with horizontal navigation tabs for filtering events
+  Displays page title with navigation tabs and integrated search
 {% endcomment %}
 
 {% liquid
   assign tabs = section.settings.tabs | split: ','
+  assign section_id = section.id | replace: '_', '' | downcase
 %}
+
+{% comment %} Get current blog for search {% endcomment %}
+{% if blog %}
+  {% assign current_blog = blog %}
+{% else %}
+  {% assign current_blog = blogs['events'] %}
+{% endif %}
+
+{% comment %} Extract unique tags from articles {% endcomment %}
+{% assign all_tags = '' %}
+{% if current_blog %}
+  {% for article in current_blog.articles limit: 50 %}
+    {% for tag in article.tags %}
+      {% unless all_tags contains tag %}
+        {% capture all_tags %}{{ all_tags }}{% if all_tags != '' %},{% endif %}{{ tag }}{% endcapture %}
+      {% endunless %}
+    {% endfor %}
+  {% endfor %}
+{% endif %}
+{% assign tag_array = all_tags | split: ',' %}
 
 <div
   class="
@@ -18,22 +39,39 @@
   style="
     {%- render 'spacing-style', settings: section.settings -%}
   "
+  data-section-id="{{ section_id }}"
 >
   <div class="events-header__content">
     {% if section.settings.heading != blank %}
       <h1 class="events-header__title">{{ section.settings.heading }}</h1>
     {% endif %}
 
-    {% if tabs.size > 0 %}
+    <div class="events-header__nav-bar">
+      {% if section.settings.show_search %}
+        <button class="events-header__search-btn" aria-label="Open Search" data-search-trigger>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+      {% endif %}
+
       <nav class="events-header__nav" aria-label="Event filters">
         <ul class="events-header__tabs">
+          {% if section.settings.show_view_all %}
+            <li class="events-header__tab-item">
+              <a href="{{ current_blog.url }}" class="events-header__tab-link events-header__tab-link--view-all is-active">
+                View All
+              </a>
+            </li>
+          {% endif %}
           {% for tab in tabs %}
             {% assign tab_text = tab | strip %}
             {% assign tab_handle = tab_text | handleize %}
             <li class="events-header__tab-item">
               <a
-                href="#{{ tab_handle }}"
-                class="events-header__tab-link {% if forloop.first %}is-active{% endif %}"
+                href="{{ current_blog.url }}/tagged/{{ tab_handle }}"
+                class="events-header__tab-link"
                 data-tab-target="{{ tab_handle }}"
               >
                 {{ tab_text }}
@@ -42,28 +80,139 @@
           {% endfor %}
         </ul>
       </nav>
-    {% endif %}
+    </div>
   </div>
+
+  {% if section.settings.show_search %}
+    {% comment %} Search Overlay {% endcomment %}
+    <div class="events-search__overlay" data-search-overlay></div>
+
+    {% comment %} Search Modal (Desktop) {% endcomment %}
+    <div class="events-search__modal" data-search-modal>
+      <div class="events-search__header">
+        <button class="events-search__back-btn" data-search-close>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+        <input
+          type="text"
+          class="events-search__input"
+          placeholder="{{ section.settings.search_placeholder }}"
+          data-search-input
+        >
+      </div>
+      <div class="events-search__results" data-search-results></div>
+    </div>
+
+    {% comment %} Search Drawer (Mobile) {% endcomment %}
+    <div class="events-search__drawer" data-search-drawer>
+      <div class="events-search__header">
+        <button class="events-search__back-btn" data-search-close>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+        <input
+          type="text"
+          class="events-search__input"
+          placeholder="{{ section.settings.search_placeholder }}"
+          data-search-input
+        >
+      </div>
+      <div class="events-search__results" data-search-results></div>
+    </div>
+  {% endif %}
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const tabs = document.querySelectorAll('.events-header__tab-link');
+  (function() {
+    const section = document.querySelector('[data-section-id="{{ section_id }}"]');
+    if (!section) return;
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', function(e) {
-        e.preventDefault();
-        tabs.forEach(t => t.classList.remove('is-active'));
-        this.classList.add('is-active');
+    const searchTrigger = section.querySelector('[data-search-trigger]');
+    const overlay = section.querySelector('[data-search-overlay]');
+    const modal = section.querySelector('[data-search-modal]');
+    const drawer = section.querySelector('[data-search-drawer]');
+    const closeButtons = section.querySelectorAll('[data-search-close]');
 
-        // Optional: Dispatch custom event for filtering
-        const targetId = this.dataset.tabTarget;
-        document.dispatchEvent(new CustomEvent('events:filter', {
-          detail: { filter: targetId }
-        }));
+    if (!searchTrigger) return;
+
+    const blogHandle = '{{ current_blog.handle | default: "events" }}';
+    let searchTimer;
+
+    function getContainer() {
+      return window.innerWidth > 749 ? modal : drawer;
+    }
+
+    function toggleSearch(open) {
+      if (overlay) overlay.classList.toggle('is-active', open);
+      const container = getContainer();
+      if (container) {
+        container.classList.toggle('is-active', open);
+        if (open) {
+          setTimeout(() => container.querySelector('[data-search-input]').focus(), 100);
+        }
+      }
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+
+    searchTrigger.addEventListener('click', () => toggleSearch(true));
+    if (overlay) overlay.addEventListener('click', () => toggleSearch(false));
+    closeButtons.forEach(btn => btn.addEventListener('click', () => toggleSearch(false)));
+
+    // Search functionality
+    section.querySelectorAll('[data-search-input]').forEach(input => {
+      input.addEventListener('input', (e) => {
+        clearTimeout(searchTimer);
+        const query = e.target.value;
+        if (query.length < 2) {
+          section.querySelectorAll('[data-search-results]').forEach(r => r.innerHTML = '');
+          return;
+        }
+        searchTimer = setTimeout(() => performSearch(query), 300);
       });
     });
-  });
+
+    async function performSearch(query) {
+      const searchUrl = `/search/suggest.json?q=${encodeURIComponent(query)}*&resources[type]=article&resources[options][fields]=title,body,tag,author`;
+
+      try {
+        const response = await fetch(searchUrl);
+        const data = await response.json();
+        const articles = data.resources?.results?.articles || [];
+        const filtered = articles.filter(a => a.url.includes(`/blogs/${blogHandle}`));
+
+        const resultsHtml = filtered.length === 0
+          ? '<p class="events-search__no-results">No events found.</p>'
+          : filtered.map(a => `
+              <a href="${a.url}" class="events-search__result-item">
+                <div class="events-search__result-title">${highlight(a.title, query)}</div>
+                ${a.summary ? `<div class="events-search__result-summary">${highlight(a.summary, query)}</div>` : ''}
+              </a>
+            `).join('');
+
+        section.querySelectorAll('[data-search-results]').forEach(r => r.innerHTML = resultsHtml);
+      } catch (e) {
+        console.error('Search error:', e);
+      }
+    }
+
+    function highlight(text, query) {
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, '<mark class="events-search__highlight">$1</mark>');
+    }
+
+    // Tab active state based on current URL
+    const currentPath = window.location.pathname;
+    section.querySelectorAll('.events-header__tab-link').forEach(link => {
+      if (currentPath === link.getAttribute('href') ||
+          (currentPath.includes('/tagged/') && link.getAttribute('href').includes(currentPath.split('/tagged/')[1]))) {
+        section.querySelectorAll('.events-header__tab-link').forEach(l => l.classList.remove('is-active'));
+        link.classList.add('is-active');
+      }
+    });
+  })();
 </script>
 
 {% stylesheet %}
@@ -78,16 +227,35 @@
   }
 
   .events-header__title {
-    font-size: var(--font-heading-size, 48px);
-    font-family: var(--font-heading-family);
-    font-weight: var(--font-heading-weight);
+    font-size: 48px;
     text-transform: none;
     margin: 0;
     text-align: center;
   }
 
+  .events-header__nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .events-header__search-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--color-foreground);
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+  }
+
+  .events-header__search-btn:hover {
+    opacity: 1;
+  }
+
   .events-header__nav {
-    width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -99,7 +267,6 @@
 
   .events-header__tabs {
     display: flex;
-    justify-content: center;
     gap: 24px;
     list-style: none;
     padding: 0;
@@ -124,14 +291,160 @@
     opacity: 0.6;
   }
 
+  .events-header__tab-link--view-all {
+    text-decoration: underline;
+    font-weight: 500;
+  }
+
   .events-header__tab-link:hover,
   .events-header__tab-link.is-active {
     opacity: 1;
+  }
+
+  .events-header__tab-link.is-active:not(.events-header__tab-link--view-all) {
     border-bottom-color: var(--color-foreground);
   }
 
-  @media (max-width: 768px) {
-    .events-header__tabs {
+  /* Search Overlay */
+  .events-search__overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .events-search__overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Search Modal & Drawer shared styles */
+  .events-search__modal,
+  .events-search__drawer {
+    position: fixed;
+    background: var(--color-background);
+    z-index: 9999;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .events-search__header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.1);
+    gap: 12px;
+  }
+
+  .events-search__back-btn {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--color-foreground);
+    flex-shrink: 0;
+  }
+
+  .events-search__input {
+    flex: 1;
+    border: none;
+    padding: 8px;
+    font-size: 16px;
+    outline: none;
+    background: transparent;
+    color: var(--color-foreground);
+  }
+
+  .events-search__results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+  }
+
+  .events-search__result-item {
+    display: block;
+    padding: 16px;
+    text-decoration: none;
+    color: var(--color-foreground);
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.05);
+    transition: background 0.2s;
+  }
+
+  .events-search__result-item:hover {
+    background: rgba(var(--color-foreground-rgb), 0.03);
+  }
+
+  .events-search__result-title {
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .events-search__result-summary {
+    font-size: 13px;
+    opacity: 0.7;
+  }
+
+  .events-search__highlight {
+    background: rgba(255, 235, 59, 0.4);
+    font-weight: 600;
+  }
+
+  .events-search__no-results {
+    padding: 32px;
+    text-align: center;
+    opacity: 0.6;
+  }
+
+  /* Desktop Modal */
+  @media screen and (min-width: 750px) {
+    .events-search__modal {
+      top: 15%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      width: 600px;
+      max-height: 450px;
+      border-radius: 12px;
+      opacity: 0;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .events-search__modal.is-active {
+      visibility: visible;
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .events-search__drawer {
+      display: none;
+    }
+  }
+
+  /* Mobile Drawer */
+  @media screen and (max-width: 749px) {
+    .events-search__drawer {
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 85vh;
+      transform: translateY(100%);
+      border-radius: 20px 20px 0 0;
+    }
+
+    .events-search__drawer.is-active {
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .events-search__modal {
+      display: none;
+    }
+
+    .events-header__nav-bar {
       justify-content: flex-start;
       padding: 0 16px;
     }
@@ -159,8 +472,30 @@
       "type": "textarea",
       "id": "tabs",
       "label": "Navigation Tabs",
-      "info": "Enter tab names separated by commas (e.g., PAST EVENTS, UPCOMING, LOCATIONS)",
+      "info": "Enter tab names separated by commas. These will link to blog tags.",
       "default": "PAST EVENTS, UPCOMING, LOCATIONS"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' link",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Search"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Enable search",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search events..."
     },
     {
       "type": "header",

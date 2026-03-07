@@ -1,15 +1,44 @@
 {% comment %}
-  Events Location Grid Section
-  Displays events from a blog filtered by location tag in a grid layout
+  Events Past Grid Section
+  Displays past events from a blog in a grid layout
 {% endcomment %}
 
 {% liquid
-  assign blog = section.settings.blog
-  assign location_tag = section.settings.location_tag
+  # Use section.settings.blog if set, otherwise fallback to global blog object (available in blog templates)
+  if section.settings.blog != blank
+    assign current_blog = section.settings.blog
+  elsif blog != blank
+    assign current_blog = blog
+  else
+    assign current_blog = blogs['events']
+  endif
+
+  assign filter_tag = section.settings.filter_tag | default: 'past-events'
   assign max_items = section.settings.post_limit
-  assign filtered_articles = ''
+
+  # Pre-count matching articles to determine if section should render
+  assign matching_count = 0
+  if current_blog != blank and current_blog.articles_count > 0
+    for article in current_blog.articles
+      if matching_count >= max_items
+        break
+      endif
+      assign matches = false
+      for tag in article.tags
+        if tag == filter_tag
+          assign matches = true
+          break
+        endif
+      endfor
+      if matches
+        assign matching_count = matching_count | plus: 1
+      endif
+    endfor
+  endif
 %}
 
+{% comment %} Only render section if there are matching events {% endcomment %}
+{% if matching_count > 0 %}
 <div
   class="
     events-location-grid
@@ -37,23 +66,20 @@
   </div>
 
   <div class="events-location-grid__grid">
-    {% if blog != blank and blog.articles_count > 0 %}
+    {% if current_blog != blank and current_blog.articles_count > 0 %}
       {% assign article_count = 0 %}
-      {% for article in blog.articles %}
+      {% for article in current_blog.articles %}
         {% if article_count >= max_items %}
           {% break %}
         {% endif %}
 
-        {% assign show_article = true %}
-        {% if location_tag != blank %}
-          {% assign show_article = false %}
-          {% for tag in article.tags %}
-            {% if tag == location_tag %}
-              {% assign show_article = true %}
-              {% break %}
-            {% endif %}
-          {% endfor %}
-        {% endif %}
+        {% assign show_article = false %}
+        {% for tag in article.tags %}
+          {% if tag == filter_tag %}
+            {% assign show_article = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
 
         {% if show_article %}
           {% assign article_count = article_count | plus: 1 %}
@@ -80,34 +106,10 @@
           </a>
         {% endif %}
       {% endfor %}
-
-      {% comment %} Show placeholders if not enough articles {% endcomment %}
-      {% assign remaining = max_items | minus: article_count %}
-      {% if remaining > 0 and article_count == 0 %}
-        {% for i in (1..max_items) %}
-          <div class="events-location-grid__item">
-            <div class="events-location-grid__image-wrapper">
-              <div class="events-location-grid__placeholder">
-                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-      {% endif %}
-    {% else %}
-      {% comment %} Placeholder items when no blog selected {% endcomment %}
-      {% for i in (1..max_items) %}
-        <div class="events-location-grid__item">
-          <div class="events-location-grid__image-wrapper">
-            <div class="events-location-grid__placeholder">
-              {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-            </div>
-          </div>
-        </div>
-      {% endfor %}
     {% endif %}
   </div>
 </div>
+{% endif %}
 
 {% stylesheet %}
   .events-location-grid {
@@ -198,7 +200,7 @@
 
 {% schema %}
 {
-  "name": "Events Location Grid",
+  "name": "Events Past Grid",
   "tag": "section",
   "class": "events-location-grid-section",
   "settings": [
@@ -210,15 +212,16 @@
     },
     {
       "type": "text",
-      "id": "location_tag",
-      "label": "Location Tag",
-      "info": "Filter events by this tag (leave blank to show all)"
+      "id": "filter_tag",
+      "label": "Filter Tag",
+      "default": "past-events",
+      "info": "Show only events with this tag (e.g., 'past-events')"
     },
     {
       "type": "text",
       "id": "tab_id",
       "label": "Tab ID",
-      "info": "Link this section to a tab in the Events Header (e.g., 'locations')"
+      "info": "Link this section to a tab in the Events Header (e.g., 'past-events')"
     },
     {
       "type": "header",
@@ -227,8 +230,8 @@
     {
       "type": "text",
       "id": "location_label",
-      "label": "Location Label",
-      "default": "EVENT LOCATION"
+      "label": "Section Label",
+      "default": "PAST EVENTS"
     },
     {
       "type": "textarea",
@@ -327,7 +330,7 @@
   ],
   "presets": [
     {
-      "name": "Events Location Grid",
+      "name": "Events Past Grid",
       "category": "Events"
     }
   ]

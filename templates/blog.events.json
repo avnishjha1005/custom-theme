@@ -5,41 +5,29 @@
       "settings": {
         "heading": "Events",
         "tabs": "PAST EVENTS, UPCOMING, LOCATIONS",
+        "show_view_all": true,
+        "show_search": true,
+        "search_placeholder": "Search events...",
         "section_width": "page-width",
         "color_scheme": "scheme-1",
         "padding-block-start": 48,
         "padding-block-end": 24
       }
     },
-    "events-location-1": {
+    "events-past": {
       "type": "events-location-grid",
       "settings": {
-        "location_label": "EVENT LOCATION",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing",
-        "tab_id": "locations",
-        "post_limit": 4,
+        "filter_tag": "past-events",
+        "location_label": "PAST EVENTS",
+        "description": "",
+        "tab_id": "past-events",
+        "post_limit": 8,
         "columns": 4,
         "grid_gap": 16,
-        "show_title": false,
+        "show_title": true,
         "section_width": "page-width",
         "color_scheme": "scheme-1",
         "padding-block-start": 32,
-        "padding-block-end": 32
-      }
-    },
-    "events-location-2": {
-      "type": "events-location-grid",
-      "settings": {
-        "location_label": "EVENT LOCATION",
-        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing",
-        "tab_id": "locations",
-        "post_limit": 4,
-        "columns": 4,
-        "grid_gap": 16,
-        "show_title": false,
-        "section_width": "page-width",
-        "color_scheme": "scheme-1",
-        "padding-block-start": 0,
         "padding-block-end": 48
       }
     },
@@ -50,6 +38,7 @@
         "tab_id": "upcoming",
         "post_limit": 5,
         "show_date": true,
+        "show_time": true,
         "date_format": "%B %d, %Y",
         "cta_text": "SEE MORE",
         "mobile_layout": "scroll",
@@ -62,8 +51,7 @@
   },
   "order": [
     "events-header",
-    "events-location-1",
-    "events-location-2",
+    "events-past",
     "events-upcoming"
   ]
 }
