@@ -81,11 +81,18 @@
   .ai-blog-search-view-all-{{ ai_gen_id }} {
     display: inline-block;
     color: {{ block.settings.tag_text_color }};
-    text-decoration: underline;
+    text-decoration: none;
     font-size:  {{ block.settings.tag_font_size }}
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+  }
+  .ai-blog-search-view-all-{{ ai_gen_id }}.active {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .ai-blog-search-view-all-{{ ai_gen_id }}:hover {
+    text-decoration: underline;
   }
 
   .ai-blog-search-tag-link-{{ ai_gen_id }} {
@@ -94,11 +101,15 @@
     color: {{ block.settings.tag_text_color }};
     text-decoration: none;
     font-size: {{ block.settings.tag_font_size }}
-    font-weight: 400;
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     border: none;
     padding: 0;
+  }
+  .ai-blog-search-tag-link-{{ ai_gen_id }}.active {
+    font-weight: 700;
+    text-decoration: underline;
   }
   .ai-blog-search-tag-link-{{ ai_gen_id }}:hover {
     text-decoration: underline;
@@ -150,9 +161,9 @@
     </button>
     <div class="ai-blog-search-tags-{{ ai_gen_id }}">
       <ul class="ai-blog-search-tags-list-{{ ai_gen_id }}">
-        <li><a href="{{ current_blog.url }}" class="ai-blog-search-view-all-{{ ai_gen_id }}">View All</a></li>
+        <li><a href="{{ current_blog.url }}" class="ai-blog-search-view-all-{{ ai_gen_id }}{% unless current_tags %} active{% endunless %}">View All</a></li>
         {% for tag in tag_array limit: 6 %}
-          <li><a href="{{ current_blog.url }}/tagged/{{ tag | handle }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}">{{ tag }}</a></li>
+          <li><a href="{{ current_blog.url }}/tagged/{{ tag | handle }}" class="ai-blog-search-tag-link-{{ ai_gen_id }}{% if current_tags contains tag %} active{% endif %}">{{ tag }}</a></li>
         {% endfor %}
       </ul>
     </div>
