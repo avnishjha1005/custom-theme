@@ -265,6 +265,9 @@
         super();
         this.isExpanded = false;
         this.scrollHandler = null;
+        this.resizeHandler = null;
+        this.lastScrollY = 0;
+        this.scrollThreshold = 10; // Minimum scroll distance to trigger hide/show
       }
 
       connectedCallback() {
@@ -275,13 +278,15 @@
           this.toggleBtn.addEventListener('click', () => this.toggle());
         }
 
-        this.observeFooter();
+        this.initScrollBehavior();
       }
 
       disconnectedCallback() {
         if (this.scrollHandler) {
           window.removeEventListener('scroll', this.scrollHandler);
-          window.removeEventListener('resize', this.scrollHandler);
+        }
+        if (this.resizeHandler) {
+          window.removeEventListener('resize', this.resizeHandler);
         }
       }
 
@@ -302,10 +307,44 @@
           || document.querySelector('[id*="shopify-section-footer"]');
       }
 
-      observeFooter() {
+      initScrollBehavior() {
         const self = this;
+        this.lastScrollY = window.scrollY;
 
-        // Re-query footer on each check to handle DOM changes
+        const handleScroll = () => {
+          const currentScrollY = window.scrollY;
+          const scrollDelta = currentScrollY - self.lastScrollY;
+          const footer = self.getFooter();
+
+          // Check if footer is visible - always hide when footer is in view
+          if (footer) {
+            const footerRect = footer.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            if (footerRect.top < windowHeight) {
+              self.classList.add('is-hidden');
+              self.lastScrollY = currentScrollY;
+              return;
+            }
+          }
+
+          // Only trigger if scroll distance exceeds threshold
+          if (Math.abs(scrollDelta) < self.scrollThreshold) {
+            return;
+          }
+
+          // Scrolling down - hide the bar
+          if (scrollDelta > 0 && currentScrollY > 100) {
+            self.classList.add('is-hidden');
+          }
+          // Scrolling up - show the bar
+          else if (scrollDelta < 0) {
+            self.classList.remove('is-hidden');
+          }
+
+          self.lastScrollY = currentScrollY;
+        };
+
         const checkFooterVisibility = () => {
           const footer = self.getFooter();
           if (!footer) return;
@@ -313,11 +352,8 @@
           const footerRect = footer.getBoundingClientRect();
           const windowHeight = window.innerHeight;
 
-          // Footer is visible if its top is within viewport
           if (footerRect.top < windowHeight) {
             self.classList.add('is-hidden');
-          } else {
-            self.classList.remove('is-hidden');
           }
         };
 
@@ -325,13 +361,14 @@
         setTimeout(checkFooterVisibility, 100);
 
         // Listen to scroll events
-        window.addEventListener('scroll', checkFooterVisibility, { passive: true });
+        window.addEventListener('scroll', handleScroll, { passive: true });
 
         // Also check on resize
         window.addEventListener('resize', checkFooterVisibility, { passive: true });
 
-        // Store reference for cleanup
-        this.scrollHandler = checkFooterVisibility;
+        // Store references for cleanup
+        this.scrollHandler = handleScroll;
+        this.resizeHandler = checkFooterVisibility;
       }
 
       toggle() {
