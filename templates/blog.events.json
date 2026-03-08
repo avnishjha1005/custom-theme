@@ -74,7 +74,7 @@
     "events-header": {
       "type": "events-header",
       "custom_css": [
-        ".events-header__tab-link {font-weight: 700 !important; line-height: 16px;}"
+        ".events-header__tab-link {line-height: 16px;}"
       ],
       "settings": {
         "heading": "{{ blog.title }}",
