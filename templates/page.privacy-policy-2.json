@@ -73,12 +73,12 @@
             "icon_size": 24,
             "icon_color": "#000000",
             "icon_hover_color": "#666666",
-            "keywords": "PRODUCTS, Return",
+            "keywords": "Information, Definitions",
             "view_all_text": "View All",
             "tag_font_size": 14,
             "tag_text_color": "#000000",
             "tag_hover_text_color": "#666666",
-            "search_placeholder": "Search FAQs...",
+            "search_placeholder": "Search Privacy Policy",
             "modal_background": "#ffffff",
             "empty_message": "Start typing to search",
             "no_results_message": "No items found"
@@ -109,7 +109,7 @@
               "settings": {
                 "heading": "DEFINITIONS",
                 "open_by_default": true,
-                "keywords": "Products, Damaged, Defective, Tampered",
+                "keywords": "Definitions, Information",
                 "icon": "none",
                 "width": 20
               },
@@ -148,8 +148,8 @@
               "type": "_accordion-row",
               "settings": {
                 "heading": "INFORMATION WE COLLECT",
-                "open_by_default": false,
-                "keywords": "Return, Exchange",
+                "open_by_default": true,
+                "keywords": "Information, Registration, Customer Support",
                 "icon": "none",
                 "width": 20
               },
