@@ -1,0 +1,555 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "text_BXTgp3": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>{{ closest.page.title }}</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "accordion_filter_NEW": {
+          "type": "accordion-filter",
+          "name": "Accordion Filter",
+          "settings": {
+            "padding": 16,
+            "gap": 16,
+            "icon_size": 24,
+            "icon_color": "#000000",
+            "icon_hover_color": "#666666",
+            "keywords": "PRODUCTS, Return",
+            "view_all_text": "View All",
+            "tag_font_size": 14,
+            "tag_text_color": "#000000",
+            "tag_hover_text_color": "#666666",
+            "search_placeholder": "Search FAQs...",
+            "modal_background": "#ffffff",
+            "empty_message": "Start typing to search",
+            "no_results_message": "No items found"
+          },
+          "blocks": {}
+        },
+        "accordion_xyJEfa": {
+          "type": "accordion",
+          "name": "t:names.accordion",
+          "settings": {
+            "icon": "caret",
+            "dividers": true,
+            "type_preset": "h6",
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "accordion_row_PppWBH": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Products Damaged, Defective or Incorrectly Delivered",
+                "open_by_default": true,
+                "keywords": "Products, Damaged, Defective, Tampered",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_TNAetT": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>When receiving your order, please verify the items and quantities listed on the invoice before accepting the package from the courier.</p><p>If the parcel appears damaged or tampered with, kindly mention this to our customer care representative at the time of receipt.</p><p>If you believe you have received:</p><ul><li>A defective item</li><li>The wrong product</li><li>A product with a quality issue</li></ul><p>please notify us at <a href=\"mailto:------------@altarasa.com\"><span style=\"text-decoration:underline\">------------@altarasa.com</span></a> within 48 hours of delivery.</p><p>Your email should clearly include:</p><ul><li>Order number/ invoice</li><li>Description of the issue</li><li>Photographs showing the defect or mismatch</li></ul>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_TNAetT"
+              ]
+            },
+            "accordion_row_VKqMR6": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Eligibility for Return or Exchange",
+                "open_by_default": false,
+                "keywords": "Return, Exchange",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_Din7MH": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Your order qualifies for a return/exchange only under the following circumstances:</p><ul><li>The item delivered does not match the product ordered.</li><li>The product has a genuine manufacturing defect.</li></ul><p>Our team will review the request and guide you on the next steps after completing a quality assessment.</p><p><span style=\"text-decoration:underline\">Please note:</span></p><p>The returned product must reach us within 3 days (within India) and 7 days (for international orders) from the date our team advises you to send it. The item must be unused, unworn, unwashed, and returned with all original tags and packaging.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_Din7MH"
+              ]
+            },
+            "accordion_row_JCnVrx": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Incorrect or Incomplete Shipping Address",
+                "open_by_default": false,
+                "keywords": "Shipping, Address",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_YTj4p4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Refunds cannot be issued if:</p><ul><li>The shipping address provided by the customer is incomplete or incorrect</li><li>Delivery attempts fail thrice</li><li>The package is refused by the recipient</li></ul>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_YTj4p4"
+              ]
+            },
+            "accordion_row_Ty3MV4": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Colour Disclaimer",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_jLWit4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>We make every effort to ensure that product colours displayed on AltaRasa are accurate. However, actual colours may vary depending on your device’s display settings. We do not guarantee a perfect colour match.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_jLWit4"
+              ]
+            },
+            "accordion_row_UtQ9Vm": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Refunds & Store Credit",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_8VVwCU": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Depending on the nature of the return, the following options are available:</p><p><strong>A. Store Credit</strong></p><p>Once the returned product passes our quality check, the approved refund amount will be added to your AltaRasa account as store credit. Store credit can be used on future purchases at checkout.</p><p><strong>B. Bank Refund</strong></p><p>For eligible orders:</p><ul><li>Refunds will be processed to the same payment method used during purchase.</li><li>Cancellations requested within 24 hours of placing the order qualify for a full refund.</li></ul><p>Refund processing may take 7–10 business days after the returned product is received and approved.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_8VVwCU"
+              ]
+            },
+            "accordion_row_4T6yKw": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Order Cancellation",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_rXy8TP": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<ul><li>Orders can be cancelled within 24 hours of placing the order.</li><li>After 24 hours, cancellation requests cannot be accepted as the order may already be in processing.</li></ul><p>AltaRasa reserves the right to cancel any order at its discretion and issue a full refund if the order cannot be processed.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_rXy8TP"
+              ]
+            },
+            "accordion_row_6Ui7hM": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Non-Returnable & Non-Exchangeable Products",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_LjxCTK": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>For hygiene, customization, and policy reasons, the following items cannot be returned or exchanged:</p><ul><li>All accessories: jewellery, clutches, wallets, bags, scarves, belts, footwear, etc.</li><li>Custom-made or made-to-order products</li><li>Orders purchased using store credit</li><li>Unstitched pieces such as dupattas or sarees with unstitched blouse fabric</li><li>Items altered to your personal measurements</li><li>Products bought during sales, promotions, or special offers</li><li>Products marked as “non-returnable/non-exchangeable” at the time of purchase</li></ul>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_LjxCTK"
+              ]
+            },
+            "accordion_row_MwdeGB": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Gift Cards",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_UUMmBi": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<ul><li>AltaRasa Gift Cards are valid for a period of 6 months once issued.</li><li>An account on the AltaRasa website is required to redeem a Gift Card.</li><li>Gift Cards can be used across all eligible AltaRasa platforms.</li><li>Gift Cards cannot be refunded, exchanged for cash, transferred, or used to buy another Gift Card.</li><li>If your order exceeds the Gift Card value, the balance must be paid at checkout (COD not permitted).</li><li>If you return an item purchased via Gift Card, the refund will follow AltaRasa’s return policy and be reissued as store credit.</li><li>AltaRasa is not responsible for lost, stolen, or unauthorized Gift Card use.</li><li>AltaRasa may cancel or reject a Gift Card if misuse or invalidity is suspected.</li></ul>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_UUMmBi"
+              ]
+            },
+            "accordion_row_NTXgp7": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Need Assistance?",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_nVGJjG": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>For any questions or support, you can reach us at:</p><p> +91-XXXXXXXXXX</p><p> <a href=\"mailto:---------------@altarasa.com\"><span style=\"text-decoration:underline\">---------------@altarasa.com</span></a></p><p> Weekdays: 10 AM – 6 PM (IST)</p><p> Weekends: 10 AM – 6 PM (IST), excluding Sunday’s and Public Holidays</p><p>AltaRasa Address: </p><p>3RD Floor, B-25 Defence Colony, </p><p>Bishmah Pitamah Marg,</p><p>New Delhi - 110024</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_nVGJjG"
+              ]
+            }
+          },
+          "block_order": [
+            "accordion_row_PppWBH",
+            "accordion_row_VKqMR6",
+            "accordion_row_JCnVrx",
+            "accordion_row_Ty3MV4",
+            "accordion_row_UtQ9Vm",
+            "accordion_row_4T6yKw",
+            "accordion_row_6Ui7hM",
+            "accordion_row_MwdeGB",
+            "accordion_row_NTXgp7"
+          ]
+        }
+      },
+      "block_order": [
+        "text_BXTgp3",
+        "accordion_filter_NEW",
+        "accordion_xyJEfa"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "gap": 16,
+        "color_scheme": "scheme-9279c1cb-9d8e-4383-af64-cd9f6d70d124",
+        "padding-block-start": 16,
+        "padding-block-end": 16
+      }
+    },
+    "section_EfGNGi": {
+      "type": "section",
+      "blocks": {
+        "custom_liquid_dJP8zg": {
+          "type": "custom-liquid",
+          "name": "t:names.custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"page-width\">\n  {% render 'wishlist' %}\n</div>"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "custom_liquid_dJP8zg"
+      ],
+      "disabled": true,
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "177095202455c59acc": {
+      "type": "_blocks",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "section_EfGNGi",
+    "177095202455c59acc"
+  ]
+}
