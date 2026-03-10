@@ -188,7 +188,7 @@
               "type": "_accordion-row",
               "settings": {
                 "heading": " EXCLUSIONS",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "Shipping, Address",
                 "icon": "none",
                 "width": 20
@@ -229,7 +229,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": "HOW WE USE YOUR INFORMATION",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
@@ -270,7 +270,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": "LINKS TO EXTERNAL WEBSITES",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
@@ -311,7 +311,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": "MARKET RESEARCH",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
