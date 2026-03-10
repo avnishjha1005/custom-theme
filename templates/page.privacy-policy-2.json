@@ -469,6 +469,129 @@
               "block_order": [
                 "text_nVGJjG"
               ]
+            },
+            "accordion_row_kWMXnD": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "BUSINESS TRANSFERS",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_6h3f43": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>If AltaRasa undergoes an acquisition, merger, restructuring, or transfer of assets, user information may be included among the transferred assets. Your information will remain protected under the then-current Privacy Policy.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_6h3f43"
+              ]
+            },
+            "accordion_row_bzxQ8N": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": " ACCEPTANCE OF THIS POLICY",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_xWK7pg": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>By using the Website or Services, you confirm your acceptance of this Privacy Policy.</p><p>If we update the Policy, we will notify you through the Website or via email. Continued use of the platform constitutes agreement to the revised terms.</p><p>If you do not agree with the Policy, you must discontinue use of the Website and Services.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_xWK7pg"
+              ]
+            },
+            "accordion_row_WHrgdp": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "CONTACT & QUERIES",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_KDLcCb": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>For questions about this Privacy Policy, or if you wish to update preferences or exercise opt-out rights, please contact us at:</p><p><strong>[Insert AltaRasa customer care email]</strong></p><p>AltaRasa may use your information to respond to inquiries, offer support, share service-related updates, and send marketing messages (with your consent) across channels such as email, SMS, WhatsApp, or voice communication.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_KDLcCb"
+              ]
             }
           },
           "block_order": [
@@ -480,7 +603,10 @@
             "accordion_row_4T6yKw",
             "accordion_row_6Ui7hM",
             "accordion_row_MwdeGB",
-            "accordion_row_NTXgp7"
+            "accordion_row_NTXgp7",
+            "accordion_row_kWMXnD",
+            "accordion_row_bzxQ8N",
+            "accordion_row_WHrgdp"
           ]
         }
       },
