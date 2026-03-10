@@ -352,7 +352,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": "USE OF AGGREGATED DATA",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
@@ -393,7 +393,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": "WHEN WE MAY SHARE YOUR INFORMATION",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
@@ -434,7 +434,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": "SECURITY & ACCOUNT PROTECTION",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
@@ -475,7 +475,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": "BUSINESS TRANSFERS",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
@@ -516,7 +516,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": " ACCEPTANCE OF THIS POLICY",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
@@ -557,7 +557,7 @@
               "name": "t:names.accordion_row",
               "settings": {
                 "heading": "CONTACT & QUERIES",
-                "open_by_default": false,
+                "open_by_default": true,
                 "keywords": "",
                 "icon": "none",
                 "width": 20
