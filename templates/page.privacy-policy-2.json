@@ -147,7 +147,7 @@
             "accordion_row_VKqMR6": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Eligibility for Return or Exchange",
+                "heading": "INFORMATION WE COLLECT",
                 "open_by_default": false,
                 "keywords": "Return, Exchange",
                 "icon": "none",
@@ -187,7 +187,7 @@
             "accordion_row_JCnVrx": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Incorrect or Incomplete Shipping Address",
+                "heading": " EXCLUSIONS",
                 "open_by_default": false,
                 "keywords": "Shipping, Address",
                 "icon": "none",
@@ -197,7 +197,7 @@
                 "text_YTj4p4": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Refunds cannot be issued if:</p><ul><li>The shipping address provided by the customer is incomplete or incorrect</li><li>Delivery attempts fail thrice</li><li>The package is refused by the recipient</li></ul>",
+                    "text": "<p>This Privacy Policy does not apply to publicly posted content (e.g., comments, social media posts, or information shared on third-party sites).</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -228,7 +228,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Colour Disclaimer",
+                "heading": "HOW WE USE YOUR INFORMATION",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -238,7 +238,7 @@
                 "text_jLWit4": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We make every effort to ensure that product colours displayed on AltaRasa are accurate. However, actual colours may vary depending on your device’s display settings. We do not guarantee a perfect colour match.</p>",
+                    "text": "<p>AltaRasa may use your information for purposes including:</p><ul><li>Operating and enhancing the Website and Services</li><li>Delivering products, services, and features you request</li><li>Managing registrations, subscriptions, or transactions</li><li>Understanding user preferences to improve offerings</li><li>Conducting analytics and usage tracking</li><li>Providing customer support</li><li>Sending updates, offers, promotions, and marketing communications</li><li>Delivering reminders, alerts, administrative notices, and security messages</li><li>Displaying advertisements via email or other channels</li><li>Managing internal business operations such as compliance, fraud prevention, and </li></ul>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -269,7 +269,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Refunds & Store Credit",
+                "heading": "LINKS TO EXTERNAL WEBSITES",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -279,7 +279,7 @@
                 "text_8VVwCU": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Depending on the nature of the return, the following options are available:</p><p><strong>A. Store Credit</strong></p><p>Once the returned product passes our quality check, the approved refund amount will be added to your AltaRasa account as store credit. Store credit can be used on future purchases at checkout.</p><p><strong>B. Bank Refund</strong></p><p>For eligible orders:</p><ul><li>Refunds will be processed to the same payment method used during purchase.</li><li>Cancellations requested within 24 hours of placing the order qualify for a full refund.</li></ul><p>Refund processing may take 7–10 business days after the returned product is received and approved.</p>",
+                    "text": "<p>Our Website or Services may contain links to third-party websites. AltaRasa is not responsible for their actions, content, or privacy practices. You must review their individual policies before using those sites.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
