@@ -187,7 +187,7 @@
             "accordion_row_JCnVrx": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Incorrect or Incomplete Shipping Address",
+                "heading": "Order Lookup / Tracking",
                 "open_by_default": false,
                 "keywords": "Shipping, Address",
                 "icon": "none",
@@ -197,7 +197,7 @@
                 "text_YTj4p4": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Refunds cannot be issued if:</p><ul><li>The shipping address provided by the customer is incomplete or incorrect</li><li>Delivery attempts fail thrice</li><li>The package is refused by the recipient</li></ul>",
+                    "text": "<p>AltaRasa offers a guest order tracking facility, allowing customers to check order status using:</p><p>\t•\tOrder ID</p><p>\t•\tBilling last name</p><p>\t•\tRegistered email address</p><p>\t•\tBilling ZIP/postal code</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -228,7 +228,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Colour Disclaimer",
+                "heading": "What size should I order?",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -238,7 +238,7 @@
                 "text_jLWit4": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We make every effort to ensure that product colours displayed on AltaRasa are accurate. However, actual colours may vary depending on your device’s display settings. We do not guarantee a perfect colour match.</p>",
+                    "text": "<p>Each product features its own customised size chart, available on the product page. We strongly recommend referring to the relevant size chart before placing your order to ensure the best possible fit.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -269,7 +269,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Refunds & Store Credit",
+                "heading": "Can I add items to my existing order?",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -279,7 +279,7 @@
                 "text_8VVwCU": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Depending on the nature of the return, the following options are available:</p><p><strong>A. Store Credit</strong></p><p>Once the returned product passes our quality check, the approved refund amount will be added to your AltaRasa account as store credit. Store credit can be used on future purchases at checkout.</p><p><strong>B. Bank Refund</strong></p><p>For eligible orders:</p><ul><li>Refunds will be processed to the same payment method used during purchase.</li><li>Cancellations requested within 24 hours of placing the order qualify for a full refund.</li></ul><p>Refund processing may take 7–10 business days after the returned product is received and approved.</p>",
+                    "text": "<p>Yes, you may request to add items to an existing order by contacting our Customer Care team via email or WhatsApp (details to be inserted). Please note that this is subject to order status and product availability.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -310,7 +310,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Order Cancellation",
+                "heading": "Can I change my shipping address after placing an order and/or after dispatch?",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -320,7 +320,7 @@
                 "text_rXy8TP": {
                   "type": "text",
                   "settings": {
-                    "text": "<ul><li>Orders can be cancelled within 24 hours of placing the order.</li><li>After 24 hours, cancellation requests cannot be accepted as the order may already be in processing.</li></ul><p>AltaRasa reserves the right to cancel any order at its discretion and issue a full refund if the order cannot be processed.</p>",
+                    "text": "<p>You may request a change to your shipping address within 48 hours of placing the order by reaching out to our Customer Care team via email or WhatsApp (details to be inserted).</p><p>Once an order has been dispatched, changes to the shipping address may not be possible.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -351,7 +351,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Non-Returnable & Non-Exchangeable Products",
+                "heading": "How much duties and taxes will I have to pay?",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -361,7 +361,7 @@
                 "text_LjxCTK": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>For hygiene, customization, and policy reasons, the following items cannot be returned or exchanged:</p><ul><li>All accessories: jewellery, clutches, wallets, bags, scarves, belts, footwear, etc.</li><li>Custom-made or made-to-order products</li><li>Orders purchased using store credit</li><li>Unstitched pieces such as dupattas or sarees with unstitched blouse fabric</li><li>Items altered to your personal measurements</li><li>Products bought during sales, promotions, or special offers</li><li>Products marked as “non-returnable/non-exchangeable” at the time of purchase</li></ul>",
+                    "text": "<p><strong>For orders within India:</strong></p><p>All prices displayed are inclusive of applicable taxes and duties.</p><p><strong>For international orders:</strong></p><p>Prices displayed are exclusive of import duties, customs charges, and local taxes. As the recipient, you are responsible for paying any such charges levied by your country at the time of delivery, if required, to release the shipment from customs.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -387,88 +387,6 @@
               "block_order": [
                 "text_LjxCTK"
               ]
-            },
-            "accordion_row_MwdeGB": {
-              "type": "_accordion-row",
-              "name": "t:names.accordion_row",
-              "settings": {
-                "heading": "Gift Cards",
-                "open_by_default": false,
-                "keywords": "",
-                "icon": "none",
-                "width": 20
-              },
-              "blocks": {
-                "text_UUMmBi": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<ul><li>AltaRasa Gift Cards are valid for a period of 6 months once issued.</li><li>An account on the AltaRasa website is required to redeem a Gift Card.</li><li>Gift Cards can be used across all eligible AltaRasa platforms.</li><li>Gift Cards cannot be refunded, exchanged for cash, transferred, or used to buy another Gift Card.</li><li>If your order exceeds the Gift Card value, the balance must be paid at checkout (COD not permitted).</li><li>If you return an item purchased via Gift Card, the refund will follow AltaRasa’s return policy and be reissued as store credit.</li><li>AltaRasa is not responsible for lost, stolen, or unauthorized Gift Card use.</li><li>AltaRasa may cancel or reject a Gift Card if misuse or invalidity is suspected.</li></ul>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_UUMmBi"
-              ]
-            },
-            "accordion_row_NTXgp7": {
-              "type": "_accordion-row",
-              "name": "t:names.accordion_row",
-              "settings": {
-                "heading": "Need Assistance?",
-                "open_by_default": false,
-                "keywords": "",
-                "icon": "none",
-                "width": 20
-              },
-              "blocks": {
-                "text_nVGJjG": {
-                  "type": "text",
-                  "settings": {
-                    "text": "<p>For any questions or support, you can reach us at:</p><p> +91-XXXXXXXXXX</p><p> <a href=\"mailto:---------------@altarasa.com\"><span style=\"text-decoration:underline\">---------------@altarasa.com</span></a></p><p> Weekdays: 10 AM – 6 PM (IST)</p><p> Weekends: 10 AM – 6 PM (IST), excluding Sunday’s and Public Holidays</p><p>AltaRasa Address: </p><p>3RD Floor, B-25 Defence Colony, </p><p>Bishmah Pitamah Marg,</p><p>New Delhi - 110024</p>",
-                    "width": "100%",
-                    "max_width": "normal",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
-                    "padding-block-start": 0,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                }
-              },
-              "block_order": [
-                "text_nVGJjG"
-              ]
             }
           },
           "block_order": [
@@ -478,9 +396,7 @@
             "accordion_row_Ty3MV4",
             "accordion_row_UtQ9Vm",
             "accordion_row_4T6yKw",
-            "accordion_row_6Ui7hM",
-            "accordion_row_MwdeGB",
-            "accordion_row_NTXgp7"
+            "accordion_row_6Ui7hM"
           ]
         }
       },
