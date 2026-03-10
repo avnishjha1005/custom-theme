@@ -1,0 +1,708 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "text_BXTgp3": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>{{ closest.page.title }}</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_UTfVtH": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>By using our Website or Services, you agree to the practices described below.</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "accordion_filter_NEW": {
+          "type": "accordion-filter",
+          "name": "Accordion Filter",
+          "settings": {
+            "padding": 16,
+            "gap": 16,
+            "icon_size": 24,
+            "icon_color": "#000000",
+            "icon_hover_color": "#666666",
+            "keywords": "Information, Definitions",
+            "view_all_text": "View All",
+            "tag_font_size": 14,
+            "tag_text_color": "#000000",
+            "tag_hover_text_color": "#666666",
+            "search_placeholder": "Search Privacy Policy",
+            "modal_background": "#ffffff",
+            "empty_message": "Start typing to search",
+            "no_results_message": "No items found"
+          },
+          "blocks": {}
+        },
+        "accordion_xyJEfa": {
+          "type": "accordion",
+          "name": "t:names.accordion",
+          "settings": {
+            "icon": "caret",
+            "dividers": true,
+            "type_preset": "h6",
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "accordion_row_PppWBH": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "DEFINITIONS",
+                "open_by_default": true,
+                "keywords": "Definitions, Information",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_TNAetT": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>A. “Non-Personal Information”</p><p>Information that does not identify you personally and is collected automatically when you browse the Website or use our Services.</p><p>B. “Personally Identifiable Information”</p><p>Information that can be used to identify you, such as your name, address, age, phone number, or other details shared while using our Services.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_TNAetT"
+              ]
+            },
+            "accordion_row_VKqMR6": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "INFORMATION WE COLLECT",
+                "open_by_default": true,
+                "keywords": "Information, Registration, Customer Support",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_Din7MH": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>When you access the Website, AltaRasa may automatically gather Non-Personal Information (e.g., browser type, IP address). We may also collect Personally Identifiable Information through:</p><ul><li>Forms, registrations, or other inputs on the Website.</li><li>Emails, calls, messages, or interactions via social media.</li><li>Data transmitted from your mobile device, if you use one to access our Services.</li><li>Information received from third parties.</li></ul><p><strong>A. Registration</strong></p><p>To create an account, you may be required to share details such as your name, email address, company information, and contact number. We may request additional optional information to improve your experience. By registering on the AltaRasa Website, you allow us to identify you and use your information in accordance with this Policy and our Terms.</p><p><strong>B. Customer Support</strong></p><p>When you communicate with AltaRasa’s support team, we collect information to verify your concerns, respond appropriately, and investigate any issues.</p><p><strong>C. Third-Party Services</strong></p><p>If you access or interact with third-party platforms through our Website, those parties may collect information according to their own policies. AltaRasa may receive information related to such interactions and will use it only as permitted under this Policy.</p><p><strong>D. Cookies</strong></p><p>The Website may use cookies, which are small data files stored on your device. Cookies help us recognize returning users, understand Website usage patterns, and personalise your browsing experience.</p><p>You may disable cookies through your browser settings, but certain features may not function properly.</p><p>We may also allow approved third parties to place cookies for analytics or advertising; these cookies do not contain Personally Identifiable Information.</p><p><strong>E. Web Beacons & Tracking Tools</strong></p><p>AltaRasa may use web beacons, tracking pixels, or similar tools to gather Non-Personal Information for analytics, auditing, advertising performance, and newsletter engagement. These tools do not track your activity outside our Website unless explicitly permitted.</p><p><strong>F. Device & Log Information</strong></p><p>When you browse the Website, we may receive:</p><ul><li>The URL you came from and visit next</li><li>Your IP address</li><li>Browser type and operating system</li><li>Device details (including device identifiers and mobile OS)</li><li>Usage patterns</li><li>Mobile carrier or ISP information</li><li>Location data shared via GPS-enabled services</li></ul><p>This information helps us improve the Website, troubleshoot issues, and secure our systems.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_Din7MH"
+              ]
+            },
+            "accordion_row_JCnVrx": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": " EXCLUSIONS",
+                "open_by_default": true,
+                "keywords": "Shipping, Address",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_YTj4p4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>This Privacy Policy does not apply to publicly posted content (e.g., comments, social media posts, or information shared on third-party sites).</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_YTj4p4"
+              ]
+            },
+            "accordion_row_Ty3MV4": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "HOW WE USE YOUR INFORMATION",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_jLWit4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa may use your information for purposes including:</p><ul><li>Operating and enhancing the Website and Services</li><li>Delivering products, services, and features you request</li><li>Managing registrations, subscriptions, or transactions</li><li>Understanding user preferences to improve offerings</li><li>Conducting analytics and usage tracking</li><li>Providing customer support</li><li>Sending updates, offers, promotions, and marketing communications</li><li>Delivering reminders, alerts, administrative notices, and security messages</li><li>Displaying advertisements via email or other channels</li><li>Managing internal business operations such as compliance, fraud prevention, and </li></ul>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_jLWit4"
+              ]
+            },
+            "accordion_row_UtQ9Vm": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "LINKS TO EXTERNAL WEBSITES",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_8VVwCU": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Our Website or Services may contain links to third-party websites. AltaRasa is not responsible for their actions, content, or privacy practices. You must review their individual policies before using those sites.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_8VVwCU"
+              ]
+            },
+            "accordion_row_4T6yKw": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "MARKET RESEARCH",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_rXy8TP": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa may conduct surveys or research to gather user insights. If you choose to participate, we may request Personally Identifiable Information. Such data is used solely for research purposes and is not sold or shared without your consent unless allowed under this Policy.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_rXy8TP"
+              ]
+            },
+            "accordion_row_6Ui7hM": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "USE OF AGGREGATED DATA",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_LjxCTK": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa may combine Non-Personal Information from multiple users to create anonymised, aggregated reports. These do not contain personally identifiable details and may be shared with third parties.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_LjxCTK"
+              ]
+            },
+            "accordion_row_MwdeGB": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "WHEN WE MAY SHARE YOUR INFORMATION",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_UUMmBi": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa may disclose Personally Identifiable Information only in the following circumstances:</p><p><strong>A. Service Providers</strong></p><p>We may share information with contractors, partners, or service providers who support Website operations, marketing, analytics, customer service, or other business needs.</p><p>Such partners are required to:</p><ol><li>Use your information only for their assigned function</li><li>Protect your information in a manner consistent with this Policy</li></ol><p><strong>B. Legal Obligations & Safety</strong></p><p>We may disclose information if required by:</p><ul><li>Law, regulation, or legal process</li><li>Court order, subpoena, or governmental request</li><li>Protection of AltaRasa’s legal rights or the safety of users</li><li>Prevention of fraud or security threats</li></ul><p>We will attempt to notify you unless legally prohibited.</p><p><strong>C. Opt-Out Options</strong></p><p>If you wish to restrict certain sharing with service providers, you may contact us at the email provided below.</p><p>This opt-out does not apply to situations described in Sections 8.A or 8.B.</p><p><strong>D. Third-Party Hosted Services</strong></p><p>Some AltaRasa content or features may be delivered through third-party websites. We will not share your Personally Identifiable Information with those platforms without your consent. However, any information you submit directly to those sites will be governed by their own policies.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_UUMmBi"
+              ]
+            },
+            "accordion_row_NTXgp7": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "SECURITY & ACCOUNT PROTECTION",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_nVGJjG": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa employs firewalls, encryption, secure servers, and other industry-standard measures to safeguard your information.</p><p>Your login credentials must be kept confidential. If you believe your account has been compromised, please contact our support team immediately.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_nVGJjG"
+              ]
+            },
+            "accordion_row_kWMXnD": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "BUSINESS TRANSFERS",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_6h3f43": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>If AltaRasa undergoes an acquisition, merger, restructuring, or transfer of assets, user information may be included among the transferred assets. Your information will remain protected under the then-current Privacy Policy.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_6h3f43"
+              ]
+            },
+            "accordion_row_bzxQ8N": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": " ACCEPTANCE OF THIS POLICY",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_xWK7pg": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>By using the Website or Services, you confirm your acceptance of this Privacy Policy.</p><p>If we update the Policy, we will notify you through the Website or via email. Continued use of the platform constitutes agreement to the revised terms.</p><p>If you do not agree with the Policy, you must discontinue use of the Website and Services.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_xWK7pg"
+              ]
+            },
+            "accordion_row_WHrgdp": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "CONTACT & QUERIES",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_KDLcCb": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>For questions about this Privacy Policy, or if you wish to update preferences or exercise opt-out rights, please contact us at:</p><p><strong>[Insert AltaRasa customer care email]</strong></p><p>AltaRasa may use your information to respond to inquiries, offer support, share service-related updates, and send marketing messages (with your consent) across channels such as email, SMS, WhatsApp, or voice communication.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_KDLcCb"
+              ]
+            }
+          },
+          "block_order": [
+            "accordion_row_PppWBH",
+            "accordion_row_VKqMR6",
+            "accordion_row_JCnVrx",
+            "accordion_row_Ty3MV4",
+            "accordion_row_UtQ9Vm",
+            "accordion_row_4T6yKw",
+            "accordion_row_6Ui7hM",
+            "accordion_row_MwdeGB",
+            "accordion_row_NTXgp7",
+            "accordion_row_kWMXnD",
+            "accordion_row_bzxQ8N",
+            "accordion_row_WHrgdp"
+          ]
+        }
+      },
+      "block_order": [
+        "text_BXTgp3",
+        "text_UTfVtH",
+        "accordion_filter_NEW",
+        "accordion_xyJEfa"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "gap": 16,
+        "color_scheme": "scheme-9279c1cb-9d8e-4383-af64-cd9f6d70d124",
+        "padding-block-start": 16,
+        "padding-block-end": 16
+      }
+    },
+    "section_EfGNGi": {
+      "type": "section",
+      "blocks": {
+        "custom_liquid_dJP8zg": {
+          "type": "custom-liquid",
+          "name": "t:names.custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"page-width\">\n  {% render 'wishlist' %}\n</div>"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "custom_liquid_dJP8zg"
+      ],
+      "disabled": true,
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "177095202455c59acc": {
+      "type": "_blocks",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "section_EfGNGi",
+    "177095202455c59acc"
+  ]
+}

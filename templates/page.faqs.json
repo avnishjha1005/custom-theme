@@ -1,0 +1,498 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "text_BXTgp3": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>{{ closest.page.title }}</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "custom",
+            "font": "var(--font-heading--family)",
+            "font_size": "2rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground-heading)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "text_aLxmdB": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>Your frequently asked questions</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "accordion_filter_NEW": {
+          "type": "accordion-filter",
+          "name": "Accordion Filter",
+          "settings": {
+            "padding": 16,
+            "gap": 16,
+            "icon_size": 24,
+            "icon_color": "#000000",
+            "icon_hover_color": "#666666",
+            "keywords": "PRODUCTS, Return",
+            "view_all_text": "View All",
+            "tag_font_size": 14,
+            "tag_text_color": "#000000",
+            "tag_hover_text_color": "#666666",
+            "search_placeholder": "Search FAQs...",
+            "modal_background": "#ffffff",
+            "empty_message": "Start typing to search",
+            "no_results_message": "No items found"
+          },
+          "blocks": {}
+        },
+        "accordion_xyJEfa": {
+          "type": "accordion",
+          "name": "t:names.accordion",
+          "settings": {
+            "icon": "caret",
+            "dividers": true,
+            "type_preset": "h6",
+            "inherit_color_scheme": true,
+            "color_scheme": "",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "accordion_row_PppWBH": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Payment Policies",
+                "open_by_default": true,
+                "keywords": "Products, Damaged, Defective, Tampered",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_TNAetT": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p><strong>Accepted payment methods include:</strong></p><p>\t•\tNet banking</p><p>\t•\tAll major credit and debit cards</p><p>\t•\tUPI payments</p><p>\t•\tPayPal (for international orders)</p><p>\t•\tSecure payment gateways for both domestic and international checkouts</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_TNAetT"
+              ]
+            },
+            "accordion_row_VKqMR6": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Order Tracking & Shipping",
+                "open_by_default": true,
+                "keywords": "Return, Exchange",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_Din7MH": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p><strong>Order tracking:</strong></p><p>\t•\tOnce an order is dispatched, AltaRasa shares the tracking number and tracking link via email, enabling customers to track their shipment through the assigned courier partner.</p><p><strong>Shipping details:</strong></p><p>\t•\tOrders are shipped via trusted courier partners such as FedEx, UPS, Delhivery, etc.</p><p>\t•\tDelivery timelines are calculated from the date of order confirmation.</p><p>\t•\tIn the event of delays extending beyond one week of the estimated delivery timeline, AltaRasa will proactively reach out to confirm whether the customer wishes to proceed with the order.</p><p>\t•\tFor international orders, customs duties and local taxes are borne by the customer and are payable at the time of delivery, subject to destination country regulations.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_Din7MH"
+              ]
+            },
+            "accordion_row_JCnVrx": {
+              "type": "_accordion-row",
+              "settings": {
+                "heading": "Order Lookup / Tracking",
+                "open_by_default": false,
+                "keywords": "Shipping, Address",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_YTj4p4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>AltaRasa offers a guest order tracking facility, allowing customers to check order status using:</p><p>\t•\tOrder ID</p><p>\t•\tBilling last name</p><p>\t•\tRegistered email address</p><p>\t•\tBilling ZIP/postal code</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_YTj4p4"
+              ]
+            },
+            "accordion_row_Ty3MV4": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "What size should I order?",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_jLWit4": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Each product features its own customised size chart, available on the product page. We strongly recommend referring to the relevant size chart before placing your order to ensure the best possible fit.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_jLWit4"
+              ]
+            },
+            "accordion_row_UtQ9Vm": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Can I add items to my existing order?",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_8VVwCU": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>Yes, you may request to add items to an existing order by contacting our Customer Care team via email or WhatsApp (details to be inserted). Please note that this is subject to order status and product availability.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_8VVwCU"
+              ]
+            },
+            "accordion_row_4T6yKw": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "Can I change my shipping address after placing an order and/or after dispatch?",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_rXy8TP": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p>You may request a change to your shipping address within 48 hours of placing the order by reaching out to our Customer Care team via email or WhatsApp (details to be inserted).</p><p>Once an order has been dispatched, changes to the shipping address may not be possible.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_rXy8TP"
+              ]
+            },
+            "accordion_row_6Ui7hM": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "How much duties and taxes will I have to pay?",
+                "open_by_default": false,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "text_LjxCTK": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p><strong>For orders within India:</strong></p><p>All prices displayed are inclusive of applicable taxes and duties.</p><p><strong>For international orders:</strong></p><p>Prices displayed are exclusive of import duties, customs charges, and local taxes. As the recipient, you are responsible for paying any such charges levied by your country at the time of delivery, if required, to release the shipment from customs.</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "rte",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "color": "var(--color-foreground)",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_LjxCTK"
+              ]
+            }
+          },
+          "block_order": [
+            "accordion_row_PppWBH",
+            "accordion_row_VKqMR6",
+            "accordion_row_JCnVrx",
+            "accordion_row_Ty3MV4",
+            "accordion_row_UtQ9Vm",
+            "accordion_row_4T6yKw",
+            "accordion_row_6Ui7hM"
+          ]
+        }
+      },
+      "block_order": [
+        "text_BXTgp3",
+        "text_aLxmdB",
+        "accordion_filter_NEW",
+        "accordion_xyJEfa"
+      ],
+      "settings": {
+        "content_direction": "column",
+        "gap": 16,
+        "color_scheme": "scheme-9279c1cb-9d8e-4383-af64-cd9f6d70d124",
+        "padding-block-start": 16,
+        "padding-block-end": 16
+      }
+    },
+    "section_EfGNGi": {
+      "type": "section",
+      "blocks": {
+        "custom_liquid_dJP8zg": {
+          "type": "custom-liquid",
+          "name": "t:names.custom_liquid",
+          "settings": {
+            "custom_liquid": "<div class=\"page-width\">\n  {% render 'wishlist' %}\n</div>"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "custom_liquid_dJP8zg"
+      ],
+      "disabled": true,
+      "name": "t:names.custom_section",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "small",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "177095202455c59acc": {
+      "type": "_blocks",
+      "settings": {
+        "content_direction": "column",
+        "vertical_on_mobile": true,
+        "horizontal_alignment": "flex-start",
+        "vertical_alignment": "center",
+        "align_baseline": false,
+        "horizontal_alignment_flex_direction_column": "flex-start",
+        "vertical_alignment_flex_direction_column": "center",
+        "gap": 12,
+        "section_width": "page-width",
+        "section_height": "",
+        "section_height_custom": 50,
+        "color_scheme": "",
+        "background_media": "none",
+        "video_position": "cover",
+        "background_image_position": "cover",
+        "border": "none",
+        "border_width": 1,
+        "border_opacity": 100,
+        "border_radius": 0,
+        "toggle_overlay": false,
+        "overlay_color": "#00000026",
+        "overlay_style": "solid",
+        "gradient_direction": "to top",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    }
+  },
+  "order": [
+    "main",
+    "section_EfGNGi",
+    "177095202455c59acc"
+  ]
+}
