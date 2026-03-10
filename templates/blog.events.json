@@ -127,7 +127,7 @@
         "heading": "Upcoming events",
         "post_limit": 5,
         "show_date": true,
-        "show_time": true,
+        "show_time": false,
         "date_format": "%B %d, %Y",
         "cta_text": "SEE MORE",
         "empty_message": "No upcoming events",
