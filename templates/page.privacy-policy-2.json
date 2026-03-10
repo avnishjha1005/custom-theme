@@ -310,7 +310,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Order Cancellation",
+                "heading": "MARKET RESEARCH",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -320,7 +320,7 @@
                 "text_rXy8TP": {
                   "type": "text",
                   "settings": {
-                    "text": "<ul><li>Orders can be cancelled within 24 hours of placing the order.</li><li>After 24 hours, cancellation requests cannot be accepted as the order may already be in processing.</li></ul><p>AltaRasa reserves the right to cancel any order at its discretion and issue a full refund if the order cannot be processed.</p>",
+                    "text": "<p>AltaRasa may conduct surveys or research to gather user insights. If you choose to participate, we may request Personally Identifiable Information. Such data is used solely for research purposes and is not sold or shared without your consent unless allowed under this Policy.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
