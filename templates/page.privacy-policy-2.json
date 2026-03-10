@@ -38,6 +38,32 @@
           },
           "blocks": {}
         },
+        "text_UTfVtH": {
+          "type": "text",
+          "name": "t:names.text",
+          "settings": {
+            "text": "<p>By using our Website or Services, you agree to the practices described below.</p>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "center",
+            "type_preset": "rte",
+            "font": "var(--font-body--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
         "accordion_filter_NEW": {
           "type": "accordion-filter",
           "name": "Accordion Filter",
@@ -81,7 +107,7 @@
             "accordion_row_PppWBH": {
               "type": "_accordion-row",
               "settings": {
-                "heading": "Products Damaged, Defective or Incorrectly Delivered",
+                "heading": "DEFINITIONS",
                 "open_by_default": true,
                 "keywords": "Products, Damaged, Defective, Tampered",
                 "icon": "none",
@@ -91,7 +117,7 @@
                 "text_TNAetT": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>When receiving your order, please verify the items and quantities listed on the invoice before accepting the package from the courier.</p><p>If the parcel appears damaged or tampered with, kindly mention this to our customer care representative at the time of receipt.</p><p>If you believe you have received:</p><ul><li>A defective item</li><li>The wrong product</li><li>A product with a quality issue</li></ul><p>please notify us at <a href=\"mailto:------------@altarasa.com\"><span style=\"text-decoration:underline\">------------@altarasa.com</span></a> within 48 hours of delivery.</p><p>Your email should clearly include:</p><ul><li>Order number/ invoice</li><li>Description of the issue</li><li>Photographs showing the defect or mismatch</li></ul>",
+                    "text": "<p>A. “Non-Personal Information”</p><p>Information that does not identify you personally and is collected automatically when you browse the Website or use our Services.</p><p>B. “Personally Identifiable Information”</p><p>Information that can be used to identify you, such as your name, address, age, phone number, or other details shared while using our Services.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -460,6 +486,7 @@
       },
       "block_order": [
         "text_BXTgp3",
+        "text_UTfVtH",
         "accordion_filter_NEW",
         "accordion_xyJEfa"
       ],
