@@ -351,7 +351,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Non-Returnable & Non-Exchangeable Products",
+                "heading": "USE OF AGGREGATED DATA",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -361,7 +361,7 @@
                 "text_LjxCTK": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>For hygiene, customization, and policy reasons, the following items cannot be returned or exchanged:</p><ul><li>All accessories: jewellery, clutches, wallets, bags, scarves, belts, footwear, etc.</li><li>Custom-made or made-to-order products</li><li>Orders purchased using store credit</li><li>Unstitched pieces such as dupattas or sarees with unstitched blouse fabric</li><li>Items altered to your personal measurements</li><li>Products bought during sales, promotions, or special offers</li><li>Products marked as “non-returnable/non-exchangeable” at the time of purchase</li></ul>",
+                    "text": "<p>AltaRasa may combine Non-Personal Information from multiple users to create anonymised, aggregated reports. These do not contain personally identifiable details and may be shared with third parties.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -392,7 +392,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Gift Cards",
+                "heading": "WHEN WE MAY SHARE YOUR INFORMATION",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -402,7 +402,7 @@
                 "text_UUMmBi": {
                   "type": "text",
                   "settings": {
-                    "text": "<ul><li>AltaRasa Gift Cards are valid for a period of 6 months once issued.</li><li>An account on the AltaRasa website is required to redeem a Gift Card.</li><li>Gift Cards can be used across all eligible AltaRasa platforms.</li><li>Gift Cards cannot be refunded, exchanged for cash, transferred, or used to buy another Gift Card.</li><li>If your order exceeds the Gift Card value, the balance must be paid at checkout (COD not permitted).</li><li>If you return an item purchased via Gift Card, the refund will follow AltaRasa’s return policy and be reissued as store credit.</li><li>AltaRasa is not responsible for lost, stolen, or unauthorized Gift Card use.</li><li>AltaRasa may cancel or reject a Gift Card if misuse or invalidity is suspected.</li></ul>",
+                    "text": "<p>AltaRasa may disclose Personally Identifiable Information only in the following circumstances:</p><p><strong>A. Service Providers</strong></p><p>We may share information with contractors, partners, or service providers who support Website operations, marketing, analytics, customer service, or other business needs.</p><p>Such partners are required to:</p><ol><li>Use your information only for their assigned function</li><li>Protect your information in a manner consistent with this Policy</li></ol><p><strong>B. Legal Obligations & Safety</strong></p><p>We may disclose information if required by:</p><ul><li>Law, regulation, or legal process</li><li>Court order, subpoena, or governmental request</li><li>Protection of AltaRasa’s legal rights or the safety of users</li><li>Prevention of fraud or security threats</li></ul><p>We will attempt to notify you unless legally prohibited.</p><p><strong>C. Opt-Out Options</strong></p><p>If you wish to restrict certain sharing with service providers, you may contact us at the email provided below.</p><p>This opt-out does not apply to situations described in Sections 8.A or 8.B.</p><p><strong>D. Third-Party Hosted Services</strong></p><p>Some AltaRasa content or features may be delivered through third-party websites. We will not share your Personally Identifiable Information with those platforms without your consent. However, any information you submit directly to those sites will be governed by their own policies.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -433,7 +433,7 @@
               "type": "_accordion-row",
               "name": "t:names.accordion_row",
               "settings": {
-                "heading": "Need Assistance?",
+                "heading": "SECURITY & ACCOUNT PROTECTION",
                 "open_by_default": false,
                 "keywords": "",
                 "icon": "none",
@@ -443,7 +443,7 @@
                 "text_nVGJjG": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>For any questions or support, you can reach us at:</p><p> +91-XXXXXXXXXX</p><p> <a href=\"mailto:---------------@altarasa.com\"><span style=\"text-decoration:underline\">---------------@altarasa.com</span></a></p><p> Weekdays: 10 AM – 6 PM (IST)</p><p> Weekends: 10 AM – 6 PM (IST), excluding Sunday’s and Public Holidays</p><p>AltaRasa Address: </p><p>3RD Floor, B-25 Defence Colony, </p><p>Bishmah Pitamah Marg,</p><p>New Delhi - 110024</p>",
+                    "text": "<p>AltaRasa employs firewalls, encryption, secure servers, and other industry-standard measures to safeguard your information.</p><p>Your login credentials must be kept confidential. If you believe your account has been compromised, please contact our support team immediately.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
