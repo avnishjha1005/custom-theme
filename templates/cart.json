@@ -40,7 +40,7 @@
       ],
       "custom_css": [
         ".custom-section-content {padding: 0px !important;}",
-        "@media screen and (min-width: 768px){.logo-block__image{display: none; }}"
+        "@media screen and (min-width: 768px) {.logo-block__image {display: none; }}"
       ],
       "name": "t:names.large_logo",
       "settings": {
@@ -94,9 +94,9 @@
           "static": true,
           "settings": {
             "gap": 24,
-            "image_ratio": "square",
+            "image_ratio": "portrait",
             "dividers": true,
-            "vendor": false,
+            "vendor": true,
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
