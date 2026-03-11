@@ -915,26 +915,20 @@
         "z_index": 9999
       }
     },
-    "popup_promotion_iPmyt7": {
-      "type": "popup-promotion",
-      "name": "Promotional Popup",
+    "promo_popup_text_3wHQHa": {
+      "type": "promo-popup-text",
+      "name": "Popup - Plain Text",
       "settings": {
-        "show_homepage_only": false,
-        "delay_seconds": 0,
-        "frequency_days": 0,
-        "popup_image": "shopify://shop_images/5615046c656907fb37658b9661370d9fc9a8f22d.jpg",
-        "popup_title": "Special Offer!",
-        "title_size": 28,
-        "popup_text": "<p>Subscribe to our newsletter and get 10% off your first order!</p>",
-        "text_alignment": "center",
-        "show_newsletter_form": true,
-        "email_placeholder": "Enter your email",
-        "button_text": "Subscribe",
-        "success_message": "Thanks for subscribing!",
-        "button_link": "",
-        "popup_width": 500,
-        "popup_padding": 40,
-        "show_close_button": true
+        "trigger_type": "delay",
+        "delay_seconds": 3,
+        "scroll_percent": 50,
+        "show_homepage_only": true,
+        "frequency_days": 7,
+        "eyebrow_text": "LIMITED TIME",
+        "heading": "Lorem ipsum dolor sit amet, consectetur adipiscing",
+        "subheading": "Sign up for exclusive access to new arrivals, sales, and special offers.",
+        "button_text": "SEE MORE",
+        "button_link": ""
       }
     }
   },
@@ -945,6 +939,6 @@
     "1765185071796b9f09",
     "collection_list_wWH4nF",
     "whatsapp_fab_QmNEQ4",
-    "popup_promotion_iPmyt7"
+    "promo_popup_text_3wHQHa"
   ]
 }
