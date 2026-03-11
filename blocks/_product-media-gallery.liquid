@@ -292,6 +292,11 @@
   data-presentation="{{ block_settings.media_presentation }}"
   {{ block.shopify_attributes }}
 >
+  {%- comment -%} Render badges only in product card context (not on product page) {%- endcomment -%}
+  {%- if template.name != 'product' and selected_product != blank -%}
+    {% render 'product-card-badges', product: selected_product, settings: settings %}
+  {%- endif -%}
+
   {% capture slides %}
     {% for media in sorted_media %}
       {% capture children %}
@@ -564,6 +569,11 @@
 </media-gallery>
 
 {% stylesheet %}
+  /* Position relative for badge positioning in product cards */
+  media-gallery {
+    position: relative;
+  }
+
   .dialog-zoomed-gallery {
     cursor: zoom-out;
   }
