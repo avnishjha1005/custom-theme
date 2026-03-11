@@ -3,6 +3,14 @@
   Displays "Discover More" heading + articles 7-10 + Load More button
 {%- endcomment -%}
 
+{%- liquid
+  # Get saved articles for bookmark state
+  assign saved_articles = nil
+  if customer
+    assign saved_articles = customer.metafields.custom.saved_articles.value
+  endif
+-%}
+
 {% assign initial_offset = 6 %}
 {% assign initial_limit = 4 %}
 {% assign articles_per_load = section.settings.articles_per_load | default: 4 %}
@@ -62,10 +70,41 @@
 
             <div class="blog-discover-card__actions">
               <a href="{{ article.url }}" class="blog-discover-card__read-link">READ</a>
-              <button type="button" class="blog-discover-card__bookmark" aria-label="Bookmark article">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
-                </svg>
+              {%- liquid
+                assign is_bookmarked = false
+                if saved_articles
+                  for saved in saved_articles
+                    assign saved_handle = saved.handle | default: saved
+                    if saved_handle == article.handle
+                      assign is_bookmarked = true
+                      break
+                    endif
+                  endfor
+                endif
+              -%}
+              <button
+                type="button"
+                class="blog-discover-card__bookmark{% if is_bookmarked %} blog-discover-card__bookmark--active{% endif %}"
+                aria-label="Bookmark article"
+                aria-pressed="{{ is_bookmarked }}"
+                data-bookmark-button
+                data-article-handle="{{ article.handle }}"
+                data-blog-handle="{{ blog.handle }}"
+                data-article-title="{{ article.title | escape }}"
+                data-article-excerpt="{{ article.excerpt_or_content | strip_html | truncate: 150 | escape }}"
+                {%- if article.image %}data-article-image="{{ article.image | image_url: width: 600 }}"{% endif %}
+                {% unless customer %}data-require-login="true"{% endunless %}
+              >
+                <span class="bookmark-icon">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </span>
+                <span class="bookmark-icon bookmark-icon--filled">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </span>
               </button>
             </div>
           </div>
@@ -93,6 +132,126 @@
 </blog-discover-loader>
 
 <script>
+  // Bookmark functionality
+  (function() {
+    function showNotification(message) {
+      const existing = document.querySelector('.bookmark-notification');
+      if (existing) existing.remove();
+
+      const notification = document.createElement('div');
+      notification.className = 'bookmark-notification';
+      notification.textContent = message;
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        notification.classList.add('bookmark-notification--hiding');
+        setTimeout(() => notification.remove(), 300);
+      }, 2500);
+    }
+
+    async function getBookmarks() {
+      try {
+        const response = await fetch('/apps/bookmarks');
+        if (!response.ok) return [];
+        const data = await response.json();
+        return data.bookmarks || [];
+      } catch (error) {
+        console.error('Bookmark fetch failed:', error);
+        return [];
+      }
+    }
+
+    async function saveBookmarks(bookmarks) {
+      try {
+        const response = await fetch('/apps/bookmarks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ bookmarks })
+        });
+        if (!response.ok) return false;
+        const data = await response.json();
+        return data.success === true;
+      } catch (error) {
+        console.error('Bookmark save failed:', error);
+        return false;
+      }
+    }
+
+    window.initDiscoverBookmarks = function(container = document) {
+      container.querySelectorAll('[data-bookmark-button]').forEach(btn => {
+        if (btn._bookmarkBound) return;
+        btn._bookmarkBound = true;
+
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+
+          if (btn.hasAttribute('data-require-login')) {
+            window.location.href = '/account/login';
+            return;
+          }
+
+          const articleHandle = btn.getAttribute('data-article-handle');
+          const blogHandle = btn.getAttribute('data-blog-handle');
+          if (!articleHandle || !blogHandle) return;
+
+          const articleData = {
+            handle: articleHandle,
+            blogHandle: blogHandle,
+            title: btn.getAttribute('data-article-title') || '',
+            excerpt: btn.getAttribute('data-article-excerpt') || '',
+            image: btn.getAttribute('data-article-image') || '',
+            url: `/blogs/${blogHandle}/${articleHandle}`
+          };
+
+          btn.disabled = true;
+          const isActive = btn.getAttribute('aria-pressed') === 'true';
+
+          let bookmarks = await getBookmarks();
+
+          if (isActive) {
+            bookmarks = bookmarks.filter(b => {
+              const h = typeof b === 'string' ? b : b.handle;
+              return h !== articleHandle;
+            });
+            showNotification('Article removed from saved');
+          } else {
+            const exists = bookmarks.some(b => {
+              const h = typeof b === 'string' ? b : b.handle;
+              return h === articleHandle;
+            });
+            if (!exists) {
+              bookmarks.push(articleData);
+            }
+            showNotification('Article saved');
+          }
+
+          const success = await saveBookmarks(bookmarks);
+
+          if (success) {
+            btn.setAttribute('aria-pressed', String(!isActive));
+            btn.classList.toggle('blog-discover-card__bookmark--active', !isActive);
+            window.dispatchEvent(new CustomEvent('bookmarks:updated', {
+              detail: { bookmarks, articleHandle, action: isActive ? 'removed' : 'added' }
+            }));
+          } else {
+            showNotification('Failed to save. Please try again.');
+          }
+
+          btn.disabled = false;
+        });
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => window.initDiscoverBookmarks());
+    } else {
+      window.initDiscoverBookmarks();
+    }
+
+    document.addEventListener('shopify:section:load', () => window.initDiscoverBookmarks());
+  })();
+
+  // Load More functionality
   if (!customElements.get('blog-discover-loader')) {
     customElements.define('blog-discover-loader', class extends HTMLElement {
       constructor() {
@@ -145,6 +304,11 @@
               this.container.appendChild(item);
             });
             this.currentOffset += newItems.length;
+
+            // Initialize bookmarks for newly loaded items
+            if (window.initDiscoverBookmarks) {
+              window.initDiscoverBookmarks(this.container);
+            }
           }
 
           // Hide button if no more articles
@@ -298,10 +462,35 @@
     padding: 0;
     cursor: pointer;
     color: var(--color-foreground-heading);
+    position: relative;
+    width: 20px;
+    height: 20px;
   }
 
   .blog-discover-card__bookmark:hover {
     opacity: 0.7;
+  }
+
+  .blog-discover-card__bookmark .bookmark-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .blog-discover-card__bookmark .bookmark-icon--filled {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  .blog-discover-card__bookmark--active .bookmark-icon:not(.bookmark-icon--filled) {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  .blog-discover-card__bookmark--active .bookmark-icon--filled {
+    opacity: 1;
+    transform: scale(1);
   }
 
   /* Mobile Styles - maintain side-by-side layout */
