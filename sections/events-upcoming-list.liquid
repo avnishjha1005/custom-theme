@@ -18,12 +18,22 @@
   assign filter_tag = section.settings.filter_tag
   assign mobile_layout = section.settings.mobile_layout | default: 'list'
 
+  # Capture current article handle to exclude from suggestions (on article pages)
+  assign current_article_handle = nil
+  if article != blank
+    assign current_article_handle = article.handle
+  endif
+
   # Pre-count matching articles to determine if section should render
   assign matching_count = 0
   if current_blog != blank and current_blog.articles_count > 0
     for article in current_blog.articles
       if matching_count >= max_items
         break
+      endif
+      # Skip current article on article pages
+      if current_article_handle != nil and article.handle == current_article_handle
+        continue
       endif
       assign matches = true
       if filter_tag != blank
@@ -68,6 +78,11 @@
       {% for article in current_blog.articles %}
         {% if article_count >= max_items %}
           {% break %}
+        {% endif %}
+
+        {% comment %} Skip current article on article pages {% endcomment %}
+        {% if current_article_handle != nil and article.handle == current_article_handle %}
+          {% continue %}
         {% endif %}
 
         {% assign show_article = true %}
