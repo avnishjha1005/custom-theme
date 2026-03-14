@@ -505,6 +505,7 @@
       "custom_css": [
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
         "#ResultsList > .grid {display: unset;}",
+        ".product-grid-container{max-width: 1440px; margin: auto;}",
         ".product-grid__item {height: 100%;}",
         ".product-card__content {height: 100%;}",
         "media-gallery {height: 100% !important;}",
