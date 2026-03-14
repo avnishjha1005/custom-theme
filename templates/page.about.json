@@ -183,10 +183,10 @@
         "horizontal_alignment_flex_direction_column": "flex-start",
         "vertical_alignment_flex_direction_column": "center",
         "gap": 12,
-        "section_width": "full-width",
+        "section_width": "page-width",
         "section_height": "small",
         "section_height_custom": 50,
-        "color_scheme": "",
+        "color_scheme": "scheme-303550e5-f4f9-40f5-8baa-6d6458b28010",
         "background_media": "none",
         "video_position": "cover",
         "background_image_position": "cover",
@@ -324,6 +324,7 @@
               "settings": {
                 "heading": "Our Vision",
                 "open_by_default": true,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -363,6 +364,7 @@
               "settings": {
                 "heading": "Our Founder",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -402,6 +404,7 @@
               "settings": {
                 "heading": "The Journey",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -441,6 +444,7 @@
               "settings": {
                 "heading": "Advisory Board",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -825,6 +829,7 @@
               "settings": {
                 "heading": "Our Point of View",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -864,6 +869,7 @@
               "settings": {
                 "heading": "What We Curate",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
@@ -903,6 +909,7 @@
               "settings": {
                 "heading": "The AltaRasa Woman",
                 "open_by_default": false,
+                "keywords": "",
                 "icon": "none",
                 "width": 20
               },
