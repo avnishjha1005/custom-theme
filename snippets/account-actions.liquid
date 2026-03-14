@@ -80,6 +80,24 @@
             {{ 'content.account_profile' | t }}
           </a>
         </li>
+        {% if customer %}
+          <li class="account-actions__list-item account-actions__list-item--full">
+            <a
+              href="/pages/bookmarks"
+              class="account-actions__link button-secondary"
+            >
+              <span
+                class="account-actions__icon"
+                aria-hidden="true"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </span>
+              {{ 'content.account_bookmarks' | t }}
+            </a>
+          </li>
+        {% endif %}
       </ul>
     </nav>
   </div>
@@ -174,6 +192,14 @@
 
     @media screen and (max-width: 300px) {
       grid-template-columns: 1fr;
+    }
+  }
+
+  .account-actions__list-item--full {
+    grid-column: span 2;
+
+    @media screen and (max-width: 300px) {
+      grid-column: span 1;
     }
   }
 
