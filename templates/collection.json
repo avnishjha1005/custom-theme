@@ -137,7 +137,7 @@
         ".spacing-style p {max-width: 1440px; margin: auto;}",
         ".section-background {border-top: 0.5px solid #d8d1c6;}",
         ".custom-section-content {padding: 0px !important;}",
-        ".section--page-width {max-width: unset !important;}"
+        ".section--page-width {max-width: 1440px; margin: auto;}"
       ],
       "name": "Collection heading",
       "settings": {
