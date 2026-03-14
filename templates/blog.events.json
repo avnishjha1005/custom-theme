@@ -111,7 +111,7 @@
       "type": "divider",
       "name": "t:names.divider_section",
       "settings": {
-        "color_scheme": "scheme-1",
+        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
         "section_width": "page-width",
         "thickness": 1,
         "corner_radius": "square",
