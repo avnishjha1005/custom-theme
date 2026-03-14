@@ -974,7 +974,8 @@
     "custom_css": [
       "shopify-section-template--20837767905494__section {}",
       "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
-      "footer {margin-bottom: -1px;}"
+      "footer {margin-bottom: -1px;}",
+      ".header__columns .spacing-style {padding-inline: 0px;}"
     ]
   }
 }
