@@ -4,7 +4,9 @@
   .parallax-slide-{{ slide_id }} {
     position: sticky;
     top: 0;
-    width: 100%;  
+    --slide-sticky-top: 0px;
+    top: var(--slide-sticky-top, 0px);
+    width: 100%;
     display: flex;
     align-items: {{ block.settings.vertical_alignment }};
     justify-content: {{ block.settings.horizontal_alignment }};
@@ -38,6 +40,34 @@
   </div>
 </div>
 
+<script>
+  (function() {
+    const slide = document.querySelector('.parallax-slide-{{ slide_id }}');
+    if (!slide) return;
+
+    const scrollBuffer = {{ block.settings.scroll_buffer }};
+
+    function updateStickyTop() {
+      const slideHeight = slide.offsetHeight;
+      const viewportHeight = window.innerHeight;
+
+      if (slideHeight > viewportHeight) {
+        const stickyTop = -(slideHeight - viewportHeight + scrollBuffer);
+        slide.style.setProperty('--slide-sticky-top', stickyTop + 'px');
+      } else {
+        const stickyTop = -scrollBuffer;
+        slide.style.setProperty('--slide-sticky-top', stickyTop + 'px');
+      }
+    }
+
+    updateStickyTop();
+    window.addEventListener('resize', updateStickyTop);
+
+    const resizeObserver = new ResizeObserver(updateStickyTop);
+    resizeObserver.observe(slide);
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Parallax Slide",
@@ -47,6 +77,21 @@
     { "type": "@app" }
   ],
   "settings": [
+    {
+      "type": "header",
+      "content": "Scroll Behavior"
+    },
+    {
+      "type": "range",
+      "id": "scroll_buffer",
+      "label": "Extra scroll before next slide",
+      "info": "Additional scroll distance after content is visible, before the next slide overlaps",
+      "min": 0,
+      "max": 300,
+      "step": 20,
+      "unit": "px",
+      "default": 100
+    },
     {
       "type": "header",
       "content": "Dimensions"
