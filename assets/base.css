@@ -1094,11 +1094,6 @@ body:has(.header[transparent]) #header-group > *:not(.header-section) {
   }
 }
 
-.product-grid__card .group-block > * {
-  @media screen and (max-width: 749px) {
-    flex-direction: column;
-  }
-}
 
 ul[product-grid-view='zoom-out'] .product-grid__card > * {
   display: none;
