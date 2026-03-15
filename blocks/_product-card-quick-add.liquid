@@ -167,24 +167,12 @@
 
 {% stylesheet %}
 
-  product-form-component{
-    width: 100%;
-  }
-
-  quick-add-component{
-    height: 97% !important;
-  }
-
-  @media screen and (max-width: 768px){
-   quick-add-component{
-    height: unset !important;
-  }
-  }
-
   .product-card-quick-add-block {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     margin-left: auto;
+    flex-shrink: 0;
+    width: auto;
   }
 
   .quick-add--inline {
@@ -193,9 +181,28 @@
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    width: 100%;
+    width: auto;
     inset: auto;
     pointer-events: auto;
+  }
+
+  /* Chat button should not span full width */
+  a.quick-add--inline.quick-add__chat-button {
+    width: auto;
+    justify-content: center;
+  }
+
+  /* Ensure quick-add-component only takes needed space */
+  .product-card-quick-add-block quick-add-component {
+    width: auto;
+  }
+
+  .product-card-quick-add-block product-form-component {
+    width: auto;
+  }
+
+  .product-card-quick-add-block .shopify-product-form {
+    width: auto;
   }
 
   .quick-add--inline .quick-add__button {
@@ -223,7 +230,7 @@
   }
 
   .quick-add__chat-button {
-    display: grid;
+    display: flex;
     background: none;
     place-items: center;
     position: relative;
@@ -233,8 +240,7 @@
     padding: 1rem;
     text-decoration: none;
     padding-right: 0px;
-    display: flex;
-    align-items: end;
+    align-items: flex-end;
     padding-bottom: 0px;
   }
 
@@ -251,6 +257,69 @@
   .quick-add__chat-icon svg {
     width: 2rem;
     height: 2rem;
+  }
+
+  @media screen and (max-width: 749px) {
+    /* Make product cards stretch to fill grid row */
+    .product-grid product-card,
+    .product-grid product-card-link {
+      height: 100%;
+    }
+
+    .product-grid .product-card__content {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Make the group containing quick-add grow to fill space */
+    .product-grid .group-block:has(.product-card-quick-add-block) {
+      flex-grow: 1;
+      width: 100%;
+    }
+
+    /* Ensure parent group stays as row on mobile and fills width */
+    .group-block-content:has(.product-card-quick-add-block) {
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      align-items: flex-end;
+      height: 100%;
+      width: 100%;
+    }
+
+    /* Let sibling content take remaining space */
+    .group-block-content:has(.product-card-quick-add-block) > *:not(.product-card-quick-add-block) {
+      flex: 1 1 auto;
+      min-width: 0;
+      width: 100% !important;
+    }
+
+    /* Ensure nested groups also fill width */
+    .group-block-content:has(.product-card-quick-add-block) .group-block {
+      width: 100%;
+    }
+
+    .group-block-content:has(.product-card-quick-add-block) .group-block-content {
+      width: 100%;
+    }
+
+    .product-card-quick-add-block {
+      flex-shrink: 0;
+      flex-grow: 0;
+      align-self: flex-end;
+    }
+
+    .quick-add__chat-button {
+      min-width: 2.5rem;
+      min-height: 2.5rem;
+      padding: 0.25rem;
+      align-items: center;
+    }
+
+    .quick-add__chat-icon svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
   }
 {% endstylesheet %}
 
