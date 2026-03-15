@@ -977,7 +977,7 @@
       "footer {margin-bottom: -1px;}",
       ".header__columns .spacing-style {padding-inline: 0px;}",
       "@media screen and (max-width: 768px) {.main-collection-grid {padding-inline: 16px; }}",
-      ".quick-add--inline.quick-add__chat-button.button{}"
+      ".quick-add--inline.quick-add__chat-button.button {justify-content: end;}"
     ]
   }
 }
