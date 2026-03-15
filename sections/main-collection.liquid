@@ -127,20 +127,8 @@
 
   /* ========================================
      HERO ITEMS: Base Logic
+     Hero items use grid-auto-flow: dense to prevent gaps
      ======================================== */
-  @media (min-width: 990px) {
-  /* .product-grid__item--hero {
-    grid-column: 1 / span 2;
-  } */
-}
-
-/* Tablet */
-@media (min-width: 750px) and (max-width: 989px) {
-  .product-grid__item--hero {
-    grid-column: span 1;
-    grid-row: span 2;
-  }
-}
 
 
   .collection-wrapper {
@@ -257,16 +245,20 @@
 
   }
 
-  /* Tablet: Hero items span 2 columns, 1.5 rows */
-  @media screen and (min-width: 750px) and (max-width: 989px) {
-    .product-grid__item--hero {
+  /* Featured items in resource lists - responsive handling */
+  .resource-list__item--featured {
+    /* Desktop: span 2x2 */
+    @media screen and (min-width: 750px) {
+      grid-column: span 2;
       grid-row: span 2;
     }
+
+    /* Mobile: full width, auto height */
+    @media screen and (max-width: 749px) {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
   }
-   .resource-list__item--featured {
-     grid-column: span 2;
-     grid-row: span 2;
-   }
 
   /* Mobile: Hero items full width and slightly taller */
   @media screen and (max-width: 749px) {

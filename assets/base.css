@@ -3969,6 +3969,7 @@ slideshow-arrows .slideshow-control.slideshow-control--style-none {
   display: grid;
   gap: var(--resource-list-row-gap) var(--resource-list-column-gap);
   grid-template-columns: var(--resource-list-columns-mobile);
+  grid-auto-flow: dense;
 
   @media screen and (min-width: 750px) {
     grid-template-columns: var(--resource-list-columns);

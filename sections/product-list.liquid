@@ -123,17 +123,20 @@
 </script>
 
 <style>
-  /* Featured product styling - spans 2 columns and 2 rows in grid layout */
-  .resource-list__item--featured {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
-  
-  /* Ensure featured items work on mobile too */
-  @media screen and (max-width: 749px) {
+  /* Featured product styling - responsive grid spanning */
+  /* Desktop/Tablet: span 2 columns and 2 rows */
+  @media screen and (min-width: 750px) {
     .resource-list__item--featured {
       grid-column: span 2;
       grid-row: span 2;
+    }
+  }
+
+  /* Mobile: full width, auto height to prevent gaps */
+  @media screen and (max-width: 749px) {
+    .resource-list__item--featured {
+      grid-column: 1 / -1;
+      grid-row: auto;
     }
   }
   /* Only apply swiper layout when JS is active and layout is carousel */

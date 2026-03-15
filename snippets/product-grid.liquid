@@ -231,6 +231,10 @@
     --product-grid-gap: var(--product-grid-gap-mobile);
     --mobile-columns: 2; /* Default value */
 
+    display: grid;
+    grid-template-columns: repeat(var(--mobile-columns), 1fr);
+    gap: var(--product-grid-gap);
+    grid-auto-flow: dense;
     isolation: isolate;
 
     @media screen and (min-width: 750px) {
