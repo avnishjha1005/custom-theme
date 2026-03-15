@@ -976,7 +976,8 @@
       "quick-add-component {display: flex; align-items: flex-end; margin-right: 0;}",
       "footer {margin-bottom: -1px;}",
       ".header__columns .spacing-style {padding-inline: 0px;}",
-      "@media screen and (max-width: 768px){.main-collection-grid{padding-inline: 16px; }}"
+      "@media screen and (max-width: 768px) {.main-collection-grid {padding-inline: 16px; }}",
+      ".quick-add--inline.quick-add__chat-button.button{}"
     ]
   }
 }
