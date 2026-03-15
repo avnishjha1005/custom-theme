@@ -638,7 +638,7 @@
       "custom_css": [
         "quick-add-component {display: flex; align-items: flex-end; margin-right: 0; padding-right: 0; padding-bottom: 0;}",
         "quick-add-component button {align-items: end; padding-bottom: 0; justify-content: end; padding-right: 0px;}",
-        "quick-add-component .svg-wrapper {min-height: 2.5rem; min-width: 2.5rem; justify-content: end; padding-right: 5px; align-self: end;}",
+        "quick-add-component .svg-wrapper {min-height: 2.5rem; min-width: 2.5rem; justify-content: end; padding-right: 5px; align-items: end;}",
         ".wishlist-button {margin-top: 10px;}",
         "slideshow-controls {z-index: 1;}",
         ".section--full-width {padding-inline: 16px;}",
