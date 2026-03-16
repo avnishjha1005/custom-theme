@@ -4940,7 +4940,7 @@ price-list compare-at-price,
 /* Shiprocket Smart EDD overrides */
 
 #delivery-widget .sr-delivery-widget {
-  border-radius: 8px;
+  border-radius: 0;
   background: #fafafa;
   font-family: inherit;
 }
