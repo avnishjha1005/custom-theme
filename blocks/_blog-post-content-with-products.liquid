@@ -5,6 +5,9 @@
 {% endcomment %}
 
 {% liquid
+  # Get products from article metafield (list.product_reference)
+  assign banner_products = article.metafields.custom.banner_products.value
+
   # Split article content by paragraphs to insert banner in the middle
   assign content_html = article.content
 
@@ -26,11 +29,6 @@
       endif
     endif
   endfor
-
-  # Get random products from store
-  assign random_seed = article.id | default: 1 | times: 7 | modulo: 10
-  assign all_products_count = collections.all.products_count | default: 10
-  assign random_offset = random_seed | modulo: all_products_count | at_most: all_products_count | minus: 2 | at_least: 0
 %}
 
 <div class="blog-post-content-with-products">
@@ -41,30 +39,42 @@
     </rte-formatter>
   </div>
 
-  {% comment %} Featured Products Banner {% endcomment %}
-  <div class="blog-featured-products color-{{ block.settings.color_scheme }} gradient">
-    <div class="blog-featured-products__inner page-width">
-      {% if block.settings.heading != blank %}
-        <h4 class="blog-featured-products__heading">{{ block.settings.heading }}</h4>
-      {% endif %}
+  {% comment %} Featured Products Banner — only renders if metafield is set {% endcomment %}
+  {% if banner_products != blank and banner_products.size > 0 %}
+    <div class="blog-featured-products color-{{ block.settings.color_scheme }} gradient">
+      <div class="blog-featured-products__inner page-width">
+        {% if block.settings.heading != blank %}
+          <h4 class="blog-featured-products__heading">{{ block.settings.heading }}</h4>
+        {% endif %}
 
-      <ul class="blog-featured-products__grid">
-        {% for product in collections.all.products limit: 2 offset: random_offset %}
-          <li>
-            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-          </li>
-        {% else %}
-          {% comment %} Fallback if no products in store {% endcomment %}
-          {% for i in (1..2) %}
-            <li class="blog-product-placeholder">
-              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-              <p>No products available</p>
-            </li>
+        {% capture slideshow_arrows %}
+          {% render 'slideshow-arrows', icon_style: 'chevron_large', icon_shape: 'circle', arrows_position: 'center' %}
+        {% endcapture %}
+
+        {% capture all_slides %}
+          {% for product in banner_products %}
+            {% capture slide_content %}
+              {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
+            {% endcapture %}
+            {% render 'slideshow-slide', index: forloop.index0, children: slide_content, class: 'resource-list__slide blog-featured-products__slide' %}
           {% endfor %}
-        {% endfor %}
-      </ul>
+        {% endcapture %}
+
+        <div class="blog-featured-products__carousel resource-list__carousel">
+          {% render 'slideshow',
+            ref: 'blogFeaturedProducts',
+            slides: all_slides,
+            slideshow_arrows: slideshow_arrows,
+            slide_count: banner_products.size,
+            infinite: false,
+            initial_slide: 0,
+            auto_hide_controls: false,
+            slideshow_gutters: 'start end'
+          %}
+        </div>
+      </div>
     </div>
-  </div>
+  {% endif %}
 
   {% comment %} Second half of blog content {% endcomment %}
   {% if content_after != blank %}
@@ -86,7 +96,7 @@
     margin: 0 auto;
   }
 
-  /* Full-width banner that breaks out of container */
+  /* Full-width filmstrip — same pattern as .article-filmstrip-container */
   .blog-featured-products {
     width: 100vw;
     position: relative;
@@ -94,9 +104,10 @@
     transform: translateX(-50%);
     padding: 48px 0;
     margin: 48px 0;
+    overflow-x: hidden;
   }
-  
-  .quick-add__button{
+
+  .quick-add__button {
     color: white !important;
   }
 
@@ -107,28 +118,43 @@
   .blog-featured-products__heading {
     font-size: 0.875rem;
     font-weight: 500;
-    margin: 0 auto 16px;
-    max-width: 700px;
+    /* Align heading with the article text left edge */
+    padding-inline-start: max(var(--page-margin, 1.5rem), calc((100vw - 800px) / 2));
+    margin: 0 0 16px;
     text-align: left;
   }
 
-  .blog-featured-products__grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    max-width: 700px;
-    margin: 0 auto;
-    list-style: none;
-    padding: 0;
+  .blog-featured-products__carousel {
+    --slide-width-max: 300px;
+    --resource-list-column-gap: 16px;
+    /* Align first slide with article text left edge — mirrors .article-filmstrip padding-left */
+    --gutter-slide-width: max(var(--page-margin, 1.5rem), calc((100vw - 800px) / 2));
+    width: 100%;
+    position: relative;
   }
 
-  .blog-featured-products__grid li {
-    width: 100%;
-    min-width: 0;
+  .blog-featured-products__slide {
+    width: 260px;
   }
 
-  .blog-featured-products__grid .product-card {
+  /* Force consistent portrait aspect ratio for all product images in the slider */
+  .blog-featured-products__slide .product-media-container {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+
+  .blog-featured-products__slide .product-media-container img,
+  .blog-featured-products__slide .product-media-container video {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  /* Ensure the slideshow inside the product card fills the fixed container */
+  .blog-featured-products__slide .product-media-gallery__slideshow,
+  .blog-featured-products__slide slideshow-slides {
+    height: 100%;
   }
 
   @media screen and (max-width: 749px) {
@@ -138,40 +164,20 @@
     }
 
     .blog-featured-products__heading {
-      padding: 0 16px;
+      padding-inline-start: var(--page-margin, 1rem);
     }
 
-    .blog-featured-products__grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      padding: 0 16px;
+    .blog-featured-products__carousel {
+      --gutter-slide-width: var(--page-margin, 1rem);
     }
-  }
 
-  /* Placeholder */
-  .blog-product-placeholder {
-    background: rgba(var(--color-foreground-rgb), 0.05);
-    padding: 60px 20px;
-    text-align: center;
-    border-radius: var(--product-corner-radius, 0);
-    aspect-ratio: 4 / 5;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+    .blog-featured-products__slide {
+      width: 60vw;
+    }
 
-  .blog-product-placeholder svg {
-    width: 40%;
-    max-width: 120px;
-    height: auto;
-    opacity: 0.3;
-  }
-
-  .blog-product-placeholder p {
-    margin-top: 16px;
-    color: rgba(var(--color-foreground-rgb), 0.5);
-    font-size: 14px;
+    .blog-featured-products__slide .product-media-container {
+      aspect-ratio: 3 / 4;
+    }
   }
 {% endstylesheet %}
 
