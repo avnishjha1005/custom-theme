@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper@10/swiper-bundle.min.css">
 
     <!-- Swiper JS UMD bundle (includes core + modules) -->
+    <!-- Shiprocket Widget Style Injector -->
+    <script src="{{ 'shiprocket-widget-styles.js' | asset_url }}" defer></script>
     <script src="https://unpkg.com/swiper@10/swiper-bundle.min.js" async></script>
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
@@ -90,9 +92,6 @@
         <p class="wishlist_text">Your Wishlist</p>
       </a>
     {% endif %}
-
-    <!-- Shiprocket Widget Style Injector -->
-    <script src="{{ 'shiprocket-widget-styles.js' | asset_url }}" defer></script>
 
   </body>
 </html>
