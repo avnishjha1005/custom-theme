@@ -183,7 +183,8 @@
             "show_whatsapp": false,
             "show_reddit": false,
             "show_telegram": false,
-            "show_instagram": true
+            "show_instagram": true,
+            "show_bookmark": true
           },
           "blocks": {}
         },
