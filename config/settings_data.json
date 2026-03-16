@@ -976,7 +976,8 @@
       "footer {margin-bottom: -1px;}",
       ".header__columns .spacing-style {padding-inline: 0px;}",
       "@media screen and (max-width: 768px) {.main-collection-grid {padding-inline: 16px; }}",
-      ".quick-add--inline.quick-add__chat-button.button {align-items: end; justify-content: end;}"
+      ".quick-add--inline.quick-add__chat-button.button {align-items: end; justify-content: end;}",
+      ".sr-delivery-widget {max-width: unset !important;}"
     ]
   }
 }
