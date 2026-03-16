@@ -4961,3 +4961,6 @@ price-list compare-at-price,
   background: black !important;
   color: white !important;
 }
+wishlist-page .wk-grid{
+  min-width: 300px;
+}
