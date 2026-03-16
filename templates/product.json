@@ -1070,6 +1070,7 @@
                   "settings": {
                     "heading": "Product Description",
                     "open_by_default": false,
+                    "keywords": "",
                     "icon": "none",
                     "width": 20
                   },
@@ -1109,6 +1110,7 @@
                   "settings": {
                     "heading": "Fabric Care",
                     "open_by_default": false,
+                    "keywords": "",
                     "icon": "none",
                     "width": 20
                   },
@@ -1149,6 +1151,7 @@
                   "settings": {
                     "heading": "Exchange & Returns",
                     "open_by_default": false,
+                    "keywords": "",
                     "icon": "none",
                     "width": 20
                   },
@@ -1189,6 +1192,7 @@
                   "settings": {
                     "heading": "Shipping Policy",
                     "open_by_default": false,
+                    "keywords": "",
                     "icon": "none",
                     "width": 20
                   },
@@ -1229,6 +1233,7 @@
                   "settings": {
                     "heading": "In-store availability",
                     "open_by_default": false,
+                    "keywords": "",
                     "icon": "none",
                     "width": 20
                   },
@@ -1274,7 +1279,6 @@
             },
             "shiprocket_smart_edd_shiprocket_smart_edd_aTBb4F": {
               "type": "shopify://apps/shiprocket-smart-edd/blocks/shiprocket-smart-edd/9b57fbd9-7bee-480b-839d-a538d163fbf0",
-              "disabled": true,
               "settings": {}
             },
             "shiprocket_promise_promise_widget_J4MFhC": {
