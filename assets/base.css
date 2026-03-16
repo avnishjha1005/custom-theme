@@ -4937,3 +4937,34 @@ price-list compare-at-price,
   border-radius: 0px !important;
   border: 1px solid #D8d1c6;
 }
+/* Shiprocket Smart EDD overrides */
+
+#delivery-widget .sr-delivery-widget {
+  border-radius: 8px;
+  background: #fafafa;
+  font-family: inherit;
+}
+
+#delivery-widget .sr-delivery-container {
+  border: 1px solid #e5e5e5 !important;
+  padding: 12px !important;
+  border-radius: 8px !important;
+}
+
+#delivery-widget .sr-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111;
+}
+
+#delivery-widget .sr-pincode-input {
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  height: 40px;
+}
+
+#delivery-widget button {
+  background: #000;
+  color: #fff;
+  border-radius: 6px;
+}
