@@ -106,7 +106,9 @@
       "block_order": [
         "swish_wishlist_king_wishlist_page_block_nBhbQ9"
       ],
-      "custom_css": [],
+      "custom_css": [
+        ".custom-section-content{padding: 0px !important;}"
+      ],
       "settings": {
         "content_direction": "column",
         "vertical_on_mobile": true,
