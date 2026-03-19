@@ -84,7 +84,7 @@
             "alignment": "center",
             "type_preset": "custom",
             "font": "var(--font-body--family)",
-            "font_size": "2rem",
+            "font_size": "1.125rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
@@ -108,9 +108,9 @@
             "width": "100%",
             "max_width": "narrow",
             "alignment": "center",
-            "type_preset": "rte",
+            "type_preset": "custom",
             "font": "var(--font-body--family)",
-            "font_size": "1rem",
+            "font_size": "0.625rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
@@ -195,7 +195,7 @@
         "divider_tCTP7z"
       ],
       "custom_css": [
-        ".h2{}"
+        ".h2 {}"
       ],
       "settings": {
         "color_scheme": "scheme-1",
