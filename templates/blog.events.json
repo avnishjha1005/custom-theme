@@ -77,6 +77,7 @@
         ".events-header__tab-link {line-height: 16px;}"
       ],
       "settings": {
+        "eyebrow_text": "Nemo enim ipsam voluptatem quia voluptas sit aut odit aut fugit.",
         "heading": "{{ blog.title }}",
         "show_view_all": true,
         "show_search": true,
@@ -84,7 +85,21 @@
         "section_width": "page-width",
         "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
         "padding-block-start": 20,
-        "padding-block-end": 20
+        "padding-block-end": 10
+      }
+    },
+    "divider_6QjtgY": {
+      "type": "divider",
+      "name": "t:names.divider_section",
+      "settings": {
+        "color_scheme": "",
+        "section_width": "full-width",
+        "thickness": 1,
+        "corner_radius": "square",
+        "width_percent": 100,
+        "alignment_horizontal": "center",
+        "padding-block-start": 0,
+        "padding-block-end": 0
       }
     },
     "events-upcoming": {
@@ -103,12 +118,15 @@
         "mobile_layout": "list",
         "section_width": "page-width",
         "color_scheme": "scheme-1",
-        "padding-block-start": 48,
+        "padding-block-start": 30,
         "padding-block-end": 48
       }
     },
     "divider_CxNrcf": {
       "type": "divider",
+      "custom_css": [
+        ".divider {color: black;}"
+      ],
       "name": "t:names.divider_section",
       "settings": {
         "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
@@ -142,6 +160,7 @@
   "order": [
     "section_TKfJVw",
     "events-header",
+    "divider_6QjtgY",
     "events-upcoming",
     "divider_CxNrcf",
     "events-past"
