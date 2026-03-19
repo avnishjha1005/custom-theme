@@ -77,6 +77,7 @@
         ".events-header__tab-link {line-height: 16px;}"
       ],
       "settings": {
+        "eyebrow_text": "Nemo enim ipsam voluptatem quia voluptas sit aut odit aut fugit.",
         "heading": "{{ blog.title }}",
         "show_view_all": true,
         "show_search": true,
@@ -84,7 +85,7 @@
         "section_width": "page-width",
         "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
         "padding-block-start": 20,
-        "padding-block-end": 20
+        "padding-block-end": 0
       }
     },
     "events-upcoming": {
@@ -103,7 +104,7 @@
         "mobile_layout": "list",
         "section_width": "page-width",
         "color_scheme": "scheme-1",
-        "padding-block-start": 48,
+        "padding-block-start": 0,
         "padding-block-end": 48
       }
     },
