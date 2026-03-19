@@ -78,7 +78,7 @@
           "type": "text",
           "name": "Title",
           "settings": {
-            "text": "<p>{{ closest.blog.title }}</p>",
+            "text": "<h1>{{ closest.blog.title }}</h1>",
             "width": "100%",
             "max_width": "narrow",
             "alignment": "center",
@@ -94,7 +94,7 @@
             "background_color": "#00000026",
             "corner_radius": 0,
             "padding-block-start": 20,
-            "padding-block-end": 0,
+            "padding-block-end": 8,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -195,7 +195,7 @@
         "divider_tCTP7z"
       ],
       "custom_css": [
-        ".h2 {}"
+        "@media screen and (max-width: 768px) {h1 {font-size: 16px; } p {font-size: 10px; }}"
       ],
       "settings": {
         "color_scheme": "scheme-1",
