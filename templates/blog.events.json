@@ -85,6 +85,20 @@
         "section_width": "page-width",
         "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
         "padding-block-start": 20,
+        "padding-block-end": 10
+      }
+    },
+    "divider_6QjtgY": {
+      "type": "divider",
+      "name": "t:names.divider_section",
+      "settings": {
+        "color_scheme": "",
+        "section_width": "full-width",
+        "thickness": 1,
+        "corner_radius": "square",
+        "width_percent": 100,
+        "alignment_horizontal": "center",
+        "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
@@ -143,6 +157,7 @@
   "order": [
     "section_TKfJVw",
     "events-header",
+    "divider_6QjtgY",
     "events-upcoming",
     "divider_CxNrcf",
     "events-past"
