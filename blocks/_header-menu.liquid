@@ -182,10 +182,6 @@
   .menu-list__list-item[aria-hidden='true'] {
     visibility: hidden;
   }
-  .menu-list__submenu-inner{
-    margin: auto;
-    max-width: 1440px;
-  }
   .menu-list__link {
     font-family: var(--menu-top-level-font-family);
     font-style: var(--menu-top-level-font-style);
@@ -291,6 +287,8 @@
     padding-inline: var(--padding-inline);
     clip-path: rect(0 100% var(--submenu-height) 0); /* stylelint-disable-line */
     transition: clip-path var(--submenu-animation-speed) var(--ease-out-cubic);
+    display: grid;
+    grid-template-columns: var(--full-page-grid-with-margins);
   }
 
   /* Show the submenus on hover */
@@ -314,11 +312,6 @@
       height: 0;
     }
   }
-  .menu-list__submenu-inner{
-    margin: auto;
-    max-width: 1440px;
-  }
-
   .menu-list__submenu-inner,
   .overflow-menu::part(overflow-list) {
     grid-column: 2;
@@ -329,9 +322,6 @@
 
   .overflow-menu::part(overflow) {
     --menu-top-level-font-size: var(--font-size--xlarge);
-
-    display: grid;
-    grid-template-columns: var(--full-page-grid-with-margins);
   }
 
   .overflow-menu::part(overflow-list) {
@@ -571,11 +561,7 @@
     }
   }
 
-  .menu-list__list-item[slot='overflow'] .section {
-    grid-template-columns: 1fr;
-  }
-
-  .menu-list__list-item[slot='overflow'] .section .mega-menu__grid {
+  .menu-list__list-item[slot='overflow'] .mega-menu__grid {
     grid-column: 1;
   }
 
