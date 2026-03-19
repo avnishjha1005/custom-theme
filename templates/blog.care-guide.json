@@ -195,7 +195,9 @@
         "ai_gen_block_004ee6f_3QpYYd",
         "divider_tCTP7z"
       ],
-      "custom_css": [],
+      "custom_css": [
+        "@media screen and (max-width: 768px) {h1 {font-size: 16px; } p {font-size: 10px; }}"
+      ],
       "settings": {
         "color_scheme": "scheme-1",
         "padding-block-start": 0,
