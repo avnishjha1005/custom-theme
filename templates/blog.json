@@ -83,7 +83,7 @@
             "max_width": "narrow",
             "alignment": "center",
             "type_preset": "custom",
-            "font": "var(--font-heading--family)",
+            "font": "var(--font-body--family)",
             "font_size": "2rem",
             "line_height": "normal",
             "letter_spacing": "normal",
@@ -194,8 +194,11 @@
         "ai_gen_block_004ee6f_3QpYYd",
         "divider_tCTP7z"
       ],
+      "custom_css": [
+        ".h2{}"
+      ],
       "settings": {
-        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "color_scheme": "scheme-1",
         "padding-block-start": 0,
         "padding-block-end": 48
       }
