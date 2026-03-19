@@ -79,7 +79,7 @@
           "type": "text",
           "name": "Title",
           "settings": {
-            "text": "<p>Clothing</p>",
+            "text": "<p>{{ closest.collection.title }}</p>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "left",
@@ -105,7 +105,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aut odit aut fugit.</p>",
+            "text": "<p></p>{{ closest.collection.description }}",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
@@ -513,7 +513,7 @@
         "media-gallery {height: 100% !important;}",
         ".facets-product-type__list a {padding-left: 0px;}",
         ".facets-type-bar__meta .svg-wrapper {height: unset;}",
-        "@media screen and (max-width: 768px) {.main-collection-grid{padding: 16px; } .facets-type-bar {padding: 8px; }}",
+        "@media screen and (max-width: 768px) {.main-collection-grid {padding: 16px; } .facets-type-bar {padding: 8px; }}",
         ".facets-toggle {display: none;}"
       ],
       "settings": {

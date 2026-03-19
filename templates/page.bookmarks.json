@@ -16,7 +16,7 @@
       ],
       "settings": {
         "title": "Bookmarks",
-        "empty_state_blog": "editorial",
+        "empty_state_blog": "the-editorial",
         "color_scheme": "scheme-1",
         "padding_top": 40,
         "padding_bottom": 80
