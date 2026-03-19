@@ -123,7 +123,7 @@
           assign links_before_wrap = links_before_wrap | minus: 1
         endif
         assign break_after_float = links_before_wrap | times: 1.0
-        assign column_span = 1
+        assign column_span = link.links.size | divided_by: break_after_float | ceil | at_least: 1
         assign column_count = column_count | plus: column_span
         assign should_break_columns = true
 
@@ -183,9 +183,9 @@
           {% for childLink in link.links %}
             {% assign break_after_modulo = forloop.index | modulo: links_before_wrap %}
             <li
-              {% comment %} {% if break_after_modulo == 0 and should_break_columns %}
+              {% if break_after_modulo == 0 and should_break_columns %}
                 style="break-after: column;"
-              {% endif %} {% endcomment %}
+              {% endif %}
             >
               <a
                 href="{{ childLink.url }}"
