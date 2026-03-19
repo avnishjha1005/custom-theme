@@ -124,6 +124,9 @@
     },
     "divider_CxNrcf": {
       "type": "divider",
+      "custom_css": [
+        ".divider__line{background-color: black;}"
+      ],
       "name": "t:names.divider_section",
       "settings": {
         "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
