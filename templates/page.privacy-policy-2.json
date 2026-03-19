@@ -16,13 +16,13 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>{{ closest.page.title }}</p>",
+            "text": "<h1>{{ closest.page.title }}</h1>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "center",
             "type_preset": "custom",
-            "font": "var(--font-heading--family)",
-            "font_size": "2rem",
+            "font": "var(--font-body--family)",
+            "font_size": "1.125rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
@@ -615,6 +615,9 @@
         "text_UTfVtH",
         "accordion_filter_NEW",
         "accordion_xyJEfa"
+      ],
+      "custom_css": [
+        "h1 {color: black; font-weight: 400;}"
       ],
       "settings": {
         "content_direction": "column",
