@@ -79,13 +79,13 @@
           "type": "text",
           "name": "Title",
           "settings": {
-            "text": "<p>{{ closest.blog.title }}</p>",
+            "text": "<h1>{{ closest.blog.title }}</h1>",
             "width": "100%",
             "max_width": "narrow",
             "alignment": "center",
             "type_preset": "custom",
-            "font": "var(--font-heading--family)",
-            "font_size": "2rem",
+            "font": "var(--font-body--family)",
+            "font_size": "1.125rem",
             "line_height": "normal",
             "letter_spacing": "normal",
             "case": "none",
@@ -95,7 +95,7 @@
             "background_color": "#00000026",
             "corner_radius": 0,
             "padding-block-start": 20,
-            "padding-block-end": 0,
+            "padding-block-end": 8,
             "padding-inline-start": 0,
             "padding-inline-end": 0
           },
@@ -107,7 +107,7 @@
           "settings": {
             "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aut odit aut fugit.</p>",
             "width": "100%",
-            "max_width": "narrow",
+            "max_width": "none",
             "alignment": "center",
             "type_preset": "rte",
             "font": "var(--font-body--family)",
@@ -197,7 +197,7 @@
       ],
       "custom_css": [],
       "settings": {
-        "color_scheme": "scheme-98b873f3-8bc4-4b33-aa5f-dbaec183dbc5",
+        "color_scheme": "scheme-1",
         "padding-block-start": 0,
         "padding-block-end": 0
       }
@@ -259,7 +259,7 @@
       "name": "Blog Grid",
       "settings": {
         "articles_per_page": 12,
-        "load_more_enabled": true,
+        "load_more_enabled": false,
         "load_more_text": "Read More",
         "color_scheme": "",
         "padding_top": 0,
