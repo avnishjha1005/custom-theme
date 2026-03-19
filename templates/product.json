@@ -89,7 +89,7 @@
             "thumbnail_position": "bottom",
             "thumbnail_width": 100,
             "aspect_ratio": "1/1.25",
-            "constrain_to_viewport": true,
+            "constrain_to_viewport": false,
             "media_fit": "cover",
             "media_radius": 0,
             "extend_media": true,
