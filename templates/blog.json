@@ -52,7 +52,7 @@
         "horizontal_alignment_flex_direction_column": "center",
         "vertical_alignment_flex_direction_column": "space-between",
         "gap": 0,
-        "section_width": "page-width",
+        "section_width": "full-width",
         "section_height": "custom",
         "section_height_custom": 0,
         "color_scheme": "scheme-3",
