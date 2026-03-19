@@ -31,6 +31,10 @@
       <h1 class="events-header__title">{{ section.settings.heading }}</h1>
     {% endif %}
 
+    {% if section.settings.eyebrow_text != blank %}
+      <p class="events-header__eyebrow">{{ section.settings.eyebrow_text }}</p>
+    {% endif %}
+
     <div class="events-header__nav-bar">
       {% if section.settings.show_search %}
         <button class="events-header__search-btn" aria-label="Open Search" data-search-trigger>
@@ -264,6 +268,24 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+  }
+
+  .events-header__eyebrow {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    text-align: center;
+    margin: 0;
+    color: var(--color-foreground);
+    font-family: 'Inter';
+    max-width: 220px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .events-header__title + .events-header__eyebrow {
+    margin-top: -16px;
   }
 
   .events-header__title {
@@ -644,6 +666,12 @@
   "tag": "section",
   "class": "events-header-section",
   "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow_text",
+      "label": "Eyebrow text",
+      "default": "Nemo enim ipsam voluptatem quia voluptas sit aut odit aut fugit."
+    },
     {
       "type": "text",
       "id": "heading",
