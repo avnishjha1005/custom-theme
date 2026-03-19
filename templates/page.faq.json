@@ -464,7 +464,7 @@
         "accordion_xyJEfa"
       ],
       "custom_css": [
-        "h1{color: black;}"
+        "h1 {color: black; font-weight: 400;}"
       ],
       "settings": {
         "content_direction": "column",
