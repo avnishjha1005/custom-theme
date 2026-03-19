@@ -27,6 +27,7 @@
   data-section-id="{{ section_id }}"
 >
   <div class="events-header__content">
+    <div class="events-header__content-text">
     {% if section.settings.heading != blank %}
       <h1 class="events-header__title">{{ section.settings.heading }}</h1>
     {% endif %}
@@ -34,6 +35,7 @@
     {% if section.settings.eyebrow_text != blank %}
       <p class="events-header__eyebrow">{{ section.settings.eyebrow_text }}</p>
     {% endif %}
+  </div>
 
     <div class="events-header__nav-bar">
       {% if section.settings.show_search %}
@@ -267,10 +269,11 @@
   .events-header__content {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 16px;
   }
 
   .events-header__eyebrow {
+    padding-top: 8px;
     font-size: 10px;
     font-weight: 400;
     text-transform: none;
@@ -283,10 +286,14 @@
     margin-right: auto;
   }
 
-  .events-header__title + .events-header__eyebrow {
-    margin-top: -16px;
+@media screen and (max-width: 768px){
+  .events-header__title{
+    font-size: 16px;
   }
-
+  .events-header__eyebrow {
+    font-size: 10px;
+  }
+}
   .events-header__title {
     font-size: 18px;
     text-transform: none;
@@ -653,7 +660,7 @@
     }
 
     .events-header__title {
-      font-size: 32px;
+      font-size: 16px;
       padding: 0 16px;
     }
   }
