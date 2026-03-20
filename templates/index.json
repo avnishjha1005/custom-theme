@@ -976,7 +976,7 @@
       "type": "promo-popup-text",
       "name": "Popup - Plain Text",
       "settings": {
-        "trigger_type": "delay",
+        "trigger_type": "scroll",
         "delay_seconds": 3,
         "scroll_percent": 10,
         "show_homepage_only": true,
