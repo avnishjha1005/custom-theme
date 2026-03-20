@@ -8,7 +8,7 @@
         <line x1="6" y1="6" x2="18" y2="18"></line>
       </svg>
     </button>
-
+    <div class="popup-content__wrapper">
     {%- if section.settings.eyebrow_text != blank -%}
       <p class="promo-popup-text__eyebrow">{{ section.settings.eyebrow_text }}</p>
     {%- endif -%}
@@ -28,6 +28,7 @@
         {{ section.settings.button_text }}
       </a>
     {%- endif -%}
+  </div>
   </div>
 </div>
 
