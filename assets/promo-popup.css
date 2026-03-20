@@ -84,6 +84,7 @@
 }
 .popup-content__wrapper{
   max-width:200px;
+  justify-content:center;
 }
 .promo-popup-text__subheading {
   font-size: 10px;
