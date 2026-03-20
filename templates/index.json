@@ -992,7 +992,7 @@
       "type": "promo-popup-split",
       "name": "Popup - Image Split",
       "settings": {
-        "trigger_type": "delay",
+        "trigger_type": "scroll",
         "delay_seconds": 3,
         "scroll_percent": 50,
         "show_homepage_only": true,
