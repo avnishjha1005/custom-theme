@@ -996,7 +996,7 @@
         "delay_seconds": 3,
         "scroll_percent": 50,
         "show_homepage_only": true,
-        "frequency_days": 7,
+        "frequency_days": 0,
         "popup_image": "shopify://shop_images/e110dcd99c619539fcfb81c2cd9b456494ad7f5d.jpg",
         "image_title": "Lorem Ipsum Collection",
         "image_text": "Explore our exclusive new arrivals",
