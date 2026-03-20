@@ -82,7 +82,9 @@
   margin: 0 0 12px;
   color: #000;
 }
-
+.popup-content__wrapper{
+  max-width:200px;
+}
 .promo-popup-text__subheading {
   font-size: 10px;
   line-height: 1.6;
