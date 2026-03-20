@@ -977,7 +977,7 @@
       "name": "Popup - Plain Text",
       "settings": {
         "trigger_type": "scroll",
-        "delay_seconds": 3,
+        "delay_seconds": 1,
         "scroll_percent": 10,
         "show_homepage_only": true,
         "frequency_days": 7,
