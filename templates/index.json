@@ -978,7 +978,7 @@
       "settings": {
         "trigger_type": "delay",
         "delay_seconds": 3,
-        "scroll_percent": 50,
+        "scroll_percent": 10,
         "show_homepage_only": true,
         "frequency_days": 7,
         "eyebrow_text": "Welcome to AltaRasa",
