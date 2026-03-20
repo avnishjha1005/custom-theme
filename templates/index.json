@@ -980,11 +980,30 @@
         "delay_seconds": 1,
         "scroll_percent": 10,
         "show_homepage_only": true,
-        "frequency_days": 7,
+        "frequency_days": 0,
         "eyebrow_text": "Welcome to AltaRasa",
         "heading": "An Elevated Essence of South Asia",
         "subheading": "Be the first to encounter new voices, rare pieces, and cultural moments.",
         "button_text": "SUBSCRIBE",
+        "button_link": ""
+      }
+    },
+    "promo_popup_split_qcgtqG": {
+      "type": "promo-popup-split",
+      "name": "Popup - Image Split",
+      "settings": {
+        "trigger_type": "delay",
+        "delay_seconds": 3,
+        "scroll_percent": 50,
+        "show_homepage_only": true,
+        "frequency_days": 7,
+        "popup_image": "shopify://shop_images/e110dcd99c619539fcfb81c2cd9b456494ad7f5d.jpg",
+        "image_title": "Lorem Ipsum Collection",
+        "image_text": "Explore our exclusive new arrivals",
+        "eyebrow_text": "NEW ARRIVAL",
+        "heading": "Get 20% Off Your First Order",
+        "subheading": "Join our newsletter and be the first to know about new collections and exclusive offers.",
+        "button_text": "SEE MORE",
         "button_link": ""
       }
     }
@@ -996,6 +1015,7 @@
     "1765185071796b9f09",
     "collection_list_wWH4nF",
     "whatsapp_fab_QmNEQ4",
-    "promo_popup_text_3wHQHa"
+    "promo_popup_text_3wHQHa",
+    "promo_popup_split_qcgtqG"
   ]
 }
