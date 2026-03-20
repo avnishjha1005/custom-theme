@@ -981,10 +981,10 @@
         "scroll_percent": 50,
         "show_homepage_only": true,
         "frequency_days": 7,
-        "eyebrow_text": "LIMITED TIME",
-        "heading": "Lorem ipsum dolor sit amet, consectetur adipiscing",
-        "subheading": "Sign up for exclusive access to new arrivals, sales, and special offers.",
-        "button_text": "SEE MORE",
+        "eyebrow_text": "Welcome to AltaRasa",
+        "heading": "An Elevated Essence of South Asia",
+        "subheading": "Be the first to encounter new voices, rare pieces, and cultural moments.",
+        "button_text": "SUBSCRIBE",
         "button_link": ""
       }
     }
