@@ -107,8 +107,9 @@
     overflow-x: hidden;
   }
 
-  .quick-add__button {
-    color: white !important;
+  /* Keep quick-add button visible in the banner (overrides desktop display:none) */
+  .blog-featured-products .quick-add__button {
+    display: grid;
   }
 
   .blog-featured-products__inner {
