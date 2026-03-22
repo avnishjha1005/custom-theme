@@ -42,7 +42,7 @@
       {%- endif -%}
 
       {%- if section.settings.button_text != blank -%}
-        <a href="{{ section.settings.button_link }}" class="promo-popup__cta">
+        <a href="{{ section.settings.button_link }}" class="promo-popup__cta" data-close-popup>
           {{ section.settings.button_text }}
         </a>
       {%- endif -%}
