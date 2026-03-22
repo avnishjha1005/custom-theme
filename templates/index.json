@@ -980,7 +980,7 @@
         "delay_seconds": 1,
         "scroll_percent": 10,
         "show_homepage_only": true,
-        "frequency_days": 0,
+        "frequency_days": 5,
         "eyebrow_text": "Welcome to AltaRasa",
         "heading": "An Elevated Essence of South Asia",
         "subheading": "Be the first to encounter new voices, rare pieces, and cultural moments.",
@@ -1004,7 +1004,7 @@
         "heading": "",
         "subheading": "",
         "button_text": "DISCOVER NEW ARRIVALS",
-        "button_link": ""
+        "button_link": "shopify://collections"
       }
     }
   },
