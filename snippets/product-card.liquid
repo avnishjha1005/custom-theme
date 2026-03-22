@@ -177,11 +177,11 @@
     display: none;
   }
 
-  /* Hide "Add" button for single option product cards that show a swatches variant picker */
+  /* Hide "Choose" button for single option product cards that show a swatches variant picker (overlay only, not inline) */
   :is(.product-card:not([data-no-swatch-selected])):has(.quick-add__product-form-component--single-option):has(
       swatches-variant-picker-component
     )
-    .quick-add__button--choose {
+    .quick-add:not(.quick-add--inline) .quick-add__button--choose {
     display: none;
   }
 
