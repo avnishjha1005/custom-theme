@@ -153,7 +153,7 @@
                 "text_TNAetT": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>When receiving your order, please verify the items and quantities listed on the invoice before accepting the package from the courier.</p><p>If the parcel appears damaged or tampered with, kindly mention this to our customer care representative at the time of receipt.</p><p>If you believe you have received:</p><ul><li>A defective item</li><li>The wrong product</li><li>A product with a quality issue</li></ul><p>please notify us at <a href=\"mailto:------------@altarasa.com\"><span style=\"text-decoration:underline\">------------@altarasa.com</span></a> within 48 hours of delivery.</p><p>Your email should clearly include:</p><ul><li>Order number/ invoice</li><li>Description of the issue</li><li>Photographs showing the defect or mismatch</li></ul>",
+                    "text": "<p>When receiving your order, please verify the items and quantities listed on the invoice before accepting the package from the courier.</p><p>If the parcel appears damaged or tampered with, kindly mention this to our customer care representative at the time of receipt.</p><p>If you believe you have received:</p><ul><li>A defective item</li><li>The wrong product</li><li>A product with a quality issue</li></ul><p>please notify us at\u00a0<a href=\"mailto:------------@altarasa.com\"><span style=\"text-decoration:underline\">------------@altarasa.com</span></a>\u00a0within 48 hours of delivery.</p><p>Your email should clearly include:</p><ul><li>Order number/ invoice</li><li>Description of the issue</li><li>Photographs showing the defect or mismatch</li></ul>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -274,7 +274,7 @@
                 "text_jLWit4": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>We make every effort to ensure that product colours displayed on AltaRasa are accurate. However, actual colours may vary depending on your device’s display settings. We do not guarantee a perfect colour match.</p>",
+                    "text": "<p>We make every effort to ensure that product colours displayed on AltaRasa are accurate. However, actual colours may vary depending on your device\u2019s display settings. We do not guarantee a perfect colour match.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -315,7 +315,7 @@
                 "text_8VVwCU": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>Depending on the nature of the return, the following options are available:</p><p><strong>A. Store Credit</strong></p><p>Once the returned product passes our quality check, the approved refund amount will be added to your AltaRasa account as store credit. Store credit can be used on future purchases at checkout.</p><p><strong>B. Bank Refund</strong></p><p>For eligible orders:</p><ul><li>Refunds will be processed to the same payment method used during purchase.</li><li>Cancellations requested within 24 hours of placing the order qualify for a full refund.</li></ul><p>Refund processing may take 7–10 business days after the returned product is received and approved.</p>",
+                    "text": "<p>Depending on the nature of the return, the following options are available:</p><p><strong>A. Store Credit</strong></p><p>Once the returned product passes our quality check, the approved refund amount will be added to your AltaRasa account as store credit. Store credit can be used on future purchases at checkout.</p><p><strong>B. Bank Refund</strong></p><p>For eligible orders:</p><ul><li>Refunds will be processed to the same payment method used during purchase.</li><li>Cancellations requested within 24 hours of placing the order qualify for a full refund.</li></ul><p>Refund processing may take 7\u201310 business days after the returned product is received and approved.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -397,7 +397,7 @@
                 "text_LjxCTK": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>For hygiene, customization, and policy reasons, the following items cannot be returned or exchanged:</p><ul><li>All accessories: jewellery, clutches, wallets, bags, scarves, belts, footwear, etc.</li><li>Custom-made or made-to-order products</li><li>Orders purchased using store credit</li><li>Unstitched pieces such as dupattas or sarees with unstitched blouse fabric</li><li>Items altered to your personal measurements</li><li>Products bought during sales, promotions, or special offers</li><li>Products marked as “non-returnable/non-exchangeable” at the time of purchase</li></ul>",
+                    "text": "<p>For hygiene, customization, and policy reasons, the following items cannot be returned or exchanged:</p><ul><li>All accessories: jewellery, clutches, wallets, bags, scarves, belts, footwear, etc.</li><li>Custom-made or made-to-order products</li><li>Orders purchased using store credit</li><li>Unstitched pieces such as dupattas or sarees with unstitched blouse fabric</li><li>Items altered to your personal measurements</li><li>Products bought during sales, promotions, or special offers</li><li>Products marked as \u201cnon-returnable/non-exchangeable\u201d at the time of purchase</li></ul>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -438,7 +438,7 @@
                 "text_UUMmBi": {
                   "type": "text",
                   "settings": {
-                    "text": "<ul><li>AltaRasa Gift Cards are valid for a period of 6 months once issued.</li><li>An account on the AltaRasa website is required to redeem a Gift Card.</li><li>Gift Cards can be used across all eligible AltaRasa platforms.</li><li>Gift Cards cannot be refunded, exchanged for cash, transferred, or used to buy another Gift Card.</li><li>If your order exceeds the Gift Card value, the balance must be paid at checkout (COD not permitted).</li><li>If you return an item purchased via Gift Card, the refund will follow AltaRasa’s return policy and be reissued as store credit.</li><li>AltaRasa is not responsible for lost, stolen, or unauthorized Gift Card use.</li><li>AltaRasa may cancel or reject a Gift Card if misuse or invalidity is suspected.</li></ul>",
+                    "text": "<ul><li>AltaRasa Gift Cards are valid for a period of 6 months once issued.</li><li>An account on the AltaRasa website is required to redeem a Gift Card.</li><li>Gift Cards can be used across all eligible AltaRasa platforms.</li><li>Gift Cards cannot be refunded, exchanged for cash, transferred, or used to buy another Gift Card.</li><li>If your order exceeds the Gift Card value, the balance must be paid at checkout (COD not permitted).</li><li>If you return an item purchased via Gift Card, the refund will follow AltaRasa\u2019s return policy and be reissued as store credit.</li><li>AltaRasa is not responsible for lost, stolen, or unauthorized Gift Card use.</li><li>AltaRasa may cancel or reject a Gift Card if misuse or invalidity is suspected.</li></ul>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -479,7 +479,7 @@
                 "text_nVGJjG": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>For any questions or support, you can reach us at:</p><p> +91-XXXXXXXXXX</p><p> <a href=\"mailto:---------------@altarasa.com\"><span style=\"text-decoration:underline\">---------------@altarasa.com</span></a></p><p> Weekdays: 10 AM – 6 PM (IST)</p><p> Weekends: 10 AM – 6 PM (IST), excluding Sunday’s and Public Holidays</p><p>AltaRasa Address: </p><p>3RD Floor, B-25 Defence Colony, </p><p>Bishmah Pitamah Marg,</p><p>New Delhi - 110024</p>",
+                    "text": "<p>For any questions or support, you can reach us at:</p><p>\u00a0+91-XXXXXXXXXX</p><p>\u00a0<a href=\"mailto:---------------@altarasa.com\"><span style=\"text-decoration:underline\">---------------@altarasa.com</span></a></p><p>\u00a0Weekdays: 10 AM \u2013 6 PM (IST)</p><p>\u00a0Weekends: 10 AM \u2013 6 PM (IST), excluding Sunday\u2019s and Public Holidays</p><p>AltaRasa Address:\u00a0</p><p>3RD Floor, B-25 Defence Colony,\u00a0</p><p>Bishmah Pitamah Marg,</p><p>New Delhi - 110024</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -610,12 +610,27 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "whatsapp_fab_global": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button (Bottom Right)",
+      "settings": {
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi there! I would like to chat.",
+        "label_text": "Chat on WhatsApp",
+        "offset_x": 0,
+        "offset_y": -86,
+        "show_on_mobile": true,
+        "z_index": 9999
+      }
     }
   },
   "order": [
     "section_z69U7p",
     "main",
     "section_EfGNGi",
-    "177095202455c59acc"
+    "177095202455c59acc",
+    "whatsapp_fab_global"
   ]
 }

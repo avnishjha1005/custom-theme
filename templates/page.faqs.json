@@ -179,7 +179,7 @@
                 "text_TNAetT": {
                   "type": "text",
                   "settings": {
-                    "text": "<p><strong>Accepted payment methods include:</strong></p><p>\t•\tNet banking</p><p>\t•\tAll major credit and debit cards</p><p>\t•\tUPI payments</p><p>\t•\tPayPal (for international orders)</p><p>\t•\tSecure payment gateways for both domestic and international checkouts</p>",
+                    "text": "<p><strong>Accepted payment methods include:</strong></p><p>\t\u2022\tNet banking</p><p>\t\u2022\tAll major credit and debit cards</p><p>\t\u2022\tUPI payments</p><p>\t\u2022\tPayPal (for international orders)</p><p>\t\u2022\tSecure payment gateways for both domestic and international checkouts</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -219,7 +219,7 @@
                 "text_Din7MH": {
                   "type": "text",
                   "settings": {
-                    "text": "<p><strong>Order tracking:</strong></p><p>\t•\tOnce an order is dispatched, AltaRasa shares the tracking number and tracking link via email, enabling customers to track their shipment through the assigned courier partner.</p><p><strong>Shipping details:</strong></p><p>\t•\tOrders are shipped via trusted courier partners such as FedEx, UPS, Delhivery, etc.</p><p>\t•\tDelivery timelines are calculated from the date of order confirmation.</p><p>\t•\tIn the event of delays extending beyond one week of the estimated delivery timeline, AltaRasa will proactively reach out to confirm whether the customer wishes to proceed with the order.</p><p>\t•\tFor international orders, customs duties and local taxes are borne by the customer and are payable at the time of delivery, subject to destination country regulations.</p>",
+                    "text": "<p><strong>Order tracking:</strong></p><p>\t\u2022\tOnce an order is dispatched, AltaRasa shares the tracking number and tracking link via email, enabling customers to track their shipment through the assigned courier partner.</p><p><strong>Shipping details:</strong></p><p>\t\u2022\tOrders are shipped via trusted courier partners such as FedEx, UPS, Delhivery, etc.</p><p>\t\u2022\tDelivery timelines are calculated from the date of order confirmation.</p><p>\t\u2022\tIn the event of delays extending beyond one week of the estimated delivery timeline, AltaRasa will proactively reach out to confirm whether the customer wishes to proceed with the order.</p><p>\t\u2022\tFor international orders, customs duties and local taxes are borne by the customer and are payable at the time of delivery, subject to destination country regulations.</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -259,7 +259,7 @@
                 "text_YTj4p4": {
                   "type": "text",
                   "settings": {
-                    "text": "<p>AltaRasa offers a guest order tracking facility, allowing customers to check order status using:</p><p>\t•\tOrder ID</p><p>\t•\tBilling last name</p><p>\t•\tRegistered email address</p><p>\t•\tBilling ZIP/postal code</p>",
+                    "text": "<p>AltaRasa offers a guest order tracking facility, allowing customers to check order status using:</p><p>\t\u2022\tOrder ID</p><p>\t\u2022\tBilling last name</p><p>\t\u2022\tRegistered email address</p><p>\t\u2022\tBilling ZIP/postal code</p>",
                     "width": "100%",
                     "max_width": "normal",
                     "alignment": "left",
@@ -553,12 +553,27 @@
         "padding-block-start": 0,
         "padding-block-end": 0
       }
+    },
+    "whatsapp_fab_global": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button (Bottom Right)",
+      "settings": {
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi there! I would like to chat.",
+        "label_text": "Chat on WhatsApp",
+        "offset_x": 0,
+        "offset_y": -86,
+        "show_on_mobile": true,
+        "z_index": 9999
+      }
     }
   },
   "order": [
     "section_GkVYKM",
     "main",
     "section_EfGNGi",
-    "177095202455c59acc"
+    "177095202455c59acc",
+    "whatsapp_fab_global"
   ]
 }

@@ -26,9 +26,24 @@
         "show_home_button": true,
         "home_button_text": "HOME"
       }
+    },
+    "whatsapp_fab_global": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button (Bottom Right)",
+      "settings": {
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi there! I would like to chat.",
+        "label_text": "Chat on WhatsApp",
+        "offset_x": 0,
+        "offset_y": -86,
+        "show_on_mobile": true,
+        "z_index": 9999
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "whatsapp_fab_global"
   ]
 }

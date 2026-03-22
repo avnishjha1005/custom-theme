@@ -739,7 +739,7 @@
       "type": "sticky-info-bar",
       "settings": {
         "store_name": "The AR Studio",
-        "address_line_1": "B-25 Defence Colony, 3rd Floor Bhismaha Pitamah Marg,",
+        "address_line_1": "B-25 Defence Colony,\u20283rd Floor Bhismaha Pitamah Marg,",
         "address_line_2": "New Delhi 110024",
         "phone": "+91 9217364661",
         "email": "customercare@thealtarasa.com",
@@ -754,6 +754,20 @@
         "button_text": "#ffffff",
         "footer_selector": ".shopify-section-group-footer-group"
       }
+    },
+    "whatsapp_fab_global": {
+      "type": "whatsapp_fab",
+      "name": "WhatsApp Floating Button (Bottom Right)",
+      "settings": {
+        "enabled": true,
+        "phone": "919972320665",
+        "message": "Hi there! I would like to chat.",
+        "label_text": "Chat on WhatsApp",
+        "offset_x": 0,
+        "offset_y": -86,
+        "show_on_mobile": true,
+        "z_index": 9999
+      }
     }
   },
   "order": [
@@ -761,6 +775,7 @@
     "section_VpcqLa",
     "1769565018f1634e2e",
     "parallax_section",
-    "sticky_info_bar"
+    "sticky_info_bar",
+    "whatsapp_fab_global"
   ]
 }
