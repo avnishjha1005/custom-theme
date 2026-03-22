@@ -78,7 +78,8 @@
       {%- liquid
         assign whatsapp_message = settings.whatsapp_price_request_message | default: "Hi! I'd like to request a price for {{product_name}}"
         assign whatsapp_message = whatsapp_message | replace: '{{product_name}}', product.title
-        assign whatsapp_url = 'https://wa.me/' | append: settings.whatsapp_phone | append: '?text=' | append: whatsapp_message | url_encode
+        assign encoded_message = whatsapp_message | url_encode
+        assign whatsapp_url = 'https://wa.me/' | append: settings.whatsapp_phone | append: '?text=' | append: encoded_message
       -%}
       <a
         href="{{ whatsapp_url }}"
