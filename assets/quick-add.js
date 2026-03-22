@@ -161,15 +161,17 @@ export class QuickAddComponent extends Component {
       const productFormComponent = productGrid.querySelector('product-form-component');
       const variantPicker = productGrid.querySelector('variant-picker');
       const productPrice = productGrid.querySelector('product-price');
+      const productVendor = productGrid.querySelector('.product-vendor-block');
       const productTitle = document.createElement('a');
       productTitle.textContent = this.dataset.productTitle || '';
-
-      // Make product title as a link to the product page
       productTitle.href = this.productPageUrl;
 
       const productHeader = document.createElement('div');
       productHeader.classList.add('product-header');
 
+      if (productVendor) {
+        productHeader.appendChild(productVendor);
+      }
       productHeader.appendChild(productTitle);
       if (productPrice) {
         productHeader.appendChild(productPrice);
@@ -184,6 +186,34 @@ export class QuickAddComponent extends Component {
       }
 
       productDetails?.remove();
+    } else {
+      // Desktop: restructure product-details into info group + variant picker row
+      const groupContent = productGrid.querySelector('.product-details > .group-block > .group-block-content');
+      if (groupContent) {
+        const productVendor = groupContent.querySelector('.product-vendor-block');
+        const viewProductTitle = groupContent.querySelector('.view-product-title');
+        const productPrice = groupContent.querySelector('product-price');
+        const variantPicker = groupContent.querySelector('variant-picker');
+        const buyButtons = groupContent.querySelector('.buy-buttons-block');
+
+        // Create info group: vendor, title, price
+        const infoGroup = document.createElement('div');
+        infoGroup.classList.add('quick-add-info-group');
+        if (productVendor) infoGroup.appendChild(productVendor);
+        if (viewProductTitle) infoGroup.appendChild(viewProductTitle);
+        if (productPrice) infoGroup.appendChild(productPrice);
+
+        // Create the row: info group + variant picker
+        const infoRow = document.createElement('div');
+        infoRow.classList.add('quick-add-info-row');
+        infoRow.appendChild(infoGroup);
+        if (variantPicker) infoRow.appendChild(variantPicker);
+
+        // Clear and rebuild group content
+        groupContent.innerHTML = '';
+        groupContent.appendChild(infoRow);
+        if (buyButtons) groupContent.appendChild(buyButtons);
+      }
     }
 
     morph(modalContent, productGrid);

@@ -141,6 +141,15 @@
     }
   }
 
+  .quick-add-modal__content .product-header .product-vendor-block {
+    @media screen and (max-width: 749px) {
+      opacity: 0.7;
+      font-size: var(--font-size--sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+  }
+
   .quick-add-modal__content .product-header a:not(product-price *) {
     @media screen and (max-width: 749px) {
       font-size: var(--font-size--md);
@@ -263,6 +272,12 @@
       product-price *,
       product-inventory,
       product-inventory *,
+      .product-vendor-block,
+      .product-vendor-block *,
+      .quick-add-info-row,
+      .quick-add-info-row *,
+      .quick-add-info-group,
+      .quick-add-info-group *,
       .view-more-details__wrapper,
       .view-more-details__wrapper *
     ) {
@@ -285,6 +300,8 @@
           product-price *,
           product-inventory,
           product-inventory *,
+          .product-vendor-block,
+          .product-vendor-block *,
           .view-more-details__wrapper,
           .view-more-details__wrapper *
         ),
@@ -319,6 +336,47 @@
   .quick-add-modal__content .product-details > .group-block {
     padding: var(--padding-2xl);
     max-height: 100%;
+  }
+
+  /* Quick-add modal layout: info row (vendor/title/price + variant picker) stacked above buy buttons */
+  @media screen and (min-width: 750px) {
+    .quick-add-modal__content .product-details > .group-block > .group-block-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-lg);
+    }
+
+    .quick-add-modal__content .quick-add-info-row {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--gap-2xl);
+    }
+
+    .quick-add-modal__content .quick-add-info-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap-xs);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .quick-add-modal__content .quick-add-info-group .product-vendor-block {
+      opacity: 0.6;
+      font-size: var(--font-size--sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .quick-add-modal__content .quick-add-info-group .view-product-title a {
+      font-size: var(--font-size--lg);
+      font-weight: 500;
+    }
+
+    .quick-add-modal__content .quick-add-info-row variant-picker {
+      flex-shrink: 0;
+      max-width: 30%;
+    }
   }
 
   .quick-add-modal__content slideshow-slide:not([aria-hidden='false']) {
