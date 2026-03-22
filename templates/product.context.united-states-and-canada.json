@@ -49,5 +49,9 @@
         "z_index": 9999
       }
     }
-  }
+  },
+  "order": [
+    "main",
+    "whatsapp_fab_global"
+  ]
 }
