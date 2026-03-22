@@ -276,7 +276,7 @@
                     "vertical_on_mobile": false,
                     "horizontal_alignment": "space-between",
                     "vertical_alignment": "flex-end",
-                    "align_baseline": false,
+                    "align_baseline": true,
                     "horizontal_alignment_flex_direction_column": "flex-start",
                     "vertical_alignment_flex_direction_column": "center",
                     "gap": 12,
