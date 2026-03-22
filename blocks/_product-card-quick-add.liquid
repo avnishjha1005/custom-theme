@@ -257,6 +257,8 @@
   }
 
   .quick-add.quick-add--inline .quick-add__button .add-to-cart-text {
+    display: flex;
+    align-items: flex-end;
     margin-inline: 0 !important;
     padding-inline: 0 !important;
     padding-bottom: 0 !important;
@@ -273,7 +275,10 @@
   .quick-add__chat-button {
     display: flex;
     background: none;
-    place-items: center;
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+    color: currentColor;
     position: relative;
     pointer-events: all;
     min-width: 4.4rem;
