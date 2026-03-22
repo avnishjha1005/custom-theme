@@ -18,14 +18,14 @@
         ".collage-heading {font-size: 30px;}",
         ".collage-subheading {color: black;}",
         ".collage-link {color: black;}",
-        ".expert-collage__image{object-position: 50% 25%;}"
+        ".expert-collage__image {object-position: 50% 25%;}"
       ],
       "name": "Expert Collage",
       "settings": {
         "heading": "Meet our experts for a bespoke look.",
         "subheading": "<p>Our styling team works closely with you to curate looks that feel personal, considered, and aligned with your life. From occasion dressing to wardrobe building, each appointment is guided by intention, not excess.</p>",
         "link_text": "BOOK AN APPOINTMENT",
-        "link_url": "",
+        "link_url": "shopify://pages/book-an-appointment",
         "image": "shopify://shop_images/Copy_of_Altrarasa01791_BW.jpg",
         "bg_color": "#f3eee6",
         "text_color": "#000000"

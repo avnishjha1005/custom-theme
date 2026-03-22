@@ -985,7 +985,7 @@
         "heading": "An Elevated Essence of South Asia",
         "subheading": "Be the first to encounter new voices, rare pieces, and cultural moments.",
         "button_text": "SUBSCRIBE",
-        "button_link": ""
+        "button_link": "#contact_form"
       }
     },
     "promo_popup_split_qcgtqG": {
@@ -996,7 +996,7 @@
         "delay_seconds": 3,
         "scroll_percent": 50,
         "show_homepage_only": true,
-        "frequency_days": 0,
+        "frequency_days": 2,
         "popup_image": "shopify://shop_images/e110dcd99c619539fcfb81c2cd9b456494ad7f5d.jpg",
         "image_title": "A new generation of voices from South Asia",
         "image_text": "Explore our exclusive new arrivals",
