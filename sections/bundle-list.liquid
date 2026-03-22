@@ -69,7 +69,7 @@
     width: 28px;
     height: 28px;
     background: transparent;
-    border: 2px solid var(--hs-border, #fff);
+    border: none;
     border-radius: 50%;
     position: relative;
     font-size: 0;
@@ -97,10 +97,16 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 12px;
-    height: 12px;
+    width: 8px;
+    height: 8px;
     background: var(--hs-bg, #fff);
     border-radius: 50%;
+    animation: hotspot-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes hotspot-pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    50% { transform: translate(-50%, -50%) scale(1.6); opacity: 0.6; }
   }
 
   .hotspot-text {
@@ -200,7 +206,7 @@
     width: 18px;
     height: 18px;
     background: transparent;
-    border: 1.5px solid #fff;
+    border: none;
     border-radius: 50%;
     position: relative;
     font-size: 0;
@@ -211,13 +217,13 @@
 
   /* Larger hit area on mobile */
   .hotspot-dot::before {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
   }
 
   .hotspot-dot::after {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   }
 {%- endstyle -%}
@@ -280,7 +286,11 @@
                       {% endif %}
                       <div class="hotspot-text {{ hs_text_pos }}">
                         <span class="hs-title">{{ hs_product.title }}</span>
-                        <span class="hs-price">{{ hs_product.price | money }}</span>
+                        {% if hs_product.price == 0 %}
+                          <span class="hs-price">Price on request</span>
+                        {% else %}
+                          <span class="hs-price">{{ hs_product.price | money }}</span>
+                        {% endif %}
                       </div>
                     </div>
                   {% endif %}
