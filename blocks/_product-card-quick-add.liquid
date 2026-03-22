@@ -217,19 +217,21 @@
     width: auto;
   }
 
-  .quick-add--inline .quick-add__button {
-    display: grid;
+  .quick-add.quick-add--inline .quick-add__button {
+    display: flex;
     position: relative;
     pointer-events: all;
-    color: var(--color-foreground) !important;
+    color: currentColor;
     background: none;
-    place-items: center;
-    min-width: 4.4rem;
-    min-height: 4.4rem;
-    padding: 1rem;
-    padding-right: 0px;
-    padding-bottom: 0px;
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    min-width: auto;
+    min-height: auto;
     align-items: flex-end;
+    justify-content: flex-end;
   }
 
   .quick-add--inline .quick-add__button:is(:hover, :focus) {
@@ -254,10 +256,12 @@
     transform: translateX(0);
   }
 
-  .quick-add--inline .quick-add__button .add-to-cart-text {
+  .quick-add.quick-add--inline .quick-add__button .add-to-cart-text {
     margin-inline: 0 !important;
     padding-inline: 0 !important;
+    padding-bottom: 0 !important;
     gap: 0 !important;
+    height: 30px;
   }
 
   .quick-add--inline .quick-add__button:is(:focus, :hover) .add-to-cart-text {
