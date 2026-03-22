@@ -86,7 +86,6 @@ product-recommendations {
   position: relative;
   transition: transform var(--hover-transition-duration) var(--hover-transition-timing),
     box-shadow var(--hover-transition-duration) var(--hover-transition-timing);
-  will-change: transform, box-shadow;
   z-index: var(--layer-flat);
 }
 

@@ -6,17 +6,7 @@
     href="{{ settings.type_body_font | font_url }}"
     type="font/woff2"
     crossorigin
-    fetchpriority="low"
-  >
-{%- endunless -%}
-{%- unless settings.type_subheading_font.system? -%}
-  <link
-    rel="preload"
-    as="font"
-    href="{{ settings.type_subheading_font | font_url }}"
-    type="font/woff2"
-    crossorigin
-    fetchpriority="low"
+    fetchpriority="high"
   >
 {%- endunless -%}
 {%- unless settings.type_heading_font.system? -%}
@@ -24,6 +14,15 @@
     rel="preload"
     as="font"
     href="{{ settings.type_heading_font | font_url }}"
+    type="font/woff2"
+    crossorigin
+  >
+{%- endunless -%}
+{%- unless settings.type_subheading_font.system? -%}
+  <link
+    rel="preload"
+    as="font"
+    href="{{ settings.type_subheading_font | font_url }}"
     type="font/woff2"
     crossorigin
     fetchpriority="low"

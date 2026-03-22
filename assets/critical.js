@@ -329,10 +329,6 @@ export class OverflowList extends DeclarativeShadowElement {
 
     const getVisibleElements = () => elements.filter((el) => el.getBoundingClientRect().top <= rootRect.top);
     let visibleElements = getVisibleElements();
-    console.log(visibleElements);
-    console.log(visibleElements.length);
-    console.log(elements.length);
-    console.log(lastVisibleElement);
     // If not all items fit or we have a lastVisibleElement, let's calculate with "More" button
     if (visibleElements.length !== (elements.length - 1) || lastVisibleElement) {
       // Putting the "More" item (and lastVisibleElement, if provided) at the start of the list lets us see which items will fit on the same row

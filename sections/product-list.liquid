@@ -78,8 +78,7 @@
     {%- content_for 'blocks' -%}
   </div>
 </div>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-<script async src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+{% comment %} Swiper CSS & JS loaded globally in theme.liquid {% endcomment %}
 
 <script>
   document.addEventListener('shopify:section:load', initSwipers);

@@ -31,7 +31,6 @@
   <script
     src="{{ 'view-transitions.js' | asset_url }}"
     async
-    blocking="render"
   ></script>
   {% # theme-check-enable %}
 {% endif %}
@@ -44,12 +43,10 @@
 <link
   rel="modulepreload"
   href="{{ 'utilities.js' | asset_url }}"
-  fetchpriority="low"
 >
 <link
   rel="modulepreload"
   href="{{ 'component.js' | asset_url }}"
-  fetchpriority="low"
 >
 <link
   rel="modulepreload"

@@ -12,19 +12,18 @@
       >
     {%- endif -%}
 
-    {% comment %} This a way to wait for main content to load when navigating to a new page so that the view transitions can work consistently {% endcomment %}
-    <link
-      rel="expect"
-      href="#MainContent"
-      blocking="render"
-      id="view-transition-render-blocker"
-    >
-    <link rel="stylesheet" href="https://unpkg.com/swiper@10/swiper-bundle.min.css">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdn.shopify.com">
 
-    <!-- Swiper JS UMD bundle (includes core + modules) -->
+    {% comment %} Swiper CSS - loaded non-render-blocking {% endcomment %}
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
+
     <!-- Shiprocket Widget Style Injector -->
     <script src="{{ 'shiprocket-widget-styles.js' | asset_url }}" defer></script>
-    <script src="https://unpkg.com/swiper@10/swiper-bundle.min.js" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" async></script>
     {%- render 'meta-tags' -%}
     {%- render 'stylesheets' -%}
     {%- render 'fonts' -%}
@@ -49,7 +48,6 @@
       src="{{ 'critical.js' | asset_url }}"
       type="module"
       async
-      blocking="render"
     ></script>
 
     <main
