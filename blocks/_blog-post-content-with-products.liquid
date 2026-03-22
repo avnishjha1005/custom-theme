@@ -111,6 +111,14 @@
   .blog-featured-products .quick-add__button {
     display: grid;
   }
+    /* Override quick-add color scheme so the plus icon inherits the banner's color scheme */
+  .blog-featured-products .quick-add--inline .quick-add__button {
+    color: rgba(var(--color-foreground), 1) !important;
+  }
+
+  .blog-featured-products .quick-add--inline {
+    color: inherit;
+  }
 
   .blog-featured-products__inner {
     margin: 0 auto;
