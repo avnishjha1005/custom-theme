@@ -1,4 +1,7 @@
 
+{% if template.suffix == 'book-an-appointment' %}
+  <script src="{{ 'book-appointment-forms.js' | asset_url }}" defer></script>
+{% endif %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 <div class="section page-width-content color-{{ section.settings.color_scheme }}">

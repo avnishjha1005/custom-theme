@@ -1,0 +1,87 @@
+/* Override Shopify Forms app styles to match contact form */
+
+[class*="_formFieldset"] {
+  border: none !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 24px !important;
+  max-width: 500px !important;
+  margin: 0 auto !important;
+}
+
+[class*="_formInputField"]:not(label),
+[class*="_textArea"] {
+  width: 100% !important;
+  background: transparent !important;
+  padding: 8px 0 !important;
+  border: none !important;
+  border-bottom: 1px solid #ccc !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-radius: 0 !important;
+  transition: border-color 0.2s ease !important;
+  color: inherit !important;
+  outline: none !important;
+  box-shadow: none !important;
+  -webkit-font-smoothing: antialiased;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+[class*="_formInputField"]:not(label):focus,
+[class*="_textArea"]:focus {
+  border: none !important;
+  border-bottom: 1px solid #000 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+[class*="_formInputField"]:not(label)::placeholder,
+[class*="_textArea"]::placeholder {
+  color: inherit !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+[class*="_textArea"] {
+  resize: vertical !important;
+  min-height: 60px !important;
+  padding-bottom: 24px !important;
+}
+
+[class*="_formInputFieldLabel"] {
+  font-size: 12px !important;
+  color: #999 !important;
+  font-weight: 400 !important;
+}
+
+[class*="_formFieldContainer"] {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+[class*="_formSubmitButton"] {
+  background: #202020 !important;
+  color: #fff !important;
+  border: none !important;
+  padding: 12px 24px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  min-width: max-content !important;
+  border-radius: 0 !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+[class*="_birthdayText"] {
+  font-size: 12px !important;
+  color: #999 !important;
+  font-weight: 400 !important;
+}
+
+[class*="_dateFieldContainer"] {
+  display: flex !important;
+  gap: 12px !important;
+}
