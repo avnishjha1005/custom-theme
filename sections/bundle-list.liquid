@@ -78,19 +78,7 @@
     z-index: 11;
   }
 
-  /* Larger invisible hit area for easier clicking */
-  .hotspot-dot::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
+  /* Static center dot */
   .hotspot-dot::after {
     content: '';
     position: absolute;
@@ -101,12 +89,25 @@
     height: 8px;
     background: var(--hs-bg, #fff);
     border-radius: 50%;
-    animation: hotspot-pulse 2s ease-in-out infinite;
   }
 
-  @keyframes hotspot-pulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    50% { transform: translate(-50%, -50%) scale(1.6); opacity: 0.6; }
+  /* Radar pulse ring */
+  .hotspot-dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--hs-bg, #fff);
+    border-radius: 50%;
+    animation: hotspot-radar 2s ease-out infinite;
+  }
+
+  @keyframes hotspot-radar {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(3.5); opacity: 0; }
   }
 
   .hotspot-text {
@@ -215,13 +216,13 @@
     z-index: 11;
   }
 
-  /* Larger hit area on mobile */
-  .hotspot-dot::before {
-    width: 44px;
-    height: 44px;
+  /* Smaller dots on mobile */
+  .hotspot-dot::after {
+    width: 6px;
+    height: 6px;
   }
 
-  .hotspot-dot::after {
+  .hotspot-dot::before {
     width: 6px;
     height: 6px;
   }
