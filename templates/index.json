@@ -992,7 +992,7 @@
     "promo_popup_split_qcgtqG": {
       "type": "promo-popup-split",
       "custom_css": [
-        ".promo-popup-split__subheading{}"
+        ".promo-popup-split__subheading {}"
       ],
       "name": "Popup - Image Split",
       "settings": {
@@ -1003,7 +1003,7 @@
         "frequency_days": 0,
         "popup_image": "shopify://shop_images/e110dcd99c619539fcfb81c2cd9b456494ad7f5d.jpg",
         "image_title": "A new generation of voices from South Asia",
-        "image_text": "Explore our exclusive new arrivals",
+        "image_text": "THIS JUST IN",
         "eyebrow_text": "",
         "heading": "",
         "subheading": "Introducing new arrivals from design voices that are globally fluent, culturally nuanced, with a distinct point of view.",
