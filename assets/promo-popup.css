@@ -94,6 +94,76 @@
   margin: 0 0 28px;
 }
 
+/* Newsletter Form - Plain Text Popup */
+.promo-popup-text__newsletter {
+  margin-top: 0;
+}
+
+.promo-popup-text__form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.promo-popup-text__input {
+  width: 100%;
+  padding: 12px 0;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  background: transparent;
+  color: #000;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.promo-popup-text__input::placeholder {
+  color: #999;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.promo-popup-text__input:focus {
+  border-bottom-color: #000;
+}
+
+.promo-popup-text__submit {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  padding: 14px 32px;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 8px;
+}
+
+.promo-popup-text__submit:hover {
+  background: #333;
+}
+
+.promo-popup-text__success {
+  font-size: 12px;
+  color: #2d7d2d;
+  margin-top: 12px;
+  letter-spacing: 0.5px;
+}
+
+.promo-popup-text__error {
+  font-size: 12px;
+  color: #c23030;
+  margin-top: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* CTA Button (used by split popup) */
 .promo-popup__cta {
   display: inline-block;
   background: #000;
@@ -243,6 +313,14 @@
     font-size: 14px;
     line-height: 1.5;
     margin-bottom: 32px;
+  }
+
+  .promo-popup-text__submit {
+    width: 100%;
+    text-align: center;
+    padding: 16px 32px;
+    font-size: 12px;
+    letter-spacing: 3px;
   }
 
   .promo-popup__cta {

@@ -23,11 +23,31 @@
       <p class="promo-popup-text__subheading">{{ section.settings.subheading }}</p>
     {%- endif -%}
 
-    {%- if section.settings.button_text != blank -%}
-      <a href="{{ section.settings.button_link }}" class="promo-popup__cta" data-close-popup>
-        {{ section.settings.button_text }}
-      </a>
-    {%- endif -%}
+    <div class="promo-popup-text__newsletter">
+      {% form 'customer', class: 'promo-popup-text__form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter,popup">
+        <div class="promo-popup-text__form-row">
+          <input
+            type="email"
+            name="contact[email]"
+            class="promo-popup-text__input"
+            placeholder="{{ section.settings.email_placeholder }}"
+            required
+            autocomplete="email"
+            aria-label="{{ section.settings.email_placeholder }}"
+          >
+          <button type="submit" class="promo-popup-text__submit">
+            {{ section.settings.button_text }}
+          </button>
+        </div>
+        {%- if form.posted_successfully? -%}
+          <p class="promo-popup-text__success">{{ section.settings.success_message }}</p>
+        {%- endif -%}
+        {%- if form.errors -%}
+          <p class="promo-popup-text__error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+        {%- endif -%}
+      {% endform %}
+    </div>
   </div>
   </div>
 </div>
@@ -68,8 +88,8 @@
       document.body.style.overflow = 'hidden';
       localStorage.setItem(storageKey, Date.now().toString());
 
-      const firstFocusable = popup.querySelector('button, a');
-      if (firstFocusable) firstFocusable.focus();
+      const emailInput = popup.querySelector('input[type="email"]');
+      if (emailInput) emailInput.focus();
     }
 
     function closePopup() {
@@ -218,15 +238,26 @@
       "default": "Sign up for exclusive access to new arrivals, sales, and special offers."
     },
     {
-      "type": "text",
-      "id": "button_text",
-      "label": "Button text",
-      "default": "SEE MORE"
+      "type": "header",
+      "content": "Newsletter Form"
     },
     {
-      "type": "url",
-      "id": "button_link",
-      "label": "Button link"
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Submit button text",
+      "default": "SUBSCRIBE"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you for subscribing!"
     }
   ],
   "presets": [
