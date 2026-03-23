@@ -991,6 +991,9 @@
     },
     "promo_popup_split_qcgtqG": {
       "type": "promo-popup-split",
+      "custom_css": [
+        ".promo-popup-split__subheading{}"
+      ],
       "name": "Popup - Image Split",
       "settings": {
         "trigger_type": "scroll",
