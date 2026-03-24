@@ -2918,7 +2918,7 @@ fly-to-cart {
 
 @keyframes slideInTopViewTransition {
   from {
-    transform: translateY(100px);
+    transform: translateY(30px);
   }
 }
 

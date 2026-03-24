@@ -16,10 +16,13 @@
     const { viewTransition } = event;
 
     // Cancel view transition on user interaction to improve INP (Interaction to Next Paint)
-    ['pointerdown', 'keydown'].forEach(eventName => {
-      document.addEventListener(eventName, () => {
-        viewTransition.skipTransition();
-      }, { once: true });
+    // Delay listener setup so the click that triggered navigation doesn't immediately cancel the transition
+    requestAnimationFrame(() => {
+      ['pointerdown', 'keydown'].forEach(eventName => {
+        document.addEventListener(eventName, () => {
+          viewTransition.skipTransition();
+        }, { once: true });
+      });
     });
 
     // Clean in case you landed on the pdp first. We want to remove the default transition type on the PDP media gallery so there is no duplicate transition name
