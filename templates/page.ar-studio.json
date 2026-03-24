@@ -152,6 +152,7 @@
             "slide_1": {
               "type": "parallax-slide",
               "settings": {
+                "scroll_buffer": 100,
                 "min_height": 100,
                 "min_height_mobile": 60,
                 "padding": 65,
@@ -168,7 +169,7 @@
                   "settings": {
                     "content_direction": "row",
                     "vertical_on_mobile": true,
-                    "horizontal_alignment": "flex-start",
+                    "horizontal_alignment": "space-between",
                     "vertical_alignment": "center",
                     "align_baseline": false,
                     "horizontal_alignment_flex_direction_column": "flex-start",
@@ -211,7 +212,7 @@
                         "horizontal_alignment": "flex-start",
                         "vertical_alignment": "center",
                         "align_baseline": false,
-                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "horizontal_alignment_flex_direction_column": "center",
                         "vertical_alignment_flex_direction_column": "center",
                         "gap": 12,
                         "width": "fill",
@@ -272,7 +273,7 @@
                             "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
                             "width": "100%",
                             "max_width": "normal",
-                            "alignment": "left",
+                            "alignment": "center",
                             "type_preset": "rte",
                             "font": "var(--font-body--family)",
                             "font_size": "1rem",
@@ -306,7 +307,7 @@
                         "horizontal_alignment": "flex-start",
                         "vertical_alignment": "center",
                         "align_baseline": false,
-                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "horizontal_alignment_flex_direction_column": "center",
                         "vertical_alignment_flex_direction_column": "center",
                         "gap": 12,
                         "width": "fill",
@@ -367,7 +368,7 @@
                             "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
                             "width": "100%",
                             "max_width": "normal",
-                            "alignment": "left",
+                            "alignment": "center",
                             "type_preset": "rte",
                             "font": "var(--font-body--family)",
                             "font_size": "1rem",
@@ -406,6 +407,7 @@
             "slide_2": {
               "type": "parallax-slide",
               "settings": {
+                "scroll_buffer": 100,
                 "min_height": 100,
                 "min_height_mobile": 60,
                 "padding": 0,
@@ -437,6 +439,7 @@
             "slide_3": {
               "type": "parallax-slide",
               "settings": {
+                "scroll_buffer": 100,
                 "min_height": 100,
                 "min_height_mobile": 60,
                 "padding": 65,
@@ -664,6 +667,7 @@
             "slide_4": {
               "type": "parallax-slide",
               "settings": {
+                "scroll_buffer": 100,
                 "min_height": 100,
                 "min_height_mobile": 60,
                 "padding": 0,
@@ -739,7 +743,7 @@
       "type": "sticky-info-bar",
       "settings": {
         "store_name": "The AR Studio",
-        "address_line_1": "B-25 Defence Colony,\u20283rd Floor Bhismaha Pitamah Marg,",
+        "address_line_1": "B-25 Defence Colony, 3rd Floor Bhismaha Pitamah Marg,",
         "address_line_2": "New Delhi 110024",
         "phone": "+91 9217364661",
         "email": "customercare@thealtarasa.com",
