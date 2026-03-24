@@ -28,9 +28,6 @@
   assign matching_count = 0
   if current_blog != blank and current_blog.articles_count > 0
     for article in current_blog.articles
-      if matching_count >= max_items
-        break
-      endif
       # Skip current article on article pages
       if current_article_handle != nil and article.handle == current_article_handle
         continue
@@ -74,98 +71,121 @@
 
   <div class="events-upcoming-list__container">
     {% if current_blog != blank and current_blog.articles_count > 0 %}
-      {% assign article_count = 0 %}
-      {% for article in current_blog.articles %}
-        {% if article_count >= max_items %}
-          {% break %}
-        {% endif %}
-
-        {% comment %} Skip current article on article pages {% endcomment %}
-        {% if current_article_handle != nil and article.handle == current_article_handle %}
+      {% comment %} First pass: collect date::handle pairs for sorting {% endcomment %}
+      {% assign sorted_entries = '' %}
+      {% for a in current_blog.articles %}
+        {% if current_article_handle != nil and a.handle == current_article_handle %}
           {% continue %}
         {% endif %}
-
-        {% assign show_article = true %}
+        {% assign show_a = true %}
         {% if filter_tag != blank %}
-          {% assign show_article = false %}
-          {% for tag in article.tags %}
+          {% assign show_a = false %}
+          {% for tag in a.tags %}
             {% if tag == filter_tag %}
-              {% assign show_article = true %}
+              {% assign show_a = true %}
               {% break %}
             {% endif %}
           {% endfor %}
         {% endif %}
-
-        {% if show_article %}
-          {% assign article_count = article_count | plus: 1 %}
-          {% comment %} Build tag handles for filtering {% endcomment %}
-          {% assign tag_handles = '' %}
-          {% for tag in article.tags %}
-            {% assign tag_handle = tag | handleize %}
-            {% if tag_handles == '' %}
-              {% assign tag_handles = tag_handle %}
-            {% else %}
-              {% assign tag_handles = tag_handles | append: ' ' | append: tag_handle %}
-            {% endif %}
-          {% endfor %}
-
-          <article class="events-upcoming-list__item" data-event-tags="{{ tag_handles }}">
-            <a href="{{ article.url }}" class="events-upcoming-list__link">
-              <div class="events-upcoming-list__image-wrapper">
-                {% if article.image %}
-                  <img
-                    src="{{ article.image | image_url: width: 400 }}"
-                    srcset="{{ article.image | image_url: width: 200 }} 200w,
-                            {{ article.image | image_url: width: 400 }} 400w,
-                            {{ article.image | image_url: width: 600 }} 600w"
-                    sizes="(max-width: 768px) 120px, 200px"
-                    alt="{{ article.image.alt | escape | default: article.title }}"
-                    width="{{ article.image.width }}"
-                    height="{{ article.image.height }}"
-                    loading="lazy"
-                    class="events-upcoming-list__image"
-                  >
-                {% else %}
-                  <div class="events-upcoming-list__placeholder">
-                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
-                  </div>
-                {% endif %}
-              </div>
-
-              <div class="events-upcoming-list__content">
-                {% if section.settings.show_date %}
-                  <span class="events-upcoming-list__date">
-                    {% if article.metafields.event.date %}
-                      {% assign event_date = article.metafields.event.date %}
-                      {{ event_date | date: section.settings.date_format }}
-                      {% if section.settings.show_time %}
-                        <span class="events-upcoming-list__time">{{ event_date | date: "%I:%M %p" }}</span>
-                      {% endif %}
-                    {% else %}
-                      {{ article.published_at | date: section.settings.date_format }}
-                    {% endif %}
-                  </span>
-                {% endif %}
-
-                <h3 class="events-upcoming-list__title">{{ article.title }}</h3>
-
-                {% if article.excerpt != blank or article.content != blank %}
-                  <p class="events-upcoming-list__description">
-                    {% if article.excerpt != blank %}
-                      {{ article.excerpt | strip_html | truncate: 150 }}
-                    {% else %}
-                      {{ article.content | strip_html | truncate: 150 }}
-                    {% endif %}
-                  </p>
-                {% endif %}
-
-                <span class="events-upcoming-list__cta">
-                  {{ section.settings.cta_text }}
-                </span>
-              </div>
-            </a>
-          </article>
+        {% if show_a %}
+          {% if a.metafields.event.date %}
+            {% assign sort_date = a.metafields.event.date | date: '%Y%m%d%H%M' %}
+          {% else %}
+            {% assign sort_date = a.published_at | date: '%Y%m%d%H%M' %}
+          {% endif %}
+          {% assign entry = sort_date | append: '::' | append: a.handle %}
+          {% if sorted_entries == '' %}
+            {% assign sorted_entries = entry %}
+          {% else %}
+            {% assign sorted_entries = sorted_entries | append: '|||' | append: entry %}
+          {% endif %}
         {% endif %}
+      {% endfor %}
+
+      {% comment %} Sort entries chronologically and render {% endcomment %}
+      {% assign sorted_array = sorted_entries | split: '|||' | sort %}
+      {% assign article_count = 0 %}
+      {% for entry in sorted_array %}
+        {% assign entry_handle = entry | split: '::' | last %}
+
+        {% comment %} Find the article by handle {% endcomment %}
+        {% for article in current_blog.articles %}
+          {% if article.handle == entry_handle %}
+            {% assign article_count = article_count | plus: 1 %}
+            {% comment %} Build tag handles for filtering {% endcomment %}
+            {% assign tag_handles = '' %}
+            {% for tag in article.tags %}
+              {% assign tag_handle = tag | handleize %}
+              {% if tag_handles == '' %}
+                {% assign tag_handles = tag_handle %}
+              {% else %}
+                {% assign tag_handles = tag_handles | append: ' ' | append: tag_handle %}
+              {% endif %}
+            {% endfor %}
+
+            <article
+              class="events-upcoming-list__item{% if article_count > max_items %} events-upcoming-list__item--hidden{% endif %}"
+              data-event-tags="{{ tag_handles }}"
+              data-event-index="{{ article_count }}"
+            >
+              <a href="{{ article.url }}" class="events-upcoming-list__link">
+                <div class="events-upcoming-list__image-wrapper">
+                  {% if article.image %}
+                    <img
+                      src="{{ article.image | image_url: width: 400 }}"
+                      srcset="{{ article.image | image_url: width: 200 }} 200w,
+                              {{ article.image | image_url: width: 400 }} 400w,
+                              {{ article.image | image_url: width: 600 }} 600w"
+                      sizes="(max-width: 768px) 120px, 200px"
+                      alt="{{ article.image.alt | escape | default: article.title }}"
+                      width="{{ article.image.width }}"
+                      height="{{ article.image.height }}"
+                      loading="lazy"
+                      class="events-upcoming-list__image"
+                    >
+                  {% else %}
+                    <div class="events-upcoming-list__placeholder">
+                      {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="events-upcoming-list__content">
+                  {% if section.settings.show_date %}
+                    <span class="events-upcoming-list__date">
+                      {% if article.metafields.event.date %}
+                        {% assign event_date = article.metafields.event.date %}
+                        {{ event_date | date: section.settings.date_format }}
+                        {% if section.settings.show_time %}
+                          <span class="events-upcoming-list__time">{{ event_date | date: "%I:%M %p" }}</span>
+                        {% endif %}
+                      {% else %}
+                        {{ article.published_at | date: section.settings.date_format }}
+                      {% endif %}
+                    </span>
+                  {% endif %}
+
+                  <h3 class="events-upcoming-list__title">{{ article.title }}</h3>
+
+                  {% if article.excerpt != blank or article.content != blank %}
+                    <p class="events-upcoming-list__description">
+                      {% if article.excerpt != blank %}
+                        {{ article.excerpt | strip_html | truncate: 150 }}
+                      {% else %}
+                        {{ article.content | strip_html | truncate: 150 }}
+                      {% endif %}
+                    </p>
+                  {% endif %}
+
+                  <span class="events-upcoming-list__cta">
+                    {{ section.settings.cta_text }}
+                  </span>
+                </div>
+              </a>
+            </article>
+            {% break %}
+          {% endif %}
+        {% endfor %}
       {% endfor %}
     {% endif %}
 
@@ -178,8 +198,48 @@
         <p>{{ section.settings.empty_message }}</p>
       </div>
     {% endif %}
-      </div>
+  </div>
+
+  {% if matching_count > max_items %}
+    <div class="events-upcoming-list__load-more-wrapper">
+      <button
+        type="button"
+        class="events-upcoming-list__load-more"
+        data-load-more
+        data-per-page="{{ max_items }}"
+      >
+        {{ section.settings.load_more_text }}
+      </button>
+    </div>
+  {% endif %}
 </div>
+
+<script>
+  (function() {
+    var section = document.querySelector('.events-upcoming-list-section');
+    if (!section) return;
+    var btn = section.querySelector('[data-load-more]');
+    if (!btn) return;
+    var perPage = parseInt(btn.getAttribute('data-per-page'), 10);
+    var currentlyShown = perPage;
+
+    btn.addEventListener('click', function() {
+      var hiddenItems = section.querySelectorAll('.events-upcoming-list__item--hidden');
+      var count = 0;
+      hiddenItems.forEach(function(item) {
+        if (count < perPage) {
+          item.classList.remove('events-upcoming-list__item--hidden');
+          count++;
+        }
+      });
+      currentlyShown += count;
+      var remaining = section.querySelectorAll('.events-upcoming-list__item--hidden');
+      if (remaining.length === 0) {
+        btn.parentElement.style.display = 'none';
+      }
+    });
+  })();
+</script>
 
 {% stylesheet %}
   .events-upcoming-list {
@@ -213,8 +273,36 @@
     margin: 0 auto;
   }
 
-  .events-upcoming-list__item.is-hidden {
+  .events-upcoming-list__item.is-hidden,
+  .events-upcoming-list__item--hidden {
     display: none;
+  }
+
+  .events-upcoming-list__load-more-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .events-upcoming-list__load-more {
+    background: none;
+    border: 1px solid var(--color-foreground);
+    color: var(--color-foreground);
+    padding: 12px 32px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .events-upcoming-list__load-more:hover {
+    background-color: var(--color-foreground);
+    color: var(--color-background);
   }
 
   .events-upcoming-list__link {
@@ -459,11 +547,12 @@
     {
       "type": "range",
       "id": "post_limit",
-      "label": "Maximum events",
+      "label": "Events per page",
       "min": 1,
       "max": 10,
       "step": 1,
-      "default": 5
+      "default": 5,
+      "info": "Number of events shown initially and per 'Load More' click"
     },
     {
       "type": "checkbox",
@@ -497,6 +586,12 @@
       "id": "empty_message",
       "label": "Empty state message",
       "default": "No upcoming events"
+    },
+    {
+      "type": "text",
+      "id": "load_more_text",
+      "label": "Load more button text",
+      "default": "Load More"
     },
     {
       "type": "header",

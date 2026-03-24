@@ -68,7 +68,6 @@
 
 .promo-popup-text__eyebrow {
   font-size: 10px;
-  letter-spacing: 2px;
   text-transform: uppercase;
   color: #0F0F0F;
   margin-bottom: 16px;
@@ -226,10 +225,12 @@
 .promo-popup-split__image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+  background: rgba(0,0,0,0.35);
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
   padding: 24px;
   color: #fff;
 }
@@ -258,7 +259,6 @@
 
 .promo-popup-split__eyebrow {
   font-size: 11px;
-  letter-spacing: 2px;
   text-transform: uppercase;
   color: #666;
   margin-bottom: 12px;

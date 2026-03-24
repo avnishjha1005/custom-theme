@@ -50,10 +50,6 @@
         <p class="single-event__description">{{ article.excerpt }}</p>
       {% endif %}
 
-      {% if section.settings.show_author and article.author != blank %}
-        <p class="single-event__author">Written by {{ article.author }}</p>
-      {% endif %}
-
       {% comment %} Social Share Block {% endcomment %}
       <div class="single-event__social">
         {% content_for 'blocks' %}
@@ -142,13 +138,6 @@
     color: var(--color-foreground);
     opacity: 0.8;
     margin: 0 0 16px 0;
-  }
-
-  .single-event__author {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: var(--color-foreground);
-    margin: 0 0 8px 0;
   }
 
   .single-event__social {
@@ -277,12 +266,6 @@
       "label": "Default location",
       "info": "Used if event.location metafield is not set",
       "default": "Event Location"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_author",
-      "label": "Show author",
-      "default": true
     },
     {
       "type": "header",
