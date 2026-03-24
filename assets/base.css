@@ -245,42 +245,27 @@ h1{
     navigation: auto;
   }
 
-  /* Keep page interactive while view transitions are running */
-  :root {
-    view-transition-name: none;
+  ::view-transition {
+    pointer-events: none;
   }
 
-  /* Have the root transition during page navigation */
+  /* Root captures everything — crossfade at 0.5s so header/footer don't flicker */
   html:active-view-transition-type(page-navigation),
   html:active-view-transition-type(product-image-transition) {
     view-transition-name: root-custom;
   }
 
-  ::view-transition {
-    pointer-events: none;
-  }
-
-  html:active-view-transition-type(page-navigation) main[data-page-transition-enabled='true'] {
-    view-transition-name: main-content;
-  }
-
-  html:active-view-transition-type(page-navigation) #header-group {
-    view-transition-name: header;
-  }
-
-  /* Smooth crossfade for header during page transitions */
-  ::view-transition-old(header) {
+  ::view-transition-old(root-custom) {
     animation: 0.5s cubic-bezier(0.4, 0, 0.2, 1) both fadeOut;
   }
 
-  ::view-transition-new(header) {
+  ::view-transition-new(root-custom) {
     animation: 0.5s cubic-bezier(0.4, 0, 0.2, 1) both fadeIn;
   }
 
-  /* Suppress root crossfade so only named transitions (main-content, header) play */
-  ::view-transition-old(root-custom),
-  ::view-transition-new(root-custom) {
-    animation: none;
+  /* Main content gets its own slide-up animation on top of the root crossfade */
+  html:active-view-transition-type(page-navigation) main[data-page-transition-enabled='true'] {
+    view-transition-name: main-content;
   }
 
   html:active-view-transition-type(page-navigation) main[data-product-transition='true'][data-template*='product'] {
