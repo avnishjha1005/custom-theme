@@ -15,15 +15,6 @@
 
     const { viewTransition } = event;
 
-    // Cancel view transition on user interaction to improve INP (Interaction to Next Paint)
-    // Delay listener setup so the click that triggered navigation doesn't immediately cancel the transition
-    requestAnimationFrame(() => {
-      ['pointerdown', 'keydown'].forEach(eventName => {
-        document.addEventListener(eventName, () => {
-          viewTransition.skipTransition();
-        }, { once: true });
-      });
-    });
 
     // Clean in case you landed on the pdp first. We want to remove the default transition type on the PDP media gallery so there is no duplicate transition name
     document
@@ -36,11 +27,9 @@
     const transitionType = transitionTriggered?.getAttribute('data-view-transition-type');
 
     if (transitionType) {
-      viewTransition.types.clear();
       viewTransition.types.add(transitionType);
       sessionStorage.setItem('custom-transition-type', transitionType);
     } else {
-      viewTransition.types.clear();
       viewTransition.types.add('page-navigation');
       sessionStorage.removeItem('custom-transition-type');
     }
@@ -56,12 +45,10 @@
     const customTransitionType = sessionStorage.getItem('custom-transition-type');
 
     if (customTransitionType) {
-      viewTransition.types.clear();
       viewTransition.types.add(customTransitionType);
 
       await viewTransition.finished;
 
-      viewTransition.types.clear();
       viewTransition.types.add('page-navigation');
 
       idleCallback(() => {
@@ -71,7 +58,6 @@
         });
       });
     } else {
-      viewTransition.types.clear();
       viewTransition.types.add('page-navigation');
     }
   });
