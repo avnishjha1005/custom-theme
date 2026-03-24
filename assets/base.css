@@ -4567,7 +4567,7 @@ text-component {
   /* overflow-x: visible; */
   scroll-snap-type: unset !important;
   padding-left:calc(-720px + 50vw);
-  padding-right: calc(-720px + 50vw + 16px);
+  padding-right: calc(-720px + 50vw);
 }
 
 [ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"] > .swiper-wrapper{
