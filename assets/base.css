@@ -2,6 +2,7 @@
   box-sizing: border-box;
 }
 
+
 /* Safari/iOS: Prevent blue tap highlight on all interactive elements globally */
 button,
 a,
@@ -3153,15 +3154,15 @@ fly-to-cart {
   }
 }
 
-@keyframes slideInRight {
+@keyframes slideInUp {
   from {
     opacity: 0;
-    transform: translateX(40px);
+    transform: translateY(40px);
   }
 
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 

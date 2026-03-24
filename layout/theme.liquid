@@ -63,15 +63,47 @@
 
     {% sections 'footer-group' %}
 
-    <script type="speculationrules">
-      {
-        "prerender": [
-          {
-            "where": { "href_matches": "/*" },
-            "eagerness": "moderate"
-          }
-        ]
-      }
+    <script>
+      // Prefetch pages for faster view transitions
+      (function () {
+        const prefetched = new Set();
+        const prerendered = new Set();
+
+        function getInternalUrl(anchor) {
+          if (!anchor) return null;
+          try {
+            const url = new URL(anchor.href);
+            if (url.origin !== location.origin) return null;
+            if (url.pathname === location.pathname && url.search === location.search) return null;
+            if (url.hash && url.pathname === location.pathname) return null;
+            return url.href;
+          } catch { return null; }
+        }
+
+        // On hover: prefetch the HTML immediately
+        function onHover(e) {
+          const url = getInternalUrl(e.target.closest('a[href]'));
+          if (!url || prefetched.has(url)) return;
+          prefetched.add(url);
+          const link = document.createElement('link');
+          link.rel = 'prefetch';
+          link.href = url;
+          link.as = 'document';
+          document.head.appendChild(link);
+        }
+
+        // On pointerdown/touchstart: high-priority fetch to warm cache before click fires
+        function onPointerDown(e) {
+          const url = getInternalUrl(e.target.closest('a[href]'));
+          if (!url || prerendered.has(url)) return;
+          prerendered.add(url);
+          fetch(url, { credentials: 'include' }).catch(() => {});
+        }
+
+        document.addEventListener('pointerenter', onHover, { capture: true, passive: true });
+        document.addEventListener('pointerdown', onPointerDown, { capture: true, passive: true });
+        document.addEventListener('touchstart', onPointerDown, { capture: true, passive: true });
+      })();
     </script>
 
     {% render 'search-modal' %}
