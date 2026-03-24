@@ -35,10 +35,7 @@
   {% # theme-check-enable %}
 {% endif %}
 
-<link
-  rel="modulepreload"
-  href="{{ 'critical.js' | asset_url }}"
->
+{% comment %} critical.js modulepreload removed — already loaded via script tag in theme.liquid {% endcomment %}
 
 <link
   rel="modulepreload"
@@ -160,11 +157,13 @@
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'product-title-truncation.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if template.name == 'collection' or template.name == 'search' or template.name == 'product' %}
+  <script
+    src="{{ 'product-title-truncation.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 <script
   src="{{ 'product-inventory.js' | asset_url }}"
   type="module"
@@ -175,11 +174,13 @@
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'slideshow.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if template.name == 'collection' or template.name == 'index' %}
+  <script
+    src="{{ 'slideshow.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 <script
   src="{{ 'anchored-popover.js' | asset_url }}"
   type="module"
@@ -200,21 +201,25 @@
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'media-gallery.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if template.name == 'product' %}
+  <script
+    src="{{ 'media-gallery.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 <script
   src="{{ 'rte-formatter.js' | asset_url }}"
   type="module"
   fetchpriority="low"
 ></script>
-<script
-  src="{{ 'gift-card-recipient-form.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{% if template.suffix == 'gift_card' or template == 'gift_card' %}
+  <script
+    src="{{ 'gift-card-recipient-form.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{% endif %}
 
 {% if localization.available_countries.size > 1 or localization.available_languages.size > 1 %}
   <script
