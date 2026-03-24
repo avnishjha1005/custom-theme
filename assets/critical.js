@@ -463,6 +463,9 @@ function updateHeaderHeights() {
 
   document.body.style.setProperty('--header-height', `${headerHeight}px`);
   document.body.style.setProperty('--header-group-height', `${headerGroupHeight}px`);
+
+  // Signal that the header layout is stable
+  header.setAttribute('ready', '');
 }
 
 /**

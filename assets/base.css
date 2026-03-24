@@ -263,6 +263,22 @@ h1{
     view-transition-name: main-content;
   }
 
+  html:active-view-transition-type(page-navigation) #header-group {
+    view-transition-name: header;
+  }
+
+  /* Keep header static during page transitions */
+  ::view-transition-old(header),
+  ::view-transition-new(header) {
+    animation: none;
+  }
+
+  /* Suppress root crossfade so only named transitions (main-content, header) play */
+  ::view-transition-old(root-custom),
+  ::view-transition-new(root-custom) {
+    animation: none;
+  }
+
   html:active-view-transition-type(page-navigation) main[data-product-transition='true'][data-template*='product'] {
     view-transition-name: none;
   }

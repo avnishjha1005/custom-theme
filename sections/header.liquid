@@ -373,6 +373,16 @@
     transition: background-color var(--animation-speed) var(--animation-easing);
   }
 
+  /* Prevent layout shift from overflow-list reflow on initial load */
+  header-component:not([ready]) .header__columns {
+    opacity: 0;
+  }
+
+  header-component[ready] .header__columns {
+    opacity: 1;
+    transition: opacity 0.15s ease;
+  }
+
   @media screen and (min-width: 750px) {
     .header {
       position: relative;
