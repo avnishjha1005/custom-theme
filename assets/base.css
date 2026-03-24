@@ -3137,6 +3137,34 @@ fly-to-cart {
   }
 }
 
+@keyframes scaleDownFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.96);
+    filter: blur(4px);
+  }
+}
+
+@keyframes clipRevealIn {
+  from {
+    opacity: 0;
+    clip-path: inset(8% 8% 8% 8%);
+    transform: scale(1.02);
+  }
+
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+  }
+}
+
 @keyframes modalSlideInTop {
   from {
     transform: translateY(var(--padding-sm));
