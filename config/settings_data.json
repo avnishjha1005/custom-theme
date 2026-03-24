@@ -245,6 +245,11 @@
           "wishlist_path": "/pages/wishlist",
           "money_show_currency_code": true
         }
+      },
+      "17899005752291538835": {
+        "type": "shopify://apps/loadify-preloader/blocks/loadify-block/a901f8d1-8a96-4e38-a7d8-fdf18b278bfc",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
