@@ -268,10 +268,13 @@ h1{
     view-transition-name: header;
   }
 
-  /* Keep header static during page transitions */
-  ::view-transition-old(header),
+  /* Smooth crossfade for header during page transitions */
+  ::view-transition-old(header) {
+    animation: 0.5s cubic-bezier(0.4, 0, 0.2, 1) both fadeOut;
+  }
+
   ::view-transition-new(header) {
-    animation: none;
+    animation: 0.5s cubic-bezier(0.4, 0, 0.2, 1) both fadeIn;
   }
 
   /* Suppress root crossfade so only named transitions (main-content, header) play */
