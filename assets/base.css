@@ -1893,18 +1893,6 @@ slideshow-slide .shopify-model-viewer-ui__controls-area.shopify-model-viewer-ui_
   bottom: var(--padding-sm);
   right: var(--padding-sm);
 }
-.swiper-initialized .swiper-slide {
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-/* Maintain your theme's gap logic within the Swiper wrapper */
-.slideshow-slides.swiper-wrapper {
-  display: flex !important; /* Swiper needs flex to align slides */
-  flex-direction: row;
-  height: 100%;
-  /* If your theme uses CSS variables for gaps, Swiper will respect them here */
-}
 
 .dialog-zoomed-gallery .shopify-model-viewer-ui__controls-area.shopify-model-viewer-ui__controls-area {
   /* Move the controls above the thumbnails. Need to calculate the height of the thumbnails list */
@@ -4380,13 +4368,6 @@ text-component {
 }
 
 @media screen and (min-width: 750px){
-.product-grid__item--hero  .swiper-container-box{
-  height: 105%;
-}
-.product-grid__item--hero .swiper-wrapper{
-  padding-bottom:0;
-  height: 102% !important;
-}
 #ResultsList > div {
   padding-left:0px;
   padding-right:0px;
@@ -4587,10 +4568,6 @@ text-component {
   padding-right: calc(-720px + 50vw);
 }
 
-[ref="resourceListCarousel"] > [ref="slideshowContainer"] > [ref="scroller"] > .swiper-wrapper{
-  width:100%;
-  overflow: visible;
-}
 
 
 [data-testid="product-list"]{
