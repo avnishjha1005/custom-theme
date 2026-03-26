@@ -119,31 +119,21 @@
         continue
       endif
 
-      # Decide whether to open a column span, and how many columns of the grid to span
+      # Each parent link gets exactly one column — force column_span to 1
       if forloop.first or open_column_span == false
         assign open_column_span = true
-
-        # Don't allow orphan links in a column
-        assign break_after_modulo = link.links.size | modulo: links_before_wrap
-        if break_after_modulo == 1
-          assign links_before_wrap = links_before_wrap | minus: 1
-        endif
-        assign break_after_float = links_before_wrap | times: 1.0
-        assign column_span = link.links.size | divided_by: break_after_float | ceil | at_least: 1
-        assign column_count = column_count | plus: column_span
-        assign should_break_columns = true
+        assign column_span = 1
+        assign column_count = column_count | plus: 1
+        assign should_break_columns = false
 
         if menu_content_type == 'collection_images'
-          assign should_break_columns = false
-          # For collection image mode, we have an 8-column grid when 4 or fewer parent links are used. Set column span to 2 in that case, otherwise use 1 column
           if parent_link.links.size <= 4
             assign span_class = 'mega-menu__column--wide-collection-image'
           else
             assign span_class = 'mega-menu__column--span-1'
           endif
         else
-          # For all other modes, column span is determined by the number of links in the parent link
-          assign span_class = 'mega-menu__column--span-' | append: column_span
+          assign span_class = 'mega-menu__column--span-1'
         endif
         echo '<li class="mega-menu__column ' | append: span_class | append: '">'
       endif
@@ -182,17 +172,10 @@
       {% if link.links != blank %}
         <ul
           class="list-unstyled"
-          {% if should_break_columns %}
-            style="column-count: {{ column_span }};"
-          {% endif %}
+          style="column-count: 1;"
         >
-          {% for childLink in link.links %}
-            {% assign break_after_modulo = forloop.index | modulo: links_before_wrap %}
-            <li
-              {% if break_after_modulo == 0 and should_break_columns %}
-                style="break-after: column;"
-              {% endif %}
-            >
+          {% for childLink in link.links limit: 10 %}
+            <li>
               <a
                 href="{{ childLink.url }}"
                 class="mega-menu__link"
