@@ -17,10 +17,11 @@
 {%- assign jewelry_types = 'rings,ring,bracelets,bracelet,necklaces,necklace,earrings,earring,jewelry,jewellery,bangles,pendant,chain' | split: ',' -%}
 {%- assign bags_types = 'bags,bag,handbags,handbag,purse,clutch,tote,backpack,satchel' | split: ',' -%}
 {%- assign product_type_lower = product.type | downcase | strip -%}
+{%- assign product_category = product.category | downcase | strip -%}
 {%- assign measurement_category = 'clothing' -%}
 
 {%- for type in footwear_types -%}
-  {%- if product_type_lower contains type -%}
+  {%- if product_category contains type -%}
     {%- assign measurement_category = 'footwear' -%}
     {%- break -%}
   {%- endif -%}
@@ -96,7 +97,7 @@
             </div>
           {%- endif -%}
           <div class="sg-htm-instructions">
-            {{ how_to_measure.instructions }}
+            {{ how_to_measure.instructions | metafield_tag }}
           </div>
         </div>
       {%- endif -%}
