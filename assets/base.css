@@ -249,18 +249,22 @@ h1{
     pointer-events: none;
   }
 
-  /* Old page stays fully visible underneath — no white gap */
   html:active-view-transition-type(page-navigation),
   html:active-view-transition-type(product-image-transition) {
     view-transition-name: root-custom;
   }
 
+  /* plus-lighter keeps combined opacity at 100% — no white gap during crossfade */
+  ::view-transition-image-pair(root-custom) {
+    mix-blend-mode: plus-lighter;
+  }
+
   ::view-transition-old(root-custom) {
-    animation: none;
+    animation: 0.5s ease-out both fadeOut;
   }
 
   ::view-transition-new(root-custom) {
-    animation: pageEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: pageEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   /* Main content slides up on top of the old page */
@@ -272,12 +276,16 @@ h1{
     view-transition-name: none;
   }
 
+  ::view-transition-image-pair(main-content) {
+    mix-blend-mode: plus-lighter;
+  }
+
   ::view-transition-old(main-content) {
-    animation: none;
+    animation: 0.5s ease-out both fadeOut;
   }
 
   ::view-transition-new(main-content) {
-    animation: pageEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation: pageEnter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   html:active-view-transition-type(product-image-transition) {
