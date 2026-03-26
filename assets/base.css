@@ -239,7 +239,7 @@ h1{
   line-height:1;
 }
 
-/* view transitions */
+/* View transitions */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition {
     navigation: auto;
@@ -249,21 +249,21 @@ h1{
     pointer-events: none;
   }
 
-  /* Root captures everything — crossfade at 0.5s so header/footer don't flicker */
+  /* Old page stays fully visible underneath — no white gap */
   html:active-view-transition-type(page-navigation),
   html:active-view-transition-type(product-image-transition) {
     view-transition-name: root-custom;
   }
 
   ::view-transition-old(root-custom) {
-    animation: 0.5s cubic-bezier(0.4, 0, 0.2, 1) both fadeOut;
+    animation: none;
   }
 
   ::view-transition-new(root-custom) {
-    animation: 0.5s cubic-bezier(0.4, 0, 0.2, 1) both fadeIn;
+    animation: pageEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
-  /* Main content gets its own slide-up animation on top of the root crossfade */
+  /* Main content slides up on top of the old page */
   html:active-view-transition-type(page-navigation) main[data-page-transition-enabled='true'] {
     view-transition-name: main-content;
   }
@@ -273,11 +273,11 @@ h1{
   }
 
   ::view-transition-old(main-content) {
-    animation: var(--view-transition-old-main-content);
+    animation: none;
   }
 
   ::view-transition-new(main-content) {
-    animation: var(--view-transition-new-main-content);
+    animation: pageEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 
   html:active-view-transition-type(product-image-transition) {
@@ -310,7 +310,25 @@ h1{
   }
 
   ::view-transition-new(product-details) {
-    animation: var(--view-transition-new-main-content);
+    animation: pageEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fallback fade-in for Safari/Firefox */
+@supports not (view-transition-name: none) {
+  body {
+    animation: pageEnter 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }
 
