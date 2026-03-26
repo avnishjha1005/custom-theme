@@ -106,8 +106,8 @@
           "name": "t:names.text",
           "settings": {
             "text": "<p></p>{{ closest.collection.description }}",
-            "width": "fit-content",
-            "max_width": "normal",
+            "width": "100%",
+            "max_width": "none",
             "alignment": "left",
             "type_preset": "custom",
             "font": "var(--font-body--family)",
