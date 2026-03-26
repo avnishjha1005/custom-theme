@@ -83,7 +83,11 @@
   endif
 %}
 
-{% if fallback_text != blank and plain_text == blank %}
+{% if override_text != blank %}
+  <div {{ attributes }}>
+    {{ override_text }}
+  </div>
+{% elsif fallback_text != blank and plain_text == blank %}
   <div {{ attributes }}>
     {{ fallback_text }}
   </div>

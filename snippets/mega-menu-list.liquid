@@ -113,6 +113,12 @@
         continue
       endif
 
+      # Skip "Book an Appointment" - it will be rendered in the bottom links
+      assign link_title_downcase = link.title | downcase
+      if link_title_downcase == 'book an appointment'
+        continue
+      endif
+
       # Decide whether to open a column span, and how many columns of the grid to span
       if forloop.first or open_column_span == false
         assign open_column_span = true
@@ -227,10 +233,19 @@
 </ul>
 
 {% comment %} Render bottom links horizontally {% endcomment %}
-{% if bottom_links_count > 0 %}
+{% assign has_appointment_link = false %}
+{% for link in parent_link.links %}
+  {% assign check_title = link.title | downcase %}
+  {% if check_title == 'book an appointment' %}
+    {% assign has_appointment_link = true %}
+  {% endif %}
+{% endfor %}
+
+{% if bottom_links_count > 0 or has_appointment_link %}
   <ul class="mega-menu__bottom-links list-unstyled">
     {% for link in parent_link.links %}
-      {% if forloop.index0 >= bottom_links_start_index %}
+      {% assign link_title_check = link.title | downcase %}
+      {% if forloop.index0 >= bottom_links_start_index or link_title_check == 'book an appointment' %}
         <li class="mega-menu__bottom-link-item">
           <a href="{{ link.url }}" class="mega-menu__link mega-menu__link--parent">
             <span class="mega-menu__link-title wrap-text">{{ link.title }}</span>

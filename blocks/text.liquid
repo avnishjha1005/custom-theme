@@ -1,6 +1,17 @@
 
 
-{% render 'text', block: block %}
+{% if collection.handle == 'all' %}
+  {% assign block_text_plain = block.settings.text | strip_html | strip %}
+  {% if block_text_plain == collection.title %}
+    {% render 'text', block: block, override_text: '<p>Shop All</p>' %}
+  {% elsif block_text_plain == blank %}
+    {% render 'text', block: block, override_text: "<p>AltaRasa's complete edit of South Asian clothing, jewellery, and accessories, curated across regions, materials, and makers.</p>" %}
+  {% else %}
+    {% render 'text', block: block %}
+  {% endif %}
+{% else %}
+  {% render 'text', block: block %}
+{% endif %}
 
 {% schema %}
 {
