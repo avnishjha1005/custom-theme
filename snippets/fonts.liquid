@@ -7,7 +7,6 @@
     type="font/woff2"
     crossorigin
     fetchpriority="high"
-    blocking="render"
   >
 {%- endunless -%}
 {%- unless settings.type_heading_font.system? -%}
@@ -18,7 +17,6 @@
     type="font/woff2"
     crossorigin
     fetchpriority="high"
-    blocking="render"
   >
 {%- endunless -%}
 {%- unless settings.type_subheading_font.system? -%}
@@ -29,7 +27,6 @@
     type="font/woff2"
     crossorigin
     fetchpriority="high"
-    blocking="render"
   >
 {%- endunless -%}
 {%- unless settings.type_accent_font.system? -%}
@@ -40,7 +37,10 @@
     type="font/woff2"
     crossorigin
     fetchpriority="high"
-    blocking="render"
   >
 {%- endunless -%}
+
+<script type="module" blocking="render">
+  await document.fonts.ready;
+</script>
 {% # theme-check-enable %}
