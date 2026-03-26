@@ -10,7 +10,7 @@
     <a
       class="contents user-select-text"
       ref="productTitleLink"
-      href="{% render 'product-card-variant-url', product: closest.product %}"
+      href="/collections/{{ closest.product.vendor | handleize }}"
     >
       {% render 'text', fallback_text: closest.product.vendor, block: block %}
     </a>
