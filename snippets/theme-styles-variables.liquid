@@ -5,10 +5,10 @@
     assign primary_font_bold_italic = primary_font_bold | font_modify: 'style', 'italic'
   %}
 
-  {{ settings.type_body_font | font_face: font_display: 'swap' }}
-  {{ primary_font_bold | font_face: font_display: 'swap' }}
-  {{ primary_font_italic | font_face: font_display: 'swap' }}
-  {{ primary_font_bold_italic | font_face: font_display: 'swap' }}
+  {{ settings.type_body_font | font_face: font_display: 'block' }}
+  {{ primary_font_bold | font_face: font_display: 'block' }}
+  {{ primary_font_italic | font_face: font_display: 'block' }}
+  {{ primary_font_bold_italic | font_face: font_display: 'block' }}
 
   {% if settings.type_subheading_font != settings.type_body_font %}
     {%- liquid
@@ -17,10 +17,10 @@
       assign secondary_font_bold_italic = secondary_font_bold | font_modify: 'style', 'italic'
     %}
 
-    {{ settings.type_subheading_font | font_face: font_display: 'swap' }}
-    {{ secondary_font_bold | font_face: font_display: 'swap' }}
-    {{ secondary_font_italic | font_face: font_display: 'swap' }}
-    {{ secondary_font_bold_italic | font_face: font_display: 'swap' }}
+    {{ settings.type_subheading_font | font_face: font_display: 'block' }}
+    {{ secondary_font_bold | font_face: font_display: 'block' }}
+    {{ secondary_font_italic | font_face: font_display: 'block' }}
+    {{ secondary_font_bold_italic | font_face: font_display: 'block' }}
   {% endif %}
 
   {% if settings.type_heading_font != settings.type_body_font and settings.type_heading_font != settings.type_subheading_font %}
@@ -30,10 +30,10 @@
       assign tertiary_font_bold_italic = tertiary_font_bold | font_modify: 'style', 'italic'
     %}
 
-    {{ settings.type_heading_font | font_face: font_display: 'swap' }}
-    {{ tertiary_font_bold | font_face: font_display: 'swap' }}
-    {{ tertiary_font_italic | font_face: font_display: 'swap' }}
-    {{ tertiary_font_bold_italic | font_face: font_display: 'swap' }}
+    {{ settings.type_heading_font | font_face: font_display: 'block' }}
+    {{ tertiary_font_bold | font_face: font_display: 'block' }}
+    {{ tertiary_font_italic | font_face: font_display: 'block' }}
+    {{ tertiary_font_bold_italic | font_face: font_display: 'block' }}
   {% endif %}
 
   {% if settings.type_accent_font != settings.type_body_font and settings.type_accent_font != settings.type_subheading_font and settings.type_accent_font != settings.type_heading_font %}
@@ -43,10 +43,10 @@
       assign accent_font_bold_italic = accent_font_bold | font_modify: 'style', 'italic'
     %}
 
-    {{ settings.type_accent_font | font_face: font_display: 'swap' }}
-    {{ accent_font_bold | font_face: font_display: 'swap' }}
-    {{ accent_font_italic | font_face: font_display: 'swap' }}
-    {{ accent_font_bold_italic | font_face: font_display: 'swap' }}
+    {{ settings.type_accent_font | font_face: font_display: 'block' }}
+    {{ accent_font_bold | font_face: font_display: 'block' }}
+    {{ accent_font_italic | font_face: font_display: 'block' }}
+    {{ accent_font_bold_italic | font_face: font_display: 'block' }}
   {% endif %}
 
   :root {
