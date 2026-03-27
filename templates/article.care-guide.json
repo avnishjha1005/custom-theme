@@ -121,6 +121,7 @@
         "excerpt": {
           "type": "text",
           "name": "Excerpt",
+          "disabled": true,
           "settings": {
             "text": "{{ closest.article.excerpt }}",
             "width": "100%",
