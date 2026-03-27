@@ -105,7 +105,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aut odit aut fugit.</p>",
+            "text": "<p>A guide encouraging longevity, preservation, and material care for the collectors building intentional wardrobes.</p>",
             "width": "100%",
             "max_width": "none",
             "alignment": "center",
