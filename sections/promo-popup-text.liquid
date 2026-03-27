@@ -26,25 +26,33 @@
     <div class="promo-popup-text__newsletter">
       {% form 'customer', class: 'promo-popup-text__form' %}
         <input type="hidden" name="contact[tags]" value="newsletter,popup">
-        <div class="promo-popup-text__form-row">
-          <input
-            type="email"
-            name="contact[email]"
-            class="promo-popup-text__input"
-            placeholder="{{ section.settings.email_placeholder }}"
-            required
-            autocomplete="email"
-            aria-label="{{ section.settings.email_placeholder }}"
-          >
-          <button type="submit" class="promo-popup-text__submit">
-            {{ section.settings.button_text }}
-          </button>
-        </div>
         {%- if form.posted_successfully? -%}
-          <p class="promo-popup-text__success">{{ section.settings.success_message }}</p>
-        {%- endif -%}
-        {%- if form.errors -%}
-          <p class="promo-popup-text__error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+          <div class="promo-popup-text__success-wrapper">
+            <div class="promo-popup-text__success-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <p class="promo-popup-text__success">{{ section.settings.success_message }}</p>
+          </div>
+        {%- else -%}
+          <div class="promo-popup-text__form-row">
+            <input
+              type="email"
+              name="contact[email]"
+              class="promo-popup-text__input"
+              placeholder="{{ section.settings.email_placeholder }}"
+              required
+              autocomplete="email"
+              aria-label="{{ section.settings.email_placeholder }}"
+            >
+            <button type="submit" class="promo-popup-text__submit">
+              {{ section.settings.button_text }}
+            </button>
+          </div>
+          {%- if form.errors -%}
+            <p class="promo-popup-text__error">{{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}</p>
+          {%- endif -%}
         {%- endif -%}
       {% endform %}
     </div>

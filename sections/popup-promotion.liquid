@@ -1,4 +1,5 @@
 {{ 'dialog.css' | asset_url | stylesheet_tag }}
+{{ 'promo-popup.css' | asset_url | stylesheet_tag }}
 
 <dialog-component id="promo-popup-{{ section.id }}" class="dialog-modal">
   <dialog class="dialog" style="--dialog-width: {{ section.settings.popup_width }}px;">
@@ -37,24 +38,32 @@
           <div class="promo-popup__newsletter">
             {% form 'customer', class: 'newsletter-form' %}
               <input type="hidden" name="contact[tags]" value="newsletter">
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <input
-                  type="email"
-                  name="contact[email]"
-                  placeholder="{{ section.settings.email_placeholder }}"
-                  required
-                  style="flex: 1; min-width: 200px; padding: 1rem; border: 1px solid rgba(var(--color-foreground), 0.2); border-radius: 0;"
-                >
-                <button
-                  type="submit"
-                  class="button button--primary"
-                  style="padding: 1rem 2rem; white-space: nowrap;"
-                >
-                  {{ section.settings.button_text }}
-                </button>
-              </div>
               {%- if form.posted_successfully? -%}
-                <p style="margin-top: 1rem; color: green;">{{ section.settings.success_message }}</p>
+                <div class="promo-popup-text__success-wrapper">
+                  <div class="promo-popup-text__success-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <p class="promo-popup-text__success">{{ section.settings.success_message }}</p>
+                </div>
+              {%- else -%}
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <input
+                    type="email"
+                    name="contact[email]"
+                    placeholder="{{ section.settings.email_placeholder }}"
+                    required
+                    style="flex: 1; min-width: 200px; padding: 1rem; border: 1px solid rgba(var(--color-foreground), 0.2); border-radius: 0;"
+                  >
+                  <button
+                    type="submit"
+                    class="button button--primary"
+                    style="padding: 1rem 2rem; white-space: nowrap;"
+                  >
+                    {{ section.settings.button_text }}
+                  </button>
+                </div>
               {%- endif -%}
             {% endform %}
           </div>

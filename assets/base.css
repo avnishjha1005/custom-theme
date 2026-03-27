@@ -3856,7 +3856,7 @@ slideshow-arrows {
   display: flex;
   z-index: var(--layer-heightened);
   pointer-events: none;
-  mix-blend-mode: difference;
+  mix-blend-mode: overlay;
   align-items: flex-end;
 
   &[position='left'] {
