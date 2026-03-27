@@ -17,7 +17,7 @@
     <a
       class="contents user-select-text"
       ref="productTitleLink"
-      href="/collections/{{ closest.product.vendor | handleize }}"
+      href="{{ closest.product.vendor | url_for_vendor }}"
     >
       {% render 'text', fallback_text: closest.product.vendor, block: block %}
     </a>
