@@ -7,6 +7,7 @@
 
 {% liquid
   assign onboarding = false
+  assign is_tba = false
 
   if article == blank
     assign onboarding = true
@@ -17,6 +18,13 @@
     assign display_title = article.title
     assign display_date = article.published_at | date: block_settings.date_format | default: '%B %d, %Y'
     assign display_description = article.excerpt | default: article.content | strip_html | truncate: 120
+    for tag in article.tags
+      assign tag_lower = tag | downcase | strip
+      if tag_lower == 'tba'
+        assign is_tba = true
+        break
+      endif
+    endfor
   endif
 %}
 
@@ -38,14 +46,20 @@
   "
   {{ block.shopify_attributes }}
 >
-  <a
-    class="event-card__link"
-    {% unless onboarding %}
-      href="{{ article.url }}"
-    {% endunless %}
-  >
-    <span class="visually-hidden">{{ display_title }}</span>
-  </a>
+  {% if is_tba %}
+    <span class="event-card__link event-card__link--tba">
+      <span class="visually-hidden">{{ display_title }}</span>
+    </span>
+  {% else %}
+    <a
+      class="event-card__link"
+      {% unless onboarding %}
+        href="{{ article.url }}"
+      {% endunless %}
+    >
+      <span class="visually-hidden">{{ display_title }}</span>
+    </a>
+  {% endif %}
 
   <div class="event-card__inner">
     {% if onboarding or article.image %}
@@ -72,7 +86,7 @@
     {% endif %}
 
     <div class="event-card__content">
-      {% if block_settings.show_date %}
+      {% if block_settings.show_date and is_tba == false %}
         <span class="event-card__date">{{ display_date }}</span>
       {% endif %}
 
@@ -83,7 +97,13 @@
       {% endif %}
 
       {% if block_settings.show_cta %}
-        <span class="event-card__cta">{{ block_settings.cta_text }}</span>
+        <span class="event-card__cta">
+          {% if is_tba %}
+            TO BE ANNOUNCED
+          {% else %}
+            {{ block_settings.cta_text }}
+          {% endif %}
+        </span>
       {% endif %}
     </div>
   </div>
@@ -203,6 +223,15 @@
 
   .event-card:hover .event-card__cta {
     opacity: 0.7;
+  }
+
+  .event-card__link--tba {
+    cursor: default;
+  }
+
+  .event-card__link--tba ~ .event-card__inner .event-card__cta {
+    text-decoration: none;
+    opacity: 0.6;
   }
 
   @media (max-width: 768px) {

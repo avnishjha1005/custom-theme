@@ -114,8 +114,13 @@
             {% assign article_count = article_count | plus: 1 %}
             {% comment %} Build tag handles for filtering {% endcomment %}
             {% assign tag_handles = '' %}
+            {% assign is_tba = false %}
             {% for tag in article.tags %}
               {% assign tag_handle = tag | handleize %}
+              {% assign tag_lower = tag | downcase | strip %}
+              {% if tag_handle == 'tba' or tag_lower == 'tba' %}
+                {% assign is_tba = true %}
+              {% endif %}
               {% if tag_handles == '' %}
                 {% assign tag_handles = tag_handle %}
               {% else %}
@@ -123,12 +128,17 @@
               {% endif %}
             {% endfor %}
 
+            <!-- DEBUG: tags="{{ article.tags | join: ', ' }}" is_tba="{{ is_tba }}" -->
             <article
-              class="events-upcoming-list__item{% if article_count > max_items %} events-upcoming-list__item--hidden{% endif %}"
+              class="events-upcoming-list__item{% if article_count > max_items %} events-upcoming-list__item--hidden{% endif %}{% if is_tba %} events-upcoming-list__item--tba{% endif %}"
               data-event-tags="{{ tag_handles }}"
               data-event-index="{{ article_count }}"
             >
-              <a href="{{ article.url }}" class="events-upcoming-list__link">
+              {% if is_tba %}
+                <div class="events-upcoming-list__link events-upcoming-list__link--tba">
+              {% else %}
+                <a href="{{ article.url }}" class="events-upcoming-list__link">
+              {% endif %}
                 <div class="events-upcoming-list__image-wrapper">
                   {% if article.image %}
                     <img
@@ -151,7 +161,7 @@
                 </div>
 
                 <div class="events-upcoming-list__content">
-                  {% if section.settings.show_date %}
+                  {% if section.settings.show_date and is_tba == false %}
                     <span class="events-upcoming-list__date">
                       {% if article.metafields.event.date %}
                         {% assign event_date = article.metafields.event.date %}
@@ -178,10 +188,18 @@
                   {% endif %}
 
                   <span class="events-upcoming-list__cta">
-                    {{ section.settings.cta_text }}
+                    {% if is_tba %}
+                      TO BE ANNOUNCED
+                    {% else %}
+                      {{ section.settings.cta_text }}
+                    {% endif %}
                   </span>
                 </div>
-              </a>
+              {% if is_tba %}
+                </div>
+              {% else %}
+                </a>
+              {% endif %}
             </article>
             {% break %}
           {% endif %}
@@ -411,6 +429,15 @@
 
   .events-upcoming-list__link:hover .events-upcoming-list__cta {
     opacity: 0.7;
+  }
+
+  .events-upcoming-list__link--tba {
+    cursor: default;
+  }
+
+  .events-upcoming-list__link--tba .events-upcoming-list__cta {
+    text-decoration: none;
+    opacity: 0.6;
   }
 
   .events-upcoming-list__empty {
