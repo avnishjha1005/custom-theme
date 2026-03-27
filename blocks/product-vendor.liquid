@@ -1,5 +1,12 @@
 
 
+{% assign bundle_products = closest.product.metafields.custom.bundle_products.value %}
+{% assign is_bundle = false %}
+{% if bundle_products and bundle_products.size > 0 %}
+  {% assign is_bundle = true %}
+{% endif %}
+
+{% unless is_bundle %}
 <div class="product-vendor-block">
   {% if closest.product == blank %}
     {% assign text = 'placeholders.product_title' | t %}
@@ -16,6 +23,7 @@
     </a>
   {% endif %}
 </div>
+{% endunless %}
 
 {% schema %}
 {

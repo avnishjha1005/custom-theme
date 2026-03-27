@@ -34,11 +34,7 @@
 
   <a href="{{ article.url }}" class="blog-post-card-grid__content">
     <span class="blog-post-card-grid__tag">
-      {%- if article.tags.size > 0 -%}
-        {{ article.tags.first | upcase }}
-      {%- else -%}
-        TIP {% if card_index < 10 %}0{% endif %}{{ card_index }}
-      {%- endif -%}
+      TIP {% if card_index < 10 %}0{% endif %}{{ card_index }}
     </span>
 
     <div class="blog-post-card-grid__title">{{ title }}</div>

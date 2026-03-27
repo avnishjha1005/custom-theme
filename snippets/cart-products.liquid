@@ -156,7 +156,12 @@
                       {{- item.product.title -}}
                     </a>
                   </p>
-                  {% if item.product.vendor and block_settings.vendor %}
+                  {% assign cart_bundle_products = item.product.metafields.custom.bundle_products.value %}
+                  {% assign cart_is_bundle = false %}
+                  {% if cart_bundle_products and cart_bundle_products.size > 0 %}
+                    {% assign cart_is_bundle = true %}
+                  {% endif %}
+                  {% if item.product.vendor and block_settings.vendor and cart_is_bundle == false %}
                     <p>
                       {{ item.product.vendor }}
                     </p>
