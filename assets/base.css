@@ -4107,6 +4107,13 @@ slideshow-arrows .slideshow-control.slideshow-control--style-none {
   padding-block: 16px;
 }
 
+@media screen and (max-width: 768px) {
+  [ref=resourceListCarousel]>[ref=slideshowContainer]>[ref=scroller] {
+    padding-inline: 16px;
+    scroll-padding-inline-start: 16px;
+  }
+}
+
 .resource-list__carousel slideshow-arrows {
   padding-inline: var(--util-page-margin-offset);
 }
