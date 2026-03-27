@@ -4599,6 +4599,9 @@ text-component {
   scroll-snap-type: unset !important;
   padding-left:calc(-720px + 50vw);
   padding-right: calc(-720px + 50vw);
+  @media screen and (max-width: 768px) {
+    padding-inline: 16px;
+  }
 }
 
 
