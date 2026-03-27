@@ -636,12 +636,12 @@
         }
       },
       "custom_css": [
-        "quick-add-component {display: flex; align-items: flex-end; margin-right: 0; padding-right: 0; padding-bottom: 0;}",
+        "8pxquick-add-component {display: flex; align-items: flex-end; margin-right: 0; padding-right: 0; padding-bottom: 0;}",
         "quick-add-component button {align-items: end; padding-bottom: 0; justify-content: end; padding-right: 0px;}",
         "quick-add-component .svg-wrapper {min-height: 1.5rem; min-width: 1.5rem; justify-content: end; padding-right: 5px; align-items: end;}",
         ".wishlist-button {margin-top: 10px;}",
-        "slideshow-controls {z-index: 1;}",
-        ".quick-add--inline .quick-add__button {color: black !important;}"
+        ".quick-add--inline .quick-add__button {color: black !important;}",
+        "@media screen and (max-width: 768px){.slideshow-slides{padding-inline: 16px; }}"
       ],
       "name": "Featured collection",
       "settings": {
