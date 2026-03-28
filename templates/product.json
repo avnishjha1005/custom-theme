@@ -515,6 +515,32 @@
                 "padding-inline-end": 0
               },
               "blocks": {
+                "product_wishlist_button_VP96Nh": {
+                  "type": "product-wishlist-button",
+                  "name": "Wishlist Button",
+                  "settings": {
+                    "position": "top-right",
+                    "button_style": "icon-only",
+                    "icon_size": 20,
+                    "icon_color": "#000000",
+                    "icon_color_active": "#692c23",
+                    "show_background": true,
+                    "background_color": "#ffffff",
+                    "corner_radius": 50,
+                    "padding": 8,
+                    "enable_animation": true,
+                    "animation_type": "scale",
+                    "add_text": "Added to Wishlist",
+                    "remove_text": "Removed from Wishlist",
+                    "tooltip_add": "Add to wishlist",
+                    "tooltip_remove": "Remove from wishlist",
+                    "aria_label_add": "Add to wishlist",
+                    "aria_label_remove": "Remove from wishlist",
+                    "require_login": true,
+                    "show_notification": true
+                  },
+                  "blocks": {}
+                },
                 "group_FxYU7a": {
                   "type": "group",
                   "name": "t:names.group",
@@ -732,6 +758,7 @@
                 }
               },
               "block_order": [
+                "product_wishlist_button_VP96Nh",
                 "group_FxYU7a",
                 "group_VdNWtX"
               ]
