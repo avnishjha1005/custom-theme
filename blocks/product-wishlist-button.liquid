@@ -8,7 +8,7 @@
   endif
 -%}
 
-<wishlist-button data-product-id="{{ closest.product.id }}">
+<wishlist-button data-product-id="{{ closest.product.id }}" data-product-handle="{{ closest.product.handle }}" data-variant-id="{{ closest.product.selected_or_first_available_variant.id }}">
   <button
     type="button"
     class="{{ button_class }}"
@@ -60,31 +60,78 @@
 
     class WishlistButton extends HTMLElement {
       connectedCallback() {
-        this.productId = this.getAttribute('data-product-id') || this.closest('[data-product-id]')?.getAttribute('data-product-id');
+        this.productId = this.getAttribute('data-product-id');
+        this.productHandle = this.getAttribute('data-product-handle');
+        this.variantId = this.getAttribute('data-variant-id');
         this.btn = this.querySelector('[data-wishlist-button]');
-        if (!this.btn || !this.productId) return;
+        if (!this.btn) return;
 
         this.btn.addEventListener('click', this.handleClick.bind(this));
-        this.initState();
+        this.initSwish();
       }
 
-      initState() {
+      findSwishCollection() {
+        // 1. Look inside parent product-card (collection pages)
+        var card = this.closest('product-card') || this.closest('[data-product-id]');
+        if (card) {
+          var col = card.querySelector('wishlist-button-collection');
+          if (col) return col;
+        }
+        // 2. Find by product handle anywhere on page
+        if (this.productHandle) {
+          var col = document.querySelector('wishlist-button-collection[data-product-handle="' + this.productHandle + '"]');
+          if (col) return col;
+        }
+        return null;
+      }
+
+      initSwish() {
         var self = this;
-        function check() {
-          if (window.WishlistKing) {
-            window.WishlistKing.toolkit.getWishlist(function(wishlist) {
-              var found = wishlist.some(function(item) {
-                return String(item.product_id) === String(self.productId);
-              });
-              if (found) self.setActive(true);
-            });
-          }
+        var col = this.findSwishCollection();
+
+        if (!col && this.productHandle) {
+          // PDP: Swish doesn't render here, so inject a hidden one
+          col = document.createElement('wishlist-button-collection');
+          col.setAttribute('data-product-handle', this.productHandle);
+          if (this.variantId) col.setAttribute('data-variant-id', this.variantId);
+          col.setAttribute('show-icon', '');
+          col.setAttribute('icon', 'wishlist');
+          col.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;opacity:0;';
+          this.appendChild(col);
         }
-        if (window.WishlistKing) {
-          check();
+
+        if (col) {
+          this._swishCol = col;
+          this.watchSwish(col);
         } else {
-          document.addEventListener('wk:ready', check);
+          // Wait for Swish to inject it
+          var bodyObserver = new MutationObserver(function() {
+            var found = self.findSwishCollection();
+            if (found) {
+              self._swishCol = found;
+              self.watchSwish(found);
+              bodyObserver.disconnect();
+            }
+          });
+          bodyObserver.observe(document.body, { childList: true, subtree: true });
+          setTimeout(function() { bodyObserver.disconnect(); }, 15000);
         }
+      }
+
+      watchSwish(col) {
+        var self = this;
+        function update() {
+          var wkBtn = col.querySelector('wk-button');
+          if (!wkBtn) return;
+          var innerBtn = wkBtn.querySelector('button');
+          var isSelected = wkBtn.classList.contains('wk-selected') ||
+                           !!wkBtn.querySelector('.wk-selected') ||
+                           (innerBtn && innerBtn.getAttribute('aria-label') === 'Remove from Wishlist');
+          self.setActive(isSelected);
+        }
+        update();
+        this.swishObserver = new MutationObserver(update);
+        this.swishObserver.observe(col, { attributes: true, childList: true, subtree: true });
       }
 
       handleClick(e) {
@@ -96,29 +143,28 @@
           return;
         }
 
-        if (!window.WishlistKing) return;
-
-        var self = this;
-        var isActive = this.btn.classList.contains('wishlist-button--active');
-
-        if (isActive) {
-          window.WishlistKing.toolkit.removeProduct(this.productId, function() {
-            self.setActive(false);
-          });
-        } else {
-          window.WishlistKing.toolkit.addProduct(this.productId, function() {
-            self.setActive(true);
-          });
+        var col = this._swishCol || this.findSwishCollection();
+        if (col) {
+          // Click the actual Swish button inside
+          var innerBtn = col.querySelector('wk-button button');
+          if (innerBtn) {
+            // Temporarily make it clickable if hidden
+            var wasHidden = col.style.pointerEvents === 'none';
+            if (wasHidden) col.style.pointerEvents = 'auto';
+            innerBtn.click();
+            if (wasHidden) col.style.pointerEvents = 'none';
+            return;
+          }
         }
       }
 
       setActive(active) {
         this.btn.classList.toggle('wishlist-button--active', active);
         this.btn.setAttribute('aria-pressed', String(active));
-        this.btn.setAttribute('aria-label', active
-          ? this.btn.closest('wishlist-button').querySelector('.wishlist-text--remove')?.textContent?.trim() || 'Remove from wishlist'
-          : this.btn.closest('wishlist-button').querySelector('.wishlist-text--add')?.textContent?.trim() || 'Add to wishlist'
-        );
+      }
+
+      disconnectedCallback() {
+        if (this.swishObserver) this.swishObserver.disconnect();
       }
     }
 
