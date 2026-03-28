@@ -4456,6 +4456,12 @@ text-component {
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
+.wishlist-icon--outline,
+.wishlist-icon--filled {
+  width: var(--wishlist-icon-size);
+  height: var(--wishlist-icon-size);
+}
+
 .wishlist-icon--filled {
   display: none;
 }
