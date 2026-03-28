@@ -4793,6 +4793,7 @@ wishlist-product-card remove-button {
 wishlist-button-collection wk-button, wishlist-button-collection .wk-button:hover {
   left:unset !important;
   right: 0 !important;
+  mix-blend-mode: overlay;
 }
 
 .wk-selected{
