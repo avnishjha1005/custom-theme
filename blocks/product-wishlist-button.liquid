@@ -8,7 +8,7 @@
   endif
 -%}
 
-<wishlist-button>
+<wishlist-button data-product-id="{{ closest.product.id }}">
   <button
     type="button"
     class="{{ button_class }}"
@@ -29,11 +29,11 @@
       {% endif %}
     "
   >
-    
+
     <svg class="wishlist-icon wishlist-icon--outline" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       {{ 'icon-heart.svg' | inline_asset_content }}
     </svg>
-    
+
     <svg class="wishlist-icon wishlist-icon--filled" width="{{ block.settings.icon_size }}" height="{{ block.settings.icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <path d="M19.3 5.71002C18.841 5.24601 18.2943 4.87797 17.6917 4.62731C17.0891 4.37666 16.4426 4.2484 15.79 4.25002C15.1373 4.2484 14.4909 4.37666 13.8883 4.62731C13.2857 4.87797 12.739 5.24601 12.28 5.71002L12 6.00002L11.72 5.72001C10.7917 4.79182 9.53273 4.27037 8.22 4.27037C6.90726 4.27037 5.64829 4.79182 4.72 5.72001C3.80386 6.65466 3.29071 7.91125 3.29071 9.22002C3.29071 10.5288 3.80386 11.7854 4.72 12.72L11.49 19.51C11.6306 19.6505 11.8212 19.7294 12.02 19.7294C12.2187 19.7294 12.4094 19.6505 12.55 19.51L19.32 12.72C20.2365 11.7823 20.7479 10.5221 20.7442 9.21092C20.7405 7.89973 20.2218 6.64248 19.3 5.71002Z" fill="currentColor"/>
     </svg>
@@ -53,6 +53,78 @@
     {%- endif -%}
   </button>
 </wishlist-button>
+
+<script>
+  (function() {
+    if (customElements.get('wishlist-button')) return;
+
+    class WishlistButton extends HTMLElement {
+      connectedCallback() {
+        this.productId = this.getAttribute('data-product-id') || this.closest('[data-product-id]')?.getAttribute('data-product-id');
+        this.btn = this.querySelector('[data-wishlist-button]');
+        if (!this.btn || !this.productId) return;
+
+        this.btn.addEventListener('click', this.handleClick.bind(this));
+        this.initState();
+      }
+
+      initState() {
+        var self = this;
+        function check() {
+          if (window.WishlistKing) {
+            window.WishlistKing.toolkit.getWishlist(function(wishlist) {
+              var found = wishlist.some(function(item) {
+                return String(item.product_id) === String(self.productId);
+              });
+              if (found) self.setActive(true);
+            });
+          }
+        }
+        if (window.WishlistKing) {
+          check();
+        } else {
+          document.addEventListener('wk:ready', check);
+        }
+      }
+
+      handleClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (this.btn.hasAttribute('data-require-login')) {
+          window.location.href = '/account/login';
+          return;
+        }
+
+        if (!window.WishlistKing) return;
+
+        var self = this;
+        var isActive = this.btn.classList.contains('wishlist-button--active');
+
+        if (isActive) {
+          window.WishlistKing.toolkit.removeProduct(this.productId, function() {
+            self.setActive(false);
+          });
+        } else {
+          window.WishlistKing.toolkit.addProduct(this.productId, function() {
+            self.setActive(true);
+          });
+        }
+      }
+
+      setActive(active) {
+        this.btn.classList.toggle('wishlist-button--active', active);
+        this.btn.setAttribute('aria-pressed', String(active));
+        this.btn.setAttribute('aria-label', active
+          ? this.btn.closest('wishlist-button').querySelector('.wishlist-text--remove')?.textContent?.trim() || 'Remove from wishlist'
+          : this.btn.closest('wishlist-button').querySelector('.wishlist-text--add')?.textContent?.trim() || 'Add to wishlist'
+        );
+      }
+    }
+
+    customElements.define('wishlist-button', WishlistButton);
+  })();
+</script>
 
 {% schema %}
 {
