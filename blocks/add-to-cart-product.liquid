@@ -60,7 +60,7 @@
   {% endif %}
 >
   {% if product != blank %}
-    {% if is_price_on_request %}
+    {% if is_price_on_request and is_bundle == false %}
       <a
         href="{{ whatsapp_url }}"
         target="_blank"

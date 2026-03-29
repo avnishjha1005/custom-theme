@@ -47,7 +47,7 @@
   {% unless can_add_to_cart %}
     hidden
   {% endunless %}
-  {% if is_price_on_request %}
+  {% if is_price_on_request and is_bundle == false %}
     hidden
   {% endif %}
 >
@@ -67,11 +67,9 @@
         data-buy-now="true"
       {% endif %}
     >
-      {% if is_bundle %}
-        BUY NOW ({{ bundle_count }} ITEMS)
-      {% else %}
+      
         Buy Now
-      {% endif %}
+
     </button>
   {% endif %}
 </div>

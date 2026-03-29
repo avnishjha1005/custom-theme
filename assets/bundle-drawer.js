@@ -14,6 +14,12 @@ class BundleSizeDrawer extends HTMLElement {
   }
 
   connectedCallback() {
+    // Move to body so position:fixed isn't broken by parent transforms
+    if (this.parentElement !== document.body) {
+      document.body.appendChild(this);
+      return; // connectedCallback will fire again once appended to body
+    }
+
     this.overlay = this.querySelector('.bundle-drawer__overlay');
     this.closeBtn = this.querySelector('.bundle-drawer__close');
     this.confirmBtn = this.querySelector('[data-bundle-add-all]');

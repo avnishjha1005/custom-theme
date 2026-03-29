@@ -230,6 +230,13 @@ class ProductFormComponent extends Component {
    * @param {Event} event - The submit event.
    */
   handleSubmit(event) {
+    // Bundles are handled by the bundle drawer, not the standard form
+    if (this.dataset.isBundle === 'true') {
+      event.preventDefault();
+      window.openBundleSizeDrawer?.();
+      return;
+    }
+
     const { addToCartTextError, addToCartButtonContainer } = this.refs;
     // Stop default behaviour from the browser
     event.preventDefault();

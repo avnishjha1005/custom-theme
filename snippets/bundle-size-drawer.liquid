@@ -135,17 +135,15 @@
 
 {% stylesheet %}
   .bundle-size-drawer {
+    display: none;
     position: fixed;
     inset: 0;
     z-index: 9999;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    margin-bottom: 57px;
   }
 
   .bundle-size-drawer--active {
-    pointer-events: auto;
-    opacity: 1;
+    display: block;
   }
 
   .bundle-drawer__overlay {
@@ -156,9 +154,9 @@
 
   .bundle-drawer__content {
     position: absolute;
-    bottom: 0;
     left: 0;
     right: 0;
+    bottom: 0px;
     background: #fff;
     max-height: 85vh;
     transform: translateY(100%);
@@ -179,14 +177,10 @@
       border-radius: 0;
       transform: translateX(100%);
     }
-
-    .bundle-size-drawer--active .bundle-drawer__content {
-      transform: translateX(0);
-    }
   }
 
   .bundle-size-drawer--active .bundle-drawer__content {
-    transform: translateY(0);
+    transform: translate(0, 0);
   }
 
   .bundle-drawer__header {

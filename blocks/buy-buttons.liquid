@@ -33,7 +33,10 @@
     assign quantity_rule_soldout = true
   endif
 
-  if inventory_managed
+  if is_bundle and bundle_count > 0
+    assign can_add_to_cart = true
+    assign add_to_cart_text = 'products.product.add_to_cart' | t
+  elsif inventory_managed
     if inventory_quantity <= 0 and inventory_policy == 'deny' or quantity_rule_soldout
       assign can_add_to_cart = false
       assign add_to_cart_text = 'products.product.sold_out' | t
