@@ -30,7 +30,11 @@
   assign bundle_count = 0
   if bundle_products and bundle_products.size > 0
     assign is_bundle = true
-    assign bundle_count = bundle_products.size
+    for bp in bundle_products
+      if bp.price > 0
+        assign bundle_count = bundle_count | plus: 1
+      endif
+    endfor
   endif
 %}
 
