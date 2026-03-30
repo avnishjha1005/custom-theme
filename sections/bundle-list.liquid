@@ -232,7 +232,32 @@
 <div class="bundle-section-{{ section.id }}">
   <div class="bundle-wrapper">
     {% if section.settings.collection != blank %}
+      {%- comment -%} Numeric sort: extract number from title, zero-pad, then sort {%- endcomment -%}
+      {% assign sort_entries = '' %}
       {% for product in section.settings.collection.products %}
+        {% assign title_digits = product.title | remove: 'Look ' | remove: 'look ' | strip %}
+        {% assign num = title_digits | plus: 0 %}
+        {% if num < 10 %}
+          {% assign padded = '000' | append: num %}
+        {% elsif num < 100 %}
+          {% assign padded = '00' | append: num %}
+        {% elsif num < 1000 %}
+          {% assign padded = '0' | append: num %}
+        {% else %}
+          {% assign padded = num %}
+        {% endif %}
+        {% assign entry = padded | append: ':' | append: forloop.index0 %}
+        {% if sort_entries == '' %}
+          {% assign sort_entries = entry %}
+        {% else %}
+          {% assign sort_entries = sort_entries | append: ',' | append: entry %}
+        {% endif %}
+      {% endfor %}
+      {% assign sort_array = sort_entries | split: ',' | sort %}
+      {% assign products_array = section.settings.collection.products %}
+      {% for sorted_entry in sort_array %}
+        {% assign original_index = sorted_entry | split: ':' | last | plus: 0 %}
+        {% assign product = products_array[original_index] %}
         {% comment %} 9th product (and every 9th after: 9, 18, 27...) becomes 2x2 hero {% endcomment %}
         {% assign remainder = forloop.index | modulo: 9 %}
         {% assign is_hero = false %}
