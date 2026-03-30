@@ -1180,46 +1180,6 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "accordion_row_NdBezV": {
-                  "type": "_accordion-row",
-                  "settings": {
-                    "heading": "Product Description",
-                    "open_by_default": false,
-                    "keywords": "",
-                    "icon": "none",
-                    "width": 20
-                  },
-                  "blocks": {
-                    "text_n7A9da": {
-                      "type": "text",
-                      "settings": {
-                        "text": "<p>{{ closest.product.description }}</p>",
-                        "width": "100%",
-                        "max_width": "none",
-                        "alignment": "left",
-                        "type_preset": "custom",
-                        "font": "var(--font-secondary--family)",
-                        "font_size": "var(--font-size--body-lg)",
-                        "line_height": "normal",
-                        "letter_spacing": "normal",
-                        "case": "none",
-                        "wrap": "pretty",
-                        "color": "",
-                        "background": false,
-                        "background_color": "#00000026",
-                        "corner_radius": 0,
-                        "padding-block-start": 0,
-                        "padding-block-end": 0,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    }
-                  },
-                  "block_order": [
-                    "text_n7A9da"
-                  ]
-                },
                 "accordion_row_iJM37V": {
                   "type": "_accordion-row",
                   "settings": {
@@ -1233,7 +1193,7 @@
                     "text_VdG98J": {
                       "type": "text",
                       "settings": {
-                        "text": "<p>{{ closest.product.metafields.custom.fabric_care | metafield_tag }}</p>",
+                        "text": "<p>{{ closest.product.metafields.custom.fabric_care | metafield_tag }}</p><p>For detailed care instructions, visit <a href=\"/blogs/care-guide\" title=\"Care Guide\">Care Guide</a></p>",
                         "width": "100%",
                         "max_width": "none",
                         "alignment": "left",
@@ -1385,7 +1345,6 @@
                 }
               },
               "block_order": [
-                "accordion_row_NdBezV",
                 "accordion_row_iJM37V",
                 "accordion_row_qhcK6F",
                 "accordion_row_YnzL9M",
