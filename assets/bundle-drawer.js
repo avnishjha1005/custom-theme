@@ -70,7 +70,7 @@ class BundleSizeDrawer extends HTMLElement {
     // Focus the first size option for accessibility
     const firstInput = this.querySelector('.bundle-size-option input:not(:disabled)');
     if (firstInput) {
-      setTimeout(() => firstInput.focus(), 100);
+      setTimeout(() => firstInput.focus(), 300);
     }
   }
 

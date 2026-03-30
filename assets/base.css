@@ -4457,7 +4457,7 @@ text-component {
   cursor: pointer;
   background: transparent;
   transition: transform 0.2s ease;
-  z-index: 10;
+  z-index: var(--layer-raised);
 }
 
 .wishlist-button--with-bg {
