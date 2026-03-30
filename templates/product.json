@@ -1376,7 +1376,7 @@
       "custom_css": [
         "@media screen and (min-width: 768px) {.product-information__media {grid-column: 2/3; }}",
         "@media screen and (max-width: 768px) .group-block>.group-block-content>.group-block.group-block-content {}",
-        ".variant-picker {width: 75%;}",
+        ".variant-picker {width: 100%;}",
         ".slideshow-controls__thumbnails {padding-inline: 2px;}"
       ],
       "settings": {
