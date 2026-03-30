@@ -406,11 +406,6 @@
     align-items: center;
   }
 
-  .promo-popup-split__eyebrow,
-  .promo-popup-split__heading,
-  .promo-popup-split__subheading {
-    display: none;
-  }
 
   .promo-popup-split .promo-popup__cta {
     width: 100%;
