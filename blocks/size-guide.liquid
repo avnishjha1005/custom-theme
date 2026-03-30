@@ -248,6 +248,7 @@
       {%- if has_any_measurement -%}
         {%- if measurement_categories_arr.size == 1 and how_to_measure -%}
           <div id="how-to-measure" class="sg-vendor-content active">
+            <p class="sg-disclaimer">(Please refer to the accompanying diagram for guidance)</p>
             {%- if how_to_measure.image -%}
               <div class="sg-illustration">
                 <img src="{{ how_to_measure.image | image_url: width: 700 }}" loading="lazy" alt="{{ how_to_measure.title | default: 'How to Measure' }}" height="auto" width="auto">
@@ -264,6 +265,7 @@
             {%- if _htm != blank -%}
               {%- assign htm_panel_count = htm_panel_count | plus: 1 -%}
               <div id="how-to-measure-{{ cat }}" class="sg-vendor-content {% if htm_panel_count == 1 %}active{% endif %}">
+                <p class="sg-disclaimer">(Please refer to the accompanying diagram for guidance)</p>
                 {%- if _htm.image -%}
                   <div class="sg-illustration">
                     <img src="{{ _htm.image | image_url: width: 700 }}" loading="lazy" alt="{{ _htm.title | default: cat | capitalize }}" height="auto" width="auto">
