@@ -21,46 +21,71 @@
   {%- endif -%}
 
   <div class="sg-table-container-{{ index }}">
-    {%- if has_cm > 0 -%}
-      <div class="sg-unit-table unit-cm" style="display: block;">
-        <table>
-          <thead>
-            <tr>
-              {%- for col in guide.sizes.value.centimeters[0] -%}
-                <th>{{ col[0] }}</th>
-              {%- endfor -%}
-            </tr>
-          </thead>
-          <tbody>
-            {%- for row in guide.sizes.value.centimeters -%}
+    {%- if has_cm > 0 or has_in > 0 -%}
+      {%- if has_cm > 0 -%}
+        <div class="sg-unit-table unit-cm" style="display: block;">
+          <table>
+            <thead>
               <tr>
-                {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                {%- for col in guide.sizes.value.centimeters[0] -%}
+                  <th>{{ col[0] }}</th>
+                {%- endfor -%}
               </tr>
-            {%- endfor -%}
-          </tbody>
-        </table>
-      </div>
-    {%- endif -%}
+            </thead>
+            <tbody>
+              {%- for row in guide.sizes.value.centimeters -%}
+                <tr>
+                  {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+      {%- endif -%}
 
-    {%- if has_in > 0 -%}
-      <div class="sg-unit-table unit-in" style="display: {% if has_cm > 0 %}none{% else %}block{% endif %};">
-        <table>
-          <thead>
-            <tr>
-              {%- for col in guide.sizes.value.inches[0] -%}
-                <th>{{ col[0] }}</th>
-              {%- endfor -%}
-            </tr>
-          </thead>
-          <tbody>
-            {%- for row in guide.sizes.value.inches -%}
+      {%- if has_in > 0 -%}
+        <div class="sg-unit-table unit-in" style="display: {% if has_cm > 0 %}none{% else %}block{% endif %};">
+          <table>
+            <thead>
               <tr>
-                {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                {%- for col in guide.sizes.value.inches[0] -%}
+                  <th>{{ col[0] }}</th>
+                {%- endfor -%}
               </tr>
-            {%- endfor -%}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {%- for row in guide.sizes.value.inches -%}
+                <tr>
+                  {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+      {%- endif -%}
+    {%- else -%}
+      {% comment %} Fallback: flat JSON array format (no centimeters/inches nesting) {% endcomment %}
+      {%- assign flat_rows = guide.sizes.value -%}
+      {%- if flat_rows and flat_rows.size > 0 -%}
+        <div class="sg-unit-table" style="display: block;">
+          <table>
+            <thead>
+              <tr>
+                {%- for col in flat_rows[0] -%}
+                  <th>{{ col[0] }}</th>
+                {%- endfor -%}
+              </tr>
+            </thead>
+            <tbody>
+              {%- for row in flat_rows -%}
+                <tr>
+                  {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+      {%- endif -%}
     {%- endif -%}
   </div>
 </div>
