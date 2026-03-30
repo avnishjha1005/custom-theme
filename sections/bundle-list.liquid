@@ -163,7 +163,7 @@
   .hotspot-node.is-active .hotspot-text--left {
     transform: translate(0, -50%);
   }
-  
+
   .hotspot-node.is-active { z-index: 15; }
 
   .hs-title { font-size: 14px; font-weight: 500; display: block; text-transform: uppercase; line-height: 1.3; }
@@ -181,6 +181,36 @@
 
   .bundle-meta { padding-top: 20px; }
   .bundle-name { font-size: 16px; text-transform: uppercase; margin: 0 0 10px 0; }
+
+  .bundle-scroll-sentinel {
+    grid-column: 1 / -1;
+    height: 1px;
+  }
+
+  .bundle-loading-spinner {
+    grid-column: 1 / -1;
+    display: none;
+    justify-content: center;
+    padding: 20px 0;
+  }
+
+  .bundle-loading-spinner.is-loading {
+    display: flex;
+  }
+
+  .bundle-loading-spinner::after {
+    content: '';
+    width: 24px;
+    height: 24px;
+    border: 2px solid #ccc;
+    border-top-color: #000;
+    border-radius: 50%;
+    animation: bundle-spin 0.6s linear infinite;
+  }
+
+  @keyframes bundle-spin {
+    to { transform: rotate(360deg); }
+  }
 
   @media (max-width: 768px) {
     .bundle-section-{{ section.id }} {
@@ -230,111 +260,118 @@
 {%- endstyle -%}
 
 <div class="bundle-section-{{ section.id }}">
-  <div class="bundle-wrapper">
+  <div class="bundle-wrapper" id="bundle-wrapper-{{ section.id }}">
     {% if section.settings.collection != blank %}
-      {%- comment -%} Numeric sort: extract number from title, zero-pad, then sort {%- endcomment -%}
-      {% assign sort_entries = '' %}
-      {% for product in section.settings.collection.products %}
-        {% assign title_digits = product.title | remove: 'Look ' | remove: 'look ' | strip %}
-        {% assign num = title_digits | plus: 0 %}
-        {% if num < 10 %}
-          {% assign padded = '000' | append: num %}
-        {% elsif num < 100 %}
-          {% assign padded = '00' | append: num %}
-        {% elsif num < 1000 %}
-          {% assign padded = '0' | append: num %}
-        {% else %}
-          {% assign padded = num %}
-        {% endif %}
-        {% assign entry = padded | append: ':' | append: forloop.index0 %}
-        {% if sort_entries == '' %}
-          {% assign sort_entries = entry %}
-        {% else %}
-          {% assign sort_entries = sort_entries | append: ',' | append: entry %}
-        {% endif %}
-      {% endfor %}
-      {% assign sort_array = sort_entries | split: ',' | sort %}
-      {% assign products_array = section.settings.collection.products %}
-      {% for sorted_entry in sort_array %}
-        {% assign original_index = sorted_entry | split: ':' | last | plus: 0 %}
-        {% assign product = products_array[original_index] %}
-        {% comment %} 9th product (and every 9th after: 9, 18, 27...) becomes 2x2 hero {% endcomment %}
-        {% assign remainder = forloop.index | modulo: 9 %}
-        {% assign is_hero = false %}
-        {% if remainder == 0 %}{% assign is_hero = true %}{% endif %}
+      {% paginate section.settings.collection.products by 20 %}
+        {%- comment -%} Numeric sort: extract number from title, zero-pad, then sort {%- endcomment -%}
+        {% assign sort_entries = '' %}
+        {% for product in section.settings.collection.products %}
+          {% assign title_digits = product.title | remove: 'Look ' | remove: 'look ' | strip %}
+          {% assign num = title_digits | plus: 0 %}
+          {% if num < 10 %}
+            {% assign padded = '000' | append: num %}
+          {% elsif num < 100 %}
+            {% assign padded = '00' | append: num %}
+          {% elsif num < 1000 %}
+            {% assign padded = '0' | append: num %}
+          {% else %}
+            {% assign padded = num %}
+          {% endif %}
+          {% assign entry = padded | append: ':' | append: forloop.index0 %}
+          {% if sort_entries == '' %}
+            {% assign sort_entries = entry %}
+          {% else %}
+            {% assign sort_entries = sort_entries | append: ',' | append: entry %}
+          {% endif %}
+        {% endfor %}
+        {% assign sort_array = sort_entries | split: ',' | sort %}
+        {% assign products_array = section.settings.collection.products %}
+        {% for sorted_entry in sort_array %}
+          {% assign original_index = sorted_entry | split: ':' | last | plus: 0 %}
+          {% assign product = products_array[original_index] %}
+          {% comment %} 9th product (and every 9th after: 9, 18, 27...) becomes 2x2 hero {% endcomment %}
+          {% assign remainder = forloop.index | modulo: 9 %}
+          {% assign is_hero = false %}
+          {% if remainder == 0 %}{% assign is_hero = true %}{% endif %}
 
-        {%- comment -%} Get bundle products and hotspot positions from metafields {%- endcomment -%}
-        {% assign bundle_products = product.metafields.custom.bundle_products.value %}
-        {% assign hotspot_positions = product.metafields.custom.hotspot_positions.value %}
+          {%- comment -%} Get bundle products and hotspot positions from metafields {%- endcomment -%}
+          {% assign bundle_products = product.metafields.custom.bundle_products.value %}
+          {% assign hotspot_positions = product.metafields.custom.hotspot_positions.value %}
 
-        <a href="{{ product.url }}" class="bundle-list-item {% if is_hero %}bundle-item--hero{% endif %}">
-          {% capture visual_part %}
-            <div class="bundle-visual">
-              {% if product.featured_image != blank %}
-                {{ product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
-              {% else %}
-                {{ 'collection-1' | placeholder_svg_tag }}
-              {% endif %}
+          <a href="{{ product.url }}" class="bundle-list-item {% if is_hero %}bundle-item--hero{% endif %}">
+            {% capture visual_part %}
+              <div class="bundle-visual">
+                {% if product.featured_image != blank %}
+                  {{ product.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy' }}
+                {% else %}
+                  {{ 'collection-1' | placeholder_svg_tag }}
+                {% endif %}
 
-              {%- comment -%} DEBUG: Remove this after testing {%- endcomment -%}
-              <!-- DEBUG: hotspot_positions = {{ hotspot_positions | json }} -->
-              <!-- DEBUG: bundle_products count = {{ bundle_products.size }} -->
+                {%- comment -%} DEBUG: Remove this after testing {%- endcomment -%}
+                <!-- DEBUG: hotspot_positions = {{ hotspot_positions | json }} -->
+                <!-- DEBUG: bundle_products count = {{ bundle_products.size }} -->
 
-              {%- comment -%} Render hotspots from metafield data {%- endcomment -%}
-              {% if hotspot_positions != blank and bundle_products != blank %}
-                {% for hotspot in hotspot_positions %}
-                  {% assign hs_x = hotspot.x | default: 50 %}
-                  {% assign hs_y = hotspot.y | default: 50 %}
-                  {% assign product_index = hotspot.product_index | default: 0 | plus: 0 %}
+                {%- comment -%} Render hotspots from metafield data {%- endcomment -%}
+                {% if hotspot_positions != blank and bundle_products != blank %}
+                  {% for hotspot in hotspot_positions %}
+                    {% assign hs_x = hotspot.x | default: 50 %}
+                    {% assign hs_y = hotspot.y | default: 50 %}
+                    {% assign product_index = hotspot.product_index | default: 0 | plus: 0 %}
 
-                  {%- comment -%} Find product by iterating through bundle_products {%- endcomment -%}
-                  {% assign hs_product = nil %}
-                  {% for bp in bundle_products %}
-                    {% if forloop.index0 == product_index %}
-                      {% assign hs_product = bp %}
-                      {% break %}
+                    {%- comment -%} Find product by iterating through bundle_products {%- endcomment -%}
+                    {% assign hs_product = nil %}
+                    {% for bp in bundle_products %}
+                      {% if forloop.index0 == product_index %}
+                        {% assign hs_product = bp %}
+                        {% break %}
+                      {% endif %}
+                    {% endfor %}
+                    <!-- DEBUG LOOP: x={{ hs_x }}, y={{ hs_y }}, idx={{ product_index }}, product={{ hs_product.title }} -->
+
+                    {% if hs_product != blank %}
+                      <div class="hotspot-node"
+                           data-url="{{ hs_product.url }}"
+                           style="left: {{ hs_x }}%; top: {{ hs_y }}%;">
+                        <div class="hotspot-dot" style="--hs-border: {{ section.settings.hotspot_border }}; --hs-bg: {{ section.settings.hotspot_bg }};">
+                        </div>
+                        {% if hs_x <= 25 %}
+                          {% assign hs_text_pos = 'hotspot-text--right' %}
+                        {% elsif hs_x >= 75 %}
+                          {% assign hs_text_pos = 'hotspot-text--left' %}
+                        {% else %}
+                          {% assign hs_text_pos = 'hotspot-text--bottom' %}
+                        {% endif %}
+                        <div class="hotspot-text {{ hs_text_pos }}">
+                          <span class="hs-title">{{ hs_product.title }}</span>
+                          {% if hs_product.price == 0 %}
+                            <span class="hs-price">Price on request</span>
+                          {% else %}
+                            <span class="hs-price">{{ hs_product.price | money }}</span>
+                          {% endif %}
+                        </div>
+                      </div>
                     {% endif %}
                   {% endfor %}
-                  <!-- DEBUG LOOP: x={{ hs_x }}, y={{ hs_y }}, idx={{ product_index }}, product={{ hs_product.title }} -->
+                {% endif %}
+              </div>
+            {% endcapture %}
 
-                  {% if hs_product != blank %}
-                    <div class="hotspot-node"
-                         data-url="{{ hs_product.url }}"
-                         style="left: {{ hs_x }}%; top: {{ hs_y }}%;">
-                      <div class="hotspot-dot" style="--hs-border: {{ section.settings.hotspot_border }}; --hs-bg: {{ section.settings.hotspot_bg }};">
-                      </div>
-                      {% if hs_x <= 25 %}
-                        {% assign hs_text_pos = 'hotspot-text--right' %}
-                      {% elsif hs_x >= 75 %}
-                        {% assign hs_text_pos = 'hotspot-text--left' %}
-                      {% else %}
-                        {% assign hs_text_pos = 'hotspot-text--bottom' %}
-                      {% endif %}
-                      <div class="hotspot-text {{ hs_text_pos }}">
-                        <span class="hs-title">{{ hs_product.title }}</span>
-                        {% if hs_product.price == 0 %}
-                          <span class="hs-price">Price on request</span>
-                        {% else %}
-                          <span class="hs-price">{{ hs_product.price | money }}</span>
-                        {% endif %}
-                      </div>
-                    </div>
-                  {% endif %}
-                {% endfor %}
-              {% endif %}
+            {% capture title_part %}
+              <div class="bundle-name">{{ product.title }}</div>
+            {% endcapture %}
+
+            {{ visual_part }}
+            <div class="bundle-meta">
+              {{ title_part }}
             </div>
-          {% endcapture %}
+          </a>
+        {% endfor %}
 
-          {% capture title_part %}
-            <div class="bundle-name">{{ product.title }}</div>
-          {% endcapture %}
-
-          {{ visual_part }}
-          <div class="bundle-meta">
-            {{ title_part }}
-          </div>
-        </a>
-      {% endfor %}
+        {% if paginate.next %}
+          <div class="bundle-scroll-sentinel" id="bundle-sentinel-{{ section.id }}"></div>
+          <div class="bundle-loading-spinner" id="bundle-spinner-{{ section.id }}"></div>
+        {% endif %}
+      {% endpaginate %}
     {% else %}
       <p style="text-align: center; grid-column: 1 / -1; color: #666;">Select a collection to display looks.</p>
     {% endif %}
@@ -343,8 +380,6 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const nodes = document.querySelectorAll('.hotspot-node');
-
     function positionHotspotText(node) {
       const text = node.querySelector('.hotspot-text');
       if (!text) return;
@@ -376,70 +411,152 @@
       document.querySelectorAll('.bundle-visual').forEach(v => v.classList.remove('has-active-hotspot'));
     }
 
-    nodes.forEach(node => {
-      // Handle click on the hotspot dot (not the tooltip)
-      const dot = node.querySelector('.hotspot-dot');
-      if (dot) {
-        dot.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          const parentNode = this.closest('.hotspot-node');
-          const parentVisual = parentNode.closest('.bundle-visual');
-          const isActive = parentNode.classList.contains('is-active');
+    function bindHotspots(container) {
+      container.querySelectorAll('.hotspot-node').forEach(node => {
+        const dot = node.querySelector('.hotspot-dot');
+        if (dot) {
+          dot.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const parentNode = this.closest('.hotspot-node');
+            const parentVisual = parentNode.closest('.bundle-visual');
+            const isActive = parentNode.classList.contains('is-active');
 
-          clearAllHotspots();
+            clearAllHotspots();
 
-          // If wasn't active, activate it. If was active, just close it.
-          if (!isActive) {
-            parentNode.classList.add('is-active');
-            parentVisual.classList.add('has-active-hotspot');
-            positionHotspotText(parentNode);
+            if (!isActive) {
+              parentNode.classList.add('is-active');
+              parentVisual.classList.add('has-active-hotspot');
+              positionHotspotText(parentNode);
+            }
+          });
+        }
+
+        const tooltip = node.querySelector('.hotspot-text');
+        if (tooltip) {
+          tooltip.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const url = node.getAttribute('data-url');
+            if (url) window.location.href = url;
+          });
+        }
+      });
+
+      container.querySelectorAll('.bundle-visual').forEach(visual => {
+        visual.addEventListener('click', function(e) {
+          if (e.target.closest('.hotspot-node')) return;
+          if (this.classList.contains('has-active-hotspot')) {
+            e.preventDefault();
+            e.stopPropagation();
+            clearAllHotspots();
           }
         });
-      }
+      });
 
-      // Handle click on the tooltip - navigate to product
-      const tooltip = node.querySelector('.hotspot-text');
-      if (tooltip) {
-        tooltip.addEventListener('click', function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          const url = node.getAttribute('data-url');
-          if (url) window.location.href = url;
+      container.querySelectorAll('.bundle-list-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+          const visual = this.querySelector('.bundle-visual');
+          if (visual && visual.classList.contains('has-active-hotspot')) {
+            e.preventDefault();
+          }
         });
-      }
-    });
-
-    // Handle clicks on the visual area - dismiss hotspots without navigating
-    document.querySelectorAll('.bundle-visual').forEach(visual => {
-      visual.addEventListener('click', function(e) {
-        // Don't interfere with hotspot node clicks
-        if (e.target.closest('.hotspot-node')) return;
-
-        // If there's an active hotspot, just dismiss it and prevent navigation
-        if (this.classList.contains('has-active-hotspot')) {
-          e.preventDefault();
-          e.stopPropagation();
-          clearAllHotspots();
-        }
       });
-    });
+    }
 
-    // Handle clicks on the bundle-list-item link to prevent navigation when overlay active
-    document.querySelectorAll('.bundle-list-item').forEach(item => {
-      item.addEventListener('click', function(e) {
-        const visual = this.querySelector('.bundle-visual');
-        if (visual && visual.classList.contains('has-active-hotspot')) {
-          e.preventDefault();
-        }
-      });
-    });
+    // Bind hotspots on initially loaded items
+    const wrapper = document.getElementById('bundle-wrapper-{{ section.id }}');
+    if (wrapper) bindHotspots(wrapper);
 
     document.addEventListener('click', function(e) {
-      // Don't clear hotspots if clicking on one
       if (e.target.closest('.hotspot-node')) return;
       clearAllHotspots();
     });
+
+    // Infinite scroll via Section Rendering API
+    const sentinel = document.getElementById('bundle-sentinel-{{ section.id }}');
+    const spinner = document.getElementById('bundle-spinner-{{ section.id }}');
+    if (sentinel && wrapper) {
+      let currentPage = 1;
+      let loading = false;
+      let done = false;
+      const sectionId = '{{ section.id }}';
+
+      function loadNextPage() {
+        if (loading || done) return;
+        loading = true;
+        currentPage++;
+        if (spinner) spinner.classList.add('is-loading');
+
+        const url = window.location.pathname + '?page=' + currentPage + '&section_id=' + sectionId;
+
+        fetch(url)
+          .then(function(res) { return res.text(); })
+          .then(function(html) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newWrapper = doc.getElementById('bundle-wrapper-' + sectionId);
+
+            if (!newWrapper) {
+              done = true;
+              sentinel.remove();
+              if (spinner) spinner.remove();
+              return;
+            }
+
+            const newItems = newWrapper.querySelectorAll('.bundle-list-item');
+            if (newItems.length === 0) {
+              done = true;
+              sentinel.remove();
+              if (spinner) spinner.remove();
+              return;
+            }
+
+            // Check if there's a next page in the new response
+            const newSentinel = newWrapper.querySelector('.bundle-scroll-sentinel');
+            if (!newSentinel) {
+              done = true;
+            }
+
+            // Append new items before the sentinel
+            const fragment = document.createDocumentFragment();
+            newItems.forEach(function(item) {
+              fragment.appendChild(item);
+            });
+
+            // Bind hotspots on new items
+            const tempDiv = document.createElement('div');
+            tempDiv.appendChild(fragment);
+            bindHotspots(tempDiv);
+
+            // Move items into the wrapper before the sentinel
+            while (tempDiv.firstChild) {
+              wrapper.insertBefore(tempDiv.firstChild, sentinel);
+            }
+
+            if (done) {
+              observer.disconnect();
+              sentinel.remove();
+              if (spinner) spinner.remove();
+            }
+
+            loading = false;
+            if (spinner) spinner.classList.remove('is-loading');
+          })
+          .catch(function() {
+            loading = false;
+            if (spinner) spinner.classList.remove('is-loading');
+          });
+      }
+
+      const observer = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) {
+          loadNextPage();
+        }
+      }, { rootMargin: '400px' });
+
+      observer.observe(sentinel);
+    }
   });
 </script>
 {% schema %}
