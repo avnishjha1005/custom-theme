@@ -109,48 +109,6 @@
      
     {% sections 'mobile-tab-bar' %}
 
-    {% if template.suffix == 'wishlist' or request.path contains '/apps/wishlist' %}
-      <script>
-        (function() {
-          function handleZeroPriceItems() {
-            document.querySelectorAll('wishlist-product-card').forEach(function(card) {
-              var shadow = card.shadowRoot;
-              var root = shadow || card;
-              var priceEls = root.querySelectorAll('.wk-price .price, .wk-price');
-              priceEls.forEach(function(el) {
-                var text = el.textContent.trim().replace(/[^0-9.,]/g, '').replace(/,/g, '');
-                var num = parseFloat(text);
-                if (num === 0 || text === '' || text === '0' || text === '0.00' || text === '00') {
-                  // Replace price with "Price on Request"
-                  var priceContainer = el.closest('.wk-price') || el;
-                  priceContainer.innerHTML = '<span style="font-size:inherit;color:inherit;">Price on Request</span>';
-                  // Hide add to cart / CTA button
-                  var form = root.querySelector('.wk-form');
-                  if (form) form.style.display = 'none';
-                  var ctaBtn = root.querySelector('.wk-cta-button');
-                  if (ctaBtn) ctaBtn.style.display = 'none';
-                  var addToCart = root.querySelector('wishlist-add-to-cart, [data-add-to-cart]');
-                  if (addToCart) addToCart.style.display = 'none';
-                }
-              });
-            });
-          }
-
-          // Run after wishlist loads - observe DOM for wishlist cards
-          var observer = new MutationObserver(function() {
-            handleZeroPriceItems();
-          });
-          observer.observe(document.body, { childList: true, subtree: true });
-
-          // Also run on load and with delays for shadow DOM rendering
-          document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(handleZeroPriceItems, 1000);
-            setTimeout(handleZeroPriceItems, 3000);
-            setTimeout(handleZeroPriceItems, 5000);
-          });
-        })();
-      </script>
-    {% endif %}
 
     {% if settings.wishlist-floating-button-position %}
       <a href="/pages/wishlist" class="button-floating">
