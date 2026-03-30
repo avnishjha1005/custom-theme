@@ -33,47 +33,137 @@
 
 {% comment %}
   PRODUCT TYPE → MEASUREMENT CATEGORY MAPPING
-  Edit these lists to match your store's product types
+  Edit these lists to match your store's product types.
+  Rings are separate from jewelry — ring sizing is unique.
 {% endcomment %}
 {%- assign footwear_types = 'shoes,shoe,footwear,sandals,sandal,boots,boot,heels,heel,sneakers,sneaker,loafers,flats,mules,slides' | split: ',' -%}
-{%- assign jewelry_types = 'rings,ring,bracelets,bracelet,necklaces,necklace,earrings,earring,jewelry,jewellery,bangles,pendant,chain' | split: ',' -%}
+{%- assign rings_types = 'rings,ring' | split: ',' -%}
+{%- assign jewelry_types = 'bracelets,bracelet,necklaces,necklace,earrings,earring,jewelry,jewellery,bangles,pendant,chain' | split: ',' -%}
 {%- assign bags_types = 'bags,bag,handbags,handbag,purse,clutch,tote,backpack,satchel' | split: ',' -%}
-{%- assign product_type_lower = product.type | downcase | strip -%}
-{%- assign product_category = product.category | downcase | strip -%}
-{%- assign measurement_category = 'clothing' -%}
 
-{%- for type in footwear_types -%}
-  {%- if product_category contains type -%}
-    {%- assign measurement_category = 'footwear' -%}
+{% comment %}
+  Helper: detect measurement category for a single product.
+  Checks both product.type and product.category for all categories.
+  Priority: footwear > rings > jewelry > bags > clothing (fallback)
+{% endcomment %}
+{%- capture _detect_category_code -%}detect{%- endcapture -%}
+
+{% comment %}
+  For bundles: collect measurement categories from all bundled products.
+  For single products: just detect the one category.
+  Result: comma-separated list of unique category handles in `all_measurement_categories`
+{% endcomment %}
+{%- assign all_measurement_categories = '' -%}
+
+{%- if is_bundle_auto and bundle_products_for_guides and bundle_products_for_guides.size > 0 -%}
+  {%- for bp in bundle_products_for_guides -%}
+    {%- assign _pt = bp.type | downcase | strip -%}
+    {%- assign _pc = bp.category | downcase | strip -%}
+    {%- assign _cat = 'clothing' -%}
+
+    {%- for type in footwear_types -%}
+      {%- if _pt contains type or _pc contains type -%}
+        {%- assign _cat = 'footwear' -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- if _cat == 'clothing' -%}
+      {%- for type in rings_types -%}
+        {%- if _pt contains type or _pc contains type -%}
+          {%- assign _cat = 'rings' -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+
+    {%- if _cat == 'clothing' -%}
+      {%- for type in jewelry_types -%}
+        {%- if _pt contains type or _pc contains type -%}
+          {%- assign _cat = 'jewelry' -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+
+    {%- if _cat == 'clothing' -%}
+      {%- for type in bags_types -%}
+        {%- if _pt contains type or _pc contains type -%}
+          {%- assign _cat = 'bags' -%}
+          {%- break -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+
+    {%- unless all_measurement_categories contains _cat -%}
+      {%- if all_measurement_categories == '' -%}
+        {%- assign all_measurement_categories = _cat -%}
+      {%- else -%}
+        {%- assign all_measurement_categories = all_measurement_categories | append: ',' | append: _cat -%}
+      {%- endif -%}
+    {%- endunless -%}
+  {%- endfor -%}
+{%- else -%}
+  {% comment %} Single product: detect its category {% endcomment %}
+  {%- assign product_type_lower = product.type | downcase | strip -%}
+  {%- assign product_category = product.category | downcase | strip -%}
+  {%- assign measurement_category = 'clothing' -%}
+
+  {%- for type in footwear_types -%}
+    {%- if product_type_lower contains type or product_category contains type -%}
+      {%- assign measurement_category = 'footwear' -%}
+      {%- break -%}
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if measurement_category == 'clothing' -%}
+    {%- for type in rings_types -%}
+      {%- if product_type_lower contains type or product_category contains type -%}
+        {%- assign measurement_category = 'rings' -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- if measurement_category == 'clothing' -%}
+    {%- for type in jewelry_types -%}
+      {%- if product_type_lower contains type or product_category contains type -%}
+        {%- assign measurement_category = 'jewelry' -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- if measurement_category == 'clothing' -%}
+    {%- for type in bags_types -%}
+      {%- if product_type_lower contains type or product_category contains type -%}
+        {%- assign measurement_category = 'bags' -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- assign all_measurement_categories = measurement_category -%}
+{%- endif -%}
+
+{% comment %}
+  Split categories and fetch measurement instructions for each.
+  The metaobject entry HANDLE must match the category key (clothing, footwear, rings, jewelry, bags)
+{% endcomment %}
+{%- assign measurement_categories_arr = all_measurement_categories | split: ',' -%}
+{%- assign how_to_measure = nil -%}
+{%- assign has_any_measurement = false -%}
+{%- for cat in measurement_categories_arr -%}
+  {%- assign _instr = shop.metaobjects['measurement_instructions'][cat] -%}
+  {%- if _instr != blank -%}
+    {%- assign has_any_measurement = true -%}
     {%- break -%}
   {%- endif -%}
 {%- endfor -%}
-
-{%- if measurement_category == 'clothing' -%}
-  {%- for type in jewelry_types -%}
-    {%- if product_type_lower contains type -%}
-      {%- assign measurement_category = 'jewelry' -%}
-      {%- break -%}
-    {%- endif -%}
-  {%- endfor -%}
+{% comment %} For backwards compat: set how_to_measure if only one category {% endcomment %}
+{%- if measurement_categories_arr.size == 1 -%}
+  {%- assign how_to_measure = shop.metaobjects['measurement_instructions'][measurement_categories_arr[0]] -%}
 {%- endif -%}
-
-{%- if measurement_category == 'clothing' -%}
-  {%- for type in bags_types -%}
-    {%- if product_type_lower contains type -%}
-      {%- assign measurement_category = 'bags' -%}
-      {%- break -%}
-    {%- endif -%}
-  {%- endfor -%}
-{%- endif -%}
-
-{% comment %} Fallback: Tops, Jackets, Dresses, Pants, etc. all map to 'clothing' {% endcomment %}
-
-{% comment %}
-  Find matching measurement instructions directly from metaobjects.
-  The metaobject entry HANDLE must match the category key (clothing, footwear, jewelry, bags)
-{% endcomment %}
-{% assign how_to_measure = shop.metaobjects['measurement_instructions'][measurement_category] %}
 
 
 {%- assign has_guides = false -%}
@@ -104,22 +194,35 @@
 
     <div class="sg-body">
       <div class="sg-vendor-tabs">
-        {% comment %} How to Measure tab - always first if available {% endcomment %}
-        {%- if how_to_measure -%}
-          <button class="sg-tab-link active" data-tab="how-to-measure">
-            HOW TO MEASURE
-          </button>
+        {% comment %} How to Measure tab(s) - always first {% endcomment %}
+        {%- if has_any_measurement -%}
+          {%- if measurement_categories_arr.size == 1 and how_to_measure -%}
+            <button class="sg-tab-link active" data-tab="how-to-measure">
+              HOW TO MEASURE
+            </button>
+          {%- else -%}
+            {%- assign htm_tab_count = 0 -%}
+            {%- for cat in measurement_categories_arr -%}
+              {%- assign _htm = shop.metaobjects['measurement_instructions'][cat] -%}
+              {%- if _htm != blank -%}
+                {%- assign htm_tab_count = htm_tab_count | plus: 1 -%}
+                <button class="sg-tab-link {% if htm_tab_count == 1 %}active{% endif %}" data-tab="how-to-measure-{{ cat }}">
+                  HOW TO MEASURE {{ cat | upcase | replace: '_', ' ' }}
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
         {%- endif -%}
 
         {% comment %} Vendor/Brand tabs {% endcomment %}
         {%- if guides != blank -%}
           {%- for guide in guides -%}
-            <button class="sg-tab-link {% if how_to_measure == nil and forloop.first %}active{% endif %}" data-tab="vendor-{{ forloop.index }}">
+            <button class="sg-tab-link {% if has_any_measurement == false and forloop.first %}active{% endif %}" data-tab="vendor-{{ forloop.index }}">
               {{ guide.vendor_name | upcase }} SIZE GUIDE
             </button>
           {%- endfor -%}
         {%- elsif auto_single_guide != blank -%}
-          <button class="sg-tab-link {% if how_to_measure == nil %}active{% endif %}" data-tab="vendor-1">
+          <button class="sg-tab-link {% if has_any_measurement == false %}active{% endif %}" data-tab="vendor-1">
             {{ auto_single_guide.vendor_name | upcase }} SIZE GUIDE
           </button>
         {%- elsif is_bundle_auto -%}
@@ -131,7 +234,7 @@
               {%- assign bp_guide = shop.metaobjects['size_guide'][bp_handle] -%}
               {%- if bp_guide != blank -%}
                 {%- assign vendor_tab_index = vendor_tab_index | plus: 1 -%}
-                <button class="sg-tab-link {% if how_to_measure == nil and vendor_tab_index == 1 %}active{% endif %}" data-tab="vendor-{{ vendor_tab_index }}">
+                <button class="sg-tab-link {% if has_any_measurement == false and vendor_tab_index == 1 %}active{% endif %}" data-tab="vendor-{{ vendor_tab_index }}">
                   {{ bp_guide.vendor_name | upcase }} SIZE GUIDE
                 </button>
                 {%- assign seen_vendors_tab = seen_vendors_tab | append: bp_handle | append: ',' -%}
@@ -141,27 +244,47 @@
         {%- endif -%}
       </div>
 
-      {% comment %} How to Measure content panel {% endcomment %}
-      {%- if how_to_measure -%}
-        <div id="how-to-measure" class="sg-vendor-content active">
-          {%- if how_to_measure.image -%}
-            <div class="sg-illustration">
-              <img src="{{ how_to_measure.image | image_url: width: 700 }}" loading="lazy" alt="{{ how_to_measure.title | default: 'How to Measure' }}" height="auto" width="auto">
+      {% comment %} How to Measure content panel(s) {% endcomment %}
+      {%- if has_any_measurement -%}
+        {%- if measurement_categories_arr.size == 1 and how_to_measure -%}
+          <div id="how-to-measure" class="sg-vendor-content active">
+            {%- if how_to_measure.image -%}
+              <div class="sg-illustration">
+                <img src="{{ how_to_measure.image | image_url: width: 700 }}" loading="lazy" alt="{{ how_to_measure.title | default: 'How to Measure' }}" height="auto" width="auto">
+              </div>
+            {%- endif -%}
+            <div class="sg-htm-instructions">
+              {{ how_to_measure.instructions | metafield_tag }}
             </div>
-          {%- endif -%}
-          <div class="sg-htm-instructions">
-            {{ how_to_measure.instructions | metafield_tag }}
           </div>
-        </div>
+        {%- else -%}
+          {%- assign htm_panel_count = 0 -%}
+          {%- for cat in measurement_categories_arr -%}
+            {%- assign _htm = shop.metaobjects['measurement_instructions'][cat] -%}
+            {%- if _htm != blank -%}
+              {%- assign htm_panel_count = htm_panel_count | plus: 1 -%}
+              <div id="how-to-measure-{{ cat }}" class="sg-vendor-content {% if htm_panel_count == 1 %}active{% endif %}">
+                {%- if _htm.image -%}
+                  <div class="sg-illustration">
+                    <img src="{{ _htm.image | image_url: width: 700 }}" loading="lazy" alt="{{ _htm.title | default: cat | capitalize }}" height="auto" width="auto">
+                  </div>
+                {%- endif -%}
+                <div class="sg-htm-instructions">
+                  {{ _htm.instructions | metafield_tag }}
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
       {%- endif -%}
 
       {% comment %} Vendor size guide content panels {% endcomment %}
       {%- if guides != blank -%}
         {%- for guide in guides -%}
-          {% render 'size-guide-panel', guide: guide, index: forloop.index, is_first: forloop.first, how_to_measure: how_to_measure %}
+          {% render 'size-guide-panel', guide: guide, index: forloop.index, is_first: forloop.first, has_any_measurement: has_any_measurement %}
         {%- endfor -%}
       {%- elsif auto_single_guide != blank -%}
-        {% render 'size-guide-panel', guide: auto_single_guide, index: 1, is_first: true, how_to_measure: how_to_measure %}
+        {% render 'size-guide-panel', guide: auto_single_guide, index: 1, is_first: true, has_any_measurement: has_any_measurement %}
       {%- elsif is_bundle_auto -%}
         {%- assign seen_vendors_panel = '' -%}
         {%- assign vendor_panel_index = 0 -%}
@@ -176,7 +299,7 @@
               {%- else -%}
                 {%- assign is_first_panel = false -%}
               {%- endif -%}
-              {% render 'size-guide-panel', guide: bp_guide, index: vendor_panel_index, is_first: is_first_panel, how_to_measure: how_to_measure %}
+              {% render 'size-guide-panel', guide: bp_guide, index: vendor_panel_index, is_first: is_first_panel, has_any_measurement: has_any_measurement %}
               {%- assign seen_vendors_panel = seen_vendors_panel | append: bp_handle | append: ',' -%}
             {%- endif -%}
           {%- endunless -%}
@@ -297,12 +420,15 @@
     .sg-close-icon { background: none; border: none; cursor: pointer; }
 
     .sg-body { padding: 0 25px 25px; overflow-y: auto; }
-    .sg-vendor-tabs { display: flex; flex-wrap: wrap; gap: 15px 20px; margin-bottom: 20px; padding-bottom: 0; }
+    .sg-vendor-tabs { display: flex; flex-wrap: nowrap; gap: 20px; margin-bottom: 20px; padding-bottom: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+    .sg-vendor-tabs::-webkit-scrollbar { display: none; }
     
     .sg-tab-link {
       background: none;
       border: none;
       padding: 10px 0;
+      white-space: nowrap;
+      flex-shrink: 0;
       font-family: Inter, sans-serif;
       font-weight: 700;
       font-size: 10px;
