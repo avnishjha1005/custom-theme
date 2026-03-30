@@ -76,6 +76,11 @@
     .product-details .product-actions .product-title-block {
       display: block !important;
     }
+
+    /* Respect hidden attribute on child blocks inside product-actions (e.g. buy-now hidden for price-on-request) */
+    .product-details .product-actions [hidden] {
+      display: none !important;
+    }
   }
 
   .view-product-title {

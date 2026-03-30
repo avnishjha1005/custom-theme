@@ -102,9 +102,20 @@
                   <span class="swatch-count">+{{ remaining_count }}</span>
                 {%- endif -%}
               </div>
+            {%- else -%}
+              {%- assign size_max_visible = 1 -%}
+              {%- if product_option.values.size > size_max_visible -%}
+                <div class="size-mobile-trigger" data-option-name="{{ product_option.name | escape }}">
+                  {%- for product_option_value in product_option.values limit: size_max_visible -%}
+                    <span class="size-mobile-trigger__item{% if product_option_value.selected %} size-mobile-trigger__item--selected{% endif %}">{{ product_option_value | escape }}</span>
+                  {%- endfor -%}
+                  {%- assign size_remaining = product_option.values.size | minus: size_max_visible -%}
+                  <span class="swatch-count">+{{ size_remaining }}</span>
+                </div>
+              {%- endif -%}
             {%- endif -%}
 
-            <div class="swatch-container{% if variant_style == 'swatch' %} swatch-container--mobile-hidden{% endif %}">
+            <div class="swatch-container{% if variant_style == 'swatch' %} swatch-container--mobile-hidden{% endif %}{% if variant_style != 'swatch' and product_option.values.size > 1 %} swatch-container--size-hidden{% endif %}" {% if variant_style != 'swatch' and product_option.values.size > 1 %}style="display:none"{% endif %}>
               {%- for product_option_value in product_option.values -%}
                 {% if product_option_value.size > longest_value and option_id_attribute %}
                   {% assign longest_value = product_option_value.size %}
@@ -229,6 +240,26 @@
       </script>
     </form>
 
+    <style>
+      .swatch-drawer{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0;transition:opacity .3s ease}
+      .swatch-drawer--active{pointer-events:auto;opacity:1}
+      .swatch-drawer__overlay{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+      .swatch-drawer__content{position:absolute;bottom:0;left:0;right:0;background:#fff;max-height:70vh;transform:translateY(100%);transition:transform .3s ease;display:flex;flex-direction:column}
+      .swatch-drawer--active .swatch-drawer__content{transform:translateY(0)}
+      .swatch-drawer__header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px}
+      .swatch-drawer__title{font-family:'Inter',sans-serif;font-size:16px;font-weight:400;margin:0;color:#000}
+      .swatch-drawer__close{background:none;border:none;font-size:24px;line-height:1;cursor:pointer;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:#000}
+      .swatch-drawer__color-label{padding:0 20px 14px;margin-bottom:18px}
+      .swatch-drawer__color-prefix,.swatch-drawer__color-value{font-family:'Inter',sans-serif;font-size:14px;font-weight:400;color:#000}
+      .swatch-drawer__body{padding:0 20px 20px;overflow-y:auto;display:flex;flex-wrap:wrap;gap:12px}
+      .swatch-drawer__body .variant-option__button-label{display:flex;align-items:center;padding:8px 12px;border:1px solid #e5e5e5;min-height:44px;cursor:pointer;position:relative}
+      .swatch-drawer__body .variant-option__button-label:has(input:checked){border-color:#000}
+      .swatch-drawer__body .variant-option__button-label input{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0}
+      .size-drawer__content{bottom:0;left:auto;right:0;top:0;width:450px;max-width:100%;max-height:none;height:100%;transform:translateX(100%);box-shadow:-10px 0 20px rgba(0,0,0,.05)}
+      .size-drawer.swatch-drawer--active .size-drawer__content{transform:translateX(0)}
+      @media(max-width:749px){.size-drawer__content{width:100%;top:auto;bottom:0;left:0;right:0;height:auto;max-height:70vh;transform:translateY(100%);box-shadow:none}.size-drawer.swatch-drawer--active .size-drawer__content{transform:translateY(0)}}
+    </style>
+
     {%- comment -%} Mobile Swatch Drawer {%- endcomment -%}
     <div class="swatch-drawer" id="swatch-drawer">
       <div class="swatch-drawer__overlay"></div>
@@ -245,64 +276,109 @@
       </div>
     </div>
 
+    {%- comment -%} Size Drawer - slides from right {%- endcomment -%}
+    <div class="swatch-drawer size-drawer" id="size-drawer">
+      <div class="swatch-drawer__overlay"></div>
+      <div class="swatch-drawer__content size-drawer__content">
+        <div class="swatch-drawer__header">
+          <h3 class="swatch-drawer__title">Select size</h3>
+          <button class="swatch-drawer__close" aria-label="Close">×</button>
+        </div>
+        <div class="swatch-drawer__color-label">
+          <span class="swatch-drawer__color-prefix">Size:</span>
+          <span class="swatch-drawer__color-value" id="size-drawer-value"></span>
+        </div>
+        <div class="swatch-drawer__body" id="size-drawer-body"></div>
+      </div>
+    </div>
+
   </variant-picker>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const variantPicker = document.querySelector('variant-picker');
-      if (!variantPicker) return;
+    // Swatch drawer
+    document.addEventListener('click', function(e) {
+      var trigger = e.target.closest('.swatch-mobile-trigger');
+      if (!trigger) return;
+      var drawer = document.getElementById('swatch-drawer');
+      if (!drawer) return;
+      var fieldset = trigger.closest('fieldset');
+      var selectedValue = fieldset.querySelector('.variant-option__swatch-value');
+      var swatchContainer = fieldset.querySelector('.swatch-container');
+      var drawerBody = drawer.querySelector('.swatch-drawer__body');
+      var drawerColorValue = drawer.querySelector('.swatch-drawer__color-value');
+      drawerColorValue.textContent = selectedValue ? selectedValue.textContent.trim() : 'Select';
+      drawerBody.innerHTML = swatchContainer.innerHTML;
+      drawer.classList.add('swatch-drawer--active');
+      document.body.style.overflow = 'hidden';
 
-      const drawer = document.getElementById('swatch-drawer');
-      const drawerBody = drawer.querySelector('.swatch-drawer__body');
-      const drawerColorValue = drawer.querySelector('.swatch-drawer__color-value');
-      const closeBtn = drawer.querySelector('.swatch-drawer__close');
-      const overlay = drawer.querySelector('.swatch-drawer__overlay');
-
-      // Open drawer when mobile trigger is clicked
-      variantPicker.addEventListener('click', function(e) {
-        const trigger = e.target.closest('.swatch-mobile-trigger');
-        if (!trigger) return;
-        console.log("triggered");
-        const fieldset = trigger.closest('fieldset');
-        const selectedValue = fieldset.querySelector('.variant-option__swatch-value');
-        const swatchContainer = fieldset.querySelector('.swatch-container');
-
-        // Get current selected color name
-        const currentColor = selectedValue ? selectedValue.textContent.trim() : 'Select';
-        drawerColorValue.textContent = currentColor;
-        drawerBody.innerHTML = swatchContainer.innerHTML;
-
-        // Open drawer
-        drawer.classList.add('swatch-drawer--active');
-        document.body.style.overflow = 'hidden';
-
-        // Handle selections in drawer
-        drawerBody.querySelectorAll('input[type="radio"]').forEach(input => {
-          input.addEventListener('change', function() {
-            // Update the color label in drawer
-            drawerColorValue.textContent = this.value;
-
-            // Find the corresponding input in the main form
-            const mainInput = swatchContainer.querySelector(`input[value="${this.value}"]`);
-            if (mainInput) {
-              mainInput.checked = true;
-              mainInput.dispatchEvent(new Event('change', { bubbles: true }));
-            }
-            // Close drawer after selection
-            closeDrawer();
-          });
+      drawerBody.querySelectorAll('input[type="radio"]').forEach(function(input) {
+        input.addEventListener('change', function() {
+          drawerColorValue.textContent = this.value;
+          var mainInput = swatchContainer.querySelector('input[value="' + CSS.escape(this.value) + '"]');
+          if (mainInput) {
+            mainInput.checked = true;
+            mainInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          drawer.classList.remove('swatch-drawer--active');
+          document.body.style.overflow = '';
         });
       });
+    });
 
-      // Close drawer functions
-      function closeDrawer() {
-        drawer.classList.remove('swatch-drawer--active');
-        document.body.style.overflow = '';
+    // Size drawer
+    document.addEventListener('click', function(e) {
+      var sizeTrigger = e.target.closest('.size-mobile-trigger');
+      if (!sizeTrigger) return;
+      var sizeDrawer = document.getElementById('size-drawer');
+      if (!sizeDrawer) return;
+      var fieldset = sizeTrigger.closest('fieldset');
+      var swatchContainer = fieldset.querySelector('.swatch-container');
+      var sizeDrawerBody = document.getElementById('size-drawer-body');
+      var sizeDrawerValue = document.getElementById('size-drawer-value');
+      var checkedInput = swatchContainer.querySelector('input[type="radio"]:checked');
+      sizeDrawerValue.textContent = checkedInput ? checkedInput.value : '';
+      sizeDrawerBody.innerHTML = swatchContainer.innerHTML;
+
+      sizeDrawer.classList.add('swatch-drawer--active');
+      document.body.style.overflow = 'hidden';
+
+      if (checkedInput) {
+        var drawerInput = sizeDrawerBody.querySelector('input[value="' + CSS.escape(checkedInput.value) + '"]');
+        if (drawerInput) drawerInput.checked = true;
       }
 
-      closeBtn.addEventListener('click', closeDrawer);
-      overlay.addEventListener('click', closeDrawer);
+      sizeDrawerBody.querySelectorAll('input[type="radio"]').forEach(function(input) {
+        input.addEventListener('change', function() {
+          sizeDrawerValue.textContent = this.value;
+          var mainInput = swatchContainer.querySelector('input[value="' + CSS.escape(this.value) + '"]');
+          if (mainInput) {
+            mainInput.checked = true;
+            mainInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          sizeDrawer.classList.remove('swatch-drawer--active');
+          document.body.style.overflow = '';
+        });
+      });
     });
+
+    // Close drawers via overlay or close button
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.swatch-drawer__close') || e.target.closest('.swatch-drawer__overlay')) {
+        var drawer = e.target.closest('.swatch-drawer');
+        if (drawer) {
+          drawer.classList.remove('swatch-drawer--active');
+          document.body.style.overflow = '';
+        }
+      }
+    });
+
+    // Move drawers to body so they aren't clipped by parent overflow/stacking
+    (function() {
+      var swatchDrawer = document.getElementById('swatch-drawer');
+      var sizeDrawer = document.getElementById('size-drawer');
+      if (swatchDrawer) document.body.appendChild(swatchDrawer);
+      if (sizeDrawer) document.body.appendChild(sizeDrawer);
+    })();
   </script>
 {% endunless %}
 {% endunless %}
@@ -326,12 +402,51 @@
     color: var(--color-foreground, #000);
   }
 
+  /* Size trigger */
+  .size-mobile-trigger {
+    padding-bottom: 10px;
+    justify-content: end;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    flex-wrap: wrap;
+  }
+
+  .size-mobile-trigger__item {
+    font-size: 14px;
+    color: var(--color-foreground, #000);
+  }
+
+  @media (max-width: 749px) {
+    .size-mobile-trigger__item {
+      font-size: 10px;
+    }
+    .swatch-count {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-foreground, #000);
+  }
+  }
+
+  .size-mobile-trigger__item--selected {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Hide full size list when trigger is present (all breakpoints) */
+  .variant-option--buttons .swatch-container--mobile-hidden {
+    display: none !important;
+  }
+
   @media (max-width: 749px) {
     .variant-option--swatches .swatch-mobile-trigger {
       display: flex;
     }
 
-    .variant-option--swatches .swatch-container {
+    /* Swatch container hidden on mobile for swatches only */
+    .variant-option--swatches .swatch-container--mobile-hidden {
       display: none !important;
     }
 
@@ -435,6 +550,66 @@
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
+  }
+
+  /* Size drawer - slide from right */
+  .size-drawer__content {
+    bottom: 0;
+    left: auto;
+    right: 0;
+    top: 0;
+    width: 450px;
+    max-width: 100%;
+    max-height: none;
+    height: 100%;
+    transform: translateX(100%);
+    box-shadow: -10px 0 20px rgba(0,0,0,0.05);
+  }
+
+  .size-drawer.swatch-drawer--active .size-drawer__content {
+    transform: translateX(0);
+  }
+
+  @media (max-width: 749px) {
+    .size-drawer__content {
+      width: 100%;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: auto;
+      max-height: 70vh;
+      transform: translateY(100%);
+      box-shadow: none;
+    }
+
+    .size-drawer.swatch-drawer--active .size-drawer__content {
+      transform: translateY(0);
+    }
+  }
+
+  .swatch-drawer__body .variant-option__button-label {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 0;
+    min-height: 44px;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .swatch-drawer__body .variant-option__button-label:has(input:checked) {
+    border-color: #000;
+  }
+
+  .swatch-drawer__body .variant-option__button-label input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    margin: 0;
   }
 
   /* Original styles preserved below */

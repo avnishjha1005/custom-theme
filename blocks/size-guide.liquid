@@ -7,7 +7,29 @@
   Categories: clothing, footwear, jewelry (add more as needed)
 {% endcomment %}
 
+{% comment %}
+  Priority: manual metafield override > auto-lookup by vendor handle
+  If selected_size_guide is set on the product, use that.
+  Otherwise, auto-lookup the size_guide metaobject by the product's vendor handle.
+{% endcomment %}
+{%- assign product = closest.product -%}
+
 {%- assign guides = product.metafields.custom.selected_size_guide.value -%}
+{%- assign auto_single_guide = nil -%}
+{%- assign is_bundle_auto = false -%}
+{%- assign bundle_products_for_guides = nil -%}
+{%- if guides == blank -%}
+  {% comment %} Check if this is a bundle/look product {% endcomment %}
+  {%- assign bundle_products_for_guides = product.metafields.custom.bundle_products.value -%}
+  {%- if bundle_products_for_guides and bundle_products_for_guides.size > 0 -%}
+    {% comment %} Bundle: we'll pull vendors from items and look up guides during rendering {% endcomment %}
+    {%- assign is_bundle_auto = true -%}
+  {%- else -%}
+    {% comment %} Regular product: look up by product vendor {% endcomment %}
+    {%- assign vendor_handle = product.vendor | handleize -%}
+    {%- assign auto_single_guide = shop.metaobjects['size_guide'][vendor_handle] -%}
+  {%- endif -%}
+{%- endif -%}
 
 {% comment %}
   PRODUCT TYPE → MEASUREMENT CATEGORY MAPPING
@@ -54,7 +76,16 @@
 {% assign how_to_measure = shop.metaobjects['measurement_instructions'][measurement_category] %}
 
 
+{%- assign has_guides = false -%}
 {%- if guides != blank -%}
+  {%- assign has_guides = true -%}
+{%- elsif auto_single_guide != blank -%}
+  {%- assign has_guides = true -%}
+{%- elsif is_bundle_auto -%}
+  {%- assign has_guides = true -%}
+{%- endif -%}
+
+{%- if has_guides -%}
   <div class="btn-wrapper">
   <button type="button" class="sg-trigger-btn" id="SizeGuideTrigger">
     Size Guide
@@ -81,11 +112,33 @@
         {%- endif -%}
 
         {% comment %} Vendor/Brand tabs {% endcomment %}
-        {%- for guide in guides -%}
-          <button class="sg-tab-link {% if how_to_measure == nil and forloop.first %}active{% endif %}" data-tab="vendor-{{ forloop.index }}">
-            {{ guide.vendor_name | upcase }} SIZE GUIDE
+        {%- if guides != blank -%}
+          {%- for guide in guides -%}
+            <button class="sg-tab-link {% if how_to_measure == nil and forloop.first %}active{% endif %}" data-tab="vendor-{{ forloop.index }}">
+              {{ guide.vendor_name | upcase }} SIZE GUIDE
+            </button>
+          {%- endfor -%}
+        {%- elsif auto_single_guide != blank -%}
+          <button class="sg-tab-link {% if how_to_measure == nil %}active{% endif %}" data-tab="vendor-1">
+            {{ auto_single_guide.vendor_name | upcase }} SIZE GUIDE
           </button>
-        {%- endfor -%}
+        {%- elsif is_bundle_auto -%}
+          {%- assign seen_vendors_tab = '' -%}
+          {%- assign vendor_tab_index = 0 -%}
+          {%- for bp in bundle_products_for_guides -%}
+            {%- assign bp_handle = bp.vendor | handleize -%}
+            {%- unless seen_vendors_tab contains bp_handle -%}
+              {%- assign bp_guide = shop.metaobjects['size_guide'][bp_handle] -%}
+              {%- if bp_guide != blank -%}
+                {%- assign vendor_tab_index = vendor_tab_index | plus: 1 -%}
+                <button class="sg-tab-link {% if how_to_measure == nil and vendor_tab_index == 1 %}active{% endif %}" data-tab="vendor-{{ vendor_tab_index }}">
+                  {{ bp_guide.vendor_name | upcase }} SIZE GUIDE
+                </button>
+                {%- assign seen_vendors_tab = seen_vendors_tab | append: bp_handle | append: ',' -%}
+              {%- endif -%}
+            {%- endunless -%}
+          {%- endfor -%}
+        {%- endif -%}
       </div>
 
       {% comment %} How to Measure content panel {% endcomment %}
@@ -103,76 +156,32 @@
       {%- endif -%}
 
       {% comment %} Vendor size guide content panels {% endcomment %}
-      {%- for guide in guides -%}
-        <div id="vendor-{{ forloop.index }}" class="sg-vendor-content {% if how_to_measure == nil and forloop.first %}active{% endif %}">
-          
-          <p class="sg-disclaimer">
-            {{ guide.disclaimer | default: "Each item is measured to help you choose the correct fit. Please refer to the garment's measurements below to select the appropriate size." }}
-          </p>
-
-          {%- if guide.image -%}
-            <div class="sg-illustration">
-              <img src="{{ guide.image | image_url: width: 700 }}" loading="lazy" alt="Measurement Guide" height="auto" width="auto">
-            </div>
-          {%- endif -%}
-
-          {%- assign has_cm = guide.sizes.value.centimeters | size | plus: 0 -%}
-          {%- assign has_in = guide.sizes.value.inches | size | plus: 0 -%}
-
-          {%- if has_cm > 0 and has_in > 0 -%}
-            <div class="sg-unit-toggle">
-              <button class="unit-btn active" data-unit="cm" data-index="{{ forloop.index }}">CM</button>
-              <button class="unit-btn" data-unit="in" data-index="{{ forloop.index }}">IN</button>
-            </div>
-          {%- endif -%}
-
-          <div class="sg-table-container-{{ forloop.index }}">
-            {%- if has_cm > 0 -%}
-              {% comment %} Centimeters Table {% endcomment %}
-              <div class="sg-unit-table unit-cm" style="display: block;">
-                <table>
-                  <thead>
-                    <tr>
-                      {%- for col in guide.sizes.value.centimeters[0] -%}
-                        <th>{{ col[0] }}</th>
-                      {%- endfor -%}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {%- for row in guide.sizes.value.centimeters -%}
-                      <tr>
-                        {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
-                      </tr>
-                    {%- endfor -%}
-                  </tbody>
-                </table>
-              </div>
+      {%- if guides != blank -%}
+        {%- for guide in guides -%}
+          {% render 'size-guide-panel', guide: guide, index: forloop.index, is_first: forloop.first, how_to_measure: how_to_measure %}
+        {%- endfor -%}
+      {%- elsif auto_single_guide != blank -%}
+        {% render 'size-guide-panel', guide: auto_single_guide, index: 1, is_first: true, how_to_measure: how_to_measure %}
+      {%- elsif is_bundle_auto -%}
+        {%- assign seen_vendors_panel = '' -%}
+        {%- assign vendor_panel_index = 0 -%}
+        {%- for bp in bundle_products_for_guides -%}
+          {%- assign bp_handle = bp.vendor | handleize -%}
+          {%- unless seen_vendors_panel contains bp_handle -%}
+            {%- assign bp_guide = shop.metaobjects['size_guide'][bp_handle] -%}
+            {%- if bp_guide != blank -%}
+              {%- assign vendor_panel_index = vendor_panel_index | plus: 1 -%}
+              {%- if vendor_panel_index == 1 -%}
+                {%- assign is_first_panel = true -%}
+              {%- else -%}
+                {%- assign is_first_panel = false -%}
+              {%- endif -%}
+              {% render 'size-guide-panel', guide: bp_guide, index: vendor_panel_index, is_first: is_first_panel, how_to_measure: how_to_measure %}
+              {%- assign seen_vendors_panel = seen_vendors_panel | append: bp_handle | append: ',' -%}
             {%- endif -%}
-
-            {%- if has_in > 0 -%}
-              {% comment %} Inches Table {% endcomment %}
-              <div class="sg-unit-table unit-in" style="display: {% if has_cm > 0 %}none{% else %}block{% endif %};">
-                <table>
-                  <thead>
-                    <tr>
-                      {%- for col in guide.sizes.value.inches[0] -%}
-                        <th>{{ col[0] }}</th>
-                      {%- endfor -%}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {%- for row in guide.sizes.value.inches -%}
-                      <tr>
-                        {%- for cell in row -%}<td>{{ cell[1] }}</td>{%- endfor -%}
-                      </tr>
-                    {%- endfor -%}
-                  </tbody>
-                </table>
-              </div>
-            {%- endif -%}
-          </div>
-        </div>
-      {%- endfor -%}
+          {%- endunless -%}
+        {%- endfor -%}
+      {%- endif -%}
     </div>
     
   </div>
@@ -239,8 +248,8 @@
     @media (max-width: 768px) {
       .sg-drawer {
         width: 100%;
-        top: 60px;
-        height: calc(100% - 60px);
+        top: 0;
+        height: 100%;
       }
     }
 
