@@ -1,7 +1,10 @@
 <div id="vendor-{{ index }}" class="sg-vendor-content {% if has_any_measurement == false and is_first %}active{% endif %}">
 
   <p class="sg-disclaimer">
-    {{ guide.disclaimer | default: "Each item is measured to help you choose the correct fit. Please refer to the garment's measurements below to select the appropriate size." }}
+    {{ guide.disclaimer | default: "Each item is measured with care to help you select the most accurate fit. We recommend referring to the product's specific measurements below, or the brand's size guide, when choosing your size." }}
+  </p>
+  <p class="sg-disclaimer">
+    For personalised assistance or custom sizing, our <a href="/blogs/care-guide" style="text-decoration: underline;">Customer Care</a> team will be happy to assist you.
   </p>
 
   {%- if guide.image -%}
