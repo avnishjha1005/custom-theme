@@ -5036,3 +5036,6 @@ price-list compare-at-price,
 wishlist-page .wk-grid{
   min-width: 300px;
 }
+wishlist-page{
+  --page-max-width: 1440px !important;
+}
