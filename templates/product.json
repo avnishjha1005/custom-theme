@@ -1145,6 +1145,7 @@
                   "name": "t:names.button",
                   "settings": {
                     "label": "NEED ASSISTANCE? TALK TO OUR STYLIST",
+                    "use_whatsapp_link": true,
                     "link": "https://wa.me/919972320665?text=Hi+there%21+I+would+like+to+chat.",
                     "open_in_new_tab": true,
                     "style_class": "button",
