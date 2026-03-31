@@ -201,44 +201,10 @@
             "padding_right": 0,
             "padding_left": 0
           }
-        },
-        "contact_form_GWdMwD": {
-          "type": "contact-form",
-          "name": "t:names.contact_form",
-          "disabled": true,
-          "settings": {
-            "width": "custom",
-            "custom_width": 100,
-            "width_mobile": "custom",
-            "custom_width_mobile": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "padding-block-start": 36,
-            "padding-block-end": 69,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "submit-button": {
-              "type": "contact-form-submit-button",
-              "static": true,
-              "settings": {
-                "label": "Book an Appointment",
-                "style_class": "button",
-                "width": "custom",
-                "custom_width": 100,
-                "width_mobile": "custom",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": []
         }
       },
       "block_order": [
-        "forms_inline_9yLtYR",
-        "contact_form_GWdMwD"
+        "forms_inline_9yLtYR"
       ],
       "custom_css": [
         ".image-block {width: 100vw; padding: 0; margin: 0;}"
