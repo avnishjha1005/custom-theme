@@ -1,5 +1,15 @@
 
-{% render 'button', link: block.settings.link %}
+{% liquid
+  if block.settings.use_whatsapp_link
+    assign wa_phone = settings.whatsapp_phone | replace: ' ', '' | replace: '+', '' | replace: '-', '' | replace: '(', '' | replace: ')', ''
+    assign wa_message = settings.whatsapp_default_message | default: 'Hi! I have a question.' | url_encode
+    assign button_link = 'https://wa.me/' | append: wa_phone | append: '?text=' | append: wa_message
+  else
+    assign button_link = block.settings.link
+  endif
+%}
+
+{% render 'button', link: button_link %}
 
 {% schema %}
 {
@@ -13,9 +23,17 @@
       "default": "t:text_defaults.button_label"
     },
     {
+      "type": "checkbox",
+      "id": "use_whatsapp_link",
+      "label": "Use global WhatsApp number",
+      "info": "Overrides the link below with the WhatsApp number from theme settings",
+      "default": false
+    },
+    {
       "type": "url",
       "id": "link",
-      "label": "t:settings.link"
+      "label": "t:settings.link",
+      "visible_if": "{{ block.settings.use_whatsapp_link == false }}"
     },
     {
       "type": "checkbox",
