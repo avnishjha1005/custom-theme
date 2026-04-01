@@ -620,6 +620,7 @@
             },
             "accordion_row_mih97q": {
               "type": "_accordion-row",
+              "disabled": true,
               "settings": {
                 "heading": "Advisory Board",
                 "open_by_default": false,
