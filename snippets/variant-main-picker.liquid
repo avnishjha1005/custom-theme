@@ -105,12 +105,30 @@
             {%- else -%}
               {%- assign size_max_visible = 1 -%}
               {%- if product_option.values.size > size_max_visible -%}
-                <div class="size-mobile-trigger" data-option-name="{{ product_option.name | escape }}">
-                  {%- for product_option_value in product_option.values limit: size_max_visible -%}
-                    <span class="size-mobile-trigger__item{% if product_option_value.selected %} size-mobile-trigger__item--selected{% endif %}">{{ product_option_value | escape }}</span>
-                  {%- endfor -%}
-                  {%- assign size_remaining = product_option.values.size | minus: size_max_visible -%}
-                  <span class="swatch-count">+{{ size_remaining }}</span>
+                {%- comment -%} Check if any size variant is available {%- endcomment -%}
+                {%- assign any_size_available = false -%}
+                {%- for product_option_value in product_option.values -%}
+                  {%- if product_option_value.available -%}
+                    {%- assign any_size_available = true -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- comment -%} Show selected value in trigger {%- endcomment -%}
+                {%- assign trigger_value = product_option.values | first -%}
+                {%- for product_option_value in product_option.values -%}
+                  {%- if product_option_value.selected -%}
+                    {%- assign trigger_value = product_option_value -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                <div class="size-mobile-trigger{% unless any_size_available %} size-mobile-trigger--sold-out{% endunless %}" data-option-name="{{ product_option.name | escape }}">
+                  {%- if any_size_available -%}
+                    <span class="size-mobile-trigger__item size-mobile-trigger__item--selected">{{ trigger_value | escape }}</span>
+                    {%- assign size_remaining = product_option.values.size | minus: size_max_visible -%}
+                    <span class="swatch-count">+{{ size_remaining }}</span>
+                  {%- else -%}
+                    <span class="size-mobile-trigger__item size-mobile-trigger__item--sold-out">Sold out</span>
+                  {%- endif -%}
                 </div>
               {%- endif -%}
             {%- endif -%}
@@ -339,6 +357,11 @@
       sizeDrawerValue.textContent = checkedInput ? checkedInput.value : '';
       sizeDrawerBody.innerHTML = swatchContainer.innerHTML;
 
+      // Fix radio name conflict: rename drawer inputs so they don't conflict with the hidden originals
+      sizeDrawerBody.querySelectorAll('input[type="radio"]').forEach(function(input) {
+        input.name = 'drawer-' + input.name;
+      });
+
       sizeDrawer.classList.add('swatch-drawer--active');
       document.body.style.overflow = 'hidden';
 
@@ -350,6 +373,14 @@
       sizeDrawerBody.querySelectorAll('input[type="radio"]').forEach(function(input) {
         input.addEventListener('change', function() {
           sizeDrawerValue.textContent = this.value;
+
+          // Update the size-mobile-trigger text to show the newly selected size
+          var triggerItem = sizeTrigger.querySelector('.size-mobile-trigger__item');
+          if (triggerItem) {
+            triggerItem.textContent = this.value;
+            triggerItem.classList.add('size-mobile-trigger__item--selected');
+          }
+
           var mainInput = swatchContainer.querySelector('input[value="' + CSS.escape(this.value) + '"]');
           if (mainInput) {
             mainInput.checked = true;
@@ -433,6 +464,18 @@
     text-decoration: underline;
     text-underline-offset: 4px;
     text-decoration-thickness: 1px;
+  }
+
+  .size-mobile-trigger--sold-out {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .size-mobile-trigger__item--sold-out {
+    color: #999;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 
   /* Hide full size list when trigger is present (all breakpoints) */

@@ -10,7 +10,16 @@
 
     <div class="bundle-products-block__grid resource-list resource-list--grid">
       {%- for item in bundle_products limit: 4 -%}
-        <div class="resource-list__item">
+        <div class="resource-list__item bundle-products-block__item">
+          {%- if item.available == false -%}
+            <div class="bundle-products-block__badge color-{{ settings.badge_sold_out_color_scheme }}">
+              {{ 'content.product_badge_sold_out' | t }}
+            </div>
+          {%- elsif item.compare_at_price > item.price and item.available -%}
+            <div class="bundle-products-block__badge color-{{ settings.badge_sale_color_scheme }}">
+              {{ 'content.product_badge_sale' | t }}
+            </div>
+          {%- endif -%}
           {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: item %}
         </div>
       {%- endfor -%}
@@ -36,6 +45,26 @@
     --resource-list-column-gap-desktop: 8px;
     --resource-list-row-gap-desktop: 8px;
     gap: 8px;
+  }
+
+  .bundle-products-block__item {
+    position: relative;
+  }
+
+  .bundle-products-block__badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    z-index: 2;
+    font-size: 0.625rem;
+    font-weight: 500;
+    padding: 2px 6px;
+    color: var(--color-foreground);
+    background: var(--color-background);
+    border-radius: var(--badge-border-radius, 0px);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    pointer-events: none;
   }
 
   .bundle-products-block__grid img {
