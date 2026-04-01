@@ -335,7 +335,7 @@
                   "settings": {
                     "text": "<p>South Asian design has always held profound depth, in material knowledge, proportion, craftsmanship, and cultural nuance. Yet, it has too often been framed through the narrow lenses of nostalgia, occasion, or excess.</p><p>Altarasa exists to shift this lens. We are a fashion led platform shaping a contemporary expression of South Asian design. One that is culturally grounded, globally fluent, and quietly confident. At Altarasa, heritage is treated as living intelligence and craft is understood as a value system, rather than just an aesthetic. We believe South Asian design belongs confidently within the global fashion conversation, not as an exception or a category, but as an equal contributor</p>",
                     "width": "100%",
-                    "max_width": "none",
+                    "max_width": "normal",
                     "alignment": "left",
                     "type_preset": "rte",
                     "font": "var(--font-body--family)",
@@ -622,7 +622,7 @@
                           "type": "text",
                           "name": "Advisor Name",
                           "settings": {
-                            "text": "<h5>Annika Fernando</h5>",
+                            "text": "<h5>ADVISOR NAME</h5>",
                             "width": "100%",
                             "max_width": "none",
                             "alignment": "left",
@@ -648,7 +648,33 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p>Interior Designer, Entrepreneur, and Creative Director</p>",
+                            "text": "<p><em>Designation</em></p>",
+                            "width": "fit-content",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        },
+                        "text_YxcpzR": {
+                          "type": "text",
+                          "name": "t:names.text",
+                          "settings": {
+                            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -674,7 +700,8 @@
                       "block_order": [
                         "image_GnGAwk",
                         "text_F7KL8W",
-                        "text_HLVfTG"
+                        "text_HLVfTG",
+                        "text_YxcpzR"
                       ]
                     },
                     "group_TpK7B4": {
@@ -744,7 +771,7 @@
                           "type": "text",
                           "name": "Advisor Name",
                           "settings": {
-                            "text": "<p><strong>Priya Tanna </strong></p>",
+                            "text": "<p><strong>ADVISOR NAME</strong></p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -770,7 +797,33 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p>Journalist and Editor</p>",
+                            "text": "<p><em>Designation</em></p>",
+                            "width": "fit-content",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        },
+                        "text_PPzBhj": {
+                          "type": "text",
+                          "name": "t:names.text",
+                          "settings": {
+                            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -796,128 +849,14 @@
                       "block_order": [
                         "image_RyimBp",
                         "text_W9UVcg",
-                        "text_KgB3HR"
-                      ]
-                    },
-                    "flexi_group_xTrHRk": {
-                      "type": "flexi-group",
-                      "name": "Group",
-                      "settings": {
-                        "editor": "simple",
-                        "dt_flex": "column",
-                        "dt_gap": 12,
-                        "dt_align_items": "center",
-                        "dt_justify_content": "start",
-                        "dt_column_alignment": "start",
-                        "adjust_mobile_layout": false,
-                        "mb_flex": "row",
-                        "mb_gap": 12,
-                        "mb_align_items": "center",
-                        "mb_justify_content": "start",
-                        "mb_column_alignment": "start",
-                        "width": "fixed",
-                        "max_width": 2400,
-                        "bg_color": "",
-                        "border_color": "",
-                        "spacing": "basic",
-                        "padding_top": 6,
-                        "padding_bottom": 6,
-                        "padding_left": 0,
-                        "padding_right": 0,
-                        "dt_padding": "60px 0px",
-                        "mb_padding": "30px 0px",
-                        "dev_mode": false,
-                        "custom_class": "",
-                        "css_code": ""
-                      },
-                      "blocks": {
-                        "image_AeVaJJ": {
-                          "type": "image",
-                          "name": "t:names.image",
-                          "settings": {
-                            "image": "shopify://shop_images/8506f49c1c5af76a0447cda80f307f374a69a2da.jpg",
-                            "link": "",
-                            "image_ratio": "square",
-                            "width": "fill",
-                            "custom_width": 100,
-                            "width_mobile": "fill",
-                            "custom_width_mobile": 100,
-                            "height": "fit",
-                            "border": "none",
-                            "border_width": 1,
-                            "border_opacity": 100,
-                            "border_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        },
-                        "text_4KkHpK": {
-                          "type": "text",
-                          "name": "t:names.text",
-                          "settings": {
-                            "text": "<p><strong>Sujata Assomull</strong></p>",
-                            "width": "fit-content",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        },
-                        "text_Rypr6q": {
-                          "type": "text",
-                          "name": "t:names.text",
-                          "settings": {
-                            "text": "<p>Fashion Journalist and Strategic Communicator</p>",
-                            "width": "fit-content",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        }
-                      },
-                      "block_order": [
-                        "image_AeVaJJ",
-                        "text_4KkHpK",
-                        "text_Rypr6q"
+                        "text_KgB3HR",
+                        "text_PPzBhj"
                       ]
                     }
                   },
                   "block_order": [
                     "group_RpUkpt",
-                    "group_TpK7B4",
-                    "flexi_group_xTrHRk"
+                    "group_TpK7B4"
                   ]
                 }
               },
