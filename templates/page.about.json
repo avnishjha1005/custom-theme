@@ -335,7 +335,7 @@
                   "settings": {
                     "text": "<p>South Asian design has always held profound depth, in material knowledge, proportion, craftsmanship, and cultural nuance. Yet, it has too often been framed through the narrow lenses of nostalgia, occasion, or excess.</p><p>Altarasa exists to shift this lens. We are a fashion led platform shaping a contemporary expression of South Asian design. One that is culturally grounded, globally fluent, and quietly confident. At Altarasa, heritage is treated as living intelligence and craft is understood as a value system, rather than just an aesthetic. We believe South Asian design belongs confidently within the global fashion conversation, not as an exception or a category, but as an equal contributor</p>",
                     "width": "100%",
-                    "max_width": "normal",
+                    "max_width": "none",
                     "alignment": "left",
                     "type_preset": "rte",
                     "font": "var(--font-body--family)",
@@ -622,7 +622,7 @@
                           "type": "text",
                           "name": "Advisor Name",
                           "settings": {
-                            "text": "<h5>ADVISOR NAME</h5>",
+                            "text": "<h5>Annika Fernando</h5>",
                             "width": "100%",
                             "max_width": "none",
                             "alignment": "left",
@@ -648,33 +648,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p><em>Designation</em></p>",
-                            "width": "fit-content",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        },
-                        "text_YxcpzR": {
-                          "type": "text",
-                          "name": "t:names.text",
-                          "settings": {
-                            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+                            "text": "<p>Interior Designer, Entrepreneur, and Creative Director</p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -700,8 +674,7 @@
                       "block_order": [
                         "image_GnGAwk",
                         "text_F7KL8W",
-                        "text_HLVfTG",
-                        "text_YxcpzR"
+                        "text_HLVfTG"
                       ]
                     },
                     "group_TpK7B4": {
@@ -771,7 +744,7 @@
                           "type": "text",
                           "name": "Advisor Name",
                           "settings": {
-                            "text": "<p><strong>ADVISOR NAME</strong></p>",
+                            "text": "<p><strong>Priya Tanna </strong></p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -797,33 +770,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p><em>Designation</em></p>",
-                            "width": "fit-content",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        },
-                        "text_PPzBhj": {
-                          "type": "text",
-                          "name": "t:names.text",
-                          "settings": {
-                            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+                            "text": "<p>Journalist and Editor</p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -849,8 +796,7 @@
                       "block_order": [
                         "image_RyimBp",
                         "text_W9UVcg",
-                        "text_KgB3HR",
-                        "text_PPzBhj"
+                        "text_KgB3HR"
                       ]
                     }
                   },
