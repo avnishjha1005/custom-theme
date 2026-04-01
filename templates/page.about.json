@@ -330,34 +330,103 @@
                 "width": 20
               },
               "blocks": {
-                "text_AyEXPq": {
-                  "type": "text",
+                "group_iEnC7A": {
+                  "type": "group",
+                  "name": "t:names.group",
                   "settings": {
-                    "text": "<p>South Asian design has always held profound depth, in material knowledge, proportion, craftsmanship, and cultural nuance. Yet, it has too often been framed through the narrow lenses of nostalgia, occasion, or excess.</p><p>Altarasa exists to shift this lens. We are a fashion led platform shaping a contemporary expression of South Asian design. One that is culturally grounded, globally fluent, and quietly confident. At Altarasa, heritage is treated as living intelligence and craft is understood as a value system, rather than just an aesthetic. We believe South Asian design belongs confidently within the global fashion conversation, not as an exception or a category, but as an equal contributor</p>",
-                    "width": "100%",
-                    "max_width": "none",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
+                    "content_direction": "column",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "center",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 12,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
-                  "blocks": {}
+                  "blocks": {
+                    "image_ymPmtq": {
+                      "type": "image",
+                      "name": "t:names.image",
+                      "settings": {
+                        "image": "shopify://shop_images/Copy_of_Altrarasa03694_1.jpg",
+                        "link": "",
+                        "image_ratio": "adapt",
+                        "width": "custom",
+                        "custom_width": 50,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "text_hh7ary": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>South Asian design has always held profound depth, in material knowledge, proportion, craftsmanship, and cultural nuance. Yet, it has too often been framed through the narrow lenses of nostalgia, occasion, or excess.</p><p>Altarasa exists to shift this lens. We are a fashion led platform shaping a contemporary expression of South Asian design. One that is culturally grounded, globally fluent, and quietly confident. At Altarasa, heritage is treated as living intelligence and craft is understood as a value system, rather than just an aesthetic. We believe South Asian design belongs confidently within the global fashion conversation, not as an exception or a category, but as an equal contributor</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "image_ymPmtq",
+                    "text_hh7ary"
+                  ]
                 }
               },
               "block_order": [
-                "text_AyEXPq"
+                "group_iEnC7A"
               ]
             },
             "accordion_row_mQhitH": {
