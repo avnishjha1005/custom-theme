@@ -77,7 +77,7 @@
         ".events-header__tab-link {line-height: 16px;}"
       ],
       "settings": {
-        "eyebrow_text": "",
+        "eyebrow_text": "Immersive experiences celebrating the intersection of heritage craftsmanship and modern luxury.",
         "heading": "{{ blog.title }}",
         "show_view_all": true,
         "show_search": true,
