@@ -83,7 +83,9 @@
                 endif
 
               elsif menu_content_type == 'featured_products'
-                if l1_link.type == 'collection_link'
+                if featured_product_override != blank
+                  assign featured_product = featured_product_override
+                elsif l1_link.type == 'collection_link'
                   assign featured_product = l1_link.object.products | first
                 elsif l1_link.type == 'catalog_link' or l1_link.type == 'collections_link'
                   assign featured_product = collections.all.products | first
@@ -154,7 +156,9 @@
                               endfor
                             endif
                           elsif menu_content_type == 'featured_products'
-                            if l2_link.type == 'collection_link'
+                            if featured_product_override != blank
+                              assign l3_product = featured_product_override
+                            elsif l2_link.type == 'collection_link'
                               assign l3_product = l2_link.object.products | first
                             else
                               for l3_child in l2_link.links

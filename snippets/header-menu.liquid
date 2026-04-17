@@ -21,6 +21,8 @@
   elsif block_settings.menu_style == 'featured_products'
     assign ratio = block_settings.featured_products_aspect_ratio
   endif
+
+  assign featured_product_override = block_settings.featured_product
 %}
 
 {% capture children %}
@@ -59,6 +61,7 @@
               parent_link: link,
               id: list_id,
               menu_content_type: menu_content_type,
+              featured_product_override: featured_product_override,
               content_aspect_ratio: ratio,
               image_border_radius: image_border_radius
             %}

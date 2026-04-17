@@ -29,6 +29,7 @@
         linklist: block_settings.menu,
         data_header_drawer_type: 'mobile-drawer',
         menu_content_type: block_settings.menu_style,
+        featured_product_override: block_settings.featured_product,
         image_border_radius: block_settings.image_border_radius,
         content_aspect_ratio: drawer_aspect_ratio
       %}
@@ -775,6 +776,12 @@
         }
       ],
       "default": "collection_images"
+    },
+    {
+      "type": "product",
+      "id": "featured_product",
+      "label": "Featured product",
+      "info": "Overrides the automatically selected product shown in featured product menus"
     },
     {
       "type": "select",

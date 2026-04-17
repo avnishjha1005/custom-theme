@@ -7,6 +7,7 @@
   @param {number} [grid_columns_count_tablet] - Number of grid columns for the mega menu on tablets.
   @param {number} [grid_columns_count_collection_images] - Number of grid columns when `menu_content_type` is 'collection_images'.
   @param {string} [menu_content_type] - Type of content: 'featured_products', 'featured_collections', 'collection_images', or 'text'.
+  @param {product} [featured_product_override] - Optional product override for featured product menus.
   @param {number} [content_aspect_ratio] - Aspect ratio for content images.
   @param {number} [image_border_radius] - Border radius for content images.
   @param {object} [section] - The section object.
@@ -92,7 +93,9 @@
   endif
 
   if menu_content_type == 'featured_products'
-    if parent_link.type == 'collection_link'
+    if featured_product_override != blank
+      assign collection_object = nil
+    elsif parent_link.type == 'collection_link'
       assign collection_object = parent_link.object
     elsif parent_link.type == 'catalog_link' or parent_link.type == 'collections_link'
       assign collection_object = collections.all
@@ -258,7 +261,9 @@
       assign max_product_columns = max_menu_columns | minus: column_count | at_most: max_products
     endif
 
-    if eager_loading
+    if featured_product_override != blank
+      assign max_product_columns = 1
+    elsif eager_loading
       assign max_product_columns = max_product_columns | at_most: collection_object.products_count
     else
       assign max_product_columns = 0
@@ -343,7 +348,17 @@
       <ul
         class="mega-menu__content-list mega-menu__content-list--products list-unstyled"
       >
-        {% if eager_loading %}
+        {% if featured_product_override != blank %}
+          <li class="mega-menu__content-list-item">
+            {% render 'resource-card',
+              resource: featured_product_override,
+              resource_type: 'product',
+              image_hover: true,
+              image_aspect_ratio: content_aspect_ratio,
+              image_sizes: image_sizes
+            %}
+          </li>
+        {% elsif eager_loading %}
           {% paginate collection_object.products by max_featured_products %}
             {% for item in collection_object.products %}
               <li class="mega-menu__content-list-item {% if forloop.index > max_featured_products_tablet %} mega-menu__content-list-item--hidden-tablet{% endif %}">
