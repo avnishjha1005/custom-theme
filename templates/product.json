@@ -75,6 +75,10 @@
     "main": {
       "type": "product-information",
       "blocks": {
+        "shiprocket_smart_edd_shiprocket_smart_edd_kxYbc3": {
+          "type": "shopify://apps/shiprocket-smart-edd/blocks/shiprocket-smart-edd/9b57fbd9-7bee-480b-839d-a538d163fbf0",
+          "settings": {}
+        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -1374,6 +1378,9 @@
           ]
         }
       },
+      "block_order": [
+        "shiprocket_smart_edd_shiprocket_smart_edd_kxYbc3"
+      ],
       "custom_css": [
         "@media screen and (min-width: 768px) {.product-information__media {grid-column: 2/3; }}",
         "@media screen and (max-width: 768px) .group-block>.group-block-content>.group-block.group-block-content {}",
