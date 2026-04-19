@@ -319,6 +319,116 @@
             "padding-inline-end": 0
           },
           "blocks": {
+            "accordion_row_Wc9KED": {
+              "type": "_accordion-row",
+              "name": "t:names.accordion_row",
+              "settings": {
+                "heading": "About Us",
+                "open_by_default": true,
+                "keywords": "",
+                "icon": "none",
+                "width": 20
+              },
+              "blocks": {
+                "group_iEnC7A": {
+                  "type": "group",
+                  "name": "t:names.group",
+                  "settings": {
+                    "content_direction": "column",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "center",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 12,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {
+                    "image_ymPmtq": {
+                      "type": "image",
+                      "name": "t:names.image",
+                      "settings": {
+                        "image": "shopify://shop_images/Copy_of_Altrarasa03694_1.jpg",
+                        "link": "",
+                        "image_ratio": "adapt",
+                        "width": "custom",
+                        "custom_width": 50,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "padding-block-start": 16,
+                        "padding-block-end": 16,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "text_hh7ary": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>South Asian design has always held profound depth, in material knowledge, proportion, craftsmanship, and cultural nuance. Yet, it has too often been framed through the narrow lenses of nostalgia, occasion, or excess.</p><p>Altarasa exists to shift this lens. We are a fashion led platform shaping a contemporary expression of South Asian design. One that is culturally grounded, globally fluent, and quietly confident. At Altarasa, heritage is treated as living intelligence and craft is understood as a value system, rather than just an aesthetic. We believe South Asian design belongs confidently within the global fashion conversation, not as an exception or a category, but as an equal contributor</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "image_ymPmtq",
+                    "text_hh7ary"
+                  ]
+                }
+              },
+              "block_order": [
+                "group_iEnC7A"
+              ]
+            },
             "accordion_row_mQhitH": {
               "type": "_accordion-row",
               "settings": {
@@ -369,34 +479,103 @@
                 "width": 20
               },
               "blocks": {
-                "text_8zLdKr": {
-                  "type": "text",
+                "group_weMzRx": {
+                  "type": "group",
+                  "name": "t:names.group",
                   "settings": {
-                    "text": "<p>AltaRasa was founded with a clear point of view: that South Asian fashion deserves to be seen not as a category or moment, but as an evolving, globally relevant design language.</p><p>The platform brings together years of editorial perspective, cultural fluency, and a deep respect for craft, shaping a curatorial voice that values restraint, longevity, and meaning over scale or spectacle.</p>",
-                    "width": "100%",
-                    "max_width": "none",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
+                    "content_direction": "column",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "center",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 12,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
-                  "blocks": {}
+                  "blocks": {
+                    "image_hNWyVM": {
+                      "type": "image",
+                      "name": "t:names.image",
+                      "settings": {
+                        "image": "shopify://shop_images/Founder_1.jpg",
+                        "link": "",
+                        "image_ratio": "adapt",
+                        "width": "custom",
+                        "custom_width": 50,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "padding-block-start": 16,
+                        "padding-block-end": 16,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "text_JFbTGg": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>AltaRasa was founded with a clear point of view: that South Asian fashion deserves to be seen not as a category or moment, but as an evolving, globally relevant design language.</p><p>The platform brings together years of editorial perspective, cultural fluency, and a deep respect for craft, shaping a curatorial voice that values restraint, longevity, and meaning over scale or spectacle.</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "image_hNWyVM",
+                    "text_JFbTGg"
+                  ]
                 }
               },
               "block_order": [
-                "text_8zLdKr"
+                "group_weMzRx"
               ]
             },
             "accordion_row_bmErhN": {
@@ -441,6 +620,7 @@
             },
             "accordion_row_mih97q": {
               "type": "_accordion-row",
+              "disabled": true,
               "settings": {
                 "heading": "Advisory Board",
                 "open_by_default": false,
@@ -481,7 +661,7 @@
                     "content_direction": "row",
                     "vertical_on_mobile": true,
                     "horizontal_alignment": "flex-start",
-                    "vertical_alignment": "center",
+                    "vertical_alignment": "flex-start",
                     "align_baseline": false,
                     "horizontal_alignment_flex_direction_column": "flex-start",
                     "vertical_alignment_flex_direction_column": "center",
@@ -524,7 +704,7 @@
                         "vertical_alignment": "center",
                         "align_baseline": false,
                         "horizontal_alignment_flex_direction_column": "flex-start",
-                        "vertical_alignment_flex_direction_column": "center",
+                        "vertical_alignment_flex_direction_column": "flex-start",
                         "gap": 12,
                         "width": "fill",
                         "custom_width": 100,
@@ -581,7 +761,7 @@
                           "type": "text",
                           "name": "Advisor Name",
                           "settings": {
-                            "text": "<h5>ADVISOR NAME</h5>",
+                            "text": "<h5>Annika Fernando</h5>",
                             "width": "100%",
                             "max_width": "none",
                             "alignment": "left",
@@ -607,33 +787,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p><em>Designation</em></p>",
-                            "width": "fit-content",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        },
-                        "text_YxcpzR": {
-                          "type": "text",
-                          "name": "t:names.text",
-                          "settings": {
-                            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+                            "text": "<p>Interior Designer, Entrepreneur, and Creative Director</p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -659,8 +813,7 @@
                       "block_order": [
                         "image_GnGAwk",
                         "text_F7KL8W",
-                        "text_HLVfTG",
-                        "text_YxcpzR"
+                        "text_HLVfTG"
                       ]
                     },
                     "group_TpK7B4": {
@@ -673,7 +826,7 @@
                         "vertical_alignment": "center",
                         "align_baseline": false,
                         "horizontal_alignment_flex_direction_column": "flex-start",
-                        "vertical_alignment_flex_direction_column": "center",
+                        "vertical_alignment_flex_direction_column": "flex-start",
                         "gap": 12,
                         "width": "fill",
                         "custom_width": 100,
@@ -730,7 +883,7 @@
                           "type": "text",
                           "name": "Advisor Name",
                           "settings": {
-                            "text": "<p><strong>ADVISOR NAME</strong></p>",
+                            "text": "<p><strong>Priya Tanna </strong></p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -756,33 +909,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p><em>Designation</em></p>",
-                            "width": "fit-content",
-                            "max_width": "normal",
-                            "alignment": "left",
-                            "type_preset": "rte",
-                            "font": "var(--font-body--family)",
-                            "font_size": "1rem",
-                            "line_height": "normal",
-                            "letter_spacing": "normal",
-                            "case": "none",
-                            "wrap": "pretty",
-                            "color": "var(--color-foreground)",
-                            "background": false,
-                            "background_color": "#00000026",
-                            "corner_radius": 0,
-                            "padding-block-start": 0,
-                            "padding-block-end": 0,
-                            "padding-inline-start": 0,
-                            "padding-inline-end": 0
-                          },
-                          "blocks": {}
-                        },
-                        "text_PPzBhj": {
-                          "type": "text",
-                          "name": "t:names.text",
-                          "settings": {
-                            "text": "<p>We make things that work better and last longer. Our products solve real problems with clean design and honest materials.</p>",
+                            "text": "<p>Journalist and Editor</p>",
                             "width": "fit-content",
                             "max_width": "normal",
                             "alignment": "left",
@@ -808,14 +935,136 @@
                       "block_order": [
                         "image_RyimBp",
                         "text_W9UVcg",
-                        "text_KgB3HR",
-                        "text_PPzBhj"
+                        "text_KgB3HR"
+                      ]
+                    },
+                    "group_W3Q6eb": {
+                      "type": "group",
+                      "name": "t:names.group",
+                      "settings": {
+                        "content_direction": "column",
+                        "vertical_on_mobile": true,
+                        "horizontal_alignment": "flex-start",
+                        "vertical_alignment": "center",
+                        "align_baseline": false,
+                        "horizontal_alignment_flex_direction_column": "flex-start",
+                        "vertical_alignment_flex_direction_column": "flex-start",
+                        "gap": 12,
+                        "width": "fill",
+                        "custom_width": 100,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "custom_height": 100,
+                        "inherit_color_scheme": true,
+                        "color_scheme": "",
+                        "background_media": "none",
+                        "video_position": "cover",
+                        "background_image_position": "cover",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "toggle_overlay": false,
+                        "overlay_color": "#00000026",
+                        "overlay_style": "solid",
+                        "gradient_direction": "to top",
+                        "link": "",
+                        "open_in_new_tab": false,
+                        "placeholder": "",
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {
+                        "image_pdcGaW": {
+                          "type": "image",
+                          "name": "t:names.image",
+                          "settings": {
+                            "image": "shopify://shop_images/8506f49c1c5af76a0447cda80f307f374a69a2da.jpg",
+                            "link": "",
+                            "image_ratio": "square",
+                            "width": "fill",
+                            "custom_width": 100,
+                            "width_mobile": "fill",
+                            "custom_width_mobile": 100,
+                            "height": "fit",
+                            "border": "none",
+                            "border_width": 1,
+                            "border_opacity": 100,
+                            "border_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        },
+                        "text_hXtTrL": {
+                          "type": "text",
+                          "name": "Advisor Name",
+                          "settings": {
+                            "text": "<p><strong>Sujata Assomull</strong></p>",
+                            "width": "fit-content",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        },
+                        "text_mNEewG": {
+                          "type": "text",
+                          "name": "t:names.text",
+                          "settings": {
+                            "text": "<p>Fashion Journalist and Strategic Communicator</p>",
+                            "width": "fit-content",
+                            "max_width": "normal",
+                            "alignment": "left",
+                            "type_preset": "rte",
+                            "font": "var(--font-body--family)",
+                            "font_size": "1rem",
+                            "line_height": "normal",
+                            "letter_spacing": "normal",
+                            "case": "none",
+                            "wrap": "pretty",
+                            "color": "var(--color-foreground)",
+                            "background": false,
+                            "background_color": "#00000026",
+                            "corner_radius": 0,
+                            "padding-block-start": 0,
+                            "padding-block-end": 0,
+                            "padding-inline-start": 0,
+                            "padding-inline-end": 0
+                          },
+                          "blocks": {}
+                        }
+                      },
+                      "block_order": [
+                        "image_pdcGaW",
+                        "text_hXtTrL",
+                        "text_mNEewG"
                       ]
                     }
                   },
                   "block_order": [
                     "group_RpUkpt",
-                    "group_TpK7B4"
+                    "group_TpK7B4",
+                    "group_W3Q6eb"
                   ]
                 }
               },
@@ -834,34 +1083,103 @@
                 "width": 20
               },
               "blocks": {
-                "text_CRMLRH": {
-                  "type": "text",
+                "group_hTbNtf": {
+                  "type": "group",
+                  "name": "t:names.group",
                   "settings": {
-                    "text": "<p>South Asian design has always held depth - in material knowledge, proportion, craftsmanship, and cultural nuance. Yet it has often been framed through nostalgia, occasion, or excess.</p><p>AltaRasa shifts this lens.</p><p>Here, heritage is treated as living intelligence.<br/>Craft is understood as a value system.<br/><br/>Fashion is approached as a personal archive collected slowly, worn intuitively, and returned to over time.</p><p>We believe South Asian design belongs confidently within the global fashion conversation, not as an exception or category, but as an equal contributor.</p>",
-                    "width": "100%",
-                    "max_width": "none",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
+                    "content_direction": "column",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "center",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 12,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
-                  "blocks": {}
+                  "blocks": {
+                    "image_CeppAh": {
+                      "type": "image",
+                      "name": "t:names.image",
+                      "settings": {
+                        "image": "shopify://shop_images/Copy_of_Altrarasa07568.jpg",
+                        "link": "",
+                        "image_ratio": "adapt",
+                        "width": "custom",
+                        "custom_width": 50,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "padding-block-start": 16,
+                        "padding-block-end": 16,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "text_zaX6EJ": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>South Asian design has always held depth - in material knowledge, proportion, craftsmanship, and cultural nuance. Yet it has often been framed through nostalgia, occasion, or excess.</p><p>AltaRasa shifts this lens.</p><p>Here, heritage is treated as living intelligence.<br/>Craft is understood as a value system.<br/><br/>Fashion is approached as a personal archive collected slowly, worn intuitively, and returned to over time.</p><p>We believe South Asian design belongs confidently within the global fashion conversation, not as an exception or category, but as an equal contributor.</p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "image_CeppAh",
+                    "text_zaX6EJ"
+                  ]
                 }
               },
               "block_order": [
-                "text_CRMLRH"
+                "group_hTbNtf"
               ]
             },
             "accordion_row_LFTrKX": {
@@ -914,38 +1232,108 @@
                 "width": 20
               },
               "blocks": {
-                "text_6CQUfW": {
-                  "type": "text",
+                "group_V6V8mM": {
+                  "type": "group",
+                  "name": "t:names.group",
                   "settings": {
-                    "text": "<p>She is globally exposed and culturally rooted.<br/>She notices cut before branding.<br/>She understands craft as intelligence, not ornament.</p><p>Her wardrobe is built slowly, guided by instinct and discovery. </p>",
-                    "width": "100%",
-                    "max_width": "none",
-                    "alignment": "left",
-                    "type_preset": "rte",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "wrap": "pretty",
-                    "color": "var(--color-foreground)",
-                    "background": false,
-                    "background_color": "#00000026",
-                    "corner_radius": 0,
+                    "content_direction": "column",
+                    "vertical_on_mobile": true,
+                    "horizontal_alignment": "flex-start",
+                    "vertical_alignment": "center",
+                    "align_baseline": false,
+                    "horizontal_alignment_flex_direction_column": "center",
+                    "vertical_alignment_flex_direction_column": "center",
+                    "gap": 12,
+                    "width": "fill",
+                    "custom_width": 100,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "custom_height": 100,
+                    "inherit_color_scheme": true,
+                    "color_scheme": "",
+                    "background_media": "none",
+                    "video_position": "cover",
+                    "background_image_position": "cover",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "toggle_overlay": false,
+                    "overlay_color": "#00000026",
+                    "overlay_style": "solid",
+                    "gradient_direction": "to top",
+                    "link": "",
+                    "open_in_new_tab": false,
+                    "placeholder": "",
                     "padding-block-start": 0,
                     "padding-block-end": 0,
                     "padding-inline-start": 0,
                     "padding-inline-end": 0
                   },
-                  "blocks": {}
+                  "blocks": {
+                    "image_mWQ7fY": {
+                      "type": "image",
+                      "name": "t:names.image",
+                      "settings": {
+                        "image": "shopify://shop_images/Copy_of_Copy_of_Altrarasa06167.jpg",
+                        "link": "",
+                        "image_ratio": "adapt",
+                        "width": "custom",
+                        "custom_width": 50,
+                        "width_mobile": "fill",
+                        "custom_width_mobile": 100,
+                        "height": "fit",
+                        "border": "none",
+                        "border_width": 1,
+                        "border_opacity": 100,
+                        "border_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    },
+                    "text_H67bwG": {
+                      "type": "text",
+                      "settings": {
+                        "text": "<p>She is globally exposed and culturally rooted.<br/>She notices cut before branding.<br/>She understands craft as intelligence, not ornament.</p><p>Her wardrobe is built slowly, guided by instinct and discovery. </p>",
+                        "width": "100%",
+                        "max_width": "none",
+                        "alignment": "left",
+                        "type_preset": "rte",
+                        "font": "var(--font-body--family)",
+                        "font_size": "1rem",
+                        "line_height": "normal",
+                        "letter_spacing": "normal",
+                        "case": "none",
+                        "wrap": "pretty",
+                        "color": "var(--color-foreground)",
+                        "background": false,
+                        "background_color": "#00000026",
+                        "corner_radius": 0,
+                        "padding-block-start": 0,
+                        "padding-block-end": 0,
+                        "padding-inline-start": 0,
+                        "padding-inline-end": 0
+                      },
+                      "blocks": {}
+                    }
+                  },
+                  "block_order": [
+                    "image_mWQ7fY",
+                    "text_H67bwG"
+                  ]
                 }
               },
               "block_order": [
-                "text_6CQUfW"
+                "group_V6V8mM"
               ]
             }
           },
           "block_order": [
+            "accordion_row_Wc9KED",
             "accordion_row_mQhitH",
             "accordion_row_hXU86c",
             "accordion_row_bmErhN",
