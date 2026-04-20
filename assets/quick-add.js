@@ -158,6 +158,7 @@ export class QuickAddComponent extends Component {
 
     if (isMobileBreakpoint()) {
       const productDetails = productGrid.querySelector('.product-details');
+      const productMedia = productGrid.querySelector('.product-information__media');
       const productFormComponent = productGrid.querySelector('product-form-component');
       const variantPicker = productGrid.querySelector('variant-picker');
       const productPrice = productGrid.querySelector('product-price');
@@ -169,6 +170,9 @@ export class QuickAddComponent extends Component {
       const productHeader = document.createElement('div');
       productHeader.classList.add('product-header');
 
+      const mobileDetails = document.createElement('div');
+      mobileDetails.classList.add('quick-add-mobile-details');
+
       if (productVendor) {
         productHeader.appendChild(productVendor);
       }
@@ -176,13 +180,21 @@ export class QuickAddComponent extends Component {
       if (productPrice) {
         productHeader.appendChild(productPrice);
       }
-      productGrid.appendChild(productHeader);
+      mobileDetails.appendChild(productHeader);
 
       if (variantPicker) {
-        productGrid.appendChild(variantPicker);
+        mobileDetails.appendChild(variantPicker);
       }
       if (productFormComponent) {
-        productGrid.appendChild(productFormComponent);
+        mobileDetails.appendChild(productFormComponent);
+      }
+
+      if (productMedia?.nextSibling) {
+        productGrid.insertBefore(mobileDetails, productMedia.nextSibling);
+      } else if (productMedia) {
+        productGrid.appendChild(mobileDetails);
+      } else {
+        productGrid.prepend(mobileDetails);
       }
 
       productDetails?.remove();
@@ -191,10 +203,22 @@ export class QuickAddComponent extends Component {
       const groupContent = productGrid.querySelector('.product-details > .group-block > .group-block-content');
       if (groupContent) {
         const productVendor = groupContent.querySelector('.product-vendor-block');
-        const viewProductTitle = groupContent.querySelector('.view-product-title');
+        let viewProductTitle = groupContent.querySelector('.view-product-title');
         const productPrice = groupContent.querySelector('product-price');
         const variantPicker = groupContent.querySelector('variant-picker');
         const buyButtons = groupContent.querySelector('.buy-buttons-block');
+
+        if (!viewProductTitle) {
+          viewProductTitle = document.createElement('div');
+          viewProductTitle.classList.add('view-product-title');
+
+          const productLink = document.createElement('a');
+          productLink.href = this.productPageUrl;
+          productLink.textContent = this.dataset.productTitle || '';
+          productLink.classList.add('link');
+
+          viewProductTitle.appendChild(productLink);
+        }
 
         // Create info group: vendor, title, price
         const infoGroup = document.createElement('div');
