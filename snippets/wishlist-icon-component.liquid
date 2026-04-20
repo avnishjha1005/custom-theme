@@ -1,14 +1,138 @@
 {%- doc -%}
   Renders the wishlist icon, which displays the number of items in the wishlist via a bubble.
 {%- enddoc -%}
-<wishlist-icon class="wishlist-header-link header-actions__wishlist-icon" data-has-items="true">
-  <a href="/apps/wishlist" class="wkh-button wkh-selected">
+<wishlist-icon class="wishlist-header-link header-actions__wishlist-icon" data-has-items="false">
+  <a href="/apps/wishlist" class="wkh-button" aria-label="Open wishlist">
     <span class="svg-wrapper wkh-icon">
       {{ 'icon-wishlist.svg' | inline_asset_content }}
     </span>
-    <span class="wkh-counter">3</span>
+    <span class="wkh-counter" hidden aria-hidden="true"></span>
   </a>
 </wishlist-icon>
+<script>
+  (function() {
+    if (customElements.get('wishlist-icon')) return;
+
+    class WishlistIcon extends HTMLElement {
+      connectedCallback() {
+        this.button = this.querySelector('.wkh-button');
+        this.counter = this.querySelector('.wkh-counter');
+        this.renderedCount = null;
+        this.queueSync = this.queueSync.bind(this);
+
+        if (!this.button || !this.counter) return;
+
+        this.queueSync();
+
+        this.observer = new MutationObserver(this.queueSync);
+        this.observer.observe(document.body, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+          attributes: true,
+          attributeFilter: ['class', 'aria-label', 'aria-pressed', 'data-count']
+        });
+      }
+
+      disconnectedCallback() {
+        if (this.observer) this.observer.disconnect();
+        if (this.frame) cancelAnimationFrame(this.frame);
+      }
+
+      queueSync() {
+        if (this.frame) cancelAnimationFrame(this.frame);
+        this.frame = requestAnimationFrame(() => this.sync());
+      }
+
+      sync() {
+        this.frame = null;
+        const count = this.getWishlistCount();
+        const hasItems = count > 0;
+
+        if (count === this.renderedCount && this.dataset.hasItems === String(hasItems)) {
+          return;
+        }
+
+        this.renderedCount = count;
+        this.dataset.hasItems = String(hasItems);
+        this.button.classList.toggle('wkh-selected', hasItems);
+
+        if (hasItems) {
+          this.counter.textContent = String(count);
+          this.counter.hidden = false;
+          this.counter.setAttribute('aria-hidden', 'false');
+        } else {
+          this.counter.textContent = '';
+          this.counter.hidden = true;
+          this.counter.setAttribute('aria-hidden', 'true');
+        }
+      }
+
+      getWishlistCount() {
+        const externalCount = this.parseCount(this.counter.textContent);
+        if (externalCount !== null && externalCount !== this.renderedCount) {
+          return externalCount;
+        }
+
+        const attrCount = this.parseCount(this.getAttribute('data-count'));
+        if (attrCount !== null && attrCount !== this.renderedCount) {
+          return attrCount;
+        }
+
+        return this.countSelectedItems();
+      }
+
+      parseCount(value) {
+        const count = Number.parseInt(String(value || '').trim(), 10);
+        return Number.isNaN(count) ? null : Math.max(count, 0);
+      }
+
+      countSelectedItems() {
+        const selectedKeys = new Set();
+
+        document.querySelectorAll('wishlist-button[data-product-id]').forEach((wishlistButton, index) => {
+          const button = wishlistButton.querySelector('[data-wishlist-button]');
+          const isActive = button && (
+            button.classList.contains('wishlist-button--active') ||
+            button.getAttribute('aria-pressed') === 'true'
+          );
+
+          if (!isActive) return;
+
+          selectedKeys.add(
+            wishlistButton.getAttribute('data-variant-id') ||
+            wishlistButton.getAttribute('data-product-id') ||
+            wishlistButton.getAttribute('data-product-handle') ||
+            'wishlist-button-' + index
+          );
+        });
+
+        document.querySelectorAll('wishlist-button-collection').forEach((collection, index) => {
+          const wkButton = collection.querySelector('wk-button');
+          const innerButton = wkButton && wkButton.querySelector('button');
+          const isSelected = wkButton && (
+            wkButton.classList.contains('wk-selected') ||
+            !!wkButton.querySelector('.wk-selected') ||
+            (innerButton && innerButton.getAttribute('aria-label') === 'Remove from Wishlist')
+          );
+
+          if (!isSelected) return;
+
+          selectedKeys.add(
+            collection.getAttribute('data-variant-id') ||
+            collection.getAttribute('data-product-id') ||
+            collection.getAttribute('data-product-handle') ||
+            'wishlist-collection-' + index
+          );
+        });
+
+        return selectedKeys.size;
+      }
+    }
+
+    customElements.define('wishlist-icon', WishlistIcon);
+  })();
+</script>
 <style>
   /* 1. Container Alignment */
   .header-actions__wishlist-icon .svg-wrapper {
@@ -56,7 +180,7 @@
     justify-content: center;
     align-items: center;
     
-    background-color: white /* Match theme button color */
+    background-color: white; /* Match theme button color */
     color: var(--color-button-text, white);
     border-radius: 100%;
     
@@ -71,7 +195,7 @@
 
   /* Show bubble if there are items (similar to .wkh-selected logic) */
   .wishlist-header-link .wkh-selected .wkh-counter,
-  .wishlist-header-link[data-count]:not([data-count="0"]) .wkh-counter {
+  .wishlist-header-link[data-has-items="true"] .wkh-counter {
     opacity: 1;
   }
 
