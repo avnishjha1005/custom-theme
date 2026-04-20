@@ -260,12 +260,21 @@
 
   .quick-add.quick-add--inline .quick-add__button .add-to-cart-text {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     margin-inline: 0 !important;
     padding-inline: 0 !important;
     padding-bottom: 0 !important;
     gap: 0 !important;
-    height: 30px;
+    height: 2rem;
+    min-width: 2rem;
+  }
+
+  .quick-add.quick-add--inline .quick-add__button .add-to-cart-text--added {
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .quick-add--inline .quick-add__button:is(:focus, :hover) .add-to-cart-text {
@@ -390,4 +399,3 @@
   ]
 }
 {% endschema %}
-
