@@ -219,6 +219,8 @@
   }
 
   .quick-add.quick-add--inline .quick-add__button {
+    --quick-add-inline-icon-box-size: 2rem;
+    --quick-add-inline-icon-size: 1.6rem;
     display: flex;
     position: relative;
     pointer-events: all;
@@ -231,6 +233,10 @@
     padding: 0;
     min-width: auto;
     min-height: auto;
+    width: var(--quick-add-inline-icon-box-size);
+    height: var(--quick-add-inline-icon-box-size);
+    min-width: var(--quick-add-inline-icon-box-size);
+    min-height: var(--quick-add-inline-icon-box-size);
     align-items: flex-end;
     justify-content: flex-end;
     overflow: visible;
@@ -259,6 +265,8 @@
   }
 
   .quick-add.quick-add--inline .quick-add__button .add-to-cart-text {
+    position: absolute;
+    inset: auto 0 0 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -266,15 +274,38 @@
     padding-inline: 0 !important;
     padding-bottom: 0 !important;
     gap: 0 !important;
-    height: 2rem;
-    min-width: 2rem;
+    height: var(--quick-add-inline-icon-box-size);
+    min-width: var(--quick-add-inline-icon-box-size);
+    pointer-events: none;
   }
 
   .quick-add.quick-add--inline .quick-add__button .add-to-cart-text--added {
-    inset: 0;
+    inset: auto 0 0 0;
+    position: absolute;
+    height: var(--quick-add-inline-icon-box-size);
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
+  }
+
+  /* Force plus/checkmark wrappers to share the exact same center point */
+  .quick-add.quick-add--inline .quick-add__button :is(.add-to-cart-icon, .add-to-cart-icon--added) {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .quick-add.quick-add--inline .quick-add__button :is(.add-to-cart-icon, .add-to-cart-icon--added) svg {
+    width: var(--quick-add-inline-icon-size);
+    height: var(--quick-add-inline-icon-size);
   }
 
   .quick-add--inline .quick-add__button:is(:focus, :hover) .add-to-cart-text {
@@ -317,6 +348,26 @@
   }
 
   @media screen and (max-width: 749px) {
+    .quick-add.quick-add--inline .quick-add__button {
+      --quick-add-inline-icon-box-size: 1.5rem;
+      --quick-add-inline-icon-size: 1.25rem;
+    }
+
+    /* Keep title/price + inline quick add on one row in product cards */
+    .group-block-content:has(.product-card-quick-add-block) {
+      flex-wrap: nowrap !important;
+    }
+
+    .group-block-content:has(.product-card-quick-add-block) > .group-block:has(.product-card-quick-add-block) {
+      width: fit-content;
+      flex: 0 0 auto;
+    }
+
+    .group-block-content:has(.product-card-quick-add-block) > .group-block:not(:has(.product-card-quick-add-block)) {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
     .quick-add--inline .quick-add__button {
       min-width: 2.5rem;
       min-height: 2.5rem;
