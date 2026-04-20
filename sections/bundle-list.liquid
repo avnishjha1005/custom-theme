@@ -436,6 +436,13 @@
         const tooltip = node.querySelector('.hotspot-text');
         if (tooltip) {
           tooltip.addEventListener('click', function(e) {
+            const clickedPriceElement = e.target.closest('.hs-price');
+            if (clickedPriceElement && clickedPriceElement.textContent.trim().toLowerCase() === 'price on request') {
+              e.preventDefault();
+              e.stopPropagation();
+              return;
+            }
+
             e.preventDefault();
             e.stopPropagation();
             const url = node.getAttribute('data-url');

@@ -197,15 +197,43 @@
             
             name="{{ filter.label }}"
           >
+            {%- liquid
+              assign rendered_value_index = 0
+            -%}
             {%- for value in filter.values -%}
               {% liquid
-                assign input_id = 'Filter-' | append: filter.param_name | escape | append: '-' | append: forloop.index | replace: '.', '-' | append: '-' | append: filter_style | append: '-' | append: in_drawer
+                assign stripped_value_label = value.label | strip
+                assign normalized_value_label = stripped_value_label | downcase
+                assign should_skip_lowercase_duplicate = false
+
+                if stripped_value_label == normalized_value_label and value.active == false
+                  for sibling_value in filter.values
+                    assign stripped_sibling_label = sibling_value.label | strip
+                    assign sibling_normalized_label = stripped_sibling_label | downcase
+
+                    if sibling_normalized_label == normalized_value_label
+                      if sibling_value.param_name != value.param_name
+                        if stripped_sibling_label != sibling_normalized_label
+                          assign should_skip_lowercase_duplicate = true
+                          break
+                        endif
+                      endif
+                    endif
+                  endfor
+                endif
+
+                if should_skip_lowercase_duplicate
+                  continue
+                endif
+
+                assign rendered_value_index = rendered_value_index | plus: 1
+                assign input_id = 'Filter-' | append: filter.param_name | escape | append: '-' | append: rendered_value_index | replace: '.', '-' | append: '-' | append: filter_style | append: '-' | append: in_drawer
                 assign is_disabled = false
                 if value.count == 0 and value.active == false
                   assign is_disabled = true
                 endif
                 assign hidden_class = null
-                if forloop.index > inital_visible_values and render_show_more
+                if rendered_value_index > inital_visible_values and render_show_more
                   assign hidden_class = 'hidden'
                   if filter_style == 'horizontal'
                     assign hidden_class = 'mobile:hidden'
