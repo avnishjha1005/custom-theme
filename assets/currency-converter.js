@@ -26,6 +26,72 @@ const FALLBACK_RATES = {
   MYR: 0.056,
   IDR: 194,
 };
+const COUNTRY_TO_CURRENCY = {
+  IN: 'INR',
+  US: 'USD',
+  CA: 'CAD',
+  MX: 'MXN',
+  BR: 'BRL',
+  AR: 'USD',
+  CL: 'USD',
+  CO: 'USD',
+  PE: 'USD',
+  GB: 'GBP',
+  IE: 'EUR',
+  FR: 'EUR',
+  DE: 'EUR',
+  IT: 'EUR',
+  ES: 'EUR',
+  NL: 'EUR',
+  BE: 'EUR',
+  PT: 'EUR',
+  AT: 'EUR',
+  FI: 'EUR',
+  GR: 'EUR',
+  PL: 'PLN',
+  CZ: 'CZK',
+  DK: 'DKK',
+  SE: 'SEK',
+  NO: 'NOK',
+  CH: 'CHF',
+  HU: 'HUF',
+  RO: 'RON',
+  BG: 'BGN',
+  TR: 'TRY',
+  RU: 'RUB',
+  UA: 'UAH',
+  AE: 'AED',
+  SA: 'SAR',
+  QA: 'QAR',
+  KW: 'KWD',
+  BH: 'BHD',
+  OM: 'OMR',
+  IL: 'ILS',
+  JO: 'JOD',
+  EG: 'EGP',
+  ZA: 'ZAR',
+  NG: 'NGN',
+  KE: 'KES',
+  GH: 'GHS',
+  MA: 'MAD',
+  AU: 'AUD',
+  NZ: 'NZD',
+  SG: 'SGD',
+  MY: 'MYR',
+  TH: 'THB',
+  ID: 'IDR',
+  PH: 'PHP',
+  VN: 'VND',
+  KR: 'KRW',
+  JP: 'JPY',
+  HK: 'HKD',
+  TW: 'TWD',
+  CN: 'CNY',
+  PK: 'PKR',
+  BD: 'BDT',
+  LK: 'LKR',
+  NP: 'NPR',
+};
 const RATE_SOURCE_URLS = [
   'https://open.er-api.com/v6/latest/INR',
   'https://api.frankfurter.app/latest?from=INR',
@@ -58,6 +124,12 @@ function normalizeCountryCode(value) {
   return normalized;
 }
 
+function inferCurrencyFromCountryCode(countryCode) {
+  const normalizedCountryCode = normalizeCountryCode(countryCode);
+  if (!normalizedCountryCode) return null;
+  return COUNTRY_TO_CURRENCY[normalizedCountryCode] || null;
+}
+
 function safeReadStorage(key) {
   try {
     return localStorage.getItem(key);
@@ -87,7 +159,15 @@ function getAvailableCountryCurrencyMap() {
 
   document.querySelectorAll('.localization-form__list-item[data-value][data-currency]').forEach((item) => {
     const countryCode = normalizeCountryCode(item.getAttribute('data-value'));
-    const currencyCode = normalizeCurrencyCode(item.getAttribute('data-currency'));
+    const rawCurrencyCode = normalizeCurrencyCode(item.getAttribute('data-currency'));
+    const inferredCurrencyCode = inferCurrencyFromCountryCode(countryCode);
+    let currencyCode = rawCurrencyCode;
+
+    if (!currencyCode && inferredCurrencyCode) {
+      currencyCode = inferredCurrencyCode;
+    } else if (currencyCode === BASE_CURRENCY && inferredCurrencyCode && inferredCurrencyCode !== BASE_CURRENCY) {
+      currencyCode = inferredCurrencyCode;
+    }
 
     if (!countryCode || !currencyCode || countryCurrencyMap.has(countryCode)) return;
     countryCurrencyMap.set(countryCode, currencyCode);
@@ -175,6 +255,10 @@ function readCurrencyFromCountryItem(countryItem) {
   if (!(countryItem instanceof HTMLElement)) return null;
 
   const datasetCurrency = normalizeCurrencyCode(countryItem.dataset.currency);
+  const inferredFromCountry = inferCurrencyFromCountryCode(countryItem.dataset.value);
+
+  if (datasetCurrency && datasetCurrency !== BASE_CURRENCY) return datasetCurrency;
+  if (inferredFromCountry) return inferredFromCountry;
   if (datasetCurrency) return datasetCurrency;
 
   const currencyText = countryItem.querySelector('.localization-form__currency')?.textContent || '';
