@@ -19,12 +19,24 @@ import { isClickedOutside, normalizeString, onAnimationEnd } from '@theme/utilit
  * @extends {Component<FormRefs>}
  */
 class LocalizationFormComponent extends Component {
+  #isSubmitting = false;
+  #submitUnlockTimeout;
+  #onCountryItemClick = (event) => {
+    const countryItem = event.target instanceof HTMLElement ? event.target.closest('.localization-form__list-item') : null;
+    if (!(countryItem instanceof HTMLElement)) return;
+    if (!countryItem.dataset.currency) return;
+
+    event.preventDefault();
+    this.#selectDisplayCurrencyFromItem(countryItem);
+  };
+
   connectedCallback() {
     super.connectedCallback();
 
     this.refs.search && this.refs.search.addEventListener('keydown', this.#onSearchKeyDown);
     this.refs.countryList && this.refs.countryList.addEventListener('keydown', this.#onContainerKeyDown);
     this.refs.countryList && this.refs.countryList.addEventListener('scroll', this.#onCountryListScroll);
+    this.refs.countryList && this.refs.countryList.addEventListener('click', this.#onCountryItemClick);
 
     this.resizeLanguageInput();
   }
@@ -34,6 +46,10 @@ class LocalizationFormComponent extends Component {
     this.refs.search && this.refs.search.removeEventListener('keydown', this.#onSearchKeyDown);
     this.refs.countryList && this.refs.countryList.removeEventListener('keydown', this.#onContainerKeyDown);
     this.refs.countryList && this.refs.countryList.removeEventListener('scroll', this.#onCountryListScroll);
+    this.refs.countryList && this.refs.countryList.removeEventListener('click', this.#onCountryItemClick);
+    if (this.#submitUnlockTimeout) {
+      clearTimeout(this.#submitUnlockTimeout);
+    }
   }
 
   /**
@@ -42,7 +58,7 @@ class LocalizationFormComponent extends Component {
    * @param {KeyboardEvent} event - The event object.
    */
   #onContainerKeyDown = (event) => {
-    const { countryInput, countryListItems, form } = this.refs;
+    const { countryListItems } = this.refs;
 
     switch (event.key) {
       case 'ArrowUp':
@@ -61,8 +77,7 @@ class LocalizationFormComponent extends Component {
         const focusedItem = countryListItems.find((item) => item.getAttribute('aria-selected') === 'true');
 
         if (focusedItem) {
-          countryInput.value = focusedItem.dataset.value ?? '';
-          form.submit();
+          this.#selectDisplayCurrencyFromItem(focusedItem);
         }
         break;
       }
@@ -90,11 +105,16 @@ class LocalizationFormComponent extends Component {
    * @param {Event} event - The event object.
    */
   selectCountry = (countryName, event) => {
-    event.preventDefault();
-    const { countryInput, form } = this.refs;
+    if (event && typeof event.preventDefault === 'function') {
+      event.preventDefault();
+    }
 
-    countryInput.value = countryName;
-    form?.submit();
+    const selectedItemFromEvent = event?.currentTarget instanceof HTMLElement ? event.currentTarget : null;
+    const selectedItemFromCountryCode = this.refs.countryListItems.find((item) => item.dataset.value === countryName);
+    const selectedItem = selectedItemFromEvent || selectedItemFromCountryCode || null;
+
+    if (!selectedItem) return;
+    this.#selectDisplayCurrencyFromItem(selectedItem);
   };
 
   /**
@@ -107,10 +127,26 @@ class LocalizationFormComponent extends Component {
     const value = event.target instanceof HTMLSelectElement ? event.target.value : null;
 
     if (value) {
+      if (this.#isSubmitting || !form) return;
+      if (languageInput.value === value) return;
       languageInput.value = value;
       this.resizeLanguageInput();
-      form.submit();
+      this.#submitForm(form);
     }
+  }
+
+  #submitForm(form) {
+    if (this.#isSubmitting) return;
+
+    this.#isSubmitting = true;
+    this.setAttribute('data-localization-submitting', 'true');
+
+    this.#submitUnlockTimeout = window.setTimeout(() => {
+      this.#isSubmitting = false;
+      this.removeAttribute('data-localization-submitting');
+    }, 2000);
+
+    form.submit();
   }
 
   resizeLanguageInput() {
@@ -399,6 +435,47 @@ class LocalizationFormComponent extends Component {
       countryFilter.classList.toggle('is-scrolled', shouldShowBorder);
     }
   };
+
+  #selectDisplayCurrencyFromItem(countryItem) {
+    const selectedCurrency = countryItem.dataset.currency?.toUpperCase();
+    const selectedCountryCode = countryItem.dataset.value?.toUpperCase();
+    if (!selectedCurrency) return;
+
+    try {
+      localStorage.setItem('theme_display_currency', selectedCurrency);
+    } catch {
+      // Ignore storage errors (private mode, blocked storage, etc.).
+    }
+
+    for (const item of this.refs.countryListItems) {
+      if (selectedCountryCode && item.dataset.value?.toUpperCase() === selectedCountryCode) {
+        item.setAttribute('aria-current', 'true');
+      } else {
+        item.removeAttribute('aria-current');
+      }
+    }
+
+    document.querySelectorAll('[data-testid="localization-currency-code"], .drawer-localization__button .currency-code').forEach((el) => {
+      el.textContent = selectedCurrency;
+    });
+
+    window.dispatchEvent(
+      new CustomEvent('theme:display-currency-changed', {
+        detail: { currency: selectedCurrency },
+      })
+    );
+
+    const dropdown = this.closest('dropdown-localization-component');
+    if (dropdown && typeof dropdown.hidePanel === 'function') {
+      dropdown.hidePanel();
+    }
+
+    const drawerLocalization = this.closest('drawer-localization-component');
+    const drawerDetails = drawerLocalization?.querySelector('details');
+    if (drawerDetails instanceof HTMLDetailsElement) {
+      drawerDetails.open = false;
+    }
+  }
 }
 
 /**

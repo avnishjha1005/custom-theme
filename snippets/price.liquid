@@ -23,6 +23,9 @@
     assign price = 1999
   endif
 
+  assign price_cents = price
+  assign compare_at_price_cents = compare_at_price
+
   assign is_price_on_request = false
   if selected_variant.price == 0
     assign is_price_on_request = true
@@ -53,23 +56,43 @@
     {% if show_sale_price_first == false and show_compare_price %}
       <span role="group">
         <span class="visually-hidden">{{ 'content.price_regular' | t }}&nbsp;</span>
-        <span class="compare-at-price">{{- compare_at_price -}}</span>
+        <span
+          class="compare-at-price js-money-convert"
+          data-money-cents="{{ compare_at_price_cents }}"
+        >
+          {{- compare_at_price -}}
+        </span>
       </span>
     {% endif %}
 
     {% if show_compare_price %}
       <span role="group">
         <span class="visually-hidden">{{ 'content.price_sale' | t }}&nbsp;</span>
-        <span class="price">{{ price | default: '&nbsp;' }}</span>
+        <span
+          class="price js-money-convert"
+          data-money-cents="{{ price_cents }}"
+        >
+          {{ price | default: '&nbsp;' }}
+        </span>
       </span>
     {% else %}
-      <span class="price">{{ price | default: '&nbsp;' }}</span>
+      <span
+        class="price js-money-convert"
+        data-money-cents="{{ price_cents }}"
+      >
+        {{ price | default: '&nbsp;' }}
+      </span>
     {% endif %}
 
     {% if show_sale_price_first == true and show_compare_price %}
       <span role="group">
         <span class="visually-hidden">{{ 'content.price_regular' | t }}&nbsp;</span>
-        <span class="compare-at-price">{{- compare_at_price -}}</span>
+        <span
+          class="compare-at-price js-money-convert"
+          data-money-cents="{{ compare_at_price_cents }}"
+        >
+          {{- compare_at_price -}}
+        </span>
       </span>
     {% endif %}
     {%- if selected_variant.unit_price and show_unit_price %}

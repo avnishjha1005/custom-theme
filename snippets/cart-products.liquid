@@ -58,7 +58,12 @@
             role="caption"
           >
             {{ 'content.cart_total' | t }}
-            <span>{{ cart.total_price | money_with_currency }}</span>
+            <span
+              class="js-money-convert"
+              data-money-cents="{{ cart.total_price }}"
+            >
+              {{ cart.total_price | money_with_currency }}
+            </span>
           </caption>
 
           <thead
@@ -233,13 +238,28 @@
                   <div>
                     {% if item.original_price != item.final_price %}
                       <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
-                      <span>{{ item.final_price | money }}</span>
+                      <span
+                        class="js-money-convert"
+                        data-money-cents="{{ item.final_price }}"
+                      >
+                        {{ item.final_price | money }}
+                      </span>
                       <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
                       <s class="compare-at-price">
                         {% if item.variant.compare_at_price > item.original_price %}
-                          {{ item.variant.compare_at_price | money }}
+                          <span
+                            class="js-money-convert"
+                            data-money-cents="{{ item.variant.compare_at_price }}"
+                          >
+                            {{ item.variant.compare_at_price | money }}
+                          </span>
                         {% else %}
-                          {{ item.original_price | money }}
+                          <span
+                            class="js-money-convert"
+                            data-money-cents="{{ item.original_price }}"
+                          >
+                            {{ item.original_price | money }}
+                          </span>
                         {% endif %}
                       </s>
                     {% else %}
@@ -249,11 +269,23 @@
                         <span class="visually-hidden">{{ 'content.price' | t }}</span>
                       {% endif %}
 
-                      <span>{{ item.original_price | money }}</span>
+                      <span
+                        class="js-money-convert"
+                        data-money-cents="{{ item.original_price }}"
+                      >
+                        {{ item.original_price | money }}
+                      </span>
 
                       {% if item.variant.compare_at_price > item.original_price %}
                         <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
-                        <s class="compare-at-price">{{ item.variant.compare_at_price | money }}</s>
+                        <s class="compare-at-price">
+                          <span
+                            class="js-money-convert"
+                            data-money-cents="{{ item.variant.compare_at_price }}"
+                          >
+                            {{ item.variant.compare_at_price | money }}
+                          </span>
+                        </s>
                       {% endif %}
                     {% endif %}
                   </div>
@@ -323,7 +355,14 @@
                       assign unit_price = item.unit_price | money
                     endif
                   -%}
-                  <text-component value="{{ price | strip_html }}">{{ price }}</text-component>
+                  <text-component value="{{ price | strip_html }}">
+                    <span
+                      class="js-money-convert"
+                      data-money-cents="{{ item.final_line_price }}"
+                    >
+                      {{ price }}
+                    </span>
+                  </text-component>
                   {%- if item.unit_price_measurement -%}
                     <div class="cart-items__price-unit cart-secondary-typography">
                       {% render 'unit-price', price: unit_price, measurement: item.unit_price_measurement %}

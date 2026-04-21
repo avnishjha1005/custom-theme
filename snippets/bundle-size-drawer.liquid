@@ -58,7 +58,12 @@
               <div class="bundle-item__details">
                 <p class="bundle-item__vendor">{{ bundle_item.vendor }}</p>
                 <h4 class="bundle-item__title">{{ bundle_item.title }}</h4>
-                <p class="bundle-item__price">{{ bundle_item.price | money }}</p>
+                <p
+                  class="bundle-item__price js-money-convert"
+                  data-money-cents="{{ bundle_item.price }}"
+                >
+                  {{ bundle_item.price | money }}
+                </p>
 
                 {% comment %} Size selector for this bundle item {% endcomment %}
                 {% assign size_option_index = nil %}
@@ -115,7 +120,13 @@
       <div class="bundle-drawer__footer">
         <div class="bundle-drawer__summary">
           <span class="bundle-drawer__item-count">{{ bundle_count }} items</span>
-          <span class="bundle-drawer__total-price" data-original-total="{{ product.price }}">{{ product.price | money }}</span>
+          <span
+            class="bundle-drawer__total-price js-money-convert"
+            data-original-total="{{ product.price }}"
+            data-money-cents="{{ product.price }}"
+          >
+            {{ product.price | money }}
+          </span>
         </div>
         <button type="button" class="bundle-drawer__confirm button" data-bundle-add-all>
           <span class="bundle-drawer__confirm-text">Add all to bag</span>

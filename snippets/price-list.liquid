@@ -50,9 +50,19 @@ Supported variables
       <span class="sr-only">{{ 'content.price_sale' | t }}</span>
 
       {%- if settings.currency_code_enabled -%}
-        {{- variant.price | money_with_currency -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ variant.price }}"
+        >
+          {{- variant.price | money_with_currency -}}
+        </span>
       {%- else -%}
-        {{- variant.price | money -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ variant.price }}"
+        >
+          {{- variant.price | money -}}
+        </span>
       {%- endif -%}
     </sale-price>
 
@@ -60,9 +70,19 @@ Supported variables
       <span class="sr-only">{{ 'content.price_regular' | t }}</span>
 
       {%- if settings.currency_code_enabled -%}
-        {{- variant.compare_at_price | money_with_currency -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ variant.compare_at_price }}"
+        >
+          {{- variant.compare_at_price | money_with_currency -}}
+        </span>
       {%- else -%}
-        {{- variant.compare_at_price | money -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ variant.compare_at_price }}"
+        >
+          {{- variant.compare_at_price | money -}}
+        </span>
       {%- endif -%}
     </compare-at-price>
   {%- elsif line_item != blank -%}
@@ -75,9 +95,19 @@ Supported variables
       <span class="sr-only">{{ 'content.price_sale' | t }}</span>
 
       {%- if settings.currency_code_enabled -%}
-        {{- line_item.final_price | money_with_currency -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ line_item.final_price }}"
+        >
+          {{- line_item.final_price | money_with_currency -}}
+        </span>
       {%- else -%}
-        {{- line_item.final_price | money -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ line_item.final_price }}"
+        >
+          {{- line_item.final_price | money -}}
+        </span>
       {%- endif -%}
     </sale-price>
 
@@ -86,9 +116,19 @@ Supported variables
         <span class="sr-only">{{ 'content.price_regular' | t }}</span>
 
         {%- if settings.currency_code_enabled -%}
-          {{- line_item.original_price | money_with_currency -}}
+          <span
+            class="js-money-convert"
+            data-money-cents="{{ line_item.original_price }}"
+          >
+            {{- line_item.original_price | money_with_currency -}}
+          </span>
         {%- else -%}
-          {{- line_item.original_price | money -}}
+          <span
+            class="js-money-convert"
+            data-money-cents="{{ line_item.original_price }}"
+          >
+            {{- line_item.original_price | money -}}
+          </span>
         {%- endif -%}
       </compare-at-price>
     {%- endif -%}
@@ -124,25 +164,46 @@ Supported variables
       {%- if settings.product_price_strategy == 'from_price' -%}
         <sale-price class="{% if is_variant_on_sale %}{{ on_sale_price_classes }}{% else %}{{ regular_price_classes }}{% endif %}">
           <span class="sr-only">{{ 'content.price_sale' | t }}</span>
-          {{- 'content.price_from' | t: price_min: variant_price -}}
+          {{- 'content.price_from' | t: price_min: '' -}}
+          <span
+            class="js-money-convert"
+            data-money-cents="{{ variant.price }}"
+          >
+            {{- variant_price -}}
+          </span>
         </sale-price>
       {%- else -%}
         <sale-price class="{{ on_sale_price_classes }}">
           <span class="sr-only">{{ 'content.price_sale' | t }}</span>
-          {{- variant_price -}}
+          <span
+            class="js-money-convert"
+            data-money-cents="{{ variant.price }}"
+          >
+            {{- variant_price -}}
+          </span>
         </sale-price>
       {%- endif -%}
     {%- else -%}
       <sale-price class="{% if variant.price < variant.compare_at_price %}{{ on_sale_price_classes }}{% else %}{{ regular_price_classes }}{% endif %}">
         <span class="sr-only">{{ 'content.price_sale' | t }}</span>
-        {{- variant_price -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ variant.price }}"
+        >
+          {{- variant_price -}}
+        </span>
       </sale-price>
     {%- endif -%}
 
     {%- if variant.price < variant.compare_at_price -%}
       <compare-at-price class="{{ compare_at_price_classes }}">
         <span class="sr-only">{{ 'content.price_regular' | t }}</span>
-        {{- variant_compare_at_price -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ variant.compare_at_price }}"
+        >
+          {{- variant_compare_at_price -}}
+        </span>
       </compare-at-price>
     {%- endif -%}
   {%- else -%}
@@ -156,9 +217,19 @@ Supported variables
       <span class="sr-only">{{ 'content.price_sale' | t }}</span>
 
       {%- if settings.currency_code_enabled -%}
-        {{- 4999 | money_with_currency -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="4999"
+        >
+          {{- 4999 | money_with_currency -}}
+        </span>
       {%- else -%}
-        {{- 4999 | money -}}
+        <span
+          class="js-money-convert"
+          data-money-cents="4999"
+        >
+          {{- 4999 | money -}}
+        </span>
       {%- endif -%}
     </sale-price>
   {%- endif -%}
@@ -174,7 +245,14 @@ Supported variables
           {%- assign reference_value = unit_price_measurement.reference_value -%}
         {%- endif -%}
 
-        ({{ unit_price_item.unit_price | money }}/{{ reference_value }}{{ unit_price_measurement.reference_unit }})
+        (
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ unit_price_item.unit_price }}"
+        >
+          {{ unit_price_item.unit_price | money }}
+        </span>
+        /{{ reference_value }}{{ unit_price_measurement.reference_unit }})
       </unit-price>
     {%- endif -%}
   {%- endunless -%}

@@ -347,7 +347,12 @@
                           {% if hs_product.price == 0 %}
                             <span class="hs-price">Price on request</span>
                           {% else %}
-                            <span class="hs-price">{{ hs_product.price | money }}</span>
+                            <span
+                              class="hs-price js-money-convert"
+                              data-money-cents="{{ hs_product.price }}"
+                            >
+                              {{ hs_product.price | money }}
+                            </span>
                           {% endif %}
                         </div>
                       </div>

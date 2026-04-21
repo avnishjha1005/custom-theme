@@ -10,7 +10,10 @@
     {%- if cart.cart_level_discount_applications.size > 0 -%}
       <span class="cart__summary-item cart__original-total">
         <span class="cart__original-total-label">{{ 'content.cart_subtotal' | t }}</span>
-        <span class="cart__original-total-value cart-secondary-typography">
+        <span
+          class="cart__original-total-value cart-secondary-typography js-money-convert"
+          data-money-cents="{{ cart.original_total_price }}"
+        >
           {{- cart.original_total_price | money -}}
         </span>
       </span>
@@ -27,7 +30,12 @@
                 {{ discount.title | escape }}
               </span>
               <span class="cart__discount-value cart-secondary-typography"
-                >-{{ discount.total_allocated_amount | money -}}
+                >-<span
+                  class="js-money-convert"
+                  data-money-cents="{{ discount.total_allocated_amount }}"
+                >
+                  {{- discount.total_allocated_amount | money -}}
+                </span>
               </span>
             </li>
           {%- endfor -%}
@@ -71,7 +79,12 @@
         {% comment %} Used by payment_terms web component {% endcomment %}
         data-cart-subtotal
       >
-        {{ total_price }}
+        <span
+          class="js-money-convert"
+          data-money-cents="{{ cart.total_price }}"
+        >
+          {{ total_price }}
+        </span>
       </text-component>
     </span>
     {% if settings.show_installments %}
