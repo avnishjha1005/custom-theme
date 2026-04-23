@@ -992,6 +992,7 @@
     },
     "promo_popup_split_qcgtqG": {
       "type": "promo-popup-split",
+      "disabled": true,
       "custom_css": [
         ".promo-popup-split__subheading {}"
       ],
