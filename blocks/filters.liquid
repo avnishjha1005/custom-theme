@@ -146,6 +146,7 @@
         </li>
 
         {% for value in product_type_filter.values %}
+           {% unless value.label == 'Bundle' %}
           <li class="{% if value.active %}is-active{% endif %}">
             <a
               href="{% if value.active %}
@@ -158,6 +159,7 @@
               {{ value.label }}
             </a>
           </li>
+          {% endunless %}
         {% endfor %}
       </ul>
     </nav>

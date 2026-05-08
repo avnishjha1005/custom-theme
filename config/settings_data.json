@@ -15,7 +15,7 @@
     "logo": "shopify://shop_images/AR_Wordmark_Terracotta.svg",
     "logo_inverse": "shopify://shop_images/AR_Wordmark_Soft_Beige.svg",
     "logo_symbol": "shopify://shop_images/AR_Symbol_Soft_Beige.svg",
-    "favicon": "shopify://shop_images/AR_Symbol_Deep_Terracotta.svg",
+    "favicon": "shopify://shop_images/ar_favicon.png",
     "type_body_font": "inter_n4",
     "type_subheading_font": "inter_n4",
     "type_heading_font": "marcellus_n4",
@@ -258,11 +258,6 @@
       },
       "11973264549492426220": {
         "type": "shopify://apps/currency-converter/blocks/app-embed-block/a56d6bd1-e9df-4a4a-b98e-e9bb5c43a042",
-        "disabled": false,
-        "settings": {}
-      },
-      "1804893150726543839": {
-        "type": "shopify://apps/nova-multi-currency-converter/blocks/app-embed/a5be3c35-cbd0-46a1-ac3a-1ace57a9c1ce",
         "disabled": false,
         "settings": {}
       }
