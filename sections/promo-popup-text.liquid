@@ -1,4 +1,5 @@
-{{ 'promo-popup.css' | asset_url | stylesheet_tag }}
+{% unless customer and customer.accepts_marketing %}
+  {{ 'promo-popup.css' | asset_url | stylesheet_tag }}
 
 <div id="promo-popup-text-{{ section.id }}" class="promo-popup-overlay" aria-hidden="true">
   <div class="promo-popup-text" role="dialog" aria-modal="true" aria-labelledby="popup-heading-{{ section.id }}">
@@ -60,6 +61,8 @@
     const sectionId = '{{ section.id }}';
     const popupId = 'promo-popup-text-' + sectionId;
     const storageKey = 'promo-popup-text-' + sectionId;
+    const subscribedKey = 'promo-popup-text-' + sectionId + '-subscribed';
+    const subscribedCookie = subscribedKey + '=1';
     const showOnHomepageOnly = {{ section.settings.show_homepage_only | json }};
     const delaySeconds = {{ section.settings.delay_seconds }};
     const frequencyDays = {{ section.settings.frequency_days }};
@@ -67,8 +70,29 @@
     const scrollPercent = {{ section.settings.scroll_percent }};
     const autoDismissDelay = 3000;
 
+    function setSubscribedFlag() {
+      var maxAge = 60 * 60 * 24 * 365;
+      document.cookie = subscribedCookie + '; path=/; max-age=' + maxAge + '; samesite=lax';
+      try {
+        localStorage.setItem(subscribedKey, '1');
+      } catch (e) {}
+    }
+
+    function hasSubscribedFlag() {
+      if (document.cookie.indexOf(subscribedCookie) !== -1) return true;
+      try {
+        return localStorage.getItem(subscribedKey) === '1';
+      } catch (e) {
+        return false;
+      }
+    }
+
     function shouldShowPopup() {
       if (showOnHomepageOnly && window.location.pathname !== '/') {
+        return false;
+      }
+
+      if (hasSubscribedFlag()) {
         return false;
       }
 
@@ -141,6 +165,7 @@
         body: formData,
         headers: { 'Accept': 'application/json' }
       }).then(function() {
+        setSubscribedFlag();
         showSuccessState(popup);
       }).catch(function() {
         showSuccessState(popup);
@@ -201,6 +226,7 @@
     }
   })();
 </script>
+{% endunless %}
 
 {% schema %}
 {

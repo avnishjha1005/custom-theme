@@ -1,5 +1,6 @@
-{{ 'dialog.css' | asset_url | stylesheet_tag }}
-{{ 'promo-popup.css' | asset_url | stylesheet_tag }}
+{% unless customer and customer.accepts_marketing and section.settings.show_newsletter_form %}
+  {{ 'dialog.css' | asset_url | stylesheet_tag }}
+  {{ 'promo-popup.css' | asset_url | stylesheet_tag }}
 
 <dialog-component id="promo-popup-{{ section.id }}" class="dialog-modal">
   <dialog class="dialog" style="--dialog-width: {{ section.settings.popup_width }}px;">
@@ -47,6 +48,10 @@
                   </div>
                   <p class="promo-popup-text__success">{{ section.settings.success_message }}</p>
                 </div>
+                <script>
+                  document.cookie = 'promo-popup-{{ section.id }}-subscribed=1; path=/; max-age=31536000; samesite=lax';
+                  try { localStorage.setItem('promo-popup-{{ section.id }}-subscribed', '1'); } catch (e) {}
+                </script>
               {%- else -%}
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                   <input
@@ -88,13 +93,28 @@
     const sectionId = '{{ section.id }}';
     const popupId = 'promo-popup-' + sectionId;
     const storageKey = 'promo-popup-' + sectionId + '-shown';
+    const subscribedKey = 'promo-popup-' + sectionId + '-subscribed';
+    const subscribedCookie = subscribedKey + '=1';
     const showOnHomepageOnly = {{ section.settings.show_homepage_only }};
     const delaySeconds = {{ section.settings.delay_seconds }};
     const frequencyDays = {{ section.settings.frequency_days }};
 
+    function hasSubscribedFlag() {
+      if (document.cookie.indexOf(subscribedCookie) !== -1) return true;
+      try {
+        return localStorage.getItem(subscribedKey) === '1';
+      } catch (e) {
+        return false;
+      }
+    }
+
     function shouldShowPopup() {
       // Check if we should only show on homepage
       if (showOnHomepageOnly && window.location.pathname !== '/') {
+        return false;
+      }
+
+      if (hasSubscribedFlag()) {
         return false;
       }
 
@@ -160,6 +180,7 @@
     }
   }
 </style>
+{% endunless %}
 
 {% schema %}
 {
