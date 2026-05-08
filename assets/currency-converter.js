@@ -1,4 +1,4 @@
-const BASE_CURRENCY = 'INR';
+const RATE_BASE_CURRENCY = 'INR';
 const SELECTED_CURRENCY_STORAGE_KEY = 'theme_display_currency';
 const RATES_CACHE_STORAGE_KEY = 'theme_display_currency_rates_v1';
 const RATES_CACHE_TTL_MS = 6 * 60 * 60 * 1000;
@@ -38,6 +38,15 @@ const COUNTRY_TO_CURRENCY = {
   PE: 'USD',
   GB: 'GBP',
   IE: 'EUR',
+  LU: 'EUR',
+  MT: 'EUR',
+  SK: 'EUR',
+  SI: 'EUR',
+  CY: 'EUR',
+  EE: 'EUR',
+  LV: 'EUR',
+  LT: 'EUR',
+  HR: 'EUR',
   FR: 'EUR',
   DE: 'EUR',
   IT: 'EUR',
@@ -48,6 +57,12 @@ const COUNTRY_TO_CURRENCY = {
   AT: 'EUR',
   FI: 'EUR',
   GR: 'EUR',
+  AD: 'EUR',
+  MC: 'EUR',
+  SM: 'EUR',
+  VA: 'EUR',
+  ME: 'EUR',
+  XK: 'EUR',
   PL: 'PLN',
   CZ: 'CZK',
   DK: 'DKK',
@@ -99,8 +114,9 @@ const RATE_SOURCE_URLS = [
   'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/inr.json',
 ];
 
-let exchangeRates = { ...FALLBACK_RATES, [BASE_CURRENCY]: 1 };
-let targetCurrency = BASE_CURRENCY;
+let exchangeRates = { ...FALLBACK_RATES, [RATE_BASE_CURRENCY]: 1 };
+let sourceCurrency = null;
+let targetCurrency = null;
 let mutationObserver;
 let conversionFrame = null;
 let rateRefreshPromise = null;
@@ -130,6 +146,36 @@ function inferCurrencyFromCountryCode(countryCode) {
   return COUNTRY_TO_CURRENCY[normalizedCountryCode] || null;
 }
 
+function getCurrencySymbol(currencyCode) {
+  const normalizedCurrency = normalizeCurrencyCode(currencyCode);
+  if (!normalizedCurrency) return '';
+
+  try {
+    const parts = new Intl.NumberFormat('en', {
+      style: 'currency',
+      currency: normalizedCurrency,
+      currencyDisplay: 'symbol',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).formatToParts(0);
+    const symbolPart = parts.find((part) => part.type === 'currency')?.value;
+    if (!symbolPart || symbolPart.toUpperCase() === normalizedCurrency) return '';
+    return symbolPart;
+  } catch {
+    return '';
+  }
+}
+
+function inferDisplayCurrencyForCountry(countryCode, fallbackCurrency = null) {
+  const inferredCurrency = inferCurrencyFromCountryCode(countryCode);
+  if (inferredCurrency) return inferredCurrency;
+
+  const normalizedFallbackCurrency = normalizeCurrencyCode(fallbackCurrency);
+  if (normalizedFallbackCurrency) return normalizedFallbackCurrency;
+
+  return RATE_BASE_CURRENCY;
+}
+
 function safeReadStorage(key) {
   try {
     return localStorage.getItem(key);
@@ -154,6 +200,16 @@ function readCurrencyFromDom() {
   return normalizeCurrencyCode(currencyNode?.textContent ?? '');
 }
 
+function resolveSourceCurrency() {
+  const sourceFromDom = normalizeCurrencyCode(document.documentElement.getAttribute('data-store-currency'));
+  if (sourceFromDom) return sourceFromDom;
+
+  const domCurrency = readCurrencyFromDom();
+  if (domCurrency) return domCurrency;
+
+  return RATE_BASE_CURRENCY;
+}
+
 function getAvailableCountryCurrencyMap() {
   const countryCurrencyMap = new Map();
 
@@ -165,7 +221,11 @@ function getAvailableCountryCurrencyMap() {
 
     if (!currencyCode && inferredCurrencyCode) {
       currencyCode = inferredCurrencyCode;
-    } else if (currencyCode === BASE_CURRENCY && inferredCurrencyCode && inferredCurrencyCode !== BASE_CURRENCY) {
+    } else if (
+      currencyCode === RATE_BASE_CURRENCY &&
+      inferredCurrencyCode &&
+      inferredCurrencyCode !== RATE_BASE_CURRENCY
+    ) {
       currencyCode = inferredCurrencyCode;
     }
 
@@ -227,6 +287,53 @@ function syncCurrencyLabels(currency) {
     });
 }
 
+function syncLocalizationCurrencyLabels(root = document) {
+  const countryItems = root.querySelectorAll('.localization-form__list-item[data-value][data-currency]');
+  countryItems.forEach((item) => {
+    if (!(item instanceof HTMLElement)) return;
+
+    const countryCode = normalizeCountryCode(item.dataset.value);
+    const fallbackCurrency = normalizeCurrencyCode(item.dataset.currency);
+    const displayCurrency = inferDisplayCurrencyForCountry(countryCode, fallbackCurrency);
+    const displaySymbol = getCurrencySymbol(displayCurrency);
+
+    item.dataset.currency = displayCurrency;
+
+    const currencyEl = item.querySelector('.localization-form__currency');
+    if (!(currencyEl instanceof HTMLElement)) return;
+    currencyEl.textContent = displaySymbol ? `${displayCurrency} ${displaySymbol}` : displayCurrency;
+  });
+
+  const drawerCountryButtons = root.querySelectorAll('.drawer-currency-option[name="country_code"][value]');
+  drawerCountryButtons.forEach((button) => {
+    if (!(button instanceof HTMLButtonElement)) return;
+
+    const countryCode = normalizeCountryCode(button.value);
+    const fallbackCurrency = normalizeCurrencyCode(button.dataset.drawerCurrency);
+    const displayCurrency = inferDisplayCurrencyForCountry(countryCode, fallbackCurrency);
+    const displaySymbol = getCurrencySymbol(displayCurrency);
+    const countryName = button.textContent
+      ?.replace(/\s+/g, ' ')
+      .trim()
+      .replace(/\s*\(.*?\)\s*$/, '');
+
+    if (!countryName) return;
+
+    button.dataset.drawerCurrency = displayCurrency;
+    button.setAttribute('data-drawer-currency', displayCurrency);
+
+    const labelNode = button.childNodes[0];
+    if (labelNode && labelNode.nodeType === Node.TEXT_NODE) {
+      labelNode.textContent = `${countryName} (${displayCurrency}${displaySymbol ? ` ${displaySymbol}` : ''}) `;
+    } else {
+      button.insertBefore(
+        document.createTextNode(`${countryName} (${displayCurrency}${displaySymbol ? ` ${displaySymbol}` : ''}) `),
+        button.firstChild
+      );
+    }
+  });
+}
+
 function isPriceLikeClassName(value) {
   if (!value || typeof value !== 'string') return false;
   return /(price|money|amount|subtotal|total|cost|discount|sale)/i.test(value);
@@ -257,7 +364,7 @@ function readCurrencyFromCountryItem(countryItem) {
   const datasetCurrency = normalizeCurrencyCode(countryItem.dataset.currency);
   const inferredFromCountry = inferCurrencyFromCountryCode(countryItem.dataset.value);
 
-  if (datasetCurrency && datasetCurrency !== BASE_CURRENCY) return datasetCurrency;
+  if (datasetCurrency && datasetCurrency !== RATE_BASE_CURRENCY) return datasetCurrency;
   if (inferredFromCountry) return inferredFromCountry;
   if (datasetCurrency) return datasetCurrency;
 
@@ -428,6 +535,10 @@ function tagMoneyNodes(root = document) {
 }
 
 function resolveTargetCurrency() {
+  if (!sourceCurrency) {
+    sourceCurrency = resolveSourceCurrency();
+  }
+
   const storedCurrency = normalizeCurrencyCode(safeReadStorage(SELECTED_CURRENCY_STORAGE_KEY));
   const domCurrency = readCurrencyFromDom();
   const localeCurrency = guessCurrencyFromBrowserLocale();
@@ -436,7 +547,7 @@ function resolveTargetCurrency() {
     return storedCurrency;
   }
 
-  if (domCurrency && domCurrency !== BASE_CURRENCY) {
+  if (domCurrency) {
     return domCurrency;
   }
 
@@ -444,7 +555,7 @@ function resolveTargetCurrency() {
     return localeCurrency;
   }
 
-  return domCurrency || BASE_CURRENCY;
+  return sourceCurrency;
 }
 
 function readCachedRates() {
@@ -475,14 +586,14 @@ function hydrateRatesFromCache() {
   const cachedRates = readCachedRates();
   if (!cachedRates?.rates || typeof cachedRates.rates !== 'object') return false;
 
-  exchangeRates = { ...FALLBACK_RATES, ...cachedRates.rates, [BASE_CURRENCY]: 1 };
+  exchangeRates = { ...FALLBACK_RATES, ...cachedRates.rates, [RATE_BASE_CURRENCY]: 1 };
   return true;
 }
 
 function sanitizeRates(ratesCandidate) {
   if (!ratesCandidate || typeof ratesCandidate !== 'object') return null;
 
-  const sanitizedRates = { [BASE_CURRENCY]: 1 };
+  const sanitizedRates = { [RATE_BASE_CURRENCY]: 1 };
 
   for (const [currencyKey, rawRate] of Object.entries(ratesCandidate)) {
     const currency = normalizeCurrencyCode(currencyKey);
@@ -506,7 +617,7 @@ function extractRatesFromPayload(payload) {
     return sanitizeRates(payload.conversion_rates);
   }
 
-  const baseKey = BASE_CURRENCY.toLowerCase();
+  const baseKey = RATE_BASE_CURRENCY.toLowerCase();
   if (payload[baseKey] && typeof payload[baseKey] === 'object') {
     return sanitizeRates(payload[baseKey]);
   }
@@ -544,7 +655,7 @@ async function refreshExchangeRates(requiredCurrency = targetCurrency) {
     if (!rates) continue;
     if (requiredCurrency && !rates[requiredCurrency]) continue;
 
-    exchangeRates = { ...FALLBACK_RATES, ...rates, [BASE_CURRENCY]: 1 };
+    exchangeRates = { ...FALLBACK_RATES, ...rates, [RATE_BASE_CURRENCY]: 1 };
     cacheRates(exchangeRates);
     return true;
   }
@@ -590,15 +701,20 @@ function convertMoneyNode(node) {
     node.dataset.originalMoneyText = (node.textContent ?? '').trim();
   }
 
-  if (targetCurrency === BASE_CURRENCY) {
+  if (!sourceCurrency) {
+    sourceCurrency = resolveSourceCurrency();
+  }
+
+  if (targetCurrency === sourceCurrency) {
     node.textContent = node.dataset.originalMoneyText;
     return;
   }
 
-  // If a specific rate is temporarily unavailable, still switch symbol/format so the UI reacts immediately.
-  const rate = typeof exchangeRates[targetCurrency] === 'number' ? exchangeRates[targetCurrency] : 1;
+  const sourceRate = typeof exchangeRates[sourceCurrency] === 'number' ? exchangeRates[sourceCurrency] : null;
+  const targetRate = typeof exchangeRates[targetCurrency] === 'number' ? exchangeRates[targetCurrency] : null;
+  const crossRate = sourceRate && targetRate ? targetRate / sourceRate : 1;
 
-  const convertedAmount = (cents / 100) * rate;
+  const convertedAmount = (cents / 100) * crossRate;
   const formattedAmount = formatMoney(convertedAmount, targetCurrency);
   const prefix = (node.dataset.moneyPrefix || '').trim();
 
@@ -611,6 +727,7 @@ function applyConversions(root = document) {
     targetCurrency = nextCurrency;
   }
 
+  syncLocalizationCurrencyLabels(root);
   tagMoneyNodes(root);
 
   root.querySelectorAll('[data-money-cents]').forEach((node) => {
@@ -713,6 +830,8 @@ function bindLocalizationSelectionListeners() {
 }
 
 async function initCurrencyConversion() {
+  sourceCurrency = resolveSourceCurrency();
+
   window.ThemeCurrencyConverter = {
     setCurrency: (currency) => setDisplayCurrency(currency, { persist: true }),
     getCurrency: () => targetCurrency,
@@ -723,6 +842,7 @@ async function initCurrencyConversion() {
   bindLocalizationSelectionListeners();
 
   hydrateRatesFromCache();
+  syncLocalizationCurrencyLabels(document);
   applyConversions(document);
   observeMoneyNodes();
   queueWarmupReapplies();

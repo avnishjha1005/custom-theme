@@ -2,6 +2,7 @@
 <html
   class="no-js{% if request.design_mode %} shopify-design-mode{% endif %}"
   lang="{{ request.locale.iso_code }}"
+  data-store-currency="{{ cart.currency.iso_code | default: shop.currency | upcase }}"
 >
   <head>
     {%- if settings.favicon != blank -%}
@@ -127,5 +128,4 @@
 
   </body>
 </html>
-
 

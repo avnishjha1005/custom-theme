@@ -269,14 +269,10 @@
     </div>
   {% endif %}
 
-  {% if shop.enabled_currencies.size > 1 %}
+  {% if localization.available_countries.size > 1 %}
     <div class="drawer-locale-selector">
       <button type="button" class="drawer-locale-btn" id="Drawer-Currency-Btn">
-        {% comment %} <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="12" y1="1" x2="12" y2="23"></line>
-          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-        </svg> {% endcomment %}
-        <span>{{ localization.country.currency.iso_code }}</span>
+        <span class="currency-code" data-testid="localization-currency-code">{{ localization.country.currency.iso_code | default: shop.currency | upcase }}</span>
         <svg class="drawer-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
@@ -299,10 +295,11 @@
             {% for country in localization.available_countries %}
               <li>
                 <button 
-                  type="submit" 
-                  class="drawer-locale-option {% if country.iso_code == localization.country.iso_code %}is-active{% endif %}"
+                  type="submit"
+                  class="drawer-locale-option drawer-currency-option {% if country.iso_code == localization.country.iso_code %}is-active{% endif %}"
                   name="country_code"
                   value="{{ country.iso_code }}"
+                  data-drawer-currency="{{ country.currency.iso_code | upcase }}"
                 >
                   {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
                   {% if country.iso_code == localization.country.iso_code %}
@@ -384,7 +381,7 @@
     right: 0;
     bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px));
     background: #fff;
-    transform: translateX(100%);
+    transform: translateY(100%);
     transition: transform 0.3s ease;
     visibility: hidden;
     z-index: 1100;
@@ -393,9 +390,9 @@
   }
 
   .drawer-locale-panel.is-open {
-    transform: translateX(0);
+    transform: translateY(0);
     visibility: visible;
-    box-shadow: -5px 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
   }
 
   .drawer-locale-header {
@@ -489,6 +486,8 @@
       this.currencyPanel = document.getElementById('Drawer-Currency-Panel');
       this.languageBackBtn = document.getElementById('Language-Back-Btn');
       this.currencyBackBtn = document.getElementById('Currency-Back-Btn');
+      this.currencyCodeNode = this.currencyBtn ? this.currencyBtn.querySelector('.currency-code') : null;
+      this.currencyOptions = Array.from(document.querySelectorAll('.drawer-currency-option'));
       
       this.init();
       this.checkHashAndOpen();
@@ -504,6 +503,8 @@
         this.currencyBtn.addEventListener('click', () => this.togglePanel(this.currencyPanel, this.currencyBtn));
         this.currencyBackBtn.addEventListener('click', () => this.closePanel(this.currencyPanel, this.currencyBtn));
       }
+
+      this.bindCurrencyConverter();
     }
 
     checkHashAndOpen() {
@@ -523,6 +524,8 @@
     }
 
     togglePanel(panel, button) {
+      if (!panel || !button) return;
+
       if (panel.classList.contains('is-open')) {
         this.closePanel(panel, button);
       } else {
@@ -531,6 +534,8 @@
     }
 
     openPanel(panel, button) {
+      if (!panel || !button) return;
+
       // Close other panel if open
       document.querySelectorAll('.drawer-locale-panel').forEach(p => {
         if (p !== panel) {
@@ -548,8 +553,88 @@
     }
 
     closePanel(panel, button) {
+      if (!panel || !button) return;
       panel.classList.remove('is-open');
       button.classList.remove('is-open');
+    }
+
+    normalizeCurrency(value) {
+      if (!value || typeof value !== 'string') return null;
+      const normalized = value.trim().toUpperCase();
+      return /^[A-Z]{3}$/.test(normalized) ? normalized : null;
+    }
+
+    getStoredCurrency() {
+      try {
+        return this.normalizeCurrency(localStorage.getItem('theme_display_currency'));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    getCurrentCurrency() {
+      const fromConverter = this.normalizeCurrency(window.ThemeCurrencyConverter?.getCurrency?.());
+      if (fromConverter) return fromConverter;
+
+      const fromStorage = this.getStoredCurrency();
+      if (fromStorage) return fromStorage;
+
+      const fromLabel = this.normalizeCurrency(this.currencyCodeNode?.textContent);
+      if (fromLabel) return fromLabel;
+
+      return 'INR';
+    }
+
+    syncCurrencyUI(currency) {
+      const normalized = this.normalizeCurrency(currency);
+      if (!normalized) return;
+
+      if (this.currencyCodeNode) {
+        this.currencyCodeNode.textContent = normalized;
+      }
+
+      this.currencyOptions.forEach((option) => {
+        const optionCurrency = this.normalizeCurrency(option.dataset.drawerCurrency);
+        option.classList.toggle('is-active', optionCurrency === normalized);
+      });
+    }
+
+    applyCurrency(currency) {
+      const normalized = this.normalizeCurrency(currency);
+      if (!normalized) return;
+
+      if (window.ThemeCurrencyConverter?.setCurrency) {
+        window.ThemeCurrencyConverter.setCurrency(normalized);
+      } else {
+        try {
+          localStorage.setItem('theme_display_currency', normalized);
+        } catch (e) {}
+
+        window.dispatchEvent(
+          new CustomEvent('theme:display-currency-changed', {
+            detail: { currency: normalized },
+          })
+        );
+      }
+
+      this.syncCurrencyUI(normalized);
+      this.closePanel(this.currencyPanel, this.currencyBtn);
+    }
+
+    bindCurrencyConverter() {
+      this.syncCurrencyUI(this.getCurrentCurrency());
+
+      this.currencyOptions.forEach((option) => {
+        option.addEventListener('click', (event) => {
+          event.preventDefault();
+          this.applyCurrency(option.dataset.drawerCurrency);
+        });
+      });
+
+      window.addEventListener('theme:display-currency-changed', (event) => {
+        const currency = this.normalizeCurrency(event?.detail?.currency);
+        if (currency) this.syncCurrencyUI(currency);
+      });
     }
   }
 
