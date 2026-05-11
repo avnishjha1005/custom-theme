@@ -19,7 +19,12 @@
   if bundle_products and bundle_products.size > 0
     assign is_bundle = true
     for bp in bundle_products
-      if bp.price > 0
+      assign bundle_item_is_por = false
+      if bp.metafields.custom.price_on_request == true or bp.metafields.custom.price_on_request.value == true
+        assign bundle_item_is_por = true
+      endif
+
+      if bundle_item_is_por == false
         assign bundle_count = bundle_count | plus: 1
       endif
     endfor

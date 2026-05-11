@@ -9,9 +9,16 @@
 {% liquid
   assign bundle_products = product.metafields.custom.bundle_products.value
   assign bundle_count = 0
+  assign bundle_total_price = 0
   for item in bundle_products
-    if item.price > 0
+    assign bundle_item_is_por = false
+    if item.metafields.custom.price_on_request == true or item.metafields.custom.price_on_request.value == true
+      assign bundle_item_is_por = true
+    endif
+
+    if bundle_item_is_por == false
       assign bundle_count = bundle_count | plus: 1
+      assign bundle_total_price = bundle_total_price | plus: item.price
     endif
   endfor
 %}
@@ -32,7 +39,13 @@
       <div class="bundle-drawer__body">
         <div class="bundle-drawer__items">
           {% for bundle_item in bundle_products %}
-            {% if bundle_item.price == 0 %}{% continue %}{% endif %}
+            {% liquid
+              assign bundle_item_is_por = false
+              if bundle_item.metafields.custom.price_on_request == true or bundle_item.metafields.custom.price_on_request.value == true
+                assign bundle_item_is_por = true
+              endif
+            %}
+            {% if bundle_item_is_por %}{% continue %}{% endif %}
             {% assign item_index = forloop.index0 %}
             <div class="bundle-item" data-product-id="{{ bundle_item.id }}" data-item-index="{{ item_index }}">
               <div class="bundle-item__media">
@@ -122,10 +135,10 @@
           <span class="bundle-drawer__item-count">{{ bundle_count }} items</span>
           <span
             class="bundle-drawer__total-price js-money-convert"
-            data-original-total="{{ product.price }}"
-            data-money-cents="{{ product.price }}"
+            data-original-total="{{ bundle_total_price }}"
+            data-money-cents="{{ bundle_total_price }}"
           >
-            {{ product.price | money }}
+            {{ bundle_total_price | money }}
           </span>
         </div>
         <button type="button" class="bundle-drawer__confirm button" data-bundle-add-all>

@@ -330,6 +330,12 @@
                     <!-- DEBUG LOOP: x={{ hs_x }}, y={{ hs_y }}, idx={{ product_index }}, product={{ hs_product.title }} -->
 
                     {% if hs_product != blank %}
+                      {% liquid
+                        assign hs_product_is_por = false
+                        if hs_product.metafields.custom.price_on_request == true or hs_product.metafields.custom.price_on_request.value == true
+                          assign hs_product_is_por = true
+                        endif
+                      %}
                       <div class="hotspot-node"
                            data-url="{{ hs_product.url }}"
                            style="left: {{ hs_x }}%; top: {{ hs_y }}%;">
@@ -344,7 +350,7 @@
                         {% endif %}
                         <div class="hotspot-text {{ hs_text_pos }}">
                           <span class="hs-title">{{ hs_product.title }}</span>
-                          {% if hs_product.price == 0 %}
+                          {% if hs_product_is_por %}
                             <span class="hs-price">Price on request</span>
                           {% else %}
                             <span

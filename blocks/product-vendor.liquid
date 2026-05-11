@@ -1,18 +1,20 @@
 
 
-{% assign bundle_products = closest.product.metafields.custom.bundle_products.value %}
-{% assign is_bundle = false %}
-{% if bundle_products and bundle_products.size > 0 %}
-  {% assign is_bundle = true %}
-{% endif %}
+{% liquid
+  assign bundle_products = closest.product.metafields.custom.bundle_products.value
+  assign is_bundle = false
+  assign vendor_downcase = closest.product.vendor | downcase
+  if bundle_products and bundle_products.size > 0
+    assign is_bundle = true
+  endif
+%}
 
-{% unless is_bundle %}
 <div class="product-vendor-block">
   {% if closest.product == blank %}
     {% assign text = 'placeholders.product_title' | t %}
     {% assign product_title = '<p>' | append: text | append: '</p>' %}
     {% render 'text', fallback_text: product_title, block: block %}
-  {% elsif closest.product != blank %}
+  {% elsif closest.product != blank and closest.product.vendor != blank and is_bundle == false and vendor_downcase != 'bundle' %}
     {% assign product_title = '<p>' | append: closest.product.vendor | append: '</p>' %}
     <a
       class="contents user-select-text"
@@ -21,9 +23,22 @@
     >
       {% render 'text', fallback_text: closest.product.vendor, block: block %}
     </a>
+  {% else %}
+    <span class="product-vendor-block__placeholder" aria-hidden="true">&nbsp;</span>
   {% endif %}
 </div>
-{% endunless %}
+
+{% stylesheet %}
+  .product-vendor-block {
+    min-height: 1.4em;
+  }
+
+  .product-vendor-block__placeholder {
+    display: block;
+    visibility: hidden;
+    line-height: 1.4;
+  }
+{% endstylesheet %}
 
 {% schema %}
 {

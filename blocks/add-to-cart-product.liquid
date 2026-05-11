@@ -24,7 +24,7 @@
 
   assign is_price_on_request = false
   assign selected_variant = product.selected_or_first_available_variant
-  if selected_variant.price == 0
+  if product.metafields.custom.price_on_request == true or product.metafields.custom.price_on_request.value == true
     assign is_price_on_request = true
   endif
 
@@ -34,13 +34,24 @@
   assign bundle_products = product.metafields.custom.bundle_products.value
   assign is_bundle = false
   assign bundle_count = 0
+  assign non_por_bundle_items_count = 0
   if bundle_products and bundle_products.size > 0
     assign is_bundle = true
     for bp in bundle_products
-      if bp.price > 0
+      assign bundle_item_is_por = false
+      if bp.metafields.custom.price_on_request == true or bp.metafields.custom.price_on_request.value == true
+        assign bundle_item_is_por = true
+      endif
+
+      if bundle_item_is_por == false
+        assign non_por_bundle_items_count = non_por_bundle_items_count | plus: 1
         assign bundle_count = bundle_count | plus: 1
       endif
     endfor
+  endif
+
+  if is_price_on_request == false and is_bundle and non_por_bundle_items_count == 0
+    assign is_price_on_request = true
   endif
 
   if is_price_on_request

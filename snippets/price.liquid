@@ -27,8 +27,27 @@
   assign compare_at_price_cents = compare_at_price
 
   assign is_price_on_request = false
-  if selected_variant.price == 0
+  if product_resource.metafields.custom.price_on_request == true or product_resource.metafields.custom.price_on_request.value == true
     assign is_price_on_request = true
+  endif
+
+  assign bundle_products = product_resource.metafields.custom.bundle_products.value
+  if is_price_on_request == false and bundle_products and bundle_products.size > 0
+    assign non_por_bundle_items_count = 0
+    for bundle_item in bundle_products
+      assign bundle_item_is_por = false
+      if bundle_item.metafields.custom.price_on_request == true or bundle_item.metafields.custom.price_on_request.value == true
+        assign bundle_item_is_por = true
+      endif
+
+      if bundle_item_is_por == false
+        assign non_por_bundle_items_count = non_por_bundle_items_count | plus: 1
+      endif
+    endfor
+
+    if non_por_bundle_items_count == 0
+      assign is_price_on_request = true
+    endif
   endif
 
   # Checks if product handle matches the closest product's handle (i.e. product page)
