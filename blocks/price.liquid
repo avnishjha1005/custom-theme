@@ -53,6 +53,8 @@
     show_sale_price_first: block_settings.show_sale_price_first
   %}
 
+  <div class="tax-note tax-note--mobile-mrp">MRP incl. of all taxes</div>
+
   {% if block_settings.show_tax_info %}
     <div class="tax-note">
       {%- if cart.duties_included and cart.taxes_included -%}
@@ -86,6 +88,22 @@
 
 {% # theme-check-disable %}
 {% stylesheet %}
+  .tax-note--mobile-mrp {
+    display: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .product-details product-price .tax-note--mobile-mrp {
+      display: block;
+      margin-top: 6px;
+      line-height: 1.35;
+    }
+
+    .product-actions product-price .tax-note:not(.tax-note--mobile-mrp) {
+      display: none;
+    }
+  }
+
   .tax-note:empty {
     display: none;
   }

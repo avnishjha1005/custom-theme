@@ -144,6 +144,17 @@
     text-wrap: pretty;
   }
 
+  /* Product detail copy should use default wrapping on mobile.
+     iOS text balancing can force awkward breaks in key/value lines. */
+  @media screen and (max-width: 749px) {
+    .product-details .text-block.rte,
+    .product-details .text-block.paragraph,
+    .product-details .text-block.rte > *,
+    .product-details .text-block.paragraph > * {
+      text-wrap: wrap;
+    }
+  }
+
   .text-block:not(.text-block--full-width):is(.h1, .h2, .h3, .h4, .h5, .h6) {
     text-wrap: balance;
   }
