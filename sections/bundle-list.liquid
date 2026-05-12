@@ -234,6 +234,23 @@
     .hs-title { font-size: 11px; font-weight: 500; display: block; text-transform: uppercase; line-height: 1.3; }
     .hs-price { font-size: 10px; display: block; margin-top: 2px; }
     .hotspot-text { padding: 8px 12px; white-space: normal; max-width: 120px; }
+    /* Keep hotspots above image overlay but below mobile drawers/menus */
+    .hotspot-node {
+      z-index: 3;
+    }
+
+    .hotspot-dot {
+      z-index: 4;
+    }
+
+    .hotspot-text {
+      z-index: 5;
+    }
+
+    .hotspot-node.is-active {
+      z-index: 6;
+    }
+
   .hotspot-dot {
     width: 18px;
     height: 18px;
@@ -244,7 +261,7 @@
     font-size: 0;
     color: transparent;
     flex-shrink: 0;
-    z-index: 11;
+    z-index: 4;
   }
 
   /* Smaller dots on mobile */
