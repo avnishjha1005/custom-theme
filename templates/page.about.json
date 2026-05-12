@@ -370,29 +370,6 @@
                     "padding-inline-end": 0
                   },
                   "blocks": {
-                    "image_ymPmtq": {
-                      "type": "image",
-                      "name": "t:names.image",
-                      "settings": {
-                        "image": "shopify://shop_images/Copy_of_Altrarasa03694_1.jpg",
-                        "link": "",
-                        "image_ratio": "adapt",
-                        "width": "custom",
-                        "custom_width": 50,
-                        "width_mobile": "fill",
-                        "custom_width_mobile": 100,
-                        "height": "fit",
-                        "border": "none",
-                        "border_width": 1,
-                        "border_opacity": 100,
-                        "border_radius": 0,
-                        "padding-block-start": 16,
-                        "padding-block-end": 16,
-                        "padding-inline-start": 0,
-                        "padding-inline-end": 0
-                      },
-                      "blocks": {}
-                    },
                     "text_hh7ary": {
                       "type": "text",
                       "settings": {
@@ -420,13 +397,36 @@
                     }
                   },
                   "block_order": [
-                    "image_ymPmtq",
                     "text_hh7ary"
                   ]
+                },
+                "image_hBwH8q": {
+                  "type": "image",
+                  "name": "t:names.image",
+                  "settings": {
+                    "image": "shopify://shop_images/Copy_of_Altrarasa03694_1.jpg",
+                    "link": "",
+                    "image_ratio": "adapt",
+                    "width": "custom",
+                    "custom_width": 50,
+                    "width_mobile": "fill",
+                    "custom_width_mobile": 100,
+                    "height": "fit",
+                    "border": "none",
+                    "border_width": 1,
+                    "border_opacity": 100,
+                    "border_radius": 0,
+                    "padding-block-start": 16,
+                    "padding-block-end": 16,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
-                "group_iEnC7A"
+                "group_iEnC7A",
+                "image_hBwH8q"
               ]
             },
             "accordion_row_mQhitH": {
