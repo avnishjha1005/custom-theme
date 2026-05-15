@@ -1,9 +1,17 @@
-{%- assign block_settings = block.settings -%}
+{% liquid
+  assign block_settings = block.settings
+  assign bundle_products = closest.product.metafields.custom.bundle_products.value
+  assign is_bundle = false
+  if bundle_products and bundle_products.size > 0
+    assign is_bundle = true
+  endif
+%}
 
 <div
   class="product-actions"
   data-product-actions
   data-sticky-mobile="{{ block_settings.sticky_on_mobile }}"
+  data-is-bundle="{% if is_bundle %}true{% else %}false{% endif %}"
   {{ block.shopify_attributes }}
 >
   <div class="product-actions__inner">
@@ -87,6 +95,8 @@
   /* Mobile sticky styles */
   @media screen and (max-width: 749px) {
     [data-sticky-mobile="true"].product-actions {
+      --sticky-actions-padding-top: 12px;
+      --sticky-actions-padding-inline: 16px;
       position: fixed;
       bottom: -100%;
       left: 0;
@@ -95,7 +105,7 @@
       background: var(--color-background, #fff);
       border-top: 1px solid rgba(0, 0, 0, 0.1);
       box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-      padding: 12px 16px;
+      padding: var(--sticky-actions-padding-top) var(--sticky-actions-padding-inline);
       padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
       transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -113,6 +123,11 @@
       padding: 0;
       background: transparent;
       border: none;
+    }
+
+    /* Left metadata column only: remove top gap above first text line */
+    [data-sticky-mobile="true"].product-actions .group-block:has(.product-title-block) > .group-block-content.layout-panel-flex--column {
+      justify-content: flex-start;
     }
 
 
@@ -144,23 +159,33 @@
       display: none;
     }
 
+    /* Bundle sticky bar: remove vendor block entirely so no flex gap remains before title */
+    [data-sticky-mobile="true"][data-is-bundle="true"].product-actions .product-vendor-block {
+      display: none !important;
+    }
+
     /* Wishlist button in sticky bar */
     .product-actions__wishlist {
       height: 25px;
       width: 25px;
       position: absolute;
-      top: 5px;
-      right: 16px;
-    }
-
-    .product-actions__wishlist-btn {
+      top: var(--sticky-actions-padding-top);
+      right: var(--sticky-actions-padding-inline);
       display: inline-flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .product-actions__wishlist-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
       background: none;
       border: none;
       cursor: pointer;
-      padding: 4px;
+      padding: 3px;
       color: #000;
       transition: transform 0.2s ease;
     }
