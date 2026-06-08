@@ -646,7 +646,7 @@
       ],
       "name": "Featured collection",
       "settings": {
-        "collection": "all",
+        "collection": "under-15k",
         "layout_type": "carousel",
         "carousel_on_mobile": false,
         "max_products": 9,
