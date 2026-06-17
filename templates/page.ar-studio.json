@@ -682,7 +682,7 @@
                   "type": "edge-to-edge-image",
                   "name": "Edge to edge image",
                   "settings": {
-                    "image": "shopify://shop_images/7.webp",
+                    "image": "shopify://shop_images/Alta_Rasa_TCCGD_02_1.webp",
                     "image_fit": "cover",
                     "desktop_height": 800,
                     "desktop_position": "center center",
