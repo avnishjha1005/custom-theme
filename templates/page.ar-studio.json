@@ -88,7 +88,7 @@
         "ai_gen_block_2243247_VUGcLx": {
           "type": "image-with-text-overlay",
           "settings": {
-            "image": "shopify://shop_images/f03177fac9df929400f76a6c5af9e89b56596570.png",
+            "image": "shopify://shop_images/1.webp",
             "background_color": "#2f1509",
             "heading": "The Studio",
             "subtext": "",
@@ -247,7 +247,7 @@
                           "type": "image",
                           "name": "t:names.image",
                           "settings": {
-                            "image": "shopify://shop_images/69d69906cfee086ba51f0c2d11282aea1dd7bf5a.png",
+                            "image": "shopify://shop_images/2.webp",
                             "link": "",
                             "image_ratio": "square",
                             "width": "fill",
@@ -342,7 +342,7 @@
                           "type": "image",
                           "name": "t:names.image",
                           "settings": {
-                            "image": "shopify://shop_images/a94f7a15c53bd0bf667277defcf6476ff8a7cf75_1.jpg",
+                            "image": "shopify://shop_images/3.webp",
                             "link": "",
                             "image_ratio": "square",
                             "width": "fill",
@@ -422,7 +422,7 @@
                   "type": "edge-to-edge-image",
                   "name": "Edge to edge image",
                   "settings": {
-                    "image": "shopify://shop_images/d3ce7fafe14ccc8eef8844cd20b3c2e656413c47.jpg",
+                    "image": "shopify://shop_images/4.webp",
                     "image_fit": "cover",
                     "desktop_height": 850,
                     "desktop_position": "center center",
@@ -534,7 +534,7 @@
                           "type": "image",
                           "name": "t:names.image",
                           "settings": {
-                            "image": "shopify://shop_images/11b0b23b7457d0b462f0633b2d2482066e369989.png",
+                            "image": "shopify://shop_images/5.webp",
                             "link": "",
                             "image_ratio": "square",
                             "width": "fill",
@@ -602,7 +602,7 @@
                           "type": "image",
                           "name": "t:names.image",
                           "settings": {
-                            "image": "shopify://shop_images/82b7297e73ad5de46e8cfd96a98deae3dfcfb1e1.png",
+                            "image": "shopify://shop_images/6.webp",
                             "link": "",
                             "image_ratio": "square",
                             "width": "fill",
@@ -682,7 +682,7 @@
                   "type": "edge-to-edge-image",
                   "name": "Edge to edge image",
                   "settings": {
-                    "image": "shopify://shop_images/41f7c4c48e32a3a716f420ea0a9aa5dc4f274342.png",
+                    "image": "shopify://shop_images/7.webp",
                     "image_fit": "cover",
                     "desktop_height": 800,
                     "desktop_position": "center center",
