@@ -96,7 +96,7 @@
             "text_spacing": 16,
             "heading_size_desktop": 60,
             "subtext_size_desktop": 18,
-            "section_padding_desktop": 40,
+            "section_padding_desktop": 0,
             "heading_size_mobile": 48,
             "subtext_size_mobile": 14,
             "section_padding_mobile": 0
