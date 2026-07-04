@@ -270,7 +270,7 @@
                           "type": "text",
                           "name": "t:names.text",
                           "settings": {
-                            "text": "<p>We are a multi designer platform bringing together contemporary fashion, jewellery and accessories from across South Asia.</p><p>&nbsp;                                                                                                                           </p><p></p>",
+                            "text": "<p>We are a multi designer platform bringing together contemporary fashion, jewellery and accessories from across South Asia.</p><p>&nbsp;                                                                                                   </p>",
                             "width": "100%",
                             "max_width": "normal",
                             "alignment": "center",
