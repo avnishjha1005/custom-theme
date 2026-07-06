@@ -13,6 +13,7 @@
   "sections": {
     "export_collage_AK4FpE": {
       "type": "expert-collage",
+      "disabled": true,
       "custom_css": [
         ".collage-container {max-width: 1440px; margin: auto;}",
         ".collage-heading {font-size: 30px;}",
