@@ -430,6 +430,7 @@
         "text_xcPU74",
         "button_eM8Qdr"
       ],
+      "disabled": true,
       "custom_css": [
         "h3 {font-size: 36px;}",
         "@media screen and (max-width: 768px) {h3 {font-size: 30px; }}",
@@ -520,6 +521,7 @@
         "expert-3",
         "expert-4"
       ],
+      "disabled": true,
       "custom_css": [
         "h2 {font-size: 36px;}",
         "p {font-size: 14px;}",
@@ -546,6 +548,7 @@
     },
     "blog-discover": {
       "type": "main-blog-discover",
+      "disabled": true,
       "settings": {
         "heading": "Discover More",
         "button_text": "Load More",
