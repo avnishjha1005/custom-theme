@@ -104,7 +104,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aut odit aut fugit.</p>",
+            "text": "<p>Shaping a curatorial voice that values restraint, longevity, and meaning over scale or spectacle.</p>",
             "width": "100%",
             "max_width": "none",
             "alignment": "center",
@@ -413,6 +413,7 @@
           "name": "t:names.button",
           "settings": {
             "label": "Subscribe Now",
+            "use_whatsapp_link": false,
             "link": "shopify://collections/all",
             "open_in_new_tab": false,
             "style_class": "link",
