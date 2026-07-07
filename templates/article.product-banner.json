@@ -147,6 +147,7 @@
         "author": {
           "type": "text",
           "name": "Author",
+          "disabled": true,
           "settings": {
             "text": "<p>Written by {{ closest.article.author }}</p>",
             "width": "100%",
@@ -506,7 +507,7 @@
         "social-share"
       ],
       "custom_css": [
-        ".spacing-style {max-width: 800px; margin:auto; margin-bottom: 0px;}",
+        ".spacing-style {max-width: 800px; margin: auto; margin-bottom: 0px;}",
         ".custom-section-content {padding: 0px !important;}"
       ],
       "settings": {
