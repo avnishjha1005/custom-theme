@@ -31,7 +31,13 @@
   endfor
 %}
 
-
+<div class="blog-post-content-with-products">
+  {% comment %} First half of blog content {% endcomment %}
+  <div class="blog-post-content rte">
+    <rte-formatter>
+      {{ content_before }}
+    </rte-formatter>
+  </div>
 
   {% comment %} Featured Products Banner — only renders if metafield is set {% endcomment %}
   {% if banner_products != blank and banner_products.size > 0 %}
