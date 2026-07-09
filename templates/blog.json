@@ -386,7 +386,7 @@
           "type": "text",
           "name": "t:names.text",
           "settings": {
-            "text": "<p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur.</p>",
+            "text": "<p>Every story is build, towards celebrating South Asian design and allow garments to speak through how they are worn, lived in and remembered.</p>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "center",
@@ -430,7 +430,6 @@
         "text_xcPU74",
         "button_eM8Qdr"
       ],
-      "disabled": true,
       "custom_css": [
         "h3 {font-size: 36px;}",
         "@media screen and (max-width: 768px) {h3 {font-size: 30px; }}",
