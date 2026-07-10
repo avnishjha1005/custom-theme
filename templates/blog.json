@@ -414,7 +414,7 @@
           "settings": {
             "label": "Subscribe Now",
             "use_whatsapp_link": false,
-            "link": "shopify://collections/all",
+            "link": "https://thealtarasa.com/blogs/the-editorial#shopify-section-sections--20830881186006__footer",
             "open_in_new_tab": false,
             "style_class": "link",
             "width": "fit-content",
