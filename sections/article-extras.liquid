@@ -5,6 +5,7 @@
 
 {%- liquid
   assign slideshow_images = article.metafields.custom.slideshow_images.value | default: empty
+  assign slideshow_links = article.metafields.custom.slideshow_images_links.value | default: empty
   assign first_tag = article.tags.first
 -%}
 
@@ -22,20 +23,29 @@
     <div class="article-filmstrip-container">
       <div class="article-filmstrip">
         {%- for image in slideshow_images -%}
-          <div class="article-filmstrip-item">
-            <div class="aa article-filmstrip-image">
-              <img
-                src="{{ image | image_url: width: 600 }}"
-                alt="{{ image.alt | escape }}"
-                loading="lazy"
-                width="{{ image.width }}"
-                height="{{ image.height }}"
-              >
+            {% assign image_link = slideshow_links[forloop.index0] %}
+            <div class="article-filmstrip-item">
+              {% if image_link != blank %}
+                <a href="{{ image_link.url }}" target="_blank" rel="noopener noreferrer" class="article-filmstrip-image">
+              {% else %}
+                <div class="article-filmstrip-image">
+              {% endif %}
+                <img
+                  src="{{ image | image_url: width: 600 }}"
+                  alt="{{ image.alt | escape }}"
+                  loading="lazy"
+                  width="{{ image.width }}"
+                  height="{{ image.height }}"
+                >
+              {% if image_link != blank %}
+                </a>
+              {% else %}
+                </div>
+              {% endif %}
+              {%- if image.alt != blank -%}
+                <p class="article-filmstrip-caption">{{ image.alt }}</p>
+              {%- endif -%}
             </div>
-            {%- if image.alt != blank -%}
-              <p class="article-filmstrip-caption">{{ image.alt }}</p>
-            {%- endif -%}
-          </div>
         {%- endfor -%}
       </div>
     </div>
@@ -48,7 +58,6 @@
   {%- if first_tag != blank -%}
     <div class="related-articles-section">
       <h2 class="related-articles-heading">People also liked Reading</h2>
-
       <div class="related-articles-container">
         {%- assign related_count = 0 -%}
         {%- for related_article in blog.articles -%}
@@ -406,42 +415,34 @@
     .article-extras-divider {
       margin: 32px auto;
     }
-
     .related-articles-heading {
       font-size: 1.25rem;
       margin-bottom: 32px;
     }
-
     .related-articles-container {
       gap: 32px;
     }
-
     .article-extras-section .blog-listing-card {
       flex-direction: row;
       gap: 16px;
     }
-
     .article-extras-section .blog-listing-card__image {
       width: 140px;
       height: 200px;
       flex-shrink: 0;
     }
-
     .article-extras-section .blog-listing-card__content {
       padding-top: 0;
       gap: 24px;
       max-width: none !important;
       flex: 1;
     }
-
     .article-extras-section .blog-listing-card__title {
       font-size: 1.125rem;
     }
-
     .article-extras-section .blog-listing-card__tag {
       font-size: 0.625rem;
     }
-
     .article-extras-section .blog-listing-card__excerpt {
       font-size: 0.8rem;
       display: -webkit-box;
@@ -449,7 +450,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-
     .article-extras-section .blog-listing-card__read-link {
       font-size: 0.75rem;
     }
