@@ -23,7 +23,7 @@
       <div class="article-filmstrip">
         {%- for image in slideshow_images -%}
           <div class="article-filmstrip-item">
-            <div class="article-filmstrip-image">
+            <div class="aa article-filmstrip-image">
               <img
                 src="{{ image | image_url: width: 600 }}"
                 alt="{{ image.alt | escape }}"
@@ -384,7 +384,7 @@
 
   section#shopify-section-template--20830882431190__main p
   {
-font-size: 12px;
+    font-size: 12px;
   }
 
   /* Mobile Styles */
