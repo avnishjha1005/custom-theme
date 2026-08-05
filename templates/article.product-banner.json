@@ -147,7 +147,6 @@
         "author": {
           "type": "text",
           "name": "Author",
-          "disabled": true,
           "settings": {
             "text": "<p>Written by {{ closest.article.metafields.custom.author.value }}</p>",
             "width": "100%",
