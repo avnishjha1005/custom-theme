@@ -148,7 +148,7 @@
           "type": "text",
           "name": "Author",
           "settings": {
-            "text": "<p>Written by {{ closest.article.author }}</p>",
+            "text": "<p>Written by {{ closest.article.metafields.custom.author.value }}</p>",
             "width": "100%",
             "max_width": "normal",
             "alignment": "center",
