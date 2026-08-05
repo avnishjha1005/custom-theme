@@ -237,16 +237,13 @@
         {% endif %}
 
         {% if block.settings.author != blank %}
-  {% comment %} <p class="ai-quote-section__author-{{ ai_gen_id }}">
+  <p class="ai-quote-section__author-{{ ai_gen_id }}">
     <span class="ai-quote-section__dash">—</span>
     <br/>
     <span class="ai-quote-section__author-text">
       {{ block.settings.author }}
     </span>
-  </p> {% endcomment %}
-  {% if article.metafields.custom.author != blank %}
-  <p>{{ article.metafields.custom.author }}</p>
-{% endif %}
+  </p>
 {% endif %}
         
       </div>
