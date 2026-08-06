@@ -31,7 +31,13 @@
       <span>{{ 'content.blog_details_separator' | t }}</span>
     {%- endif -%}
 
-    {%- if block_settings.show_author -%}
+    {% comment %} {%- if block_settings.show_author -%}
+      <span>{{ display_author }}</span>
+    {%- endif -%} {% endcomment %}
+
+    {% assign author_stripped = display_author | remove: 'Written by' | strip %}
+    
+    {%- if block_settings.show_author and author_stripped != blank -%}
       <span>{{ display_author }}</span>
     {%- endif -%}
   </div>
