@@ -144,32 +144,43 @@
           },
           "blocks": {}
         },
-        "author": {
-          "type": "text",
-          "name": "Author",
-          "settings": {
-            "text": "<p>Written by {{ closest.article.metafields.custom.author.value }}</p>",
-            "width": "100%",
-            "max_width": "normal",
-            "alignment": "center",
-            "type_preset": "custom",
-            "font": "var(--font-body--family)",
-            "font_size": "0.75rem",
-            "line_height": "tight",
-            "letter_spacing": "normal",
-            "case": "uppercase",
-            "wrap": "pretty",
-            "color": "var(--color-foreground)",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
+        // "author": {
+        //   "type": "text",
+        //   "name": "Author",
+        //   "settings": {
+        //     "text": "<p>Written by {{ closest.article.metafields.custom.author.value }}</p>",
+        //     "width": "100%",
+        //     "max_width": "normal",
+        //     "alignment": "center",
+        //     "type_preset": "custom",
+        //     "font": "var(--font-body--family)",
+        //     "font_size": "0.75rem",
+        //     "line_height": "tight",
+        //     "letter_spacing": "normal",
+        //     "case": "uppercase",
+        //     "wrap": "pretty",
+        //     "color": "var(--color-foreground)",
+        //     "background": false,
+        //     "background_color": "#00000026",
+        //     "corner_radius": 0,
+        //     "padding-block-start": 0,
+        //     "padding-block-end": 0,
+        //     "padding-inline-start": 0,
+        //     "padding-inline-end": 0
+        //   },
+        //   "blocks": {}
+        // },
+         "author": {
+            "type": "_blog-post-info-text",
+            "settings": {
+              "show_date": false,
+              "show_author": true,
+              "alignment": "center",
+              "padding-block-start": 0,
+              "padding-block-end": 0
+            },
+            "blocks": {}
           },
-          "blocks": {}
-        },
         "social-share": {
           "type": "social-share",
           "name": "Social Share",
