@@ -261,6 +261,11 @@
         "type": "shopify://apps/currency-converter/blocks/app-embed-block/a56d6bd1-e9df-4a4a-b98e-e9bb5c43a042",
         "disabled": false,
         "settings": {}
+      },
+      "13786924369225772985": {
+        "type": "shopify://apps/c-hub-customer-accounts/blocks/accounts-everywhere/0fb3ba0b-4c65-4919-a85a-48bc2d368e9c",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
