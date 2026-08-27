@@ -167,6 +167,48 @@ h2#cart-drawer-heading {
     top: 9px !important;
     left: 24px !important;
 }
+
+/* ADD TO CART BUTTON */
+.add-to-cart-product-button {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Normal text */
+.add-to-cart-product-button .add-to-cart-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s ease;
+}
+
+/* Added text */
+.add-to-cart-product-button .add-to-cart-text--added {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translateY(100%);
+  opacity: 0;
+
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.3s ease;
+}
+
+/* When button changes to added state */
+.add-to-cart-product-button.added .add-to-cart-text {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.add-to-cart-product-button.added .add-to-cart-text--added {
+  transform: translateY(0);
+  opacity: 1;
+}
 </style>
   </body>
 </html>
