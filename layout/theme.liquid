@@ -168,26 +168,34 @@ h2#cart-drawer-heading {
     left: 24px !important;
 }
 
-/* ADD TO CART BUTTON */
+/* Add to Cart button */
 .add-to-cart-product-button {
   position: relative;
   overflow: hidden;
 }
 
-/* Normal text */
+/* Normal Add to cart text */
 .add-to-cart-product-button .add-to-cart-text {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 0.3s ease;
+  height: 100%;
+
+  transform: translateY(0);
+  opacity: 1;
+
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease;
 }
 
-/* Added text */
+/* Added checkmark */
 .add-to-cart-product-button .add-to-cart-text--added {
   position: absolute;
   inset: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -195,19 +203,29 @@ h2#cart-drawer-heading {
   transform: translateY(100%);
   opacity: 0;
 
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-              opacity 0.3s ease;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s ease;
 }
 
-/* When button changes to added state */
-.add-to-cart-product-button.added .add-to-cart-text {
+/* When Shopify removes the hidden state */
+.add-to-cart-product-button .add-to-cart-text--added:not([hidden]) {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Move Add to cart text upward */
+.add-to-cart-product-button:has(.add-to-cart-text--added:not([hidden]))
+  .add-to-cart-text {
   transform: translateY(-100%);
   opacity: 0;
 }
 
-.add-to-cart-product-button.added .add-to-cart-text--added {
-  transform: translateY(0);
-  opacity: 1;
+/* Checkmark size */
+.add-to-cart-product-button .add-to-cart-icon--added {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
   </body>
