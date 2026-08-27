@@ -266,6 +266,11 @@
         "type": "shopify://apps/c-hub-customer-accounts/blocks/accounts-everywhere/0fb3ba0b-4c65-4919-a85a-48bc2d368e9c",
         "disabled": false,
         "settings": {}
+      },
+      "16179990893605260579": {
+        "type": "shopify://apps/simplify-my-login/blocks/sml_account/d8cea981-d551-4842-a6a1-d02bd1530222",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
