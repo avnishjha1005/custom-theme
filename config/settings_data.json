@@ -281,6 +281,18 @@
         "type": "shopify://apps/otp-login-notify/blocks/app-embed-block/c26b7b17-273d-4800-af62-8ec88ba18251",
         "disabled": true,
         "settings": {}
+      },
+      "3838990611052461119": {
+        "type": "shopify://apps/c-hub-customer-accounts/blocks/app-embed/0fb3ba0b-4c65-4919-a85a-48bc2d368e9c",
+        "disabled": false,
+        "settings": {
+          "account_primary_page": "",
+          "main_element": "",
+          "custom_element": "",
+          "page_element": "",
+          "proxy_element": "",
+          "mount_json_code": ""
+        }
       }
     },
     "color_schemes": {
