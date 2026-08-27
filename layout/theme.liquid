@@ -168,70 +168,36 @@ h2#cart-drawer-heading {
     left: 24px !important;
 }
 
-/* =========================================
-   ADD TO CART - PALMONAS STYLE TRANSITION
-   ========================================= */
-
 .add-to-cart-product-button {
-  position: relative !important;
-  overflow: hidden !important;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Normal "Add to cart" */
-.add-to-cart-product-button .add-to-cart-text {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-
-  transition:
-    transform 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-    opacity 0.3s ease;
-
-  transform: translateY(0);
-  opacity: 1;
+.add-to-cart-product-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    110deg,
+    transparent,
+    rgba(255,255,255,0.45),
+    transparent
+  );
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
+  pointer-events: none;
 }
 
-/* Checkmark container */
-.add-to-cart-product-button .add-to-cart-text--added {
-  position: absolute !important;
-  inset: 0 !important;
-
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-
-  transform: translateY(100%);
-  opacity: 0;
-
-  transition:
-    transform 0.45s cubic-bezier(0.65, 0, 0.35, 1),
-    opacity 0.3s ease;
+.add-to-cart-product-button:hover::after {
+  left: 130%;
 }
 
-/* When theme makes the added state visible */
-.add-to-cart-product-button .add-to-cart-text--added[aria-hidden="false"] {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-/* Move original text up */
-.add-to-cart-product-button:has(
-  .add-to-cart-text--added[aria-hidden="false"]
-) .add-to-cart-text {
-  transform: translateY(-100%);
-  opacity: 0;
-}
-
-/* Checkmark */
-.add-to-cart-product-button .add-to-cart-icon--added {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.add-to-cart-product-button .icon-checkmark {
-  width: 20px;
-  height: 20px;
+.add-to-cart-product-button:hover {
+  transform: translateY(-2px);
 }
 </style>
   </body>
