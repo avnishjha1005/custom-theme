@@ -276,6 +276,11 @@
         "type": "shopify://apps/simplify-my-login/blocks/simplify_my_login/d8cea981-d551-4842-a6a1-d02bd1530222",
         "disabled": false,
         "settings": {}
+      },
+      "9717370649079274736": {
+        "type": "shopify://apps/otp-login-notify/blocks/app-embed-block/c26b7b17-273d-4800-af62-8ec88ba18251",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
