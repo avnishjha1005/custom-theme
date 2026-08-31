@@ -13,7 +13,7 @@
   @param {boolean} [is_main_product_media] - Indicates if this is the main product image.
 
   @example
-  {% render 'product-media', media: media,product: card_product, preview_image_only: false, loading: 'lazy' %}
+  {% render 'product-media', media: media, preview_image_only: false, loading: 'lazy' %}
 {%- enddoc -%}
 
 {% liquid
@@ -25,26 +25,12 @@
   style="--ratio: {{ media.aspect_ratio }}"
   data-media-id="{{ media.id }}"
 >
-
-{% if product.tags contains '12 June Drop 2' %}
-
- <div style="position:absolute; top:10px; left:10px; z-index:9999; background:red; color:white; padding:10px;">
-  TAGS: {{ product.tags | join: ', ' }}
-  
-  
-    Bestseller
- 
-
-</div>
-{% endif %}
   {% liquid
     assign high_res_url = media.preview_image | image_url: width: 3840
     assign fetch_priority = 'auto'
-
     if is_main_product_media
       assign fetch_priority = 'high'
     endif
-
     assign focal_point_style = '--focal-point: ' | append: media.presentation.focal_point | append: ';'
   %}
   {{
