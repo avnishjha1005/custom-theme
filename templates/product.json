@@ -79,6 +79,12 @@
           "type": "shopify://apps/shiprocket-smart-edd/blocks/shiprocket-smart-edd/9b57fbd9-7bee-480b-839d-a538d163fbf0",
           "settings": {}
         },
+        "gsc_product_labels_badges_blinks_KYH3Xc": {
+          "type": "shopify://apps/gsc-product-labels-badges/blocks/blinks/5efbb58f-b36c-464c-81da-a50c201c699f",
+          "settings": {
+            "widget_id": ""
+          }
+        },
         "media-gallery": {
           "type": "_product-media-gallery",
           "static": true,
@@ -1418,7 +1424,8 @@
         }
       },
       "block_order": [
-        "shiprocket_smart_edd_shiprocket_smart_edd_kxYbc3"
+        "shiprocket_smart_edd_shiprocket_smart_edd_kxYbc3",
+        "gsc_product_labels_badges_blinks_KYH3Xc"
       ],
       "custom_css": [
         "@media screen and (min-width: 768px) {.product-information__media {grid-column: 2/3; }}",
