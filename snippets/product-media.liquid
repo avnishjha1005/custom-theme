@@ -25,29 +25,7 @@
   style="--ratio: {{ media.aspect_ratio }}"
   data-media-id="{{ media.id }}"
 >
-  {% if product.tags contains 'bestseller' %}
-  <div class="product-bestseller-label">
-    Bestseller
-  </div>
-{% endif %}
-<style>
-.product-bestseller-label {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 20;
-  background: #000;
-  color: #fff;
-  padding: 6px 12px;
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
 
-
-</style>
   {% liquid
     assign high_res_url = media.preview_image | image_url: width: 3840
     assign fetch_priority = 'auto'
