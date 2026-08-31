@@ -26,11 +26,9 @@
   data-media-id="{{ media.id }}"
 >
 
-  {% if product and product.tags contains 'bestseller' %}
-    <div class="product-bestseller-label">
-      Bestseller
-    </div>
-  {% endif %}
+  <div style="position:absolute; top:10px; left:10px; z-index:9999; background:red; color:white; padding:10px;">
+  TAGS: {{ product.tags | join: ', ' }}
+</div>
 
   {% liquid
     assign high_res_url = media.preview_image | image_url: width: 3840
