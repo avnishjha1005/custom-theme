@@ -1408,9 +1408,9 @@
               "name": "t:names.product_recommendations",
               "settings": {
                 "recommendation_type": "related",
-                "layout_type": "carousel",
+                "layout_type": "grid",
                 "carousel_on_mobile": true,
-                "max_products": 4,
+                "max_products": 2,
                 "columns_gap": 16,
                 "rows_gap": 16,
                 "icons_style": "arrow",
