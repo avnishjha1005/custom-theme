@@ -1800,7 +1800,6 @@
       "blocks": {
         "ai_gen_block_c3cb5e8_nyF9qr": {
           "type": "ai_gen_block_c3cb5e8",
-          "disabled": true,
           "settings": {
             "scroll_threshold": 300,
             "show_quantity": true,

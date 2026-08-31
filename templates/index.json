@@ -360,6 +360,7 @@
             "product_media_gallery_zRXCVY": {
               "type": "_product-media-gallery",
               "name": "t:names.product_media",
+              "disabled": true,
               "settings": {
                 "media_presentation": "carousel",
                 "media_columns": "one",
