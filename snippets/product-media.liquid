@@ -25,6 +25,13 @@
   style="--ratio: {{ media.aspect_ratio }}"
   data-media-id="{{ media.id }}"
 >
+
+
+  {% if selected_product.tags contains 'bestseller' %}
+  <div class="product-bestseller-label">
+    Bestseller
+  </div>
+{% endif %}
   {% liquid
     assign high_res_url = media.preview_image | image_url: width: 3840
     assign fetch_priority = 'auto'
