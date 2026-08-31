@@ -25,38 +25,21 @@
   style="--ratio: {{ media.aspect_ratio }}"
   data-media-id="{{ media.id }}"
 >
-  
-{% if product and product.tags contains 'bestseller' %}
-  <div class="product-bestseller-label">
-    Bestseller
-  </div>
-{% endif %}
 
-<style>
-.product-bestseller-label {
-  position: absolute !important;
-  top: 16px !important;
-  left: 16px !important;
-  z-index: 999 !important;
-  display: block !important;
-  background: #000 !important;
-  color: #fff !important;
-  padding: 7px 12px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  line-height: 1 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  width: auto !important;
-  height: auto !important;
-}
-</style>
+  {% if product and product.tags contains 'bestseller' %}
+    <div class="product-bestseller-label">
+      Bestseller
+    </div>
+  {% endif %}
+
   {% liquid
     assign high_res_url = media.preview_image | image_url: width: 3840
     assign fetch_priority = 'auto'
+
     if is_main_product_media
       assign fetch_priority = 'high'
     endif
+
     assign focal_point_style = '--focal-point: ' | append: media.presentation.focal_point | append: ';'
   %}
   {{
