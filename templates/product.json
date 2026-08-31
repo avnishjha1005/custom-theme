@@ -194,6 +194,7 @@
                     "group_pHhMLw": {
                       "type": "group",
                       "name": "t:names.group",
+                      "disabled": true,
                       "settings": {
                         "content_direction": "column",
                         "vertical_on_mobile": true,
@@ -315,6 +316,7 @@
                     "group_UNYETJ": {
                       "type": "group",
                       "name": "t:names.group",
+                      "disabled": true,
                       "settings": {
                         "content_direction": "column",
                         "vertical_on_mobile": true,
@@ -417,6 +419,7 @@
                     },
                     "accelerated-checkout": {
                       "type": "buy-now",
+                      "disabled": true,
                       "static": true,
                       "settings": {},
                       "blocks": {}
