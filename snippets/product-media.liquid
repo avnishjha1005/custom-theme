@@ -30,15 +30,16 @@
     Bestseller
   </div>
 {% endif %}
+{% if product.tags contains 'bestseller' %}
  <div style="position:absolute; top:10px; left:10px; z-index:9999; background:red; color:white; padding:10px;">
   TAGS: {{ product.tags | join: ', ' }}
-  {% if product.tags contains 'bestseller' %}
+  
   
     Bestseller
  
-{% endif %}
-</div>
 
+</div>
+{% endif %}
   {% liquid
     assign high_res_url = media.preview_image | image_url: width: 3840
     assign fetch_priority = 'auto'
