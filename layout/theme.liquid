@@ -215,20 +215,23 @@ h2#cart-drawer-heading-empty {
 
 <style>
 .product-media {
-  position: relative !important;
+  position: relative;
+  aspect-ratio: var(--gallery-aspect-ratio, var(--ratio));
+  min-height: 0;
+  min-width: 0;
 }
 
 .product-bestseller-label {
-  position: absolute !important;
-  top: 16px !important;
-  left: 16px !important;
-  z-index: 9999 !important;
-  background: #000 !important;
-  color: #fff !important;
-  padding: 7px 12px !important;
-  font-size: 12px !important;
-  font-weight: 600 !important;
-  line-height: 1 !important;
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 9999;
+  background: #000;
+  color: #fff;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
