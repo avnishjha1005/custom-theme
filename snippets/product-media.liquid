@@ -27,7 +27,9 @@
 >
 
 
-  {% if selected_product.tags contains 'bestseller' %}
+ {% assign product_tags = selected_product.tags | join: ',' | downcase %}
+
+{% if product_tags contains 'bestseller' %}
   <div class="product-bestseller-label">
     Bestseller
   </div>
