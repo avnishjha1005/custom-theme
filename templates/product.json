@@ -1407,7 +1407,7 @@
               "type": "product-recommendations",
               "name": "t:names.product_recommendations",
               "settings": {
-                "recommendation_type": "complementary",
+                "recommendation_type": "related",
                 "layout_type": "carousel",
                 "carousel_on_mobile": true,
                 "max_products": 4,
