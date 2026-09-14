@@ -45,7 +45,7 @@
 
           # If no metafield, match common titles
           if icon_name == ''
-            case link.title | downcase
+            case link.title
               when 'home'
                 assign icon_name = 'home'
               when 'shop', 'store'
@@ -278,3 +278,13 @@
   ]
 }
 {% endschema %} {% endcomment %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "            case link.title | downcase"
+  to: "            case link.title"
+  position: 1701..1728
+{% endcomment %}

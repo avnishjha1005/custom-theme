@@ -21,7 +21,7 @@
       >
         {% if show_icons %}
           <span class="mobile-tab-bar__icon">
-            {% case link.title | downcase %}
+            {% case link.title %}
               {% when 'home' %}
                 {% render 'icon', name: 'home' %}
               {% when 'shop' %}
@@ -153,3 +153,13 @@
     }
   }
 {% endstylesheet %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% case link.title | downcase %}"
+  to: "{% case link.title %}"
+  position: 847..868
+{% endcomment %}
